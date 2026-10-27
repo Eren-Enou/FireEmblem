@@ -242,6 +242,37 @@ Steps:
 
 **Observation (open, F-18):** if Lethe or Mordecai hadn't acted when the player ended the yellow phase, **the AI moved them** after End. This is not a failure of EXP-06, but it matters for co-op: player 2 ending the phase early hands the leftover units to the AI. See ROADMAP Phase 1 remaining items.
 
+## EXP-07 — Leftover yellow units wait instead of being moved by the AI (fix for F-18)
+
+**Cause (static):** the phase-end handler `0x8002E670` launches the computer-player proc **`E_CP_PhaseMain`** (`0x8028E7F8`). For phases 1/2 it does so only if `control[phase] == 2` (`0x8002E708`; EXP-04 showed this at runtime). For phase 3 it **doesn't check control at all** (`0x8002E6DC`).
+**Change:** Gecko `C202E6DC` hook (annotated in `codes/GFEE01.ini`). For phase 3, launch `E_CP_PhaseMain` only if `control[3] == 2`; otherwise jump to the handler's epilogue. A CPU-controlled yellow army (vanilla) takes the original path unchanged. Static check: `test_exp07_gecko_hook`, plus 5 new signatures.
+
+**A. Human yellow (main test):**
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable EXP-01 --enable EXP-06 --enable EXP-07
+   ```
+2. Boot the game. Check that EXP-06 and EXP-07 are ticked under Properties → Gecko Codes. Load **slot 7** (Ch9, turn 1, yellow banner).
+3. Act with **Lethe only** (move + Wait). **Leave Mordecai untouched.** Map menu → **End**.
+4. Save to **slot 8** right after End, then watch.
+   a. *Expected:* Mordecai **stays on his square** and the Enemy Phase begins.
+   b. The Enemy Phase runs normally (AI).
+   c. Turn 2 Player Phase: blue units movable, yellow locked.
+   d. Turn 2 yellow phase: choose End immediately without acting. *Expected:* nobody moves and the Enemy Phase begins.
+5. Save to **slot 9** (or slot 4 if 9 fails) at the start of turn 3's Player Phase.
+
+**B. Vanilla unaffected (control test):**
+1. Close Dolphin. Run `.venv/Scripts/python -m tools.install_codes --enable EXP-07` (only EXP-07).
+2. Load **slot 6** (Ch9 fixture). End the Player Phase without acting.
+3. *Expected:* the yellow phase plays **by AI** as in the unmodded game (Lethe/Mordecai move on their own).
+
+**Success:** A(a–d) and B hold → F-18 fixed: leftover yellow units wait, as in the Player Phase.
+**Failure modes:** the game hangs after End in the yellow phase (the phase may need `E_CP_PhaseMain` to finish; I'd then switch to the phase-0 variant that launches it in "mode 8"), or Mordecai still moves (another AI path exists).
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| — | — | NOT RUN | |
+
 **Phase 1 status:** the core interaction is achieved on one controller. The yellow army is human-controlled in its own phase, the blue army in its own, with no cross-control in either direction, over two full turns, using EXP-01 + EXP-06.
 
 | Date | Tester | Result | Notes |

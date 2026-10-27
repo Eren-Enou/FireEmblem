@@ -52,26 +52,41 @@ class GameTests(unittest.TestCase):
         for addr, word, meaning in SIGNATURES:
             self.assertEqual(dol.u32(addr), word, f"{addr:08X} {meaning}")
 
-    def test_exp06_gecko_hook(self):
-        """EXP-06 cave disassembles as intended and replays the original instruction."""
+    def _gecko_c2(self, name: str, hook: int) -> list[str]:
+        """Return the disassembled cave of a C2 code (minus the branch-back slot)."""
         import capstone, struct
-        from tools.fe9.ppc import Dol
         from tools.install_codes import ROOT as R, parse_sections
         lines = parse_sections((R / "codes/GFEE01.ini").read_text())["Gecko"]
-        start = lines.index("$EXP-06 Units selectable only in their own force's phase")
-        header, *body = lines[start + 1:start + 7]
-        self.assertEqual(header, "C202858C 00000005")
-        words = [int(w, 16) for line in body for w in line.split()]
+        start = lines.index("$" + name)
+        header = lines[start + 1]
+        self.assertEqual(header.split()[0], f"C2{hook & 0x1FFFFFF:06X}")
+        nlines = int(header.split()[1], 16)
+        words = [int(w, 16) for line in lines[start + 2:start + 2 + nlines] for w in line.split()]
         self.assertEqual(words[-1], 0)  # branch-back slot
-        dol = Dol(self.disc.read_dol())
-        self.assertEqual(words[-2], dol.u32(0x8002858C))  # original instruction replayed
         md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
         code = b"".join(struct.pack(">I", w) for w in words[:-1])
-        asm = [f"{i.mnemonic} {i.op_str}".strip() for i in md.disasm(code, 0)]
+        self._cave_words = words[:-1]
+        return [f"{i.mnemonic} {i.op_str}".strip() for i in md.disasm(code, 0)]
+
+    def test_exp06_gecko_hook(self):
+        """EXP-06 cave disassembles as intended and replays the original instruction."""
+        from tools.fe9.ppc import Dol
+        asm = self._gecko_c2("EXP-06 Units selectable only in their own force's phase", 0x8002858C)
         self.assertEqual(asm, [
             "lbz r0, 0x11(r31)", "cmplw r30, r0", "beq 0x20", "li r3, 3",
             "lis r12, -0x7ffe", "ori r12, r12, 0x85a4", "mtctr r12", "bctr", "lwz r0, 0x1a0(r29)",
         ])
+        self.assertEqual(self._cave_words[-1], Dol(self.disc.read_dol()).u32(0x8002858C))
+
+    def test_exp07_gecko_hook(self):
+        """EXP-07 cave: CPU yellow -> original path; otherwise jump to the handler epilogue."""
+        from tools.fe9.ppc import Dol
+        asm = self._gecko_c2("EXP-07 Human yellow phase does not hand leftover units to the AI", 0x8002E6DC)
+        self.assertEqual(asm, [
+            "lbz r12, 0x17(r31)", "cmplwi r12, 2", "beq 0x1c", "lis r12, -0x7ffe",
+            "ori r12, r12, 0xe71c", "mtctr r12", "bctr", "cmplwi r3, 0", "nop",
+        ])
+        self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x8002E6DC))
 
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}

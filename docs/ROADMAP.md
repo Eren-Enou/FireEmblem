@@ -15,7 +15,7 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - [x] Non-blue human control proven (EXP-04, red army).
 - [x] EXP-01: Lethe/Mordecai selectable, movable, can act (including transform) during the Partner Phase; locked in Player Phase.
 - [x] EXP-06: no cross-control (blue locked in yellow phase), with blue unaffected on turn 2.
-- [ ] Decide and implement leftover-unit behaviour (F-18): today the AI moves yellow units the player didn't act with. Options: (a) keep it as an "auto-finish" convenience; (b) leftover units just wait, like the Player Phase.
+- [ ] Leftover-unit behaviour (F-18): decided that leftover yellow units **wait** (user, 2026-10-27). Fix EXP-07 is drafted and statically validated; awaiting runtime test.
 - [ ] Play Ch9 to the end with EXP-01 + EXP-06 and record a .dtm input movie.
 - [ ] Package as one Gecko code set that doesn't depend on the per-frame AR write (set control at map init and after save load: hook `0x8014D920` / `0x8014C1B8`).
 

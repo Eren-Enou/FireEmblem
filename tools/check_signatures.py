@@ -49,6 +49,12 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x80028508, 0x8BC40008, "lbz r30,8(r4)             r30 = unit force id"),
     (0x8002858C, 0x801D01A0, "lwz r0,0x1A0(r29)         EXP-06 hook site (original insn)"),
     (0x800285A4, 0x80010024, "lwz r0,0x24(r1)           epilogue, returns r3"),
+    # phase-end handler 0x8002E670: context for the EXP-07 hook
+    (0x8002E684, 0x3BE40708, "addi r31,r4,0x708         r31 = state"),
+    (0x8002E6DC, 0x28030000, "cmplwi r3,0               EXP-07 hook site (phase-3 branch)"),
+    (0x8002E6F4, 0x480CDF49, "bl 0x800FC63C             launch E_CP_PhaseMain (mode 1)"),
+    (0x8002E70C, 0x28000002, "cmplwi r0,2               phases 1/2: CP only if control==2"),
+    (0x8002E71C, 0x80010024, "lwz r0,0x24(r1)           handler epilogue"),
     # US equivalent of Ralf's PAL hook 0x80029824 (unit->force load)
     (0x80029684, 0x80630190, "lwz r3,0x190(r3)"),
     (0x80029688, 0x88030008, "lbz r0,8(r3)              force->id"),

@@ -1,5 +1,12 @@
 # Progress Log
 
+## 2026-10-27 — Session 1h: F-18 traced, EXP-07 drafted
+
+- Decision (user): leftover yellow units should **wait**, not be handed to the AI.
+- Cause found statically: the phase-end handler `0x8002E670` always launches `E_CP_PhaseMain` for phase 3, while phases 1/2 require control==2 (F-18, F-19).
+- **EXP-07**: 8-instruction Gecko hook at `0x8002E6DC` that mirrors the phase 1/2 gate for phase 3. Disassembly test plus 32/32 signatures. Not yet run.
+- Next: run EXP-07 A (human yellow) and B (vanilla control) per TESTING.md.
+
 ## 2026-10-27 — Session 1g: EXP-06 PASS (Phase 1 core achieved)
 
 - With EXP-01 + EXP-06, the yellow army is human-controlled in its own phase and blue in its own, with no cross-control, verified over turns 1–2 of Chapter 9.
