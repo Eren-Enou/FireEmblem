@@ -206,4 +206,38 @@ Steps:
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-10-27 | user | **PARTIAL PASS**: a, b, c, f yes; **e FAILED**; d not reported | Lethe/Mordecai weren't selectable in Player Phase. In the Partner Phase the cursor waited for input, Lethe transformed at phase start, and both moved and acted. **Ike, Mist and Rolf could also be moved during the yellow phase.** Slot 7 (`work/saves/GFEE01.s07_exp01_banner`): phase 3, control `01 02 02 01`. Slot 8 (`…s08_exp01_bluemoved`): Ike (23,14), Mist, Lethe (now `JID_CAT/F`) and Mordecai all have the "acted" bit set. Root cause in RESEARCH F-15; fix = EXP-06. |
+
+## EXP-06 — Ownership fix: units selectable only during their own force's phase
+
+**Problem (EXP-01 e):** `GetUnitSelectState` (`0x800284B4`) has "not your phase" checks only for forces 2 and 3. Force-0 units fall through to "selectable" in any human-controlled phase.
+**Change:** Gecko `C202858C` hook (9 instructions, annotated in `codes/GFEE01.ini`). If `unit.force != phase`, it returns 3 ("allied unit, not yours"). Otherwise it continues with the original instruction. In Player Phase this changes nothing: blue units match the phase, and red/green/yellow units are already filtered earlier.
+Static check: `tests/test_tools.py::test_exp06_gecko_hook` disassembles the cave and confirms it replays the original instruction. Signatures pin the registers it relies on (`r30` force id, `r31` state).
+
+Steps:
+1. Close Dolphin. Run (installs both codes):
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable EXP-01 --enable EXP-06
+   ```
+2. Boot the game. Check under Properties → **Gecko Codes** that EXP-06 is ticked (it's a Gecko code, not an AR code).
+3. **Load State → Slot 7** (yellow phase banner, turn 1). This saves replaying the Player Phase.
+4. Yellow Phase checks:
+   a. Put the cursor on Ike and press A. *Expected:* he **cannot** be moved (you may see his range/info, like with a green ally).
+   b. Same for Mist and Rolf.
+   c. Lethe and Mordecai can still be selected, moved and act.
+   d. End the phase (or let it end after both act). The **Enemy Phase** runs by AI.
+5. Turn 2 Player Phase checks:
+   e. Ike, Mist and Rolf can be moved normally.
+   f. Lethe/Mordecai can't be moved.
+6. Let the turn-2 yellow phase start, then **save to slot 9** (Shift+F9 if you have that hotkey, or Emulation → Save State → Slot 9). Save to **slot 8** at any odd screen; I'll back up the old slot 8 first.
+
+**Success:** a, b, c, d, e and f all hold → the Phase 1 milestone (yellow army human-controlled, blue army unaffected, no cross-control) is reached on one controller.
+**Failure modes:** a game freeze when EXP-06 activates (bad hook; report it immediately), or blue still movable in the yellow phase (another selection path exists, e.g. the R "next unit" button; tell me which input you used).
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| — | — | NOT RUN | |
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
 | — | — | NOT RUN | blocked on Ch9 fixture |

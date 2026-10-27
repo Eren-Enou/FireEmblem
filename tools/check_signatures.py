@@ -44,6 +44,11 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8014D2C4, 0x98830010, "stb r4,0x10(r3)           chapter id"),
     # turn-loop proc step: control[phase]==1 -> start human input proc 0x80284AC8
     (0x8002E768, 0x38654AC8, "addi r3,r5,0x4AC8         human phase proc"),
+    # GetUnitSelectState (0x800284B4): context for the EXP-06 hook
+    (0x80028504, 0x3BE30708, "addi r31,r3,0x708         r31 = state"),
+    (0x80028508, 0x8BC40008, "lbz r30,8(r4)             r30 = unit force id"),
+    (0x8002858C, 0x801D01A0, "lwz r0,0x1A0(r29)         EXP-06 hook site (original insn)"),
+    (0x800285A4, 0x80010024, "lwz r0,0x24(r1)           epilogue, returns r3"),
     # US equivalent of Ralf's PAL hook 0x80029824 (unit->force load)
     (0x80029684, 0x80630190, "lwz r3,0x190(r3)"),
     (0x80029688, 0x88030008, "lbz r0,8(r3)              force->id"),

@@ -1,5 +1,13 @@
 # Progress Log
 
+## 2026-10-27 — Session 1f: EXP-01 partial pass, ownership fix drafted
+
+- **EXP-01:** the yellow army was human-controlled in its own phase. Lethe transformed, both units moved and acted, and the yellow units were locked in the Player Phase. **Bug: blue units were also movable in the yellow phase.**
+- Root cause: `GetUnitSelectState` has no force-0 ownership check (F-15). The "acted" bits of forces 0–3 are cleared at every phase start (F-16).
+- **EXP-06** (Gecko hook, 9 instructions at `0x8002858C`): units are selectable only when `force == phase`. Statically validated (disassembly test, 27 signatures). Not yet run.
+- Slots 7/8 backed up as `work/saves/GFEE01.s07_exp01_banner` / `…s08_exp01_bluemoved`. Fixture slot 6 unchanged (SHA-1 re-checked).
+- Next: run EXP-06 from slot 7. If it passes, Phase 1 is complete on one controller → Phase 2 (per-phase controller port).
+
 ## 2026-10-27 — Session 1e: EXP-05 PASS, Chapter 9 fixture
 
 - The conditional AR redirect (`08330718 00000002` / `00330718 0000000A`) loaded Chapter 9 straight after the tutorial. Slot 6 has been verified by decoding: chapter id 10, Lethe/Mordecai in force 3, control `01 02 02 02`. Backup and SHA-1 are in TESTING.md, and a regression test was added.

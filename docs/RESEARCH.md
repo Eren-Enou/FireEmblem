@@ -93,6 +93,15 @@ The `c` file also has green NPC/event units: Mist, Rhys/Lofa, Marcia, and `*_EV`
 | F-13 | The state block is serialised in save data: `0x8014C1B8` reads chapter, phase, turn and **all four control bytes** from the save stream. A battle save can therefore carry a human-controlled yellow army across save/load, which helps Phase 4. | disassembly | VERIFIED-STATIC |
 | F-14 | Script-library accessors (likely `.cmb` commands): `0x800BCC04` get phase, `0x800BCC14` set phase, `0x800BCC24` get turn, `0x800BCC34` set turn. | disassembly | VERIFIED-STATIC (role as script commands: HYPOTHESIS) |
 
+### Unit selection and ownership (2026-10-27, from EXP-01)
+
+| ID | Finding | Evidence | Confidence |
+|---|---|---|---|
+| F-15 | **`GetUnitSelectState(unit)` = `0x800284B4`** (callers `0x800292E0`, `0x800293BC`). Returns: 0 = no unit; 1 = blocked status (`unit+0x1A4` bits); 2 = hostile to the phase force (`0x80015648` relation==1); 3 = force 2 and not (phase==2 && control[2]==1); 4 = same for force 3; 5 = already acted (`unit+0x1A0` bit0); **6 = selectable**. It has **no check for force 0**, so blue units are selectable in any human-controlled phase. Registers at `0x8002858C`: r29 = unit, r30 = unit force id, r31 = state. | disassembly **[S]**; EXP-01 (e) observed | VERIFIED-STATIC + RUNTIME |
+| F-16 | Phase-start step `0x8002E780` clears the "acted" bit (bit0 of `unit+0x1A0`) for **all units of forces 0–3** (mask query 3), not just the active force. So blue units look fresh again in the yellow phase. | disassembly; slot 7 (Ike bit0=0 after Player Phase) | VERIFIED-STATIC + RUNTIME |
+| F-17 | `0x80015648(a, b)` = force relation: 0 same, 1 hostile (either is force 1), 2 allied. | disassembly | VERIFIED-STATIC |
+| F-08 (upd.) | `unit+0x1A0` **bit0 = has acted this phase** (set on Ike, Mist, Lethe and Mordecai after acting in slot 8). `unit+0x18C` = class record, changes on laguz transform (Lethe `JID_BEAST_C/F` → `JID_CAT/F`). | slots 7/8 | VERIFIED-RUNTIME |
+
 ### Implication
 
 FE9 already models four forces with an explicit per-force **human/CPU control byte**. The selection code already contains the branches that let a non-player force be driven by a human during its own phase. The smallest Phase 1 lever is therefore one byte, not new selection or menu code: `0x8033071F := 1`.
