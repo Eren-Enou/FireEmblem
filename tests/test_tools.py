@@ -24,6 +24,20 @@ class LZ77Tests(unittest.TestCase):
             lz77.decompress(b"\x11\x00\x00\x00")
 
 
+class SetupPadsTests(unittest.TestCase):
+    def test_set_ini_updates_and_replaces(self):
+        from tools.setup_pads import PORT2_KEYBOARD, set_ini
+        core = set_ini("[General]\nA = 1\n[Core]\nCPUThread = True\nSIDevice1 = 0\n[DSP]\n", "Core", {"SIDevice1": "6"})
+        self.assertIn("SIDevice1 = 6\n[DSP]", core)
+        self.assertIn("CPUThread = True", core)
+        pads = set_ini("[GCPad1]\nDevice = X\n[GCPad2]\nDevice = old\nButtons/A = `Q`\n[GCPad3]\n", "GCPad2",
+                       PORT2_KEYBOARD, replace_section=True)
+        self.assertIn("[GCPad1]\nDevice = X\n[GCPad2]\nDevice = DInput/0/Keyboard Mouse\nButtons/A = `M`", pads)
+        self.assertNotIn("`Q`", pads)
+        self.assertIn("\n[GCPad3]", pads)
+        self.assertEqual(set_ini("", "Core", {"SIDevice1": "6"}), "[Core]\nSIDevice1 = 6\n")
+
+
 @unittest.skipUnless(IMAGE.exists(), "game image not present")
 class GameTests(unittest.TestCase):
     @classmethod
@@ -140,6 +154,23 @@ class GameTests(unittest.TestCase):
             self.assertEqual(words[7], dol.u32(addr), f"{addr:08X}")
             self.assertEqual(dol.u32(addr - 0xC) >> 16, 0x8800 | (dol.u32(addr - 0xC) >> 16 & 0xFF), f"{addr:08X}")
 
+    def test_exp14_gecko_hook(self):
+        """EXP-14 cave: current-pad pointer = pad object 1 in a human yellow phase with port 2 present."""
+        from tools.fe9.ppc import Dol
+        asm = self._gecko_c2("EXP-14 Controller port 2 drives the human yellow phase", 0x80025B8C)
+        self.assertEqual(asm, [
+            "lis r12, -0x7fcd", "lbz r11, 0x719(r12)", "cmplwi r11, 3", "bne 0x34",
+            "lbz r11, 0x71f(r12)", "cmplwi r11, 1", "bne 0x34",
+            "lis r12, -0x7fd1", "lbz r11, -0xbe2(r12)", "cmplwi r11, 0xff", "beq 0x34",
+            "addi r11, r12, -0xba4", "b 0x3c",
+            "lis r12, -0x7fd1", "addi r11, r12, -0xbc8",
+            "stw r11, -0x7b60(r13)", "lmw r27, 0xc(r1)",
+        ])
+        dol = Dol(self.disc.read_dol())
+        self.assertEqual(self._cave_words[-1], dol.u32(0x80025B8C))
+        # r13 (SDA base) = 0x8036EDA0, so r13-0x7B60 = 0x80367240 is the pointer the game stores pad object 0 in
+        self.assertEqual((dol.u32(0x80003334), dol.u32(0x80003338)), (0x3DA08036, 0x61ADEDA0))
+
     def test_coop_p1_package(self):
         """COOP-P1 is exactly EXP-08 + EXP-06 + EXP-07."""
         parts = []
@@ -159,6 +190,15 @@ class GameTests(unittest.TestCase):
                      "EXP-13 Level-up/result screens accept human-controlled yellow units"):
             parts += self._gecko_blocks(name)
         package = self._gecko_blocks("COOP-P2 Yellow army human-controlled with EXP (Phase 1 package v2)")
+        self.assertEqual(package, parts)
+        hooks = [addr for addr, _ in package]
+        self.assertEqual(len(hooks), len(set(hooks)))
+
+    def test_coop_p3_package(self):
+        """COOP-P3 is exactly COOP-P2 + EXP-14, with no hook address used twice."""
+        parts = (self._gecko_blocks("COOP-P2 Yellow army human-controlled with EXP (Phase 1 package v2)")
+                 + self._gecko_blocks("EXP-14 Controller port 2 drives the human yellow phase"))
+        package = self._gecko_blocks("COOP-P3 Two-army co-op, port 1 blue / port 2 yellow (Phase 2 package v1)")
         self.assertEqual(package, parts)
         hooks = [addr for addr, _ in package]
         self.assertEqual(len(hooks), len(set(hooks)))

@@ -411,3 +411,53 @@ Not yet covered: the stat-gain panel itself, save/load across a real battle save
 | Date | Tester | Result | Notes |
 |---|---|---|---|
 | — | — | NOT RUN | blocked on Ch9 fixture |
+
+## EXP-14 / COOP-P3 — Controller port 2 drives the yellow phase (Phase 2)
+
+**Change (F-29):** the game reads all gameplay input through one "current pad" pointer (`0x80367240` = `r13-0x7B60`). EXP-14 (C2 hook at the pad-update epilogue `0x80025B8C`) points it at **pad object 1 (port 2)** while `phase == 3 && control[3] == 1` and port 2 has a controller, and at pad object 0 (port 1) otherwise. **COOP-P3** = COOP-P2 + EXP-14 (`test_coop_p3_package`). Static: `test_exp14_gecko_hook`, 73/73 signatures.
+
+Tools: `tools/setup_pads.py --port2 keyboard|device|none` sets Dolphin port 2 (`[Core] SIDevice1`) and, for `keyboard`, a second key layout on the same PC: **A=M B=N X=B Y=V Z=E Start=Y, stick 8/5/4/6, L=O R=P**. Port 1 keeps X/Z/C/S/D/Enter/arrows. It backs up `Dolphin.ini`/`GCPadNew.ini` to `*.ini.bak` and refuses to run while Dolphin is open.
+
+### Local run (2026-10-27, Claude, computer use; two keyboard-emulated pads on one PC, codes COOP-P2 + EXP-14)
+
+| Test | Result | Evidence |
+|---|---|---|
+| A. Port 2 = None (Dolphin default), human yellow phase | **PASS (fallback)**: PADStatus[1].err = `0xFF`, current pad stays at object 0, port 1 moves the yellow cursor as before. A single-controller setup cannot softlock | slot 8 peek at 03:23 |
+| B1. Player phase, port 2 input | **PASS**: port 2 stick/A did nothing; port 1 moved the cursor, moved Ike and chose Wait, then ended the phase via the Z menu | screenshots |
+| B2. Yellow phase prompt (Transformation tutorial) | **PASS**: port 1 right + A ignored; port 2 moved to *No* and confirmed | screenshots |
+| B3. Yellow phase, port 1 input | **PASS**: port 1 stick/A/Z ignored (no movement, no menu) on turns 1 and 2 | screenshots |
+| B4. Yellow phase, port 2 control | **PASS**: port 2 selected Lethe, moved her, chose Wait; selected Mordecai, chose Wait; opened the map menu (Z) and chose End, both turns | screenshots; `work/saves/GFEE01.s08_exp14_yellow_port2` (current pad = `0x802EF45C`, SHA-1 `d7042611…fecd`) |
+| B5. Turn-start conversation after the yellow/enemy phases | **PASS**: port 2 Start ignored, port 1 Start skipped it | screenshots |
+| B6. Two full turns, ownership kept | **PASS**: turn 3 reached, current pad back to `0x802EF438`, Mordecai gained 1 EXP in the enemy phase (progression still works) | `work/saves/GFEE01.s08_exp14_turn3` (SHA-1 `bc582e96…3972`) |
+
+The Dolphin config was restored afterwards from `work/saves/config_backup/`. Not covered yet: attacks and battle animations driven by port 2, the Start/pause menu in the yellow phase, a real second device (gamepad), and a chapter that ends during the yellow phase.
+
+### Two-controller test for the tester (real devices)
+
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable COOP-P3
+   ```
+   ```bash
+   .venv/Scripts/python -m tools.setup_pads --port2 device
+   ```
+2. Open Dolphin → **Controllers**: Port 1 = Standard Controller mapped to device 1 (keyboard or pad), Port 2 = Standard Controller mapped to **a different device** (for example an XInput gamepad). Don't map the same device to both.
+3. Boot the game and load **slot 6** (not a state saved with other codes; F-25).
+4. Player phase: on **controller 2**, try to move the cursor and press A on Ike. Expected: nothing happens. On **controller 1**: move Ike, then Wait, then map menu (Z) → End.
+5. Yellow phase: on **controller 1**, try the cursor, A, Z and Start. Expected: nothing. On **controller 2**: answer any tutorial prompt, move Lethe next to an enemy, **Attack**, watch the battle (try skipping the animation with controller 2), Wait with Mordecai, then Z → End.
+6. Repeat for at least two more turns. On turn 2 or 3, also open the **Start menu** with controller 2 in the yellow phase, then with controller 1 in the player phase.
+7. Save state to **slot 9 or 8** (not 1 or 6) at any surprise, and note which controller you pressed.
+8. Afterwards: `.venv/Scripts/python -m tools.setup_pads --port2 none` (or restore the `*.ini.bak` files) to return to one controller.
+
+**Success:** each army only answers to its own controller for every action above, over 3+ turns. **Failure modes to report:** a prompt that only one controller can answer when it shouldn't, input "leaking" for one frame at phase changes, or the Start menu in the yellow phase answering to controller 1.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| — | — | NOT RUN | |
+
+## Phase 3 preparation — Netplay (not started; hypotheses to verify)
+
+- Codes: the host's Gecko codes are pushed to clients (RESEARCH §5), so only the host enables **COOP-P3**. Both machines need the same GFEE01 rev 0 image (main.dol SHA-1 in CLAUDE.md) and "Enable Cheats".
+- Ports: in the Netplay pad mapping, assign **Player 1 → port 1** and **Player 2 → port 2**. EXP-14 does the rest.
+- **Save states (F-25, plus HYPOTHESIS: Dolphin blocks loading states during Netplay).** The Ch9 fixture is a save state, so Netplay probably needs a **memory-card** starting point instead: either play the EXP-05 redirect from a new game, or make a turn-1 *Suspend* save on a **separate** card folder. Never use the user's card.
+- First session plan: host + client, COOP-P3, several Ch9 turns, then compare HP/EXP/positions on both sides (decode a state on each machine after the session if allowed, or compare screenshots).

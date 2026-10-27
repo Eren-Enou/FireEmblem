@@ -8,6 +8,14 @@
 - F-25: a state saved with codes restores the old code list, so always test new codes from slot 6. F-27: unpatched force 0/5 checks are listed. F-28: Next Unit cycles blue units only (cosmetic).
 - Next: Phase 2, port-2 controller ownership.
 
+## 2026-10-27 — Session 1m: Phase 2, controller ownership (EXP-14, COOP-P3)
+
+- Traced the pad pipeline statically (F-29): every gameplay read goes through one current-pad pointer (`0x80367240`, 320 loads, one store at init). EXP-14 retargets it each frame: port 2 in a human yellow phase, port 1 otherwise, and port 1 when port 2 has no controller.
+- `tools/setup_pads.py` configures port 2 (keyboard layout for one-PC tests, or a device the tester maps).
+- **Local two-pad run PASSED** (two keyboard layouts, two full Ch9 turns): port 1 had no effect in the yellow phase (cursor, A, Z, tutorial prompt), port 2 had no effect in the player phase or the turn-start conversation, and each army completed move/Wait/End on its own port. Memory confirms the pointer switch. The port-2-absent fallback also passed.
+- **COOP-P3** = COOP-P2 + EXP-14. Tests 25/25, signatures 73/73. The Dolphin config was restored and the user's slot 1 and memory card are unchanged (hashes match).
+- Blocked on the tester: a real two-device run (procedure in TESTING.md). Phase 3 (Netplay) prep notes are in TESTING.md. The main open question is how to start Ch9 under Netplay without save states.
+
 ## 2026-10-27 — Session 1k: COOP-P1 verified, EXP gate found
 
 - **EXP-08 A PASS**: from slot 6 (`control[3]=2`), the yellow phase came up human-controlled with COOP-P1 only (slot 8 decoded).

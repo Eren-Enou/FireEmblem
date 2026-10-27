@@ -117,6 +117,13 @@ Proc scripts start with op `0x2003` + a name pointer. Names found: turn loop = *
 | F-26 | **Battle-result unit pickers** `0x801B6098`, `0x801B6290`, `0x801B6348`, `0x801B67D0`, `0x801B6BE4` (called from the battle-result sequence `0x800D2DBC`/`0x800D2DA4` and the level-up screen `0x801B5F14`). Each returns battle copy A's real unit (`0x80330EAC+0x280`) if its force id is 0/5, else copy B's (`+0x560`) if 0/5, else **NULL**. `0x801B6098` gates on the level-up flag (`0x80330EAC+0xCAC` bit 0x800) and passes the unit to `0x801B32C8`. For a yellow unit it returns NULL, giving invalid reads at `0x801B5E6C` (`lwz r0,0x18C(r30)`) and `0x801B5E90` (`lbz r0,0x19A(r30)`). Fix: EXP-13 (the EXP-10 cave on all 10 `cmplwi r0,5` sites). | disassembly **[S]**; COOP-P2 level-up runs (fail without, pass with) | VERIFIED-STATIC + RUNTIME |
 | F-27 | **Other force 0/5 checks not patched** (scan for `lbz rX,8(force)` → `cmplwi rX,5`): `0x80073954` (calls `0x8001C4FC`, role unknown), `0x801802E8` (float UI code), and `0x801818E0`–`0x8018234C` (8 sites that also test forces 6/7; UI/colour HYPOTHESIS). The level-up, EXP and battle runs needed none of them. Revisit if a yellow-unit screen misbehaves. | scan **[S]** | HYPOTHESIS (roles) |
 | F-28 | **Next Unit (X)** cycles only through force-0 units, even in the yellow phase (cursor jump only; EXP-06 still blocks selection). The blue action menu has **Direct** (vanilla partner-AI orders). | COOP-P2 run | VERIFIED-RUNTIME (Next Unit); Direct untested |
+
+### Controller input (2026-10-27, Phase 2)
+
+| Id | Finding | Evidence | Confidence |
+|---|---|---|---|
+| F-29 | **Pad pipeline.** SI library `0x8023A9DC`–`0x8023BB00`, PAD library `0x80211000`–`0x80212DD0` (`PADRead` = `0x80211CC0`, `PADControlMotor` = `0x80212CC0`). SDK `PADStatus[4]` at **`0x802EF408`** (stride 0xC; `+0` buttons, `+2..+5` sticks, `+0xA` err: 0 OK, 0xFF none). Per-frame update **`0x80025970`** (called from the main loop `0x80014B10`/`0x80014E1C` and the error screen `0x8005B210`) calls `PADRead(0x802EF408)` at `0x80025A48`, then refreshes four **pad objects** at **`0x802EF438`** (stride 0x24: `+0` → PADStatus, `+4` held incl. stick-direction bits at ±0x23, `+8` previous held, `+0xC`/`+0x10` pressed/repeat, `+0x1C` channel) via `0x800256CC`. Game logic reads input through the **current-pad pointer `r13-0x7B60` = `0x80367240`** (`r13` = `0x8036EDA0`, from `0x80003334`): **320 loads, one store** (`0x80025C48`, init → pad object 0). Direct `GetPad(n)` (`0x8002595C`) is only used by the error-screen OR loop (`0x8005B218`, pads 0–3) and `0x800CFE90` (pad 1's B-press, role unknown). Runtime: pointer = `0x802EF438` in vanilla battle states; = `0x802EF45C` in a human yellow phase with EXP-14 and port 2 present. With port 2 = None, PADStatus[1].err = 0xFF. | disassembly **[S]**; slot peeks (EXP-14 A/B) | VERIFIED-STATIC + RUNTIME |
+| F-30 | The PAL pad address `0x802F98E8` (Ralf's codes) corresponds to US `0x802EF408` (PADStatus), consistent with the ~0xA4E0 data shift seen for the force table. | F-29 vs §1 | CORROBORATED |
 | F-19 | `0x8032B3C1` = CP mode byte (8 after the player phase, 1 for AI phases). Meaning of mode 8 unknown (HYPOTHESIS: only units under forced-AI status act). | disassembly | HYPOTHESIS |
 
 ### Implication
@@ -137,6 +144,6 @@ Whether the rest of the turn loop (action menu, "End" command, phase transitions
 
 1. EXP-01 runtime behaviour (see TESTING.md).
 2. Which proc is `0x80284AC8` (human phase loop?), and does it hard-code force 0 anywhere (e.g. the End-turn menu, "all units moved" auto-end, phase banner)?
-3. Where does FE9 read controller input (US equivalent of PAL `0x802F98E8`)? Needed for Phase 2. Plan: Dolphin memory search for the button halfword, or Dolphin's built-in SDK signature DB to name `PADRead`.
+3. ~~Where does FE9 read controller input?~~ Answered by F-29 (current-pad pointer `0x80367240`). Still open: the role of `0x800CFE90` (reads pad 1's B press directly).
 4. Is state+0x10 the chapter number? The JP warp codes write JP `0x8032E798` = JP state+0x10, which suggests yes.
 5. Does the battle save or suspend data store `control[]`? If not, it is re-initialised on load (so the code must be re-applied, which a per-frame AR write does).

@@ -25,9 +25,10 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 **Done when:** a full Ch9 playthrough with a human-driven partner phase, recorded in TESTING.md, with a Dolphin input movie (.dtm) as proof.
 
 ## Phase 2 — Independent controller ownership (local, two emulated pads)
-- [ ] Find the game's pad read (US counterpart of PAL `0x802F98E8`).
-- [ ] Patch: during `phase==3` the game reads port 2. During `phase==0` it reads port 1. Other ports are ignored outside their phase.
-- [ ] Test with two Dolphin-emulated controllers (keyboard + XInput, or TAS input).
+- [x] Find the game's pad read: `PADStatus[4]` at `0x802EF408`, pad objects `0x802EF438`, current-pad pointer `0x80367240` (F-29).
+- [x] Patch **EXP-14**: in a human yellow phase the game reads port 2; otherwise port 1. If port 2 has no controller, it falls back to port 1. Packaged as **COOP-P3** = COOP-P2 + EXP-14.
+- [x] Local test with two keyboard-emulated controllers on one PC (`tools/setup_pads.py`): over two full turns each army answered only to its own port (TESTING.md "EXP-14 / COOP-P3").
+- [ ] Tester run with two real devices (procedure in TESTING.md), including attacks, battle-animation skipping and the Start menu.
 
 **Done when:** pad 1 cannot move yellow units, pad 2 cannot move blue units, both verified in one session.
 

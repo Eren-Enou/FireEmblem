@@ -74,6 +74,15 @@ SIGNATURES: list[tuple[int, int, str]] = [
         0x801B610C, 0x801B613C, 0x801B62D4, 0x801B6304, 0x801B63BC,
         0x801B63EC, 0x801B6814, 0x801B6844, 0x801B6C28, 0x801B6C58)],
     (0x801B5E6C, 0x801E018C, "lwz r0,0x18C(r30)         level-up screen reads unit class (NULL crash site)"),
+    # pad input (EXP-14): PADStatus[4] @0x802EF408, pad objects @0x802EF438 (stride 0x24), current pad @r13-0x7B60
+    (0x80003334, 0x3DA08036, "lis r13,0x8036             SDA base (r13 = 0x8036EDA0)"),
+    (0x80003338, 0x61ADEDA0, "ori r13,r13,0xEDA0"),
+    (0x80025A48, 0x481EC279, "bl 0x80211CC0             PADRead(0x802EF408)"),
+    (0x80025A98, 0x4BFFFC35, "bl 0x800256CC             pad object update from PADStatus"),
+    (0x80025B8C, 0xBB61000C, "lmw r27,0xC(r1)           EXP-14 hook site (pad update epilogue)"),
+    (0x80025C3C, 0x3803F438, "addi r0,r3,-0xBC8         pad object 0 (0x802EF438)"),
+    (0x80025C48, 0x900D84A0, "stw r0,-0x7B60(r13)       current pad = pad object 0 (only store)"),
+    (0x8002595C, 0x1C830024, "mulli r4,r3,0x24          GetPad(n)"),
     # GetExp (0x800386B0): 0xFF for force 1/2/3, else unit+0x19B; EXP-11 hook site
     (0x800386B4, 0x88040008, "lbz r0,8(r4)              force id"),
     (0x800386C8, 0x28000003, "cmplwi r0,3               EXP-11 hook site (yellow -> 0xFF)"),
