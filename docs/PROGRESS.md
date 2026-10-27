@@ -1,5 +1,22 @@
 # Progress Log
 
+## 2026-10-27 — Session 1b: save inventory, runtime confirmation, test fixtures
+
+### Done
+- Inventoried user saves: one state `GFEE01.s01` (**Prologue**, turn 1; not Chapter 9) and one GCI memory-card file (encoded, likely a new-game save). Both backed up with SHA-1 to `work/saves/2026-10-27_baseline/`. Originals untouched (hash re-checked).
+- New tools: `tools/fe9/savestate.py` (Dolphin v192 state reader/writer, LZ4), `tools/inspect_state.py` (decode RAM: chapter/phase/turn/control/forces/units), `tools/patch_state.py` (write a *new* state with patched bytes; refuses to overwrite).
+- **EXP-00 Part A passed** by decoding the state: the force model and control bytes are confirmed at runtime (RESEARCH.md §4 "Runtime confirmation").
+- Created working slots: s02 = baseline copy, s03 = Prologue with chapter id 9 (EXP-03 warp fixture).
+- Wrote exact procedures for EXP-00B, EXP-02 (green control on the Prologue, testable now), EXP-03 (warp to Ch9) and EXP-01.
+
+### Blockers (need the user)
+- Run EXP-02 and EXP-03 in Dolphin (procedures in TESTING.md). Save states at key moments to slots 4–7.
+
+### Next steps
+1. EXP-02 result → confirms or refutes the control-mode mechanism without needing Chapter 9.
+2. EXP-03 result → Chapter 9 fixture (slot 6) → EXP-01.
+3. If EXP-03 fails: find the chapter-load routine statically (callers of `0x8014D2B0`).
+
 ## 2026-10-26 — Session 1: Phase 0 setup and static research
 
 ### Done

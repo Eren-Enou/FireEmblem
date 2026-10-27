@@ -9,7 +9,12 @@ An online two-player co-op mod for *Fire Emblem: Path of Radiance* (GameCube, FE
 The original campaign, mechanics and story stay recognisable. Netplay comes from Dolphin's lock-step input sync.
 
 ## Current milestone
-**Phase 0 → Phase 1.** Static research is done. Next: run EXP-00 (baseline) and EXP-01 (partner phase human-controlled via `0x8033071F = 1`) in Chapter 9. See `docs/TESTING.md`.
+**Phase 0 → Phase 1.** Static research is done and the force model is confirmed from a decoded Prologue save state. No Chapter 9 save exists yet. Next: EXP-02 (green control on the Prologue, slot 2) and EXP-03 (chapter-warp fixture, slot 3), then EXP-01 in Chapter 9. See `docs/TESTING.md`.
+
+## Saves and states
+- User originals (never write): `Dolphin-x64/User/StateSaves/GFEE01.s01`, `Dolphin-x64/User/GC/USA/Card A/*.gci`. Backups with SHA-1 are in `work/saves/` (git-ignored).
+- Create new states only with `tools/patch_state.py` (refuses to overwrite), in slots 2+.
+- Decode any state with `python -m tools.inspect_state <file>`. Ask the tester to save a state at key moments instead of describing memory by hand.
 
 ## Architecture decisions (so far)
 1. **Reuse FE9's own per-force control mode** (`0x8033071C + force`: 1 = human, 2 = CPU) rather than writing new selection/menu logic. Evidence: docs/RESEARCH.md F-05.

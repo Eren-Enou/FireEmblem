@@ -75,6 +75,13 @@ The `c` file also has green NPC/event units: Mist, Rhys/Lofa, Marcia, and `*_EV`
 | F-07 | Cursor/unit-info classification (`0x80029664`) writes a code to `0x80330C25` (state+0x51D): force 0 → 3, force 1 → 5/6, force 2 → 8, force 3 → 7. This is the US counterpart of Ralf's PAL hook site `0x80029824` (US `0x80029684`). | **[S]** | VERIFIED-STATIC |
 | F-08 | `unit+0x1A0` = status flags. bit0 is checked in the selection classifier. Bit 0x4 is checked by `0x800AE3DC` while scanning for units that have not acted (HYPOTHESIS: "has moved/acted"). `unit+0x19E/0x19F` = map X/Y (HYPOTHESIS, used as coords in cursor code). | Disassembly. | HYPOTHESIS for the meanings |
 
+### Runtime confirmation (2026-10-27, Prologue save state, decoded with `tools/inspect_state.py`)
+- Control bytes `01 02 02 02`, phase 0, turn 1 → F-04/F-05 initial values **VERIFIED-RUNTIME**.
+- Force table: `force+8` = 0..7 for forces 0..7. `force+0` = first unit, `force+4` = last unit (HYPOTHESIS: list tail). Every unit's `+0x190` points at the right force → F-03 **VERIFIED-RUNTIME**.
+- Unit table decodes: `unit+0x188` → character record whose first word is a PID string pointer. `unit+0x18C` → class record (first word = JID pointer). `+0x19E/+0x19F` = x/y and `+0x1A8` = current HP are consistent with the scene (Ike HP 19 at (3,9)). → F-01 **VERIFIED-RUNTIME**; F-08 x/y **VERIFIED-RUNTIME**.
+- `state+0x10` = 1 in the Prologue. This matches the JP chapter numbering (Prologue 0x01, Ch9 0x0A) → "chapter id" upgraded to **CORROBORATED**. Its role as next-chapter source is tested by EXP-03.
+- Dolphin save-state format (State.h, v192): see `tools/fe9/savestate.py`. MEM1 sits at payload offset `0x8B8353` in this Dolphin 2609a state, found by code-anchor search, so we don't depend on a fixed offset.
+
 ### Implication
 
 FE9 already models four forces with an explicit per-force **human/CPU control byte**. The selection code already contains the branches that let a non-player force be driven by a human during its own phase. The smallest Phase 1 lever is therefore one byte, not new selection or menu code: `0x8033071F := 1`.

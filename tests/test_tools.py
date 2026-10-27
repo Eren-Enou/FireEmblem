@@ -68,5 +68,30 @@ class GameTests(unittest.TestCase):
         self.assertEqual(lz77.decompress(lz77.compress(plain)), plain)
 
 
+BASELINE_STATE = ROOT / "work/saves/2026-10-27_baseline/GFEE01.s01"
+
+
+@unittest.skipUnless(IMAGE.exists() and BASELINE_STATE.exists(), "baseline save state not present")
+class SaveStateTests(unittest.TestCase):
+    def test_baseline_runtime_matches_static_model(self):
+        from tools.inspect_state import FORCES, STATE, load_mem1
+        info, m = load_mem1(BASELINE_STATE, IMAGE)
+        self.assertEqual((info.game_id, info.state_version), ("GFEE01", 192))
+        self.assertEqual(list(m.read(STATE + 0x14, 4)), [1, 2, 2, 2])  # F-05 control modes
+        self.assertEqual([m.u8(FORCES + 0xC * f + 8) for f in range(8)], list(range(8)))  # F-03
+        self.assertEqual(m.u8(STATE + 0x11), 0)  # phase
+        self.assertEqual(m.u16(STATE + 0x12), 1)  # turn
+
+    def test_write_state_roundtrip(self):
+        import tempfile
+        from tools.fe9.savestate import read_state, write_state
+        _info, payload = read_state(BASELINE_STATE)
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "copy.s09"
+            write_state(BASELINE_STATE, out, payload)
+            _info2, payload2 = read_state(out)
+        self.assertEqual(payload, payload2)
+
+
 if __name__ == "__main__":
     unittest.main()
