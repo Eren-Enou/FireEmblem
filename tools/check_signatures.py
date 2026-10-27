@@ -58,6 +58,19 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8003D178, 0x28000000, "cmplwi r0,0               player force may gain EXP"),
     (0x8003D180, 0x28000005, "cmplwi r0,5               EXP-10 hook site (force 5 allowed)"),
     (0x8003D188, 0x38600000, "li r3,0                   otherwise no EXP"),
+    (0x8003D1A8, 0x4BFFB509, "bl 0x800386B0             CanGainExp: GetExp == 0xFF -> no EXP"),
+    # battle write-back 0x80034F40: level/EXP copied only for force 0 or 5; EXP-12 hook site
+    (0x80034F54, 0x80830280, "lwz r4,0x280(r3)          real unit of battle copy"),
+    (0x80034F60, 0x28000000, "cmplwi r0,0               player force: write back"),
+    (0x80034F68, 0x28000005, "cmplwi r0,5               EXP-12 hook site (force 5 written back)"),
+    (0x80034F78, 0x9804019A, "stb r0,0x19A(r4)          level written back"),
+    (0x80034F88, 0x48003705, "bl 0x8003868C             SetExp (EXP written back)"),
+    # GetExp (0x800386B0): 0xFF for force 1/2/3, else unit+0x19B; EXP-11 hook site
+    (0x800386B4, 0x88040008, "lbz r0,8(r4)              force id"),
+    (0x800386C8, 0x28000003, "cmplwi r0,3               EXP-11 hook site (yellow -> 0xFF)"),
+    (0x800386CC, 0x4082000C, "bne 0x800386D8            not 1/2/3: read EXP"),
+    (0x800386D0, 0x386000FF, "li r3,0xFF                EXP shown as --"),
+    (0x800386D8, 0x8863019B, "lbz r3,0x19B(r3)          unit EXP byte"),
     # phase-end handler 0x8002E670: context for the EXP-07 hook
     (0x8002E684, 0x3BE40708, "addi r31,r4,0x708         r31 = state"),
     (0x8002E6DC, 0x28030000, "cmplwi r3,0               EXP-07 hook site (phase-3 branch)"),

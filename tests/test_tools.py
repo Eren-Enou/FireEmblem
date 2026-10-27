@@ -99,6 +99,26 @@ class GameTests(unittest.TestCase):
         ])
         self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x8003D180))
 
+    def test_exp11_gecko_hook(self):
+        """EXP-11 cave: human-controlled force 3 reads its EXP byte instead of GetExp's 0xFF."""
+        from tools.fe9.ppc import Dol
+        asm = self._gecko_c2("EXP-11 Human-controlled yellow units show real EXP (GetExp)", 0x800386C8)
+        self.assertEqual(asm, [
+            "cmplwi r0, 3", "bne 0x1c", "lis r12, -0x7fcd", "lbz r12, 0x71f(r12)", "cmplwi r12, 1",
+            "bne 0x1c", "li r0, 0", "cmplwi r0, 3", "nop",
+        ])
+        self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x800386C8))
+
+    def test_exp12_gecko_hook(self):
+        """EXP-12 cave: the battle write-back treats human-controlled force 3 as force 5."""
+        from tools.fe9.ppc import Dol
+        asm = self._gecko_c2("EXP-12 Human-controlled yellow units keep battle EXP (write-back)", 0x80034F68)
+        self.assertEqual(asm, [
+            "cmplwi r0, 3", "bne 0x1c", "lis r12, -0x7fcd", "lbz r12, 0x71f(r12)", "cmplwi r12, 1",
+            "bne 0x1c", "li r0, 5", "cmplwi r0, 5", "nop",
+        ])
+        self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x80034F68))
+
     def test_coop_p1_package(self):
         """COOP-P1 is exactly EXP-08 + EXP-06 + EXP-07."""
         parts = []

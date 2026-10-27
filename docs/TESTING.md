@@ -340,7 +340,50 @@ Steps:
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
-| — | — | NOT RUN | |
+| 2026-10-27 | Claude (computer use) | **FAIL: no EXP** | Installed COOP-P1 + EXP-10 with Dolphin closed and loaded slot 6. Ended turn 1 (Lethe gauge 20 → transformed by turn 2). At the turn-2 yellow phase, Lethe's status showed `EX --`, both in the player phase and in the yellow phase with `control[3]=1`. In the yellow phase Lethe (cat, Lv 3) attacked the Lv 13 swordsman at (23,24) from (23,23) and killed him (forecast 18×2, 100 % hit, 27 HP). **Slot 4** (pre-confirm, backup `work/saves/GFEE01.s04_exp10_pre`, SHA-1 `fc6f3a43…0cce`) and **slot 5** (after battle, `work/saves/GFEE01.s05_exp10_post`, SHA-1 `35783b84…5f34`): both decode as phase 3, turn 2, control `1 2 2 1`. Lethe is **lv=3 exp=0 in both** (gauge 17→16, flags bit 0 set = acted), Mordecai lv=2 exp=0 in both, and the swordsman is gone in slot 5. The status screen still shows `EX --` after the kill. I saw no EXP bar, though a 3 s gap between screenshots could have missed one; the unchanged EXP byte settles it. Slot 4 RAM shows the hook is live (`0x8003D180` = `4BFC5258`, a branch to the code handler), so a missing patch isn't the cause. Questions c/d/e were not reached. **Cause found statically (F-23):** `GetExp` (`0x800386B0`) returns `0xFF` for force 3, so CanGainExp fails at `0x8003D1A8` even after EXP-10. Fix: EXP-11. Side observation: in the yellow phase, Next Unit (X) moved the cursor to Ike (blue). I didn't try to select him. Old slots 4/5 are backed up in `work/saves/pre_exp10/`. `inspect_state` now prints `lv`/`exp`/`gauge` per unit (F-22 offsets). |
+
+## EXP-11 — GetExp lets human-controlled yellow units have EXP (with EXP-10)
+
+**Cause (static, F-23):** `GetExp(unit)` (`0x800386B0`) reports `0xFF` ("--") for forces 1/2/3. CanGainExp treats that as "no EXP", and so do the status screen and AddExp.
+**Change:** Gecko `C20386C8` hook (annotated in `codes/GFEE01.ini`). A force-3 unit reads its real EXP byte **only while `control[3] == 1`**. CPU yellow armies are unchanged. Static check: `test_exp11_gecko_hook`, 45/45 signatures.
+
+Steps (same as EXP-10, from slot 4 = the saved pre-attack forecast):
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable COOP-P1 --enable EXP-10 --enable EXP-11
+   ```
+2. Boot the game and load **slot 4** (the forecast for Lethe vs. the swordsman at (23,24), turn 2, yellow phase). Optionally restore it first from `work/saves/GFEE01.s04_exp10_pre`.
+3. Before confirming, back out to the map, then open Lethe's status screen: does `EX` show `0` instead of `--`? Return to the attack and confirm it.
+4. After the battle, save to **slot 5** and decode both slots: `exp` for Lethe should be > 0 in slot 5. An EXP bar should appear after the battle.
+5. If possible, also check d (an enemy-phase counter gives EXP) and e (blue units still gain EXP).
+
+**Success:** Lethe's `exp` increases and the status screen shows a number. **Failure modes:** still 0 (yet another gate; trace AddExp `0x800351FC` with a breakpoint), a crash at the EXP bar, or wrong EXP on CPU-controlled yellow units in vanilla chapters.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | Claude (computer use) | **PARTIAL: EXP calculated, not kept** | Installed COOP-P1 + EXP-10 + EXP-11 with Dolphin closed. **Loading the EXP-10 slot 4 did not apply EXP-11** (`0x800386C8` still held the original instruction; F-25), so I replayed from **slot 6** (both hooks live, peeked via scratch slot 8, old slot 8 backed up in `work/saves/pre_exp10/`). Same inputs as EXP-10: Lethe's status read **`EX 0`** (was `--`) in the turn-1 and turn-2 yellow phases. Turn-2 yellow phase: same forecast vs. the swordsman at (23,24); saved **slot 4** (`work/saves/GFEE01.s04_exp11_pre`, SHA-1 `59940a65…3b79`) and confirmed. He hit once (Lethe 34→30) and died. **An "Exp" bar appeared, showing 15.** **Slot 5** (`work/saves/GFEE01.s05_exp11_post`, SHA-1 `8e5f1d60…3dd`): Lethe's unit lv=3 **exp=0** and status `EX 0`, but the battle copy at `0x80330EAC` has exp 15 and gain `+0x2C9` = 15. **Cause (F-24):** the battle write-back `0x80034F40` copies level/EXP back only for force 0/5. Fix: EXP-12. Questions c/d/e were not reached. |
+
+## EXP-12 — Battle write-back keeps yellow EXP (with EXP-10 + EXP-11)
+
+**Cause (static + runtime, F-24):** `0x80034F40` writes level and EXP from the battle copy back to the unit only for force 0/5.
+**Change:** Gecko `C2034F68` hook, the same cave as EXP-10. Static check: `test_exp12_gecko_hook`, 50/50 signatures.
+
+Steps:
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable COOP-P1 --enable EXP-10 --enable EXP-11 --enable EXP-12
+   ```
+2. Boot the game and load **slot 6** (not slot 4: a state saved with codes restores the old code list, F-25).
+3. End the player phase (map menu → End). In the yellow phase, end the phase. In the turn-2 player phase, end the phase.
+4. Turn-2 yellow phase: Lethe → (23,23) → Attack → Claw on the swordsman at (23,24). Save **slot 4** at the forecast, confirm, then save **slot 5**.
+5. Decode both. Lethe's `exp` should be > 0 in slot 5 (15 last time), and the status screen should show the same number.
+6. If you can, also check c (level-up at 100), d (an enemy-phase counter gives EXP) and e (blue units still gain EXP).
+
+**Success:** the unit's `exp` byte keeps the battle gain. **Failure modes:** still 0 (another write-back path; trace stores to `+0x19B` with a breakpoint) or a crash at the EXP bar or level-up.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | Claude (computer use) | **PASS (a, b)** | Installed COOP-P1 + EXP-10 + EXP-11 + EXP-12 with Dolphin closed, then booted and loaded slot 6. All three hooks are live in scratch slot 8 (`0x8003D180` = `4BFC5258`, `0x800386C8` = `4BFC9D40`, `0x80034F68` = `4BFCD4D0`). I replayed with the same inputs; the turn-2 yellow position was identical (swordsman at (23,24)). The forecast showed `EX 0`. Saved **slot 4** (`work/saves/GFEE01.s04_exp12_pre`, SHA-1 `24db47a7…d362`), confirmed and killed him. This time he missed (Lethe HP 34). **(a) An "Exp" bar appeared** after the battle. **Slot 5** (`work/saves/GFEE01.s05_exp12_post`, SHA-1 `21fd8470…7203`): **Lethe lv=3 exp=0 → exp=15** in the unit record, matching the battle copy (`+0x2C9` = 15). **(b) The status screen shows `EX 15`.** Ike (blue) is unchanged at lv 2 / exp 67 (he didn't fight). c (level-up), d (enemy-phase counter) and e (blue units still gain EXP) are **not yet tested**. |
 
 **Phase 1 status:** the core interaction is achieved on one controller. The yellow army is human-controlled in its own phase, the blue army in its own, with no cross-control in either direction, over two full turns, using EXP-01 + EXP-06.
 

@@ -13,7 +13,7 @@ from tools.fe9.ppc import Dol
 from tools.fe9.savestate import Mem1, read_state
 from tools.verify_game import DEFAULT_IMAGE
 
-# Addresses: docs/RESEARCH.md section 4 (GFEE01 rev 0)
+# Addresses: docs/RESEARCH.md section 4 (GFEE01 rev 0); unit lv/exp/gauge offsets: F-22
 STATE = 0x80330708        # battle-map state block
 FORCES = 0x802CA264       # force table, 0xC per force
 UNITS = 0x802B14E4        # unit table, 0x280 per unit, ids 1..0x9F
@@ -45,7 +45,7 @@ def describe(m: Mem1) -> list[str]:
     for f in range(8):
         base = FORCES + 0xC * f
         lines.append(f"  force {f} @{base:08X} first={m.u32(base):08X} id={m.u8(base + 8)}")
-    lines.append("units (id, force, PID, JID, x,y, hp, flags@1A0):")
+    lines.append("units (id, force, PID, JID, x,y, hp, lv@19A, exp@19B, gauge@19C, flags@1A0):")
     for i in range(1, 0xA0):
         u = UNITS + (i - 1) * 0x280
         char = m.u32(u + 0x188)
@@ -57,7 +57,8 @@ def describe(m: Mem1) -> list[str]:
         lines.append(
             f"  {i:3d} {FORCE_NAMES.get(fid, fid)!s:<15} {s(m.u32(char)):<20} "
             f"{s(m.u32(jptr)) if jptr else '':<20} ({m.u8(u + 0x19E)},{m.u8(u + 0x19F)}) "
-            f"hp={m.u8(u + 0x1A8)} flags={m.u32(u + 0x1A0):08X}"
+            f"hp={m.u8(u + 0x1A8)} lv={m.u8(u + 0x19A)} exp={m.u8(u + 0x19B)} "
+            f"gauge={m.u8(u + 0x19C)} flags={m.u32(u + 0x1A0):08X}"
         )
     return lines
 
