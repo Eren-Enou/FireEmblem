@@ -31,7 +31,18 @@ Working slots (copies; safe to overwrite):
 | Slot | File | Made by | Purpose |
 |---|---|---|---|
 | 2 | `GFEE01.s02` | byte copy of s01 | baseline for EXP-00 and EXP-02 |
-| 3 | `GFEE01.s03` | `patch_state s01 → set 80330718=09` (copy also in `work/states/`) | EXP-03 chapter-warp test |
+| 3 | `GFEE01.s03` | `patch_state s01 → set 80330718=09` (copy also in `work/states/`) | EXP-03 (failed; keep for reference) |
+| 4, 8 | — | tester | EXP-04 observations |
+| 6 | — | tester | Chapter 9 fixture produced by EXP-05 |
+
+Memory card: during the EXP-03 playthrough the **game itself** saved to the card at 00:44 (SHA-1 now `7afef93c…d325`, after Chapter 1 per slot 7). The pre-test card is still in `work/saves/2026-10-27_baseline/`, and the 00:44 version is backed up in `work/saves/2026-10-27_0044_card/`. Our tools never write the card.
+
+States saved by the tester (backed up to `work/saves/`):
+
+| Slot | Saved | Decoded content |
+|---|---|---|
+| 5 | 2026-10-27 00:11, EXP-02 enabled | Prologue (id 1), **turn 2**, phase 0, control `01 02 01 02` (code applied). Green units untouched at their start squares. |
+| 7 | 2026-10-27 00:47, no codes | **Chapter 2** (id 3 = `bmap03`; previous id 2), turn 1, phase 0, control `01 02 02 02`. Ike, Oscar, Boyd, Rhys vs. Ikanau's bandits. |
 
 Rebuild them at any time:
 ```bash
@@ -92,7 +103,7 @@ Same mechanism as EXP-01, but on force 2. It is testable **now** with the existi
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
-| — | — | NOT RUN | |
+| 2026-10-27 | user | **INCONCLUSIVE** | The Prologue never shows a green/Other phase, so no attempt to control Greil was possible. Slot 5 proves the code was active (control[2]=1) when turn 2 began. Phase order is 0→3→1→2 (RESEARCH F-09), so phase 2 was skipped by a rule we haven't decoded yet. That rule doesn't matter for EXP-04/EXP-01, whose phases normally run. |
 
 ## EXP-03 — Chapter warp to reach Chapter 9 (test fixture, HYPOTHESIS)
 
@@ -108,12 +119,69 @@ Same mechanism as EXP-01, but on force 2. It is testable **now** with the existi
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-10-27 | user | **FAILED** | Clearing the Prologue loaded Chapter 1 normally. Explanation: the next chapter is set by `SetChapter` (`0x8014D2B0`, called from script-library code), not by `state[0x10]+1` during battle. Chapter id N ↔ `zmap/bmap0N` is now verified (slot 7 = id 3 = bmap03). Superseded by EXP-05. |
+
+---
+
+## EXP-04 — Human-controlled RED army in the Prologue (smallest non-blue control test) ← **RUN THIS FIRST**
+
+**Why this test:** the enemy phase definitely runs in the Prologue (Boyd attacks). Control mode is generic per force (`0x8033071C + force`). The turn-loop step at `0x8002E738` starts the human-input proc for *any* phase whose control byte is 1. The cursor classifier lets you select a unit when its force equals the current phase. So `control[1] = 1` should hand Boyd to the player during Enemy Phase, using exactly the code path EXP-01 needs for yellow.
+**Change:** AR `0033071D 00000001`.
+
+Steps:
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable EXP-04
+   ```
+2. Start Dolphin and boot Path of Radiance. **Emulation → Load State → Slot 2** (Prologue, turn 1).
+3. Player Phase: move the cursor onto Boyd and press A. *Expected:* his range is shown, but he can't be moved (he's hostile in phase 0). Move Ike somewhere **out of Boyd's reach** (e.g. stay put), choose **Wait**, then open the map menu (B or A on an empty square) → **End**.
+4. When the **Enemy Phase** banner appears, immediately **save state to slot 4** (Shift+F4 or Emulation → Save State → Slot 4).
+5. Record:
+   a. Does a cursor appear and wait for you, instead of Boyd moving on his own?
+   b. Can you select Boyd → move him → get an action menu (Attack if adjacent to Ike, otherwise **Wait**)?
+   c. Does Boyd grey out after acting?
+   d. Does the phase end (automatically, or via map menu → End) and turn 2 begin? Is the Ike-vs-Boyd tutorial still playable afterwards?
+   e. During that Enemy Phase, can you select and move **Ike**? (*Expected:* no.)
+6. Save state to **slot 8** at any unexpected screen (softlock, odd menu) and note what you pressed.
+
+**Success:** a, b, c and d yes, and e no. → **Human control of a non-blue faction is demonstrated** with the engine's own control mode. EXP-01 then only needs the Chapter 9 fixture.
+**Partial:** the cursor appears but a step fails. Slot 4/8 tell me exactly where. That points to the routine that assumes force 0.
+**Failure:** Boyd still moves by himself (the code isn't reaching the turn loop), or a softlock/crash right at the banner.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| — | — | NOT RUN | |
+
+## EXP-05 — Load Chapter 9 by redirecting the chapter id (fixture for EXP-01)
+
+**Why:** the transition after the Prologue calls `SetChapter(2)`. The map loaded afterwards follows the chapter id (id N → `bmap0N`, verified). The conditional AR code below rewrites id 2 to id 10 (Chapter 9, `bmap10`) as soon as it appears. It never fires again because the id is then 10.
+**Change:** `08330718 00000002` / `00330718 0000000A` ("if chapter id == 2, set it to 10").
+
+Steps:
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable EXP-05
+   ```
+2. Boot the game and **Load State → Slot 2** (Prologue).
+3. Win the Prologue (defeat Boyd with Ike; it may take a few turns). Watch the following scenes.
+4. **If the game offers to save to the memory card, choose No / don't save.** That card file is your original. A backup exists in `work/saves/2026-10-27_baseline/`, but don't rely on it.
+5. When a battle map starts, look for Lethe and Mordecai (yellow) and Gallia's forest map. At the first Player Phase, **save state to slot 6**.
+6. Close Dolphin and send me slot 6. I'll decode it and confirm chapter id 10, the yellow units and the control bytes before EXP-01.
+
+**Success:** Chapter 9's map loads with Lethe/Mordecai as yellow (force 3) units. Expect only Ike and maybe a few units in your army, and odd story text; that's fine for a control test.
+**Failure modes, and what each tells us:**
+- Chapter 1 still loads → the map choice doesn't read `state+0x10` at that moment. Next I'd hook the chapter-load path statically (callers `0x800AA0E8`, `0x801D8804`, `0x801F8994`).
+- Crash or softlock in a cutscene → note the last screen and save to slot 8. I'd then redirect later (on the map-load call instead of the id).
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
 | — | — | NOT RUN | |
 
 ## EXP-01 — Human-controlled partner army in Chapter 9 (Phase 1 core experiment)
 
-**Needs:** the Chapter 9 fixture from EXP-03 (slot 6), or any real save at Ch9 Player Phase, turn 1.
+**Needs:** the Chapter 9 fixture from EXP-05 (slot 6), or any real save at Ch9 Player Phase, turn 1.
 **Change:** AR `0033071F 00000001` (control[3] = human) via `--enable EXP-01`.
+**Note:** phase order is 0 → **3** → 1 → 2, so the partner phase comes *right after* your Player Phase, before enemies move. Even a lone Ike can just Wait/End and the yellow phase follows immediately.
 
 1. Common setup with `--enable EXP-01`; load the Ch9 fixture. First run `inspect_state` on it and confirm Lethe/Mordecai are listed as `yellow/partner`.
 2. Player Phase: move Ike's units, then End. Lethe/Mordecai should *not* be selectable now.

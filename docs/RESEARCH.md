@@ -82,6 +82,17 @@ The `c` file also has green NPC/event units: Mist, Rhys/Lofa, Marcia, and `*_EV`
 - `state+0x10` = 1 in the Prologue. This matches the JP chapter numbering (Prologue 0x01, Ch9 0x0A) → "chapter id" upgraded to **CORROBORATED**. Its role as next-chapter source is tested by EXP-03.
 - Dolphin save-state format (State.h, v192): see `tools/fe9/savestate.py`. MEM1 sits at payload offset `0x8B8353` in this Dolphin 2609a state, found by code-anchor search, so we don't depend on a fixed offset.
 
+### Turn loop and chapters (2026-10-27)
+
+| ID | Finding | Evidence | Confidence |
+|---|---|---|---|
+| F-09 | **Phase order 0 → 3 → 1 → 2 → 0** (turn+1 when wrapping from 2). The partner phase directly follows the player phase. | `0x8014D3B4` **[S]** | VERIFIED-STATIC |
+| F-10 | The turn loop is a bytecode "proc" script in `.data` around `0x80284E40`. Ops look like `(u16 arg, u16 op)`: `0x200F` = call function (pointer follows), `0x2012` = call with yield, `0x1001` = label, `0x100C` = goto, `0x100A` = yield, `0x120B`/`0x1206` = conditionals (semantics HYPOTHESIS). Steps include `0x8002E738` (control[phase]==1 → start human proc `0x80284AC8`) **[S]**, `0x8002E670` (phase end), `0x8002E648` (advance phase). | data dump, xrefs | Layout HYPOTHESIS; handler roles VERIFIED-STATIC |
+| F-11 | Some rule skips a phase. In the Prologue the green phase never appeared even with control[2]=1 (slot 5: turn reached 2). The rule isn't decoded; likely candidates are the proc conditionals or "no unit able to act". | EXP-02 | HYPOTHESIS |
+| F-12 | **Chapter id = `state+0x10`; id N loads `zmap/bmap0N`** (Prologue = 1, Chapter 2 = 3, so Chapter 9 = 10). `SetChapter` = `0x8014D2B0` (old id → `state+0x51E`) **[S]**, called from `0x80005F6C`, `0x8002E234`, `0x8002E3B8`, `0x800AA0E8` (script library), `0x801D8804`, `0x801F8994`. Changing the id mid-battle does not choose the next chapter (EXP-03 failed). | slot 1 (id 1), slot 7 (id 3, bmap03 units, prev 2) | VERIFIED-RUNTIME (mapping) |
+| F-13 | The state block is serialised in save data: `0x8014C1B8` reads chapter, phase, turn and **all four control bytes** from the save stream. A battle save can therefore carry a human-controlled yellow army across save/load, which helps Phase 4. | disassembly | VERIFIED-STATIC |
+| F-14 | Script-library accessors (likely `.cmb` commands): `0x800BCC04` get phase, `0x800BCC14` set phase, `0x800BCC24` get turn, `0x800BCC34` set turn. | disassembly | VERIFIED-STATIC (role as script commands: HYPOTHESIS) |
+
 ### Implication
 
 FE9 already models four forces with an explicit per-force **human/CPU control byte**. The selection code already contains the branches that let a non-player force be driven by a human during its own phase. The smallest Phase 1 lever is therefore one byte, not new selection or menu code: `0x8033071F := 1`.

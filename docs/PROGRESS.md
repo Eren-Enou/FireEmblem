@@ -1,5 +1,22 @@
 # Progress Log
 
+## 2026-10-27 — Session 1c: EXP-02/EXP-03 results, new plan
+
+### Results
+- **EXP-02 INCONCLUSIVE:** the Prologue has no green phase to test. Slot 5 confirms the code was active (control[2]=1) when turn 2 began.
+- **EXP-03 FAILED:** patching the chapter id mid-Prologue didn't change the next chapter, because the next chapter comes from `SetChapter` calls. Slot 7 (Chapter 2) verified the **chapter id ↔ bmap mapping** (id N → `bmap0N`; Chapter 9 = id 10).
+
+### New static findings
+Phase order 0→3→1→2 (F-09), turn-loop proc script (F-10), SetChapter and its callers (F-12), control bytes saved in save data (F-13), script phase/turn accessors (F-14). Signatures: 23/23.
+
+### Plan (smallest demonstrations first)
+1. **EXP-04:** human-controlled red army in the Prologue (`0033071D 00000001`, slot 2). Shows non-blue human control with no new fixture needed.
+2. **EXP-05:** conditional AR redirect of chapter id 2 → 10 after clearing the Prologue → Chapter 9 fixture in slot 6.
+3. **EXP-01** on that fixture.
+
+### Not doing yet
+Controller routing / Netplay (per user priority).
+
 ## 2026-10-27 — Session 1b: save inventory, runtime confirmation, test fixtures
 
 ### Done

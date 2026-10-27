@@ -35,6 +35,15 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8003C898, 0x1CA0000C, "mulli r5,r0,0xC           force stride"),
     (0x8003C8A0, 0x3804A264, "addi r0,r4,-0x5D9C        0x802CA264"),
     (0x8003B6D0, 0x90830190, "stw r4,0x190(r3)          unit->force = r4"),
+    # phase advance (0x8014D3B4): 0 -> 3 -> 1 -> 2 -> 0 (turn+1)
+    (0x8014D3E0, 0x38000003, "li r0,3                   after phase 0 comes 3"),
+    (0x8014D3EC, 0x38000001, "li r0,1                   after phase 3 comes 1"),
+    (0x8014D3F8, 0x38000002, "li r0,2                   after phase 1 comes 2"),
+    (0x8014D404, 0x38000000, "li r0,0                   after phase 2 comes 0, turn++"),
+    # SetChapter(state, id): prev id -> state+0x51E, id -> state+0x10
+    (0x8014D2C4, 0x98830010, "stb r4,0x10(r3)           chapter id"),
+    # turn-loop proc step: control[phase]==1 -> start human input proc 0x80284AC8
+    (0x8002E768, 0x38654AC8, "addi r3,r5,0x4AC8         human phase proc"),
     # US equivalent of Ralf's PAL hook 0x80029824 (unit->force load)
     (0x80029684, 0x80630190, "lwz r3,0x190(r3)"),
     (0x80029688, 0x88030008, "lbz r0,8(r3)              force->id"),
