@@ -407,6 +407,17 @@ class GameTests(unittest.TestCase):
         ])
         self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x8002E6DC))
 
+    def test_script_transfer_decoding(self):
+        """chapter_audit decodes (PID, force) of UnitTransferToForceByPID calls from .cmb bytecode (F-48)."""
+        from tools.chapter_audit import script_strings, script_transfers
+        ch3 = self.disc.read_file("Scripts/C04.cmb")
+        self.assertIn(("PID_OSCAR", 7), script_transfers(ch3))      # Ch3 benches Oscar (force 7)
+        self.assertIn(("PID_BOLE", 5), script_transfers(ch3))       # ... and returns Boyd to the roster
+        ch18 = script_transfers(self.disc.read_file("Scripts/C19.cmb"))
+        self.assertIn(("PID_CHINON", 1), ch18)                      # Shinon turns enemy in Ch18
+        self.assertIn(("PID_CHINON", 0), ch18)
+        self.assertEqual(script_strings(self.disc.read_file("Scripts/C07.cmb"))[0x0A], "PID_IKE")
+
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}
         _date, groups = dispos.parse(files["dispos_n.bin"])

@@ -179,6 +179,12 @@ Two consequences of option A:
 |---|---|---|---|
 | F-47 | Dolphin 2609a Netplay with `netplay_setup` folders behaves as follows:<br>• The `[NetPlay]` presets appear in the dialogs.<br>• The default pad mapping gives the first player GC1 and the second GC2, which is what EXP-14 expects.<br>• "Load Host's Save Data Only" delivers the host's GCI folder to the client, and the host's card is not written.<br>• Synced Gecko codes are active on the client (yellow phase human, port routing, auto-end).<br>• **Saving** a state during Netplay is allowed; only loading is blocked (F-31). That makes per-instance desync checks by state comparison possible. | NET-01 run | RUNTIME |
 
+### Event scripts (2026-10-27)
+
+| ID | Finding | Evidence | Confidence |
+|---|---|---|---|
+| F-48 | **`.cmb` event scripts** (`Scripts/CNN.cmb`, NN = chapter id) are little-endian.<br>• Header: magic `cmb`, name, `+0x24` = string-pool start (`0x2C`), `+0x28` = a zero-terminated table of function-record offsets.<br>• The pool holds every command name the script calls and every PID it mentions.<br>• Bytecode seen: `1C xx` / `1D hh ll` push a pool string; `19 nn` pushes a small integer; **`38 hh ll nn` calls the command at pool offset `hhll` with `nn` arguments** (`1C 0A 38 00 12 01` = `UnitGetByPID("PID_IKE")` in C07).<br>• The `…ByPID` commands (`UnitEscapeByPID`, `UnitTransferToForceByPID`, `UnitForcedSallyByPID`) are not native registrations, so they are script helpers built on the native commands, and the EXP-16 hooks apply to them.<br>• `tools/chapter_audit.py` decodes every transfer call. Story transfers that touch the current Player-2 table: Ch3 and Ch4 bench Oscar and Boyd (→ 7, → 5); Ch5 → 5; Ch6, Ch8 and Ch17 send Shinon and Gatrie away (→ 7); Ch13 Gatrie → 7 → 0; **Ch18 Shinon → 7 → 0 → 1** (he can turn enemy).<br>• Other notable cases: Ch10 makes Kieran, Nephenee and Brom **temporary partners (→ 3)**; Ch20 Jill → 1; Ch22 Reyson → 6.<br>• Since EXP-16 only moves units out of force 0, story moves to 1/2/5/6/7 take priority; a story move back to 0 makes the unit yellow again at the next player phase. | `tools/chapter_audit.py` on all scripts; `test_script_transfer_decoding` | VERIFIED-STATIC (bytecode inferred from consistent call sites) |
+
 ### Starting Chapter 9 under Netplay (2026-10-27)
 
 | ID | Finding | Evidence | Confidence |

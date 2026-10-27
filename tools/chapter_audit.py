@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import struct
 from pathlib import Path
 
 from tools.fe9 import dispos, pack
@@ -61,6 +62,44 @@ def script_words(disc: DiscReader, cid: int) -> set[str]:
     return {m.group().decode() for m in WORD.finditer(disc.read_file(name))}
 
 
+def script_strings(raw: bytes) -> dict[int, str]:
+    """The .cmb string pool (little-endian header: +0x24 pool start, +0x28 function table), offset -> text."""
+    base, end = struct.unpack_from("<II", raw, 0x24)
+    out, o = {}, base
+    while o < end:
+        e = raw.index(b"\0", o)
+        out[o - base] = raw[o:e].decode("latin-1")
+        o = e + 1
+    return out
+
+
+def script_transfers(raw: bytes) -> list[tuple[str | None, int | None]]:
+    """(PID, force) of every 2-argument UnitTransferToForce[ByPID] call.
+
+    Bytecode seen in the scripts (F-48): 1C xx / 1D hh ll push a pool string, 19 nn pushes a small int,
+    38 hh ll nn calls the command named at pool offset hhll with nn arguments. A transfer is therefore
+    <push PID> 19 <force> 38 <name> 02; arguments built any other way are reported as None.
+    """
+    st = script_strings(raw)
+    rev = {v: k for k, v in st.items()}
+    found = []
+    for name in ("UnitTransferToForceByPID", "UnitTransferToForce"):
+        if name not in rev:
+            continue
+        off = rev[name]
+        for m in re.finditer(re.escape(bytes([0x38, off >> 8, off & 0xFF, 2])), raw):
+            pre = raw[max(0, m.start() - 8):m.start()]
+            force = pre[-1] if len(pre) >= 2 and pre[-2] == 0x19 else None
+            p = pre[:-2] if force is not None else pre
+            pid = None
+            if len(p) >= 2 and p[-2] == 0x1C:
+                pid = st.get(p[-1])
+            elif len(p) >= 3 and p[-3] == 0x1D:
+                pid = st.get((p[-2] << 8) | p[-1])
+            found.append((pid, force))
+    return found
+
+
 def dispos_units(disc: DiscReader, cid: int) -> dict[int, list[str]]:
     name = f"zmap/bmap{cid:02d}/dispos.cmp"
     if name not in disc.files():
@@ -88,11 +127,13 @@ def audit(disc: DiscReader) -> list[dict]:
             flags.append("partners")
         allies = sorted(set(units.get(0, [])))
         own_here = sorted(owned & (set(allies) | {w for w in words if w.startswith("PID_")}))
+        script = f"Scripts/C{cid:02d}.cmb"
+        transfers = script_transfers(disc.read_file(script)) if script in disc.files() else []
         rows.append({
             "cid": cid, "label": "Prologue" if cid == 1 else f"Ch{cid - 1}",
             "allies": allies, "partners": partners, "npcs": sorted(set(units.get(2, []))),
             "enemies": len(units.get(1, [])), "flags": flags, "owned": own_here,
-            "transfer_pids": sorted(w for w in words if w.startswith("PID_")) if "transfer" in flags else [],
+            "transfers": transfers,
             "runtime": RUNTIME.get(cid, ""),
         })
     return rows
@@ -121,11 +162,18 @@ def report(rows: list[dict]) -> str:
                    f"{short(r['partners'])} | {short(r['allies'])} | {short(r['npcs'])} | {r['enemies']} |")
     out += ["", "## Runtime notes", ""]
     out += [f"- **{r['label']}** (id {r['cid']}): {r['runtime']}" for r in rows if r["runtime"]]
-    out += ["", "## Chapters whose scripts transfer units between forces", "",
-            "These can move a Player-2 character the table assigns, or a native partner, during the story; each needs a "
-            "targeted check of which PIDs are moved and to which force (the PIDs listed are every PID the script mentions).", ""]
-    out += [f"- **{r['label']}** (id {r['cid']}): {', '.join(p.removeprefix('PID_') for p in r['transfer_pids'])}"
-            for r in rows if r["transfer_pids"]]
+    owned = {p for p, o in OWNERS.items() if o == 2}
+    out += ["", "## Force transfers in the event scripts", "",
+            "Every `UnitTransferToForce[ByPID]` call as PID → force, decoded from the bytecode (F-48). Force 0 = blue army, "
+            "1 = enemy, 2 = green NPC, 3 = yellow partner, 5 = roster, 6 = died list, 7 = away. **Bold** = a Player-2 "
+            "character in the current ownership table. `?` = the argument is not a literal.", ""]
+    for r in rows:
+        if r["transfers"]:
+            items = []
+            for pid, force in r["transfers"]:
+                txt = f"{(pid or '?').removeprefix('PID_')} → {'?' if force is None else force}"
+                items.append(f"**{txt}**" if pid in owned else txt)
+            out.append(f"- **{r['label']}** (id {r['cid']}): " + ", ".join(items))
     return "\n".join(out) + "\n"
 
 
