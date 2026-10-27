@@ -1,5 +1,13 @@
 # Progress Log
 
+## 2026-10-27 — Session 1l: partner progression complete, COOP-P2
+
+- **EXP-10 alone failed.** The trace found two more force gates, `GetExp` (F-23, EXP-11) and the battle write-back (F-24, EXP-12). With all three, Lethe kept 15 EXP.
+- **Regression pass with the package** (TESTING.md "EXP-13 / COOP-P2"): counter EXP and accumulation pass (0 → 15 → 27). The **level-up crashed** (NULL unit, invalid read at `0x801B5E6C`) because five battle-result pickers only accept force 0/5 (F-26). **EXP-13** fixes it; the level-up then passed (lv 3 → 4, growth bytes +1, max HP 34 → 35). Blue EXP and vanilla (codes off) are unchanged.
+- **COOP-P2** = COOP-P1 + EXP-10..13 in one code. Tests 22/22, signatures 65/65.
+- F-25: a state saved with codes restores the old code list, so always test new codes from slot 6. F-27: unpatched force 0/5 checks are listed. F-28: Next Unit cycles blue units only (cosmetic).
+- Next: Phase 2, port-2 controller ownership.
+
 ## 2026-10-27 — Session 1k: COOP-P1 verified, EXP gate found
 
 - **EXP-08 A PASS**: from slot 6 (`control[3]=2`), the yellow phase came up human-controlled with COOP-P1 only (slot 8 decoded).

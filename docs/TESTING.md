@@ -385,7 +385,28 @@ Steps:
 |---|---|---|---|
 | 2026-10-27 | Claude (computer use) | **PASS (a, b)** | Installed COOP-P1 + EXP-10 + EXP-11 + EXP-12 with Dolphin closed, then booted and loaded slot 6. All three hooks are live in scratch slot 8 (`0x8003D180` = `4BFC5258`, `0x800386C8` = `4BFC9D40`, `0x80034F68` = `4BFCD4D0`). I replayed with the same inputs; the turn-2 yellow position was identical (swordsman at (23,24)). The forecast showed `EX 0`. Saved **slot 4** (`work/saves/GFEE01.s04_exp12_pre`, SHA-1 `24db47a7…d362`), confirmed and killed him. This time he missed (Lethe HP 34). **(a) An "Exp" bar appeared** after the battle. **Slot 5** (`work/saves/GFEE01.s05_exp12_post`, SHA-1 `21fd8470…7203`): **Lethe lv=3 exp=0 → exp=15** in the unit record, matching the battle copy (`+0x2C9` = 15). **(b) The status screen shows `EX 15`.** Ike (blue) is unchanged at lv 2 / exp 67 (he didn't fight). c (level-up), d (enemy-phase counter) and e (blue units still gain EXP) are **not yet tested**. |
 
-**Phase 1 status:** the core interaction is achieved on one controller. The yellow army is human-controlled in its own phase, the blue army in its own, with no cross-control in either direction, over two full turns, using EXP-01 + EXP-06.
+## EXP-13 / COOP-P2 — Progression regression on the packaged code
+
+**COOP-P2** = COOP-P1 + EXP-10 + EXP-11 + EXP-12 + EXP-13, one Gecko code (`test_coop_p2_package`: identical lines, no duplicate hook address). **EXP-13** (F-26) fixes the level-up crash found in check 3. Install with Dolphin closed:
+```bash
+.venv/Scripts/python -m tools.install_codes --enable COOP-P2
+```
+Always start from **slot 6** (F-25). Replay inputs for Ch9 (about 2.5 min): End → *Transformation tutorial: No* → End (yellow) → Lethe's conversation (Start skips it) → *Direct tutorial: No* → End → turn-2 yellow: Lethe (25,18) → (23,23) → Attack → Claw on the swordsman (23,24). Fixtures: `work/saves/GFEE01.s04_coopp2_pre` (forecast, COOP-P2 incl. EXP-13 in RAM, SHA-1 `44fec0b8…c756`) and `work/saves/GFEE01.s08_lvlup_fixture` (the same state with Lethe EXP patched to 95 via `patch_state --set 802B54FF=5F`, SHA-1 `696943b9…817e`).
+
+| # | Check | Result (2026-10-27, Claude, computer use) | Evidence |
+|---|---|---|---|
+| 1 | Kill EXP (yellow phase) | **PASS**: Lethe exp 0 → 15, EXP bar shown | COOP-P2 without EXP-13, slot 5 decode |
+| 2 | Counter EXP (enemy phase) and accumulation | **PASS**: Lethe 15 → 27 after countering and killing the soldier (20,25) in the turn-2 enemy phase; 0 → 15 → 27 over two phases | `work/saves/scratch/GFEE01.s07_p2_turn3` (SHA-1 `ae6d2114…7ec1`, turn 3) |
+| 3 | Level-up (100 EXP), **without EXP-13** | **FAIL**: as the bar passed 100, Dolphin reported *Invalid read from 0x0000018C, PC = 0x801B5E6C*, then *0x0000019A, PC = 0x801B5E90* (a NULL unit in the level-up screen). Cause: F-26 | screenshots; `work/saves/scratch/GFEE01.s08_lvlup_fixture_oldcodes` |
+| 3b | Level-up **with EXP-13** (COOP-P2) | **PASS**: "Level Up!" banner, no warning; unit lv 3 → 4, exp 95 → 10, growth bytes `+0x1AB`, `+0x1AE`–`+0x1B2` 0 → 1, max HP 34 → 35; the status screen shows Lv 4, EX 10. I didn't capture the stat-gain panel in a screenshot (3 s gaps), so the *presentation* isn't confirmed yet | `work/saves/GFEE01.s05_coopp2_lvlup` (SHA-1 `ceaddf10…c47c3b`) |
+| 4 | Blue EXP unchanged | **PASS**: Ike 67 → 68 (attacked and missed, turn-3 enemy phase), then 68 → 80 attacking the mage at (22,21) in turn 4. A blue level-up was not run at runtime (EXP-10..13 only change the force-3 path; static) | `work/saves/GFEE01.s08_coopp2_ike_attack` (SHA-1 `398f54d8…0090`) |
+| 5 | Vanilla with codes disabled | **PASS**: `install_codes` with nothing enabled, slot 6. The partner phase ran under the AI (no cursor; Lethe/Mordecai moved (25,18)/(24,18) → (22,24)/(23,24) and fought), control = `1 2 2 2`, and every hook site held its original instruction (`0x8014D3B4`, `0x8003D180`, `0x801B610C`). Lethe exp stayed 0 (vanilla: no partner EXP) | `work/saves/GFEE01.s08_vanilla_t2` (SHA-1 `461034b4…1fa1`) |
+| 6 | Ownership: Next Unit in the yellow phase | **Cosmetic only**: X cycles the cursor through **blue units only** (Ike → Mist → Rolf → Ike), never Lethe or Mordecai. Pressing A on Ike does nothing (EXP-06 blocks it; the button hint still says "Move"). No cross-control | COOP-P2 run, turn 1 yellow |
+| 7 | Ownership: Ike's **Direct** command | Observed in Ike's menu (Items/Order/Direct/Wait). It is vanilla's way of setting the partner AI's orders. With human yellow it should have no effect; **not yet tested** | turn 3/4 screenshots |
+
+Not yet covered: the stat-gain panel itself, save/load across a real battle save (F-13 says control bytes are saved), healing EXP and promotions (no yellow healer or promotable unit in this fixture).
+
+**Phase 1 status:** the core interaction is achieved on one controller, now including progression (COOP-P2, table above). The yellow army is human-controlled in its own phase, the blue army in its own, with no cross-control in either direction.
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|

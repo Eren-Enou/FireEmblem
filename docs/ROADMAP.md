@@ -18,7 +18,9 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - [x] Leftover-unit behaviour (F-18): leftover yellow units **wait** (user decision). EXP-07 fully verified (A a–d, and vanilla control B).
 - [x] Packaged as **COOP-P1** (EXP-08 phase-advance control hook + EXP-06 + EXP-07; no per-frame write). EXP-08 A passed at runtime (B, the Prologue check, not yet reported).
 - [x] EXP-09: recorded a multi-turn Ch9 run with COOP-P1 (`work/movies/ch9_coop_p1.dtm`); the map was lost. Completing Ch9 is deferred to Phase 4 with a real army (recommendation).
-- [ ] EXP-10: human-controlled partner units gain EXP (user requirement). Drafted and statically validated; fold into COOP-P1 v2 once it passes.
+- [x] Partner progression (user requirement): EXP-10 (CanGainExp), EXP-11 (GetExp), EXP-12 (battle write-back) and EXP-13 (level-up/result screen unit pickers). Verified at runtime: kill EXP, enemy-phase counter EXP, accumulation over turns, level-up (lv 3 → 4, stats grow, no crash). Blue EXP is unchanged and vanilla is unchanged with codes off (TESTING.md "EXP-13 / COOP-P2").
+- [x] Packaged as **COOP-P2** = COOP-P1 + EXP-10..13 (one Gecko code; the parts stay for debugging).
+- [ ] Still open: the stat-gain panel itself, the Direct command with human yellow, a real battle save/load round trip.
 
 **Done when:** a full Ch9 playthrough with a human-driven partner phase, recorded in TESTING.md, with a Dolphin input movie (.dtm) as proof.
 

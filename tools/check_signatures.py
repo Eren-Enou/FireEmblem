@@ -65,6 +65,15 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x80034F68, 0x28000005, "cmplwi r0,5               EXP-12 hook site (force 5 written back)"),
     (0x80034F78, 0x9804019A, "stb r0,0x19A(r4)          level written back"),
     (0x80034F88, 0x48003705, "bl 0x8003868C             SetExp (EXP written back)"),
+    # battle-result unit pickers (EXP-13): lbz r0,8(force) ... cmplwi r0,5 at each hook site
+    (0x801B60F0, 0x80630280, "lwz r3,0x280(r3)          picker: copy A real unit"),
+    (0x801B6120, 0x80630560, "lwz r3,0x560(r3)          picker: copy B real unit"),
+    (0x801B6148, 0x38600000, "li r3,0                   picker: no player unit -> NULL"),
+    (0x801B614C, 0x4BFFD17D, "bl 0x801B32C8             level-up screen setup"),
+    *[(a, 0x28000005, "cmplwi r0,5               EXP-13 hook site") for a in (
+        0x801B610C, 0x801B613C, 0x801B62D4, 0x801B6304, 0x801B63BC,
+        0x801B63EC, 0x801B6814, 0x801B6844, 0x801B6C28, 0x801B6C58)],
+    (0x801B5E6C, 0x801E018C, "lwz r0,0x18C(r30)         level-up screen reads unit class (NULL crash site)"),
     # GetExp (0x800386B0): 0xFF for force 1/2/3, else unit+0x19B; EXP-11 hook site
     (0x800386B4, 0x88040008, "lbz r0,8(r4)              force id"),
     (0x800386C8, 0x28000003, "cmplwi r0,3               EXP-11 hook site (yellow -> 0xFF)"),

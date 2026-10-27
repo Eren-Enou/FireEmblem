@@ -119,6 +119,27 @@ class GameTests(unittest.TestCase):
         ])
         self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x80034F68))
 
+    def test_exp13_gecko_hooks(self):
+        """EXP-13: ten EXP-10-style caves on the force 0/5 checks of the battle-result unit pickers."""
+        import capstone, struct
+        from tools.fe9.ppc import Dol
+        dol = Dol(self.disc.read_dol())
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        blocks = self._gecko_blocks("EXP-13 Level-up/result screens accept human-controlled yellow units")
+        self.assertEqual([a for a, _ in blocks], [
+            0x801B610C, 0x801B613C, 0x801B62D4, 0x801B6304, 0x801B63BC,
+            0x801B63EC, 0x801B6814, 0x801B6844, 0x801B6C28, 0x801B6C58])
+        for addr, words in blocks:
+            self.assertEqual(words[-1], 0)
+            code = b"".join(struct.pack(">I", w) for w in words[:-1])
+            asm = [f"{i.mnemonic} {i.op_str}".strip() for i in md.disasm(code, 0)]
+            self.assertEqual(asm, [
+                "cmplwi r0, 3", "bne 0x1c", "lis r12, -0x7fcd", "lbz r12, 0x71f(r12)", "cmplwi r12, 1",
+                "bne 0x1c", "li r0, 5", "cmplwi r0, 5", "nop",
+            ])
+            self.assertEqual(words[7], dol.u32(addr), f"{addr:08X}")
+            self.assertEqual(dol.u32(addr - 0xC) >> 16, 0x8800 | (dol.u32(addr - 0xC) >> 16 & 0xFF), f"{addr:08X}")
+
     def test_coop_p1_package(self):
         """COOP-P1 is exactly EXP-08 + EXP-06 + EXP-07."""
         parts = []
@@ -127,6 +148,20 @@ class GameTests(unittest.TestCase):
                      "EXP-07 Human yellow phase does not hand leftover units to the AI"):
             parts += self._gecko_blocks(name)
         self.assertEqual(self._gecko_blocks("COOP-P1 Yellow army human-controlled (Phase 1 package v1)"), parts)
+
+    def test_coop_p2_package(self):
+        """COOP-P2 is exactly COOP-P1 + EXP-10..13, with no hook address used twice."""
+        parts = []
+        for name in ("COOP-P1 Yellow army human-controlled (Phase 1 package v1)",
+                     "EXP-10 Human-controlled yellow units can gain EXP",
+                     "EXP-11 Human-controlled yellow units show real EXP (GetExp)",
+                     "EXP-12 Human-controlled yellow units keep battle EXP (write-back)",
+                     "EXP-13 Level-up/result screens accept human-controlled yellow units"):
+            parts += self._gecko_blocks(name)
+        package = self._gecko_blocks("COOP-P2 Yellow army human-controlled with EXP (Phase 1 package v2)")
+        self.assertEqual(package, parts)
+        hooks = [addr for addr, _ in package]
+        self.assertEqual(len(hooks), len(set(hooks)))
 
     def test_exp06_gecko_hook(self):
         """EXP-06 cave disassembles as intended and replays the original instruction."""
