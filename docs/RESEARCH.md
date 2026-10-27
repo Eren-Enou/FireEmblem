@@ -140,6 +140,14 @@ Whether the rest of the turn loop (action menu, "End" command, phase transitions
 - **Desync**: the client handles `DesyncDetected(frame, player)` from the server. The hashing mechanism is not in this file (TODO: read `NetPlayServer.cpp`).
 - **Host input authority / Golf mode**: only the "golfer" drives inputs, and control can pass between players. This is a possible no-code fallback for strictly alternating turns (HYPOTHESIS, untested).
 
+### Starting Chapter 9 under Netplay (2026-10-27)
+
+| ID | Finding | Evidence | Confidence |
+|---|---|---|---|
+| F-31 | **Netplay cannot start from a save state, and the slot 6 state cannot make a card save either.** (a) Dolphin 2609a contains the message "Loading savestates is disabled in Netplay to prevent desyncs", and three save-data modes: host's data kept, host's data discarded at session end, or no save data. (b) A *Suspend* chosen in the slot 6 state while booted on a different (empty) card was refused: "This is not the original Memory Card. Please insert the Memory Card that you used when you loaded the game." The game remembers the card it saw at boot, and that memory is inside the state. (c) The native route works: in a private user folder (`--user work/netplay/host`), a **fresh** game with EXP-05 (Easy), Prologue won, saved at the post-Prologue prompt to file 2. The title then lists **"Ch. 9: Gallia"**. A state at the base after that decodes as chapter id 10, turn 1. After a fresh boot without EXP-05, *Restart Chapter → Ch. 9* reaches the Chapter 9 base. The card is backed up in `work/saves/netplay_ch9_card/` (SHA-1 `d93a22ae…9086`). | strings in `Dolphin.exe`; screenshots; `work/netplay/host/StateSaves/GFEE01.s02` decoded | (a) VERIFIED-STATIC (runtime refusal not yet seen); (b), (c) RUNTIME |
+| F-32 | Dolphin `--user <dir>` overrides `portable.txt`: the instance created and used `<dir>/Config`, `GC/USA/Card A` and `StateSaves`, and `Dolphin-x64/User` was not touched (the user's card SHA-1 is still `7afef93c…`). | file listing, hashes | RUNTIME |
+| F-33 | Dolphin's DInput keyboard names the keypad keys `NUMPAD0`..`NUMPAD9` (strings in `Dolphin.exe`). The port 2 dialog loads `` `NUMPAD8` `` etc. and shows them as valid (not red) bindings. Pressing the keys has not been checked yet (computer use cannot send keypad keys). | strings; config dialog | VERIFIED-STATIC |
+
 ## 6. Open questions
 
 1. EXP-01 runtime behaviour (see TESTING.md).

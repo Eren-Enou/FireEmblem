@@ -416,7 +416,7 @@ Not yet covered: the stat-gain panel itself, save/load across a real battle save
 
 **Change (F-29):** the game reads all gameplay input through one "current pad" pointer (`0x80367240` = `r13-0x7B60`). EXP-14 (C2 hook at the pad-update epilogue `0x80025B8C`) points it at **pad object 1 (port 2)** while `phase == 3 && control[3] == 1` and port 2 has a controller, and at pad object 0 (port 1) otherwise. **COOP-P3** = COOP-P2 + EXP-14 (`test_coop_p3_package`). Static: `test_exp14_gecko_hook`, 73/73 signatures.
 
-Tools: `tools/setup_pads.py --port2 keyboard|device|none` sets Dolphin port 2 (`[Core] SIDevice1`) and, for `keyboard`, a second key layout on the same PC: **A=M B=N X=B Y=V Z=E Start=Y, stick 8/5/4/6, L=O R=P**. Port 1 keeps X/Z/C/S/D/Enter/arrows. It backs up `Dolphin.ini`/`GCPadNew.ini` to `*.ini.bak` and refuses to run while Dolphin is open.
+Tools: `tools/setup_pads.py --port2 keyboard|device|none` sets Dolphin port 2 (`[Core] SIDevice1`) and, for `keyboard`, a second key layout on the same PC: **A=M B=N X=B Y=V Z=E Start=Y, stick numpad 8/5/4/6, L=O R=P** (top-row 8/5/4/6 until 2026-10-27; Dolphin names the keypad keys `NUMPAD8` etc., F-33). Port 1 keeps X/Z/C/S/D/Enter/arrows. It backs up `Dolphin.ini`/`GCPadNew.ini` to `*.ini.bak` and refuses to run while Dolphin is open.
 
 ### Local run (2026-10-27, Claude, computer use; two keyboard-emulated pads on one PC, codes COOP-P2 + EXP-14)
 
@@ -453,11 +453,67 @@ The Dolphin config was restored afterwards from `work/saves/config_backup/`. Not
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-10-27 | user | **PASS** | Two keyboard-emulated controllers (`setup_pads --port2 keyboard`, stick then on top-row 8/5/4/6): blue answered only to controller 1 and yellow only to controller 2. Usability issue: the port 2 stick should be on the numeric keypad, now changed (F-33). Still open from the list above: attacks/animation skip and the Start menu on controller 2. |
+
+**Numpad recheck (tester, 30 s):** with Dolphin closed run `.venv/Scripts/python -m tools.setup_pads --port2 keyboard`, open Dolphin → Controllers → Port 2 **Configure**, and press numpad 8/5/4/6 with Num Lock on, then off. Expected: the Control Stick dot moves up/down/left/right both times. Not run yet.
+
+## Phase 3 — Netplay
+
+**Facts so far (F-31, F-32):** Dolphin refuses to load save states during Netplay, and a Suspend made from the slot 6 state is rejected ("not the original Memory Card"). So a Netplay session starts from a **memory card**. `tools/netplay_setup.py` makes two private Dolphin user folders (`work/netplay/host`, `work/netplay/client`, launched with `--user`). `Dolphin-x64/User` (your card, states, config) is never used.
+
+| Folder | Player | Pad 1 keys (its own port 1) | Codes | Card |
+|---|---|---|---|---|
+| `work/netplay/host` | P1-Blue | X/Z/C/S/D, Enter, arrows | COOP-P3 (synced to client) | Chapter 9 card (NET-00) |
+| `work/netplay/client` | P2-Yellow | M/N/B/V/E, Y, numpad 8/5/4/6 | none (receives host's) | empty (receives host's) |
+
+Both have Background Input on, so two windows on one PC can share one keyboard. Netplay settings are preset: direct connection, 127.0.0.1:2626, sync saves and codes, and save data discarded at session end.
+
+### NET-00 — Chapter 9 memory-card start (2026-10-27, Claude, computer use; user healed Ike in the Greil fight)
+
+| Step | Result |
+|---|---|
+| Suspend in the slot 6 state, host card | **FAIL (expected after the fact):** "This is not the original Memory Card…" (F-31 b) |
+| Fresh boot in `work/netplay/host`, codes COOP-P3 + EXP-05, New Game (Easy, file 1), win the Prologue, save at the prompt to **file 2** | **PASS:** the card holds "Prologue: Mercenaries" (file 1) and **"Ch. 9: Gallia"** (file 2). A state at the base (`work/netplay/host/StateSaves/GFEE01.s02`) decodes as chapter id 10, turn 1, Ike Ranger lv 3 |
+| Fresh boot, codes COOP-P3 only, Title → **Restart Chapter → Ch. 9** | **PASS:** the Chapter 9 base menu appears, with no save state involved |
+| Base → End → first player phase with Lethe/Mordecai yellow | **NOT YET CHECKED** (handed to the tester) |
+
+Card backup: `work/saves/netplay_ch9_card/01-GFEE-FIREEMBLEM8J.gci` (SHA-1 `d93a22ae26227976a7a07c2097aca713f0899086`). `netplay_setup` copies it into the host card. The user's card (`7afef93c…`), slot 1 (`b8a42f43…`) and slot 6 (`d8430d71…`) were unchanged afterwards. To remake the card: `install_codes --user work/netplay/host --enable COOP-P3 --enable EXP-05`, then repeat the row above.
+
+### NET-01 — First Netplay session, two instances on one PC (tester)
+
+1. Close all Dolphin windows. Run:
+   ```bash
+   .venv/Scripts/python -m tools.netplay_setup --force
+   ```
+   (`--force` recreates both folders; the host card is restored from the backup.)
+2. Start both instances (two terminals):
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/netplay/host
+   ```
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/netplay/client
+   ```
+3. **Host window:** Tools → **Start NetPlay…** → **Host** tab → select *Fire Emblem: Path of Radiance*, port 2626, direct connection → **Host**.
+4. **Client window:** Tools → Start NetPlay… → **Connect** tab → IP `127.0.0.1`, port 2626 → **Connect**.
+5. In the host's NetPlay dialog:
+   - Save data: choose the mode that **loads the host's save data and discards changes** ("Write Save Data" off).
+   - **Sync AR/Gecko codes** on.
+   - **Pad mapping:** GC port 1 = P1-Blue, GC port 2 = P2-Yellow, ports 3 and 4 empty.
+   - Note the Dolphin version shown for both players.
+   - Click **Start**.
+6. In the game: Title → **Restart Chapter → Ch. 9** → base → **End → Yes**. Skip the scenes with Enter (P1).
+7. Player phase: the P1 keys (arrows, X, D) move Ike and choose Wait, then D → End. The P2 keys (numpad, M) should do nothing.
+8. Yellow phase: the P2 keys (numpad, M, E for the map menu) move Lethe, **Attack** if possible, Wait with Mordecai, then E → End. The P1 keys should do nothing.
+9. Play 3+ turns. Keep an eye on the NetPlay chat for **"desync"** messages.
+10. End the session from the host (Stop). Report the following, with screenshots of the NetPlay dialog and of any desync message:
+    - the Dolphin version shown in the NetPlay dialog
+    - the turn reached
+    - Lethe's and Mordecai's HP/EXP in both windows at the end (the Status screen is fine)
+
+**Success:** both windows show the same map and units every turn, each army answers only to its own player, and no desync is reported over 3+ turns. **Failure modes to report:** the client hangs on "waiting for players", the client boots with no save file (save sync failed), codes not active on the client (a yellow phase played by the AI), or a desync message (note the turn and action).
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
 | — | — | NOT RUN | |
 
-## Phase 3 preparation — Netplay (not started; hypotheses to verify)
-
-- Codes: the host's Gecko codes are pushed to clients (RESEARCH §5), so only the host enables **COOP-P3**. Both machines need the same GFEE01 rev 0 image (main.dol SHA-1 in CLAUDE.md) and "Enable Cheats".
-- Ports: in the Netplay pad mapping, assign **Player 1 → port 1** and **Player 2 → port 2**. EXP-14 does the rest.
-- **Save states (F-25, plus HYPOTHESIS: Dolphin blocks loading states during Netplay).** The Ch9 fixture is a save state, so Netplay probably needs a **memory-card** starting point instead: either play the EXP-05 redirect from a new game, or make a turn-1 *Suspend* save on a **separate** card folder. Never use the user's card.
-- First session plan: host + client, COOP-P3, several Ch9 turns, then compare HP/EXP/positions on both sides (decode a state on each machine after the session if allowed, or compare screenshots).
+Two machines come after NET-01: the same folders on each PC (the client folder from `netplay_setup` on the second machine), with the host's IP and port 2626 forwarded (or Dolphin's traversal server).

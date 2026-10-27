@@ -22,20 +22,37 @@ ROOT = Path(__file__).resolve().parents[1]
 SI_NONE, SI_GC_CONTROLLER = 0, 6
 
 # Port 1 (the existing layout) uses X Z C S D Return, arrows, I J K L, Q W, T F G H.
-# Port 2 uses keys that port 1 does not.
+# Port 2 uses keys that port 1 does not. The stick is on the numeric keypad; NUMPAD0..NUMPAD9 are the
+# names Dolphin's DInput keyboard backend gives those keys (not the top-row digits "8", "5", ...).
 _KEYS = {
     "Buttons/A": "M", "Buttons/B": "N", "Buttons/X": "B", "Buttons/Y": "V", "Buttons/Z": "E",
     "Buttons/Start": "Y",
-    "Main Stick/Up": "8", "Main Stick/Down": "5", "Main Stick/Left": "4", "Main Stick/Right": "6",
+    "Main Stick/Up": "NUMPAD8", "Main Stick/Down": "NUMPAD5",
+    "Main Stick/Left": "NUMPAD4", "Main Stick/Right": "NUMPAD6",
     "Main Stick/Modifier": "RSHIFT",
     "Triggers/L": "O", "Triggers/R": "P",
     "D-Pad/Up": "U", "D-Pad/Down": "J", "D-Pad/Left": "R", "D-Pad/Right": "A",
 }
-PORT2_KEYBOARD = {
-    "Device": "DInput/0/Keyboard Mouse",
-    **{k: f"`{v}`" for k, v in _KEYS.items()},
-    "Main Stick/Calibration": "100.00 141.42 100.00 141.42 100.00 141.42 100.00 141.42",
+_PORT1_KEYS = {
+    "Buttons/A": "X", "Buttons/B": "Z", "Buttons/X": "C", "Buttons/Y": "S", "Buttons/Z": "D",
+    "Buttons/Start": "RETURN",
+    "Main Stick/Up": "UP", "Main Stick/Down": "DOWN", "Main Stick/Left": "LEFT", "Main Stick/Right": "RIGHT",
+    "Main Stick/Modifier": "Shift",
+    "C-Stick/Up": "I", "C-Stick/Down": "K", "C-Stick/Left": "J", "C-Stick/Right": "L",
+    "Triggers/L": "Q", "Triggers/R": "W",
+    "D-Pad/Up": "T", "D-Pad/Down": "G", "D-Pad/Left": "F", "D-Pad/Right": "H",
 }
+_CALIBRATION = "100.00 141.42 100.00 141.42 100.00 141.42 100.00 141.42"
+
+
+def keyboard_layout(keys: dict[str, str]) -> dict[str, str]:
+    """A [GCPadN] section body for Dolphin's DInput keyboard from {control: key name}."""
+    return {"Device": "DInput/0/Keyboard Mouse", **{k: f"`{v}`" for k, v in keys.items()},
+            "Main Stick/Calibration": _CALIBRATION}
+
+
+PORT1_KEYBOARD = keyboard_layout(_PORT1_KEYS)   # Dolphin-x64's existing port 1 layout
+PORT2_KEYBOARD = keyboard_layout(_KEYS)
 
 
 def set_ini(text: str, section: str, items: dict[str, str], replace_section: bool = False) -> str:
@@ -85,7 +102,7 @@ def main() -> int:
                                 replace_section=True))
     print(f"port 2 = {args.port2} (SIDevice1 = {si}); backups: *.ini.bak in {cfg}")
     if args.port2 == "keyboard":
-        print("port 2 keys: A=M B=N X=B Y=V Z=E Start=Y stick=8/5/4/6 L=O R=P")
+        print("port 2 keys: A=M B=N X=B Y=V Z=E Start=Y stick=numpad 8/5/4/6 L=O R=P")
     return 0
 
 

@@ -16,6 +16,18 @@
 - **COOP-P3** = COOP-P2 + EXP-14. Tests 25/25, signatures 73/73. The Dolphin config was restored and the user's slot 1 and memory card are unchanged (hashes match).
 - Blocked on the tester: a real two-device run (procedure in TESTING.md). Phase 3 (Netplay) prep notes are in TESTING.md. The main open question is how to start Ch9 under Netplay without save states.
 
+## 2026-10-27 — Session 1n: tester two-pad pass, numpad layout, Netplay Chapter 9 start
+
+- **Tester PASS (EXP-14 / COOP-P3):** with two keyboard-emulated controllers, blue answers only to controller 1 and yellow only to controller 2.
+- Port 2 stick moved to the keypad (`NUMPAD8/5/4/6`, F-33). The rest of the port 2 layout is unchanged. Dolphin loads the bindings as valid; pressing the keys still needs the tester's 30-second check (TESTING.md).
+- **Chapter 9 start for Netplay solved (NET-00, F-31):**
+  - Dolphin blocks state loads in Netplay.
+  - A Suspend from the slot 6 state is rejected ("not the original Memory Card").
+  - So a native card was made in a private user folder: fresh game + EXP-05 → Prologue won → saved at the prompt as **"Ch. 9: Gallia"** → after a fresh boot, *Restart Chapter* reaches the Ch9 base. The card is backed up in `work/saves/netplay_ch9_card/`.
+- `tools/netplay_setup.py`: reproducible host/client Dolphin user folders (`--user`, F-32) with game path, cheats, Background Input, Netplay presets (127.0.0.1:2626, sync saves and codes, no write-back), per-player pad 1 layouts, and COOP-P3 plus the Ch9 card on the host. `install_codes` gained `--user`. Tests 26/26, signatures 73/73.
+- The user prefers to drive in-game checks; Claude prepares configs and procedures.
+- Next: tester runs NET-01 (one-PC loopback Netplay, TESTING.md), including the first Ch9 battle check (Lethe/Mordecai yellow from the card start). Then two machines.
+
 ## 2026-10-27 — Session 1k: COOP-P1 verified, EXP gate found
 
 - **EXP-08 A PASS**: from slot 6 (`control[3]=2`), the yellow phase came up human-controlled with COOP-P1 only (slot 8 decoded).

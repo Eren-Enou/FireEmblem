@@ -28,12 +28,15 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - [x] Find the game's pad read: `PADStatus[4]` at `0x802EF408`, pad objects `0x802EF438`, current-pad pointer `0x80367240` (F-29).
 - [x] Patch **EXP-14**: in a human yellow phase the game reads port 2; otherwise port 1. If port 2 has no controller, it falls back to port 1. Packaged as **COOP-P3** = COOP-P2 + EXP-14.
 - [x] Local test with two keyboard-emulated controllers on one PC (`tools/setup_pads.py`): over two full turns each army answered only to its own port (TESTING.md "EXP-14 / COOP-P3").
-- [ ] Tester run with two real devices (procedure in TESTING.md), including attacks, battle-animation skipping and the Start menu.
+- [x] Tester run with two keyboard-emulated controllers: PASS (2026-10-27). Port 2 stick now on the numpad.
+- [ ] Still open: attacks/battle-animation skipping and the Start menu on controller 2, and a real gamepad.
 
-**Done when:** pad 1 cannot move yellow units, pad 2 cannot move blue units, both verified in one session.
+**Done when:** pad 1 cannot move yellow units, pad 2 cannot move blue units, both verified in one session. *(Met with keyboard-emulated pads.)*
 
 ## Phase 3 — Online (Dolphin Netplay)
-- [ ] Host syncs codes and save. P1 → port 1, P2 → port 2 via pad mapping.
+- [x] Chapter 9 start without save states: a native memory-card save, "Ch. 9: Gallia" (NET-00, F-31).
+- [x] Reproducible host/client setup: `tools/netplay_setup.py` (private `--user` folders, F-32).
+- [ ] NET-01: one-PC loopback session (tester). Host syncs codes and save. P1 → port 1, P2 → port 2 via pad mapping.
 - [ ] Play Ch9 to completion online. Document desyncs, disconnects and save handling.
 
 **Done when:** two machines finish Ch9 with no desync, with a written test log.

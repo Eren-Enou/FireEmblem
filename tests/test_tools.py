@@ -34,8 +34,27 @@ class SetupPadsTests(unittest.TestCase):
                        PORT2_KEYBOARD, replace_section=True)
         self.assertIn("[GCPad1]\nDevice = X\n[GCPad2]\nDevice = DInput/0/Keyboard Mouse\nButtons/A = `M`", pads)
         self.assertNotIn("`Q`", pads)
+        for d, k in (("Up", 8), ("Down", 5), ("Left", 4), ("Right", 6)):  # keypad, not the top-row digits
+            self.assertIn(f"Main Stick/{d} = `NUMPAD{k}`\n", pads)
         self.assertIn("\n[GCPad3]", pads)
         self.assertEqual(set_ini("", "Core", {"SIDevice1": "6"}), "[Core]\nSIDevice1 = 6\n")
+
+    def test_netplay_user_folders(self):
+        import tempfile
+        from tools.netplay_setup import dolphin_ini, make_user
+        from tools.setup_pads import PORT2_KEYBOARD
+        host = dolphin_ini(Path("G:/Games"), "P1-Blue", host=True)
+        for line in ("ISOPath0 = G:", "EnableCheats = True", "BackgroundInput = True", "SyncSaves = True",
+                     "SyncCodes = True", "WriteSaveData = False", "HostPort = 2626"):
+            self.assertIn(line, host)
+        self.assertNotIn("SyncSaves", dolphin_ini(Path("G:/Games"), "P2-Yellow", host=False))
+        with tempfile.TemporaryDirectory() as tmp:
+            make_user(Path(tmp) / "client", Path("G:/Games"), "P2-Yellow", PORT2_KEYBOARD, None)
+            pad = (Path(tmp) / "client/Config/GCPadNew.ini").read_text()
+            self.assertTrue(pad.startswith("[GCPad1]\n"))  # the client's own pad 1; Netplay maps it to port 2
+            self.assertIn("Main Stick/Up = `NUMPAD8`", pad)
+            self.assertTrue((Path(tmp) / "client/GC/USA/Card A").is_dir())
+            self.assertFalse((Path(tmp) / "client/GameSettings").exists())
 
 
 @unittest.skipUnless(IMAGE.exists(), "game image not present")
