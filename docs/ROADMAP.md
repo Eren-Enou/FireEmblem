@@ -41,10 +41,15 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 
 **Done when:** two machines finish Ch9 with no desync, with a written test log.
 
-## Phase 4 — Campaign integration
-- [ ] Roster ownership model (force assignment per character, persisted across chapters).
-- [ ] Deployment for both players; chapters without natural partners (move owned units to force 3 at load via the dispos force byte or a loader hook).
-- [ ] Recruitment, events, objectives, saves.
+## Phase 4 — Campaign integration (sequential two-army campaign from Chapter 1)
+Design (user, 2026-10-27): strictly sequential phases (blue P1 → yellow P2 → enemy AI → green), reusing the game's phase system and COOP-P3 routing. Each character belongs to one player at a time and keeps their identity and progression. Ike stays blue.
+- [x] Found the game's own force-transfer path: `UnitTransferToForce`, `SetUnitForce`, unit by PID (F-34). Chapter end moves only force 0 into the roster (F-35).
+- [x] **Chapter-level proof, EXP-15 (fixed assignment), PASSED 2026-10-27 (v3):** Blue = Ike, Titania / Yellow = Boyd, Oscar in Chapter 1. Verify phases, ports, combat, EXP, victory/defeat/events, and the transition to Chapter 2 with no lost or duplicated characters. *(v1 and v2 lost Boyd and Oscar at the seize, through `AllUnitEscape` (F-39). v3 passed: Chapter 2 starts with Ike, Oscar (lv 4, 35 EXP), Boyd (47 EXP) and Rhys. Still unchecked: defeat (Game Over), a yellow unit dying, and Ch1 events on hard paths.)*
+- [ ] Separate persistent ownership from tactical force: store an owner table (per PID, in a save-safe place) instead of PIDs hard-coded in the code; apply it at every chapter start, and return units at every chapter end.
+- [ ] Chapters with preparations/deployment, recruitment (new units default to blue), story events that move units, and battle saves.
+- [ ] Pre-chapter assignment screen (only after fixed assignments and transitions are proven).
+
+**Done when:** Chapter 1 is completed with two separately commanded armies and Chapter 2 starts normally, with every character's progression and assignment preserved.
 
 ## Phase 5 — Quality & balance
 Deferred until Phases 1–3 work.

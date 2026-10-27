@@ -101,6 +101,33 @@ SIGNATURES: list[tuple[int, int, str]] = [
     # unit table 0x802B14E4, stride 0x280, ids 1..0x9F
     (0x800295D4, 0x38A314E4, "addi r5,r3,0x14E4         unit table"),
     (0x800295E8, 0x1C000280, "mulli r0,r0,0x280         unit stride"),
+    # Force change (F-34). UnitTransferToForce 0x800BCA38(unit id, force), registered as a script command
+    (0x800BB3DC, 0x3883CA38, "addi r4,r3,-0x35C8        register UnitTransferToForce"),
+    (0x800BCA38, 0x9421FFF0, "stwu r1,-0x10(r1)         UnitTransferToForce entry"),
+    (0x800BCAB4, 0x4BF80B59, "bl SetUnitForce           0x8003D60C(unit, force)"),
+    (0x8003D658, 0x4BFD8049, "bl 0x800156A0             unlink from old force list"),
+    (0x8003D670, 0x4BFD80A9, "bl 0x80015718             append to new force list"),
+    (0x80016BDC, 0x9421FFF0, "stwu r1,-0x10(r1)         unit by PID string (EXP-15)"),
+    (0x80016C1C, 0x7C001840, "cmplw r0,r3               unit+0x188 == character record"),
+    (0x800BD5CC, 0x88630198, "lbz r3,0x198(r3)          unit id byte (UnitGetByPID)"),
+    # EXP-15 hook sites: human-phase start step, and the entries of both chapter-end steps (F-35)
+    (0x8002E738, 0x9421FFF0, "stwu r1,-0x10(r1)         phase-start step entry (EXP-15 block 1)"),
+    (0x8002E0D0, 0x9421FFD0, "stwu r1,-0x30(r1)         chapter transition step entry (EXP-15 block 3)"),
+    (0x8002E0F8, 0x5400EFFF, "rlwinm. r0,r0,29,31,31    state+0x9F bit 0x08 -> early exit"),
+    (0x80284FA4, 0x0000200F, "proc op call              turn loop: ... -> 0x8002E0D0"),
+    (0x80284FA8, 0x8002E0D0, "proc step pointer         chapter transition"),
+    (0x80005F04, 0x9421FFE0, "stwu r1,-0x20(r1)         chapter-sequence step entry (EXP-15 block 4)"),
+    (0x80005F28, 0x481DD875, "bl 0x801E379C             rebuild units from save data"),
+    (0x80005FF0, 0x48010C69, "bl 0x80016C58             roster move, after the rebuild"),
+    (0x80016C58, 0x9421FFE0, "stwu r1,-0x20(r1)         army->roster (force 0 -> 5)"),
+    # AllUnitEscape 0x800BA784 (script command, F-39): escapes the force 0 list, then forces 0-3 (mask 3)
+    (0x800BA784, 0x9421FFD0, "stwu r1,-0x30(r1)         AllUnitEscape entry (EXP-15 block 2)"),
+    (0x800BA840, 0x80630004, "lwz r3,4(r3)              force 0 tail"),
+    (0x800BA84C, 0x4BF8376D, "bl 0x8003DFB8             escape unit (force 0 list)"),
+    (0x800BA860, 0x38600003, "li r3,3                   mask query 3 = forces 0-3"),
+    (0x800BA8B4, 0x4BF83705, "bl 0x8003DFB8             escape/free the rest of forces 0-3"),
+    (0x80016C84, 0x38800005, "li r4,5                   to force 5 (roster)"),
+    (0x8002E38C, 0x4BFE88CD, "bl 0x80016C58             from the chapter transition 0x8002E0D0"),
 ]
 
 

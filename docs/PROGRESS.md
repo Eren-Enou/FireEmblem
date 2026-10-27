@@ -28,6 +28,21 @@
 - The user prefers to drive in-game checks; Claude prepares configs and procedures.
 - Next: tester runs NET-01 (one-PC loopback Netplay, TESTING.md), including the first Ch9 battle check (Lethe/Mordecai yellow from the card start). Then two machines.
 
+## 2026-10-27 — Session 1o: sequential campaign goal, Chapter 1 fixed assignment (EXP-15)
+
+- User: from the Chapter 9 card start, Lethe and Mordecai appeared yellow and were controllable in the yellow phase (NET-00 complete).
+- **New goal (user):** a sequential two-player campaign from Chapter 1. The first proof is a fixed assignment: Blue = Ike, Titania; Yellow = Boyd, Oscar.
+- Static findings:
+  - The game's own script command `UnitTransferToForce` (`0x800BCA38`), `SetUnitForce` (`0x8003D60C`), the force list layout, and unit-by-PID `0x80016BDC` (F-34).
+  - At chapter end, only force 0 goes to the roster (`0x80016C58` from `0x8002E0D0`; F-35).
+  - PIDs: Boyd = `PID_BOLE`, Titania = `PID_TIAMAT` (F-36).
+  - The Prologue with COOP-P3 had no yellow phase when force 3 was empty (F-37).
+- **EXP-15** (two C2 hooks, the game's own command, PID strings in the cave): in the Chapter 1 player phase, Boyd and Oscar go 0 → 3. At chapter end, before the roster move, they go 3 → 0. Tests 27/27, signatures 85/85.
+- `netplay_setup`: the host now also has port 2 (numpad layout), so `--root work/ch1 --enable COOP-P3 --enable EXP-15` gives a one-window, two-controller Chapter 1 test bed.
+- Next: the tester runs EXP-15 (TESTING.md). Then replace the hard-coded PIDs with a persistent owner table.
+- **EXP-15 v1 run 1 (user): PARTIAL.** The Chapter 1 sequence blue → yellow → red works, and Boyd and Oscar were yellow (slot 3 decoded). But both were **deleted** at the chapter transition: Chapter 2 started with Ike and Rhys only, and the next battle's Base Data showed Ike, Titania, Shinon and Gatrie.
+- The proc script and the chapter-sequence step show the hand-back at `0x80016C58` ran too late (F-38). **v2** hands back at the entry of both chapter-end steps (`0x8002E0D0`, `0x80005F04`). Tests 27/27, signatures 92/92. Installed in `work/ch1/host`; retest steps are in TESTING.md.
+
 ## 2026-10-27 — Session 1k: COOP-P1 verified, EXP gate found
 
 - **EXP-08 A PASS**: from slot 6 (`control[3]=2`), the yellow phase came up human-controlled with COOP-P1 only (slot 8 decoded).
@@ -149,3 +164,9 @@ Controller routing / Netplay (per user priority).
 1. Run EXP-00 then EXP-01 (TESTING.md).
 2. Depending on the result: trace proc `0x80284AC8` and the End-turn menu for force-0 assumptions.
 3. Start Phase 2 research: locate the US pad-read buffer.
+- **EXP-15 v2 run 2 (user): PARTIAL.** The suspend/resume shortcut works, but Boyd and Oscar were lost again. RAM shows the v2 hooks active. A state from the ending conversation shows the drop already happened at the seize, through the script command `AllUnitEscape` (`0x800BA784`), which escapes only the force 0 list into the roster and runs the escape worker on forces 1–3 too (F-39).
+- **v3** adds a hand-back at `AllUnitEscape`'s entry (4 blocks). Tests 27/27, signatures 97/97. Installed. The Ch1 turn 1 state was recovered from `lastState.sav` into the test bed's slot 8 (backup `work/saves/GFEE01.ch1_turn1_exp15`).
+- **DBG-01** test aid (user request: speed through the tests): a per-frame C0 routine holds every red unit's HP at 1. It is enabled only in the `work/ch1/host` test bed, and a test keeps test aids out of the COOP packages. Tests 28/28.
+- **EXP-15 v3 PASSED (user, two runs).** Run A skipped Boyd and Oscar (0 EXP) but kept them. In run B, where they fought in the yellow phase, slot 6 (roster at the ending conversation) shows Oscar lv 3 → 4 with 35 EXP and Boyd with 47 EXP. Chapter 2 turn 1 (slot 7) has Ike, Oscar, Boyd and Rhys blue with identical values, and Titania off-map in force 7 as in vanilla. **Chapter-level success criterion met** for the fixed assignment.
+- Still unchecked: defeat (Ike falls → Game Over), a yellow-assigned unit dying, the single-unit `UnitEscape` command, and battle save/load during a two-army chapter.
+- Next: a persistent owner table (per PID, applied at every chapter start, returned at every chapter-end path) to replace EXP-15's hard-coded PIDs and Chapter 1 check. Then NET-01 (Netplay) with the campaign start.

@@ -475,7 +475,7 @@ Both have Background Input on, so two windows on one PC can share one keyboard. 
 | Suspend in the slot 6 state, host card | **FAIL (expected after the fact):** "This is not the original Memory Card…" (F-31 b) |
 | Fresh boot in `work/netplay/host`, codes COOP-P3 + EXP-05, New Game (Easy, file 1), win the Prologue, save at the prompt to **file 2** | **PASS:** the card holds "Prologue: Mercenaries" (file 1) and **"Ch. 9: Gallia"** (file 2). A state at the base (`work/netplay/host/StateSaves/GFEE01.s02`) decodes as chapter id 10, turn 1, Ike Ranger lv 3 |
 | Fresh boot, codes COOP-P3 only, Title → **Restart Chapter → Ch. 9** | **PASS:** the Chapter 9 base menu appears, with no save state involved |
-| Base → End → first player phase with Lethe/Mordecai yellow | **NOT YET CHECKED** (handed to the tester) |
+| Base → End → first player phase with Lethe/Mordecai yellow | **PASS (user, 2026-10-27):** from the card start (one instance, no Netplay), Lethe and Mordecai appeared as yellow units and were controllable in the yellow phase |
 
 Card backup: `work/saves/netplay_ch9_card/01-GFEE-FIREEMBLEM8J.gci` (SHA-1 `d93a22ae26227976a7a07c2097aca713f0899086`). `netplay_setup` copies it into the host card. The user's card (`7afef93c…`), slot 1 (`b8a42f43…`) and slot 6 (`d8430d71…`) were unchanged afterwards. To remake the card: `install_codes --user work/netplay/host --enable COOP-P3 --enable EXP-05`, then repeat the row above.
 
@@ -517,3 +517,72 @@ Card backup: `work/saves/netplay_ch9_card/01-GFEE-FIREEMBLEM8J.gci` (SHA-1 `d93a
 | — | — | NOT RUN | |
 
 Two machines come after NET-01: the same folders on each PC (the client folder from `netplay_setup` on the second machine), with the host's IP and port 2626 forwarded (or Dolphin's traversal server).
+
+## EXP-15 — Chapter 1 with two armies (Phase 4 proof, fixed assignment)
+
+**Goal (user):** play Chapter 1 with **Blue = Ike, Titania** (player 1, port 1) and **Yellow = Boyd, Oscar** (player 2, port 2), strictly in sequence (blue phase, then yellow phase, then enemy phase), and carry everyone into Chapter 2 with their progression.
+
+**Change (F-34, F-35):** EXP-15 reuses the game's own script command `UnitTransferToForce`:
+- **Block 1**, at the start of the Chapter 1 player phase (chapter id 2, phase 0): Boyd (`PID_BOLE`) and Oscar move force 0 → 3, only if they are in force 0, so it runs once.
+- **Blocks 2–4** (v3), at the entry of every chapter-end path found (F-38, F-39): they move 3 → 0. The paths are the seize/clear event command `AllUnitEscape` (`0x800BA784`), the transition `0x8002E0D0` and the chapter sequence `0x80005F04`. Earlier versions ran too late: v1 used the roster move `0x80016C58`, and v2 lacked `AllUnitEscape`.
+
+Everything else is COOP-P3: yellow phase human-controlled, ownership, leftover units wait, partner EXP and level-up, and port 2 input. Static: `test_exp15_gecko_hooks`, 97/97 signatures. **v3 PASSED** (user, 2026-10-27). Runs 1 (v1) and 2 (v2) were PARTIAL.
+
+Test bed (already created; `--force` recreates it):
+```bash
+.venv/Scripts/python -m tools.netplay_setup --root work/ch1 --enable COOP-P3 --enable EXP-15 --force
+```
+`work/ch1/host` is a private Dolphin user folder:
+- Port 1 keys: X/Z/C/S/D, Enter, arrows. Port 2 keys: M/N/B/V/E, Y, numpad 8/5/4/6.
+- Its card has file 1 = Prologue and file 2 = Ch. 9.
+- Its save states go to `work/ch1/host/StateSaves`, so your own slots are untouched.
+
+### Procedure (tester)
+1. Close Dolphin. Start it with the test bed:
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/ch1/host
+   ```
+2. Boot the game. **Restart Chapter → file 1 (Prologue)**. Play the Prologue (Vulnerary in the Greil fight). At the **Save Data** prompt, save to **file 3**. Expected: "Ch. 1".
+3. Chapter 1 battle, first player phase (turn 1): press **Shift+F3** (state slot 3). Check:
+   - Boyd and Oscar have **yellow** map rings; Ike and Titania have blue.
+   - Port 1 (X) on Boyd does nothing; port 2 (numpad, M) does nothing in this phase.
+4. Move Ike and Titania with port 1 and end the phase (D → End).
+5. Expected: a **yellow (partner) phase** starts. Press **Shift+F4**.
+   - Port 1 does nothing.
+   - With port 2, move Boyd and Oscar. **Attack** an enemy with one of them and note the EXP shown. End the phase with E → End.
+6. Enemy phase: enemies may attack either army. Note any counter EXP.
+7. Repeat for 2+ turns, then clear the chapter by defeating the boss with anyone. Note any conversation or event that looks wrong.
+8. At the end-of-chapter **Save Data** prompt, save to **file 4**. Expected: "Ch. 2".
+9. Chapter 2, first player phase: press **Shift+F5**. Check that Boyd and Oscar are present, blue, and keep their level/EXP, with no duplicate units. (EXP-15 only reassigns in Chapter 1, so they are blue again in Chapter 2.)
+10. Send screenshots of steps 3, 5 and 9 and tell me when the slots are saved. I'll decode slots 3–5.
+
+**Optional defeat check:** from slot 3, let Ike be defeated. Expected: the normal Game Over.
+
+**Success:** every check above holds: blue only in the blue phase and yellow only in the yellow phase, each on its own port, never at the same time; both armies fight the same enemies; EXP is gained and kept; the chapter clears normally; and Chapter 2 has the full roster once each.
+
+**Failure modes, and what each tells us:**
+- Boyd or Oscar still blue at turn 1 → block 1 did not run (slot 3 tells).
+- No yellow phase → the phase skip rule (F-11) needs more than units in force 3.
+- Boyd or Oscar missing in Chapter 2 → block 2 did not run, or roster bookkeeping needs more. Nothing is lost: it is a test card.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | user (v1) | **PARTIAL** | **Passed:**<br>• Chapter 1's first fight: blue, yellow and red phases alternated as intended (screenshot: Boyd and Oscar with yellow rings, turn 2).<br>• Slot 3 (Ch1, turn 1, phase 0) decodes as Oscar (unit 2) and Boyd (unit 3) in force 3; Ike and Titania in force 0.<br>**Failed:** Boyd and Oscar were **lost** at the transition.<br>• Slot 4 (chapter id 3 base, turn 3): the roster (force 5) holds only Ike and Titania, and unit slots 2 and 3 are empty.<br>• Slot 5 (Ch2 turn 1): Ike and Rhys in force 0, Titania in force 7.<br>• The next battle's Base Data lists Ike, Titania, Shinon and Gatrie. In vanilla Chapter 2 (old slot 7) Oscar and Boyd are deployed.<br>Cause and fix: F-38, v2. The test card was not written (no save at the prompts). |
+
+| 2026-10-27 | user (v2) | **PARTIAL** | Suspend shortcut worked: suspend from the Ch1 turn 1 state, close, reopen, resume. Phases and controls as in run 1. **Boyd and Oscar missing again in Chapter 2** (Base Data: Ike, Rhys). The v2 hooks are patched in RAM (slots 6/7). Slot 6, taken during the ending conversation, already has Ike and Titania in force 5 and unit slots 2 and 3 empty: the drop happens at the seize, in `AllUnitEscape` (F-39). v3 hooks it and passed. |
+| 2026-10-27 | user (v3, DBG-01) | **PASS (no yellow EXP)** | Suspend from slot 8, then fresh boot and resume. Chapter 1 cleared with blue → yellow → red phases. Chapter 2 Base Data lists **Ike, Oscar, Boyd, Rhys**. Slot 6 (ending conversation) has Oscar and Boyd in force 5 (roster); slot 7 (Ch2 turn 1) has them in force 0, with no duplicates. Boyd and Oscar weren't used, so EXP stayed 0. |
+| 2026-10-27 | user (v3, DBG-01) | **PASS** | Rerun with Boyd and Oscar fighting in the yellow phase. Slot 6 (11:54): **Oscar lv 3 → 4, EXP 35**; **Boyd EXP 0 → 47**; Ike lv 4 EXP 2; Titania EXP 20; all four in force 5. Slot 7 (Ch2 turn 1): Ike, Oscar (lv 4, 35, max HP 27), Boyd (lv 2, 47) and Rhys in force 0. Titania in force 7, as in vanilla Ch2 (old slot 7). The Base Data screenshot matches. The user reports every check passed: phases, separate ports, shared enemies, the chapter events, and the transition. |
+
+### Retest of v3 (tester)
+EXP-15 v3 is installed in `work/ch1/host`. Slot 3 now holds a Chapter 2 state, so the Chapter 1 turn 1 state (Dolphin's `lastState.sav`, SHA-1 `11569207…db7d`, backup `work/saves/GFEE01.ch1_turn1_exp15`) has been copied to **slot 8**.
+**Speed aids (test bed only):**
+- **DBG-01** is enabled in `work/ch1/host`: every red unit's HP is held at 1, so any hit kills. It is a per-frame C0 routine (`test_dbg01_enemy_hp`). It is never part of a COOP package; a test checks that.
+- It only takes effect after a **fresh boot**. A state restores the code list it was saved with (F-25), which is why the suspend/resume route is used below.
+- Also: turn off battle animations in the game's Options, and hold Dolphin's frame-limit hotkey (Tab by default) to fast-forward.
+
+1. **Shortcut:** open the test bed, load **slot 8** (F8). In the map menu choose **Suspend → Yes**. Close Dolphin.
+2. Start the test bed again (fresh boot = v2 codes) and **resume** the suspended chapter from the title. If the suspend failed, replay from file 1 (Prologue) as in the main procedure.
+3. Play Chapter 1 as before.
+4. **Right after the seize**, during the ending conversation, press **Shift+F6**.
+5. Save at the end-of-chapter prompt to **file 3**. At the first Chapter 2 player phase, press **Shift+F7**.
+6. Tell me who is deployed, and send the Base Data screen. Expected: Oscar and Boyd are back as blue units in Chapter 2, as in vanilla. (Same state slots as before: Shift+F6 right after the seize, Shift+F7 in Chapter 2.)

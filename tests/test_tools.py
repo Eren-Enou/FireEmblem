@@ -190,6 +190,57 @@ class GameTests(unittest.TestCase):
         # r13 (SDA base) = 0x8036EDA0, so r13-0x7B60 = 0x80367240 is the pointer the game stores pad object 0 in
         self.assertEqual((dol.u32(0x80003334), dol.u32(0x80003338)), (0x3DA08036, 0x61ADEDA0))
 
+    def test_exp15_gecko_hooks(self):
+        """EXP-15: caves calling UnitTransferToForce for PID_BOLE/PID_OSCAR (Ch1 blue phase 0->3; every chapter-end path 3->0)."""
+        import capstone, struct
+        from tools.fe9.ppc import Dol
+        dol = Dol(self.disc.read_dol())
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        blocks = self._gecko_blocks("EXP-15 Chapter 1: Boyd and Oscar fight as the yellow army (fixed assignment)")
+        self.assertEqual([a for a, _ in blocks], [0x8002E738, 0x800BA784, 0x8002E0D0, 0x80005F04])
+        for (addr, words), (src, dst) in zip(blocks, [(0, 3), (3, 0), (3, 0), (3, 0)]):
+            body = words[:-2] if words[-2] == 0x60000000 else words[:-1]
+            self.assertEqual(words[-1], 0)
+            self.assertEqual(body[-1], dol.u32(addr))  # original instruction replayed
+            code = b"".join(struct.pack(">I", w) for w in body)
+            self.assertIn(b"PID_BOLE\0\0\0\0PID_OSCAR\0\0\0", code)
+            data = code.index(b"PID_BOLE")
+            asm = [f"{i.mnemonic} {i.op_str}" for i in md.disasm(code[data + 24:], 0)]
+            text = "\n".join(asm)
+            self.assertIn("ori r12, r12, 0x6bdc", text)   # 0x80016BDC unit by PID
+            self.assertIn("ori r12, r12, 0xca38", text)   # 0x800BCA38 UnitTransferToForce
+            self.assertIn(f"cmpwi r0, {src}", text)
+            self.assertIn(f"li r4, {dst}", text)
+            # the bl over the strings lands right after them
+            bl = body[data // 4 - 1]
+            self.assertEqual(bl, 0x48000000 | (24 + 4) | 1)
+        head = [f"{i.mnemonic} {i.op_str}" for i in md.disasm(
+            b"".join(struct.pack(">I", w) for w in blocks[0][1][:14]), 0)]
+        self.assertIn("lbz r0, 0x718(r12)", head)      # chapter id
+        self.assertIn("cmpwi r0, 2", head)             # Chapter 1
+        self.assertIn("lbz r0, 0x719(r12)", head)      # phase
+
+    def test_dbg01_enemy_hp(self):
+        """DBG-01 (test aid): per-frame C0 routine walking the force 1 list, HP byte +0x1A8 held at 1."""
+        import capstone, struct
+        from tools.install_codes import ROOT as R, parse_sections
+        lines = parse_sections((R / "codes/GFEE01.ini").read_text())["Gecko"]
+        i = lines.index("$DBG-01 Test aid: enemies have 1 HP")
+        self.assertEqual(lines[i + 1], "C0000000 00000006")
+        words = [int(w, 16) for line in lines[i + 2:i + 8] for w in line.split()]
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        asm = [f"{x.mnemonic} {x.op_str}".strip() for x in md.disasm(b"".join(struct.pack(">I", w) for w in words), 0)]
+        self.assertEqual(asm, ["lis r12, -0x7fd3", "lwz r12, -0x5d90(r12)", "cmpwi r12, 0", "beq 0x2c",
+                               "lbz r11, 0x1a8(r12)", "cmplwi r11, 1", "ble 0x24", "li r11, 1",
+                               "stb r11, 0x1a8(r12)", "lwz r12, 0x184(r12)", "b 8", "blr"])
+        self.assertEqual((0x802D0000 - 0x5D90), 0x802CA264 + 0xC)  # force 1 entry of the force table
+        for name in lines:
+            if name.startswith("$COOP-"):
+                j = lines.index(name) + 1
+                while j < len(lines) and not lines[j].startswith("$"):
+                    self.assertFalse(lines[j].startswith("C0"), f"{name} must not contain a test aid")
+                    j += 1
+
     def test_coop_p1_package(self):
         """COOP-P1 is exactly EXP-08 + EXP-06 + EXP-07."""
         parts = []

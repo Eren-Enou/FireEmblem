@@ -17,7 +17,8 @@ game with EXP-05, Prologue won, saved when prompted; file 2 = "Ch. 9: Gallia"). 
 the slot 6 state: Dolphin refuses to load states during Netplay, and a suspend made from that state is
 rejected as "not the original Memory Card" (RESEARCH F-31). Title > Restart Chapter > Ch. 9 instead.
 
-Usage: python -m tools.netplay_setup [--root work/netplay] [--client-stick numpad|digits] [--force]
+Usage: python -m tools.netplay_setup [--root work/netplay] [--enable CODE ...] [--client-stick numpad|digits] [--force]
+       python -m tools.netplay_setup --root work/ch1 --enable COOP-P3 --enable EXP-15   (Chapter 1 test bed)
 Launch: Dolphin-x64/Dolphin.exe --user work/netplay/host   (and --user work/netplay/client)
 """
 
@@ -41,7 +42,8 @@ def dolphin_ini(games: Path, nickname: str, host: bool) -> str:
     sections = {
         "General": {"ISOPaths": "1", "ISOPath0": str(games)},
         "Analytics": {"Enabled": "False", "PermissionAsked": "True"},
-        "Core": {"EnableCheats": "True", "SIDevice0": "6", "SIDevice1": "0"},
+        # The host also has port 2 (numpad layout) so it doubles as a one-window, two-controller test bed.
+        "Core": {"EnableCheats": "True", "SIDevice0": "6", "SIDevice1": "6" if host else "0"},
         "Input": {"BackgroundInput": "True"},
         "NetPlay": {"Nickname": nickname, "TraversalChoice": "direct", "Address": "127.0.0.1",
                     "HostPort": str(PORT), "ConnectPort": str(PORT)},
@@ -55,10 +57,14 @@ def dolphin_ini(games: Path, nickname: str, host: bool) -> str:
     return text
 
 
-def make_user(dest: Path, games: Path, nickname: str, pad: dict[str, str], codes: str | None) -> None:
+def make_user(dest: Path, games: Path, nickname: str, pad: dict[str, str], codes: str | None,
+              pad2: dict[str, str] | None = None) -> None:
     (dest / "Config").mkdir(parents=True)
     (dest / "Config/Dolphin.ini").write_text(dolphin_ini(games, nickname, codes is not None))
-    (dest / "Config/GCPadNew.ini").write_text(set_ini("", "GCPad1", pad))
+    pads = set_ini("", "GCPad1", pad)
+    if pad2:
+        pads = set_ini(pads, "GCPad2", pad2)
+    (dest / "Config/GCPadNew.ini").write_text(pads)
     (dest / "GC/USA/Card A").mkdir(parents=True)
     if codes is not None:
         (dest / "GameSettings").mkdir()
@@ -89,7 +95,8 @@ def main() -> int:
 
     games = (args.dolphin / "Games").resolve()
     client_keys = {**_KEYS, **(_DIGITS if args.client_stick == "digits" else {})}
-    make_user(host, games, "P1-Blue", PORT1_KEYBOARD, build_ini(args.enable or ["COOP-P3"], verbose=False))
+    make_user(host, games, "P1-Blue", PORT1_KEYBOARD, build_ini(args.enable or ["COOP-P3"], verbose=False),
+              pad2=keyboard_layout(client_keys))
     make_user(client, games, "P2-Yellow", keyboard_layout(client_keys), None)
     for gci in sorted(CH9_CARD.glob("*.gci")):
         shutil.copy2(gci, host / "GC/USA/Card A" / gci.name)
