@@ -624,12 +624,12 @@ Test bed: `work/ch1/host` now has **COOP-P3 + EXP-16 + DBG-01**. Its card (backu
 
 | # | Case | Status | Evidence |
 |---|---|---|---|
-| 1 | Ike's defeat → Game Over | Untested | Ike is never moved (Player 1, rejected in the table) |
-| 2 | Yellow-owned character dies | Untested | `UnitDead` / `GetDiedPlayerCount` may count force 0 only (F-40) |
+| 1 | Ike's defeat → Game Over | Untested (optional step offered) | Ike is never moved (Player 1, rejected in the table) |
+| 2 | Yellow-owned character dies | **Verified with EXP-19:** the unit goes to force 6 with the died flag and the chapter id, as a blue unit would. Without EXP-19 it was freed (Boyd) | F-44, F-45 |
 | 3 | Yellow character escapes / seizes | Seize: only Ike seizes in Ch1–3. Escape: handled by the EXP-16 `UnitEscape` hand-back, untested | F-40 |
 | 4 | Single-unit `UnitEscape` | Static only | F-40, EXP-16 block 5 |
 | 5 | `AllUnitEscape` and chapter cleanup | **Verified** for Chapter 1 → 2 (EXP-15 v3) | F-38, F-39 |
-| 6 | Save/load mid two-army battle | Suspend → fresh boot → resume **verified once** (EXP-15 runs 2/3, forces kept). Battle Save not tested | EXP-15 |
+| 6 | Save/load mid two-army battle | **Verified** mid yellow phase (phase, `control[3]`, forces and done-flags kept). This game has no Battle Save, only Suspend | EXP-15, F-44 |
 | 7 | Ending a phase with yellow units unacted | **Verified** (EXP-07, Ch9) | EXP-07 |
 | 8 | Chapter with zero yellow units | **Verified once**: no yellow phase (Prologue) | F-37 |
 | 9 | Recruitment / story appearances | **Verified** Ch2–4: Rhys, Shinon, Gatrie and Soren joined blue (default); Titania's mid-chapter arrival was blue; Marcia behaved as in the original story | EXP-16 run, F-41 |
@@ -672,3 +672,30 @@ The table is now **Oscar, Boyd, Shinon (`PID_CHINON`), Gatrie (`PID_GATRIE`) →
 | Date | Tester | Result | Notes |
 |---|---|---|---|
 | 2026-10-27 | user (COOP-P3 + EXP-16 + EXP-17 + DBG-01, Ch5) | **PASS** | Yellow phase: **Next Unit jumped through yellow units only**. After every yellow unit had moved, **the phase ended on its own**. With Auto End off, no phase ended automatically once all units had acted. Packaged as **COOP-P4** = COOP-P3 + EXP-17 (`test_coop_p4_package`). |
+
+## EXP-18 + edge cases 1, 6, 7: Base Data, suspend mid yellow phase, yellow death (tester, one session)
+
+**EXP-18 (F-43):** the in-battle Base Data (map menu → **Unit**) is built from force 0 only. EXP-18 makes its two list walks continue into force 3, keeping only units with the game's own "deployed player" flag `0x400`. The game sets that flag on every force 0 unit at map start (`0x8002EA48`), before EXP-16 moves Player 2's units, so native partners (Lethe, Mordecai) never have it. Static: `test_exp18_base_data_hooks`, 114/114 signatures. Installed in `work/ch1/host`: COOP-P4 + EXP-16 + EXP-18 + DBG-01. Card backup: `work/saves/ch1_card_after_exp16_run2.gci`.
+
+Note: this game's map menu has **Suspend**, not a Battle Save, so "save/load mid-battle" = Suspend → fresh boot → resume.
+
+1. Fresh boot of the test bed → **Restart Chapter → "Ch. 5"** → prep → Fight.
+2. **Base Data (EXP-18):** turn 1, Map Menu → **Unit**. Expected: **all 8 units** (Ike, Titania, Rhys, Soren, Oscar, Boyd, Shinon, Gatrie) with their real level, EXP and HP. Open **Status** (Y) on a yellow unit, and try any sort or page buttons. Screenshot the list.
+3. **Suspend mid yellow phase (edge 6, 7):** in the yellow phase, after moving one yellow unit, press Shift+F2, then Map Menu → **Suspend → Yes**. Close Dolphin, start the test bed again (fresh boot) and **resume**. Expected: still the yellow phase; the moved unit is done; the others can be moved with port 2 only; port 1 does nothing. Press Shift+F3 after resuming.
+4. **Yellow death (edge 1):** let **Boyd** die. Enemies still hit at 1 HP, so park him next to several enemies and end turns, or keep attacking into counters. Press Shift+F4 right **before** the fatal enemy phase, and Shift+F5 right **after** his death message.
+5. Map Menu → Unit: is Boyd gone from the list? Then clear the chapter. Press Shift+F6 during the ending conversation and save to the "Ch. 5" file (overwrite).
+6. Chapter 6 prep: screenshot the unit list, then press Shift+F7. Expected (vanilla rule): **Boyd is gone for good**: not in the roster, not revived, not duplicated. Everyone else keeps their progression.
+
+**Optional (edge 2):** from slot 4 or 5, let **Ike** fall. Expected: the normal Game Over.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | user (COOP-P4 + EXP-16 + EXP-18 + DBG-01, Ch5 → Ch6) | **PASS with findings** | **Base Data:** all 8 listed (Ike, Titania, Oscar, Boyd, Rhys, Shinon, Gatrie, Soren) with real level and HP, and the Status screen works for yellow units. But yellow units showed **EXP "--"** at turn 1: `control[3]` is still 2 until the first phase change, so the EXP display hook (EXP-11) does not apply yet (F-44). Fixed: EXP-16's apply step now sets `control[3]` = 1 (not yet re-run). **Suspend mid yellow phase:** slot 2 → resume → slot 3: still phase 3 with `control[3]` = 1, units and done-flags kept, play continued on port 2. **Boyd's death:** slot 4 (before) has him; slot 5 (after) has his unit slot **freed** (backups `work/saves/GFEE01.ch5_before/after_boyd_death`). After Ch5 (slots 6–7) Boyd is gone for good, nobody was revived or duplicated, and the rest kept progression (Oscar lv 6, Gatrie lv 11). **Ch6 prep listing 5 units** is the original story: Ch6's ally data (`bmap07`) has no Shinon or Gatrie, and they wait in force 7. Whether vanilla also frees a dead **blue** unit is the open comparison (next test). |
+
+### Follow-up (tester): vanilla death comparison and the EXP "--" fix
+1. **Blue death comparison:** load **slot 4** (Ch5, before Boyd died; the old code list is fine for this). Let a **blue** unit die (Soren or Rhys) during an enemy phase, then press **Shift+F8** right after the death message.
+2. **EXP display:** fresh boot → Restart Chapter → "Ch. 5" → Fight. At turn 1, before moving anyone, Map Menu → Unit. Expected: the yellow units show **real EXP** (Oscar 82 and so on), not "--".
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | Claude (computer use; COOP-P4 + EXP-16 + EXP-18 + EXP-19 + DBG-01/02; Ch6 from the card) | **PASS** | **EXP display:** at turn 1 in the blue phase, Base Data showed Oscar with **EXP 28** (not "--"); `control[3]` fix confirmed. **Death record (EXP-19):** Oscar (yellow, held at 1 HP by DBG-02, DBG-01 off) attacked a soldier and died to the counter ("The enemy was better…"). Slot 2 (before): force 3, flags `0x00010400`. Slot 3 (after): **force 6, flags `0x01018409` (died `0x8000`), +0x234 = 7**, the same record a dead blue unit gets (F-45). Also seen: the yellow phase **auto-ended** after Oscar's Wait; **Next Unit** jumped to Oscar; port 1 was ignored in the yellow phase. Ch6's prep forces all 5 candidates (F-46). The vanilla blue-death comparison was replaced by the disassembly of the death routine (F-45). The card was not written. |

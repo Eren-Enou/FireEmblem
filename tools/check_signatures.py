@@ -135,6 +135,22 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x80029258, 0x48081399, "bl 0x800AA5F0             Next Unit button"),
     (0x800AA5F8, 0x80840000, "lwz r4,0(r4)              force 0 head (EXP-17 block 1)"),
     (0x800AA61C, 0x28000000, "cmplwi r0,0               start unit in force 0? (EXP-17 block 2)"),
+    # Unit list (F-43): map menu Unit -> 0x8012C9FC(force 0) -> builder 0x8012DFA8 single-force path
+    (0x8007384C, 0x38600000, "li r3,0                   Base Data for force 0"),
+    (0x80073854, 0x480B91A9, "bl 0x8012C9FC             open E_UnitList(force)"),
+    (0x8012E120, 0x7C83002E, "lwzx r4,r3,r0             head of force +0x60 (count)"),
+    (0x8012E12C, 0x80840184, "lwz r4,0x184(r4)          count walk next (EXP-18 block 1)"),
+    (0x8012E46C, 0x837A0184, "lwz r27,0x184(r26)        fill walk next (EXP-18 block 2)"),
+    (0x8002EA48, 0x60000400, "ori r0,r0,0x400           map start: force 0 units = deployed players"),
+    # Death routine 0x8003E8DC (F-45): force 0 -> force 6 died list + flag 0x8000; others freed
+    (0x8003E8F0, 0x880301A8, "lbz r0,0x1A8(r3)          HP"),
+    (0x8003E94C, 0x28000000, "cmplwi r0,0               force 0? (EXP-19)"),
+    (0x8003E968, 0x38630048, "addi r3,r3,0x48           force 6 = died list"),
+    (0x8003E96C, 0x4BFD6E71, "bl 0x800157DC             prepend to force 6"),
+    (0x8003E980, 0x60008000, "ori r0,r0,0x8000          died flag"),
+    (0x8003E98C, 0x981F0234, "stb r0,0x234(r31)         chapter of death"),
+    (0x8003E9F8, 0x4BFFCCF9, "bl 0x8003B6F0             free a non-player unit"),
+    (0x801B70A0, 0x80840048, "lwz r4,0x48(r4)           GetDiedPlayerCount walks force 6"),
     # UnitEscape 0x800BA8F8(unit id) (script command): unit id byte in r3 -> escape worker (EXP-16 block 5)
     (0x800BA8F8, 0x9421FFF0, "stwu r1,-0x10(r1)         UnitEscape entry"),
     (0x800BA900, 0x5463063F, "clrlwi. r3,r3,24          unit id argument"),

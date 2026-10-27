@@ -247,6 +247,7 @@ class GameTests(unittest.TestCase):
             self.assertNotIn("lbz r0, 0x718(r12)", head)   # no chapter restriction any more
             self.assertEqual(addr == 0x8002E738, "lbz r0, 0x719(r12)" in head)   # apply: phase 0 only
             self.assertEqual(addr == 0x800BA8F8, "cmpw r3, r0" in text)          # escape: that unit only
+            self.assertEqual(addr == 0x8002E738, "stb r0, 0x71f(r12)" in text)   # apply: control[3] = 1
         with self.assertRaises(ValueError):
             oc.pid_table({"PID_IKE": 2})
 
@@ -266,12 +267,68 @@ class GameTests(unittest.TestCase):
         self.assertEqual(asm[0], pick + ["mulli r12, r12, 0xc", "lwzx r4, r4, r12"])   # head of force r12
         self.assertEqual(asm[1], pick + ["cmplw r0, r12", "nop"])                     # start unit in force r12
 
+    def test_exp18_base_data_hooks(self):
+        """EXP-18: both force-0 unit-list walks continue into force 3 units flagged 0x400 (deployed players)."""
+        import capstone, struct
+        from tools.fe9.ppc import Dol
+        dol = Dol(self.disc.read_dol())
+        blocks = self._gecko_blocks("EXP-18 Base Data in battle lists Player 2's yellow characters")
+        self.assertEqual([a for a, _ in blocks], [0x8012E12C, 0x8012E46C])
+        self.assertEqual((dol.u32(0x8012E12C), dol.u32(0x8012E46C)), (0x80840184, 0x837A0184))
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        for (addr, words), cur, dst in zip(blocks, (4, 26), (4, 27)):
+            body = words[:-2] if words[-2] == 0x60000000 else words[:-1]
+            asm = [f"{i.mnemonic} {i.op_str}" for i in md.disasm(b"".join(struct.pack(">I", w) for w in body), 0)]
+            self.assertEqual(asm[0], f"lwz r12, 0x184(r{cur})")          # vanilla next pointer
+            self.assertEqual(asm[-1], f"mr r{dst}, r12")
+            for must in ("lbz r11, 0x60(r31)", "lwz r12, -0x5d78(r12)", "cmpwi r11, 3", "andi. r11, r11, 0x400"):
+                self.assertIn(must, asm)
+        self.assertEqual(0x802D0000 - 0x5D78, 0x802CA264 + 3 * 0xC)    # force 3 list head
+
+    def test_exp19_death_record_hook(self):
+        """EXP-19: at the death routine's force check, force 3 + flag 0x400 counts as force 0."""
+        from tools.fe9.ppc import Dol
+        dol = Dol(self.disc.read_dol())
+        asm = self._gecko_c2("EXP-19 Player 2 characters who die get the normal player death record", 0x8003E94C)
+        self.assertEqual(asm, ["cmplwi r0, 3", "bne 0x18", "lwz r12, 0x1a0(r31)", "andi. r12, r12, 0x400",
+                               "beq 0x18", "li r0, 0", "cmplwi r0, 0"])
+        self.assertEqual(self._cave_words[-1], dol.u32(0x8003E94C))
+        self.assertEqual(dol.u32(0x8003E968), 0x38630048)   # force 0 branch: force 6 (died list)
+
+    def test_dbg02_yellow_hp(self):
+        """DBG-02 (test aid): per-frame C0 holding force 3 units with flag 0x400 at 1 HP."""
+        import capstone, struct
+        from tools.install_codes import ROOT as R, parse_sections
+        lines = parse_sections((R / "codes/GFEE01.ini").read_text())["Gecko"]
+        i = lines.index("$DBG-02 Test aid: Player 2 deployed units have 1 HP")
+        self.assertEqual(lines[i + 1], "C0000000 00000008")
+        words = [int(w, 16) for line in lines[i + 2:i + 10] for w in line.split()]
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        asm = [f"{x.mnemonic} {x.op_str}".strip() for x in md.disasm(b"".join(struct.pack(">I", w) for w in words[:-1]), 0)]
+        self.assertEqual(asm[:2], ["lis r12, -0x7fd3", "lwz r12, -0x5d78(r12)"])
+        self.assertIn("andi. r11, r11, 0x400", asm)
+        self.assertEqual(asm[-1], "blr")
+
     def test_coop_p4_package(self):
         """COOP-P4 is exactly COOP-P3 + EXP-17, with no hook used twice and none shared with EXP-16."""
         from tools import owner_code as oc
         parts = self._gecko_blocks("COOP-P3 Two-army co-op, port 1 blue / port 2 yellow (Phase 2 package v1)")
         parts += self._gecko_blocks("EXP-17 Auto-end and Next Unit use the yellow army in the yellow phase")
         package = self._gecko_blocks("COOP-P4 Two-army co-op with yellow auto-end and Next Unit (Phase 4 package v1)")
+        self.assertEqual(package, parts)
+        hooks = [a for a, _ in package]
+        self.assertEqual(len(hooks), len(set(hooks)))
+        self.assertFalse(set(hooks) & {a for a, _ in oc.blocks()})
+
+    def test_coop_p5_package(self):
+        """COOP-P5 is exactly COOP-P4 + EXP-18 + EXP-19, with no hook used twice and none shared with EXP-16."""
+        from tools import owner_code as oc
+        parts = []
+        for name in ("COOP-P4 Two-army co-op with yellow auto-end and Next Unit (Phase 4 package v1)",
+                     "EXP-18 Base Data in battle lists Player 2's yellow characters",
+                     "EXP-19 Player 2 characters who die get the normal player death record"):
+            parts += self._gecko_blocks(name)
+        package = self._gecko_blocks("COOP-P5 Two-army co-op, Player 2 characters treated as player units (Phase 4 package v2)")
         self.assertEqual(package, parts)
         hooks = [a for a, _ in package]
         self.assertEqual(len(hooks), len(set(hooks)))

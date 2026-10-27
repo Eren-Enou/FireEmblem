@@ -196,3 +196,18 @@ Controller routing / Netplay (per user priority).
 - Findings: the in-battle Base Data list shows force 0 only (UI gap). There is no auto-end in the yellow phase. Static search for the auto-end check (human-phase proc steps, acted-bit tests, `GetUnitSelectState` callers) found none of the routines it would sit in; next is locating the option byte with a two-state memory diff.
 - **Auto-end found (F-42)** from the user's two option states: Auto End = `state+0x9E` bit 0x20. The after-action step `0x80028C90` ends the phase when the next-unit search `0x800AA5F0` finds nobody, but that search was hard-wired to force 0 (and also drives Next Unit, F-28). **EXP-17** (2 tiny C2 blocks) uses force 3 in phase 3. Tests 30/30, signatures 108/108. Installed in the test bed; procedure is in TESTING.md.
 - **EXP-17 PASSED (user, Ch5):** Next Unit cycles yellow units, the yellow phase auto-ends after the last yellow unit acts, and with Auto End off nothing ends automatically. **COOP-P4** = COOP-P3 + EXP-17 is packaged (`test_coop_p4_package`). Install COOP-P4 + EXP-16. Tests 31/31, signatures 108/108.
+
+## 2026-10-27 — Session 1q: playable-roster classification (EXP-18), edge-case session
+
+- **Why yellow characters were missing from Base Data (F-43):** the map menu's Unit command lists the force 0 list only (`0x8012C9FC(0)` → builder `0x8012DFA8`). This is part of a broader pattern: the game's "player army" is forces 0 and 5 (mask query 4).
+- **Central criterion:** the game's own flag `0x400` (set at map start on every force 0 unit) marks deployed player units and survives the EXP-16 move. Native partners never have it.
+- **EXP-18:** both list walks continue from force 0 into force 3 units with `0x400`, only for the force 0 list (2 C2 blocks). Tests 32/32, signatures 114/114.
+- Installed: COOP-P4 + EXP-16 + EXP-18 + DBG-01 in the test bed. One tester session is written (TESTING.md): Base Data, suspend/resume mid yellow phase (edges 6/7; there is no Battle Save in this game), and a yellow death through to the next chapter (edge 1), with optional Game Over.
+- Next, depending on results: the death handling for force 3; the other query-4 users (save path, item check) once a runtime failure shows they matter; then the first flexible prep screen and NET-01.
+- **EXP-18 session (user): PASS with findings.** Base Data now lists all 8 units, but yellow EXP showed "--" at turn 1 because `control[3]` = 2 until the first phase change; EXP-16's apply step now also sets `control[3]` = 1 (F-44). Suspend/resume mid yellow phase works. A yellow death frees the unit slot (Boyd gone for good, no revival or duplicate). Ch6's 5-unit prep list is the original story (no Shinon or Gatrie in `bmap07`). Next: compare with a vanilla blue death, and confirm the EXP display fix.
+- **Session 1q, continued (Claude, autonomous, computer use):**
+  - The **EXP display fix** is verified: Base Data showed Oscar with real EXP at turn 1.
+  - **Yellow death record:** the death routine `0x8003E8DC` keeps dead force 0 units in force 6 with flag `0x8000` and the chapter id, but frees other forces (F-45). **EXP-19** treats deployed Player 2 units (force 3 + `0x400`) as force 0 there. **Runtime-verified:** Oscar died in Ch6 and got exactly that record.
+  - New test aid: DBG-02 (Player 2 units at 1 HP).
+  - Prep screens operate on the vanilla roster before ownership applies (F-46). Ch3, Ch4 and Ch6 force every candidate.
+  - Tests 34/34, signatures 122/122.
