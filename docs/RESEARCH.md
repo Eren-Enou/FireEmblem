@@ -173,6 +173,12 @@ Two consequences of option A:
 - Restoring a character to blue during chapter cleanup cannot erase the assignment, because the assignment is never stored in the unit.
 - A battle save/suspend keeps the current tactical force per unit (F-13). The next player-phase start re-applies the table either way.
 
+### Netplay runtime facts (NET-01, 2026-10-27)
+
+| ID | Finding | Evidence | Confidence |
+|---|---|---|---|
+| F-47 | Dolphin 2609a Netplay with `netplay_setup` folders behaves as follows:<br>• The `[NetPlay]` presets appear in the dialogs.<br>• The default pad mapping gives the first player GC1 and the second GC2, which is what EXP-14 expects.<br>• "Load Host's Save Data Only" delivers the host's GCI folder to the client, and the host's card is not written.<br>• Synced Gecko codes are active on the client (yellow phase human, port routing, auto-end).<br>• **Saving** a state during Netplay is allowed; only loading is blocked (F-31). That makes per-instance desync checks by state comparison possible. | NET-01 run | RUNTIME |
+
 ### Starting Chapter 9 under Netplay (2026-10-27)
 
 | ID | Finding | Evidence | Confidence |

@@ -36,7 +36,8 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 ## Phase 3 — Online (Dolphin Netplay)
 - [x] Chapter 9 start without save states: a native memory-card save, "Ch. 9: Gallia" (NET-00, F-31).
 - [x] Reproducible host/client setup: `tools/netplay_setup.py` (private `--user` folders, F-32).
-- [ ] NET-01: one-PC loopback session (tester). Host syncs codes and save. P1 → port 1, P2 → port 2 via pad mapping.
+- [x] NET-01: one-PC loopback session (Claude, 2026-10-27): codes and save synced, P1 → GC1 and P2 → GC2, two turns in lockstep, no cross-control, identical game state in both instances.
+- [ ] NET-02: combat and a full chapter under Netplay; then two machines (tester).
 - [ ] Play Ch9 to completion online. Document desyncs, disconnects and save handling.
 
 **Done when:** two machines finish Ch9 with no desync, with a written test log.

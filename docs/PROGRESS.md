@@ -211,3 +211,8 @@ Controller routing / Netplay (per user priority).
   - New test aid: DBG-02 (Player 2 units at 1 HP).
   - Prep screens operate on the vanilla roster before ownership applies (F-46). Ch3, Ch4 and Ch6 force every candidate.
   - Tests 34/34, signatures 122/122.
+- **NET-01 PASSED (first real Netplay session; Claude, one PC, two instances).**
+  - Host COOP-P5 + EXP-16 + DBG-01. The codes and the host's Ch9 card were synced to the client; P1 → GC1 and P2 → GC2 were mapped automatically.
+  - Two turns of Ch9 ran in lockstep: each army answered only to its own player (prompts, Next Unit, moves, auto-end), and the enemy phase and conversations were identical.
+  - States saved in both instances decode identically (F-47).
+  - Next: combat and a full chapter under Netplay, then the two-machine procedure.
