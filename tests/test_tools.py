@@ -147,6 +147,19 @@ class SaveStateTests(unittest.TestCase):
         self.assertEqual((m.u8(STATE + 0x10), m.u8(STATE + 0x11), m.u16(STATE + 0x12)), (10, 3, 2))
         self.assertEqual(list(m.read(STATE + 0x14, 4)), [1, 2, 2, 1])
 
+    @unittest.skipUnless((ROOT / "work/saves/GFEE01.s08_exp07_afterEnd").exists(), "EXP-07 state not present")
+    def test_exp07_leftover_waits(self):
+        from tools.inspect_state import STATE, UNITS, load_mem1
+        _info, m = load_mem1(ROOT / "work/saves/GFEE01.s08_exp07_afterEnd", IMAGE)
+        self.assertEqual((m.u8(STATE + 0x10), m.u8(STATE + 0x11), m.u16(STATE + 0x12)), (10, 1, 1))
+        pos = {}
+        for i in range(1, 0xA0):
+            u = UNITS + (i - 1) * 0x280
+            char = m.u32(u + 0x188)
+            if char:
+                pos[m.cstr(m.u32(char))] = (m.u8(u + 0x19E), m.u8(u + 0x19F))
+        self.assertEqual(pos["PID_MORDY"], (24, 18))  # left unacted, not moved by the AI
+
     def test_write_state_roundtrip(self):
         import tempfile
         from tools.fe9.savestate import read_state, write_state

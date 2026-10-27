@@ -271,7 +271,7 @@ Steps:
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
-| — | — | NOT RUN | |
+| 2026-10-27 | user | **PASS: A(a–d) and B** | A(b–d): the Enemy Phase ran normally; on turn 2, blue was movable and yellow locked; ending turn 2's yellow phase immediately moved nobody. B (EXP-07 alone, slot 6): the vanilla yellow AI acted normally. Details for A(a): | Codes EXP-01 + EXP-06 + EXP-07, from slot 7. Lethe acted, Mordecai was left, then End. Mordecai stayed put and the phase advanced without a hang. Slot 8 (backup `work/saves/GFEE01.s08_exp07_afterEnd`): Ch9, turn 1, **phase 1 (Enemy)**, Mordecai at his start square (24,18), Lethe at (25,19). Regression test: `SaveStateTests.test_exp07_leftover_waits`. |
 
 **Phase 1 status:** the core interaction is achieved on one controller. The yellow army is human-controlled in its own phase, the blue army in its own, with no cross-control in either direction, over two full turns, using EXP-01 + EXP-06.
 

@@ -1,5 +1,14 @@
 # Progress Log
 
+## 2026-10-27 — Session 1i: EXP-07 PASS (A and B)
+
+- Update: the tester confirmed EXP-07 A(b–d) and B (vanilla yellow AI unaffected with EXP-07 alone). F-18 is closed.
+- Remaining Phase 1 items: a full Chapter 9 run with a .dtm, and packaging into one code set.
+
+- With EXP-01 + EXP-06 + EXP-07, ending the yellow phase with Mordecai unacted left him in place, and the Enemy Phase began. Slot 8 verifies it by decoding; regression test added.
+- Note: Dolphin rewrote `User/GameSettings/GFEE01.ini` with duplicated `[Gecko_Enabled]` entries (seen after the tester opened Properties). It's harmless, and `install_codes` regenerates the file anyway.
+- Remaining Phase 1 checks: EXP-07 A(b–d), B (vanilla yellow AI still works with EXP-07 alone), a full-chapter run with a .dtm, and packaging.
+
 ## 2026-10-27 — Session 1h: F-18 traced, EXP-07 drafted
 
 - Decision (user): leftover yellow units should **wait**, not be handed to the AI.
