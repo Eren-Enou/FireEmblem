@@ -150,7 +150,9 @@ Steps:
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
-| — | — | NOT RUN | |
+| 2026-10-27 | user | **PASS (a, b, d); c, e not explicitly checked** | Only EXP-04 was enabled. The player controlled the enemy during the Enemy Phase, both for Boyd and in the follow-up tutorial fight against Greil. The tutorial played through to completion, and the game then loaded Chapter 1 normally (expected: EXP-05 was not enabled). Slot 4 (backup `work/saves/GFEE01.s04_exp04`) decodes as Prologue, turn 1, **phase 1**, control `01 01 02 02`, Boyd in force 1. Regression test: `SaveStateTests.test_exp04_enemy_phase_snapshot`. |
+
+**Conclusion:** setting `0x8033071C + force` to 1 makes the game run that force's phase with the human-input process. No new selection, movement or menu code was needed. Still to confirm in a later run: (c) the unit greys out after acting, and (e) blue units can't be moved during the red phase.
 
 ## EXP-05 — Load Chapter 9 by redirecting the chapter id (fixture for EXP-01)
 

@@ -1,5 +1,12 @@
 # Progress Log
 
+## 2026-10-27 — Session 1d: EXP-04 PASS
+
+- **First runtime demonstration of human control of a non-blue army.** With only `0033071D 00000001` (control[1] = human), the user controlled Boyd, and then Greil, during the tutorial's Enemy Phases. The tutorial completed and Chapter 1 loaded normally. Evidence: user report and slot 4 (phase 1, control `01 01 02 02`), with a regression test added.
+- F-05 upgraded to VERIFIED-RUNTIME for force 1.
+- EXP-05 (Chapter 9 redirect) has **not** been run; it was not enabled in this session.
+- Next: EXP-05 → slot 6 Chapter 9 fixture → EXP-01 (yellow). Also confirm EXP-04 (c) greying out and (e) blue can't move during the red phase.
+
 ## 2026-10-27 — Session 1c: EXP-02/EXP-03 results, new plan
 
 ### Results

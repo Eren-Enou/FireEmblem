@@ -82,6 +82,14 @@ class SaveStateTests(unittest.TestCase):
         self.assertEqual(m.u8(STATE + 0x11), 0)  # phase
         self.assertEqual(m.u16(STATE + 0x12), 1)  # turn
 
+    @unittest.skipUnless((ROOT / "work/saves/GFEE01.s04_exp04").exists(), "EXP-04 state not present")
+    def test_exp04_enemy_phase_snapshot(self):
+        from tools.inspect_state import STATE, load_mem1
+        _info, m = load_mem1(ROOT / "work/saves/GFEE01.s04_exp04", IMAGE)
+        self.assertEqual(m.u8(STATE + 0x10), 1)  # Prologue
+        self.assertEqual(m.u8(STATE + 0x11), 1)  # enemy phase
+        self.assertEqual(list(m.read(STATE + 0x14, 4)), [1, 1, 2, 2])  # red army human-controlled
+
     def test_write_state_roundtrip(self):
         import tempfile
         from tools.fe9.savestate import read_state, write_state
