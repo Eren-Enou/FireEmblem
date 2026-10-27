@@ -177,7 +177,9 @@ Steps:
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
-| — | — | NOT RUN | |
+| 2026-10-27 | user | **PASS** | After the tutorial, Chapter 9's map loaded directly. Slot 6 (backup `work/saves/GFEE01.s06_ch9_fixture`, SHA-1 `d8430d71353537c78628ae9029118c48b70525a0`) decodes as chapter id 10, turn 1, phase 0, control `01 02 02 02`. **Lethe (25,18) and Mordecai (24,18) are in force 3 (yellow)**. Blue: Ike, Mist, Rolf. Red: 17 Daein units and 1 bandit. The memory card was not written. Regression test: `SaveStateTests.test_ch9_fixture`. |
+
+**Chapter 9 fixture:** slot 6. Treat it as read-only from now on; save experiment states to other slots. To restore it: `cp work/saves/GFEE01.s06_ch9_fixture Dolphin-x64/User/StateSaves/GFEE01.s06`.
 
 ## EXP-01 — Human-controlled partner army in Chapter 9 (Phase 1 core experiment)
 
@@ -185,12 +187,22 @@ Steps:
 **Change:** AR `0033071F 00000001` (control[3] = human) via `--enable EXP-01`.
 **Note:** phase order is 0 → **3** → 1 → 2, so the partner phase comes *right after* your Player Phase, before enemies move. Even a lone Ike can just Wait/End and the yellow phase follows immediately.
 
-1. Common setup with `--enable EXP-01`; load the Ch9 fixture. First run `inspect_state` on it and confirm Lethe/Mordecai are listed as `yellow/partner`.
-2. Player Phase: move Ike's units, then End. Lethe/Mordecai should *not* be selectable now.
-3. Enemy Phase runs as usual.
-4. Partner Phase: save to **slot 7**, then record a–d as in EXP-02 (selecting Lethe → move → Attack/Wait → greys out → phase ends → turn 2).
+1. Close Dolphin. Run `.venv/Scripts/python -m tools.install_codes --enable EXP-01` (EXP-05 is no longer needed).
+2. Boot the game and **Load State → Slot 6** (Chapter 9 fixture; verified: Lethe/Mordecai are yellow).
+3. Player Phase:
+   a. Put the cursor on Lethe and press A. *Expected:* not controllable now (it isn't her phase).
+   b. Move Ike, Mist and Rolf (or just Wait each), then map menu → **End**.
+4. The next phase is the **Partner (yellow) Phase**, because the phase order is 0 → 3 → 1 → 2. As soon as its banner appears, **save to slot 7**.
+5. Record:
+   a. A cursor waits for you instead of Lethe/Mordecai moving on their own.
+   b. You can select Lethe → move → action menu (Attack if next to an enemy, otherwise Wait; also check whether she can **Shove**) → confirm.
+   c. Lethe greys out after acting. Repeat with Mordecai.
+   d. The phase ends (automatically after both act, or via map menu → End) and the **Enemy Phase** follows normally.
+   e. During the yellow phase, Ike/Mist/Rolf **cannot** be moved.
+   f. Bonus: does the laguz transform gauge behave normally? (Lethe/Mordecai start untransformed and won't attack until transformed.)
+6. Save to **slot 8** at any unexpected screen.
 
-**Success (Phase 1 milestone):** a–d all yes, and Ike's army is unaffected. Repeat once and record a Dolphin input movie (.dtm) for proof.
+**Success (Phase 1 milestone):** a–e yes, and Ike's army plays normally on turn 2. For proof, repeat once while recording a Dolphin input movie (Movie → Start Recording, then load slot 6 → save the .dtm to `work/`).
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|

@@ -9,7 +9,7 @@ An online two-player co-op mod for *Fire Emblem: Path of Radiance* (GameCube, FE
 The original campaign, mechanics and story stay recognisable. Netplay comes from Dolphin's lock-step input sync.
 
 ## Current milestone
-**Phase 1.** **EXP-04 PASSED**: the red army was human-controlled in its own phase via `control[1]=1`, which proves the engine's control-mode mechanism. EXP-02 was inconclusive (no green phase in the Prologue) and EXP-03 failed (a mid-battle chapter patch is ignored). Next: **EXP-05** (AR redirect chapter id 2→10 to reach Chapter 9, slot 2), then **EXP-01** (yellow army). Controller routing/Netplay is deferred until a non-blue army is human-controlled. See `docs/TESTING.md`.
+**Phase 1.** **EXP-04 PASSED**: the red army was human-controlled in its own phase via `control[1]=1`, which proves the engine's control-mode mechanism. EXP-02 was inconclusive (no green phase in the Prologue) and EXP-03 failed (a mid-battle chapter patch is ignored). **EXP-05 PASSED**: the Chapter 9 fixture is in slot 6 (backup `work/saves/GFEE01.s06_ch9_fixture`). Next: **EXP-01** (yellow army human-controlled) on slot 6. Controller routing/Netplay is deferred until a non-blue army is human-controlled. See `docs/TESTING.md`.
 
 ## Saves and states
 - User originals (never write): `Dolphin-x64/User/StateSaves/GFEE01.s01`, `Dolphin-x64/User/GC/USA/Card A/*.gci`. Backups with SHA-1 are in `work/saves/` (git-ignored).

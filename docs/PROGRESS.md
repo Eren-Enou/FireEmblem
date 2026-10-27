@@ -1,5 +1,10 @@
 # Progress Log
 
+## 2026-10-27 — Session 1e: EXP-05 PASS, Chapter 9 fixture
+
+- The conditional AR redirect (`08330718 00000002` / `00330718 0000000A`) loaded Chapter 9 straight after the tutorial. Slot 6 has been verified by decoding: chapter id 10, Lethe/Mordecai in force 3, control `01 02 02 02`. Backup and SHA-1 are in TESTING.md, and a regression test was added.
+- **Next: EXP-01** on slot 6 (yellow army human-controlled).
+
 ## 2026-10-27 — Session 1d: EXP-04 PASS
 
 - **First runtime demonstration of human control of a non-blue army.** With only `0033071D 00000001` (control[1] = human), the user controlled Boyd, and then Greil, during the tutorial's Enemy Phases. The tutorial completed and Chapter 1 loaded normally. Evidence: user report and slot 4 (phase 1, control `01 01 02 02`), with a regression test added.
