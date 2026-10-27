@@ -1,5 +1,19 @@
 # Progress Log
 
+## 2026-10-27 — Session 1k: COOP-P1 verified, EXP gate found
+
+- **EXP-08 A PASS**: from slot 6 (`control[3]=2`), the yellow phase came up human-controlled with COOP-P1 only (slot 8 decoded).
+- **EXP-09**: the tester recorded `work/movies/ch9_coop_p1.dtm` and lost the run deliberately; the warp-fixture army is too weak to win. Recommendation: accept it as the Phase 1 proof and finish Ch9 in Phase 4 with a real army.
+- **Requirement (user):** player-controlled partners must gain EXP. Vanilla `CanGainExp` (`0x8003D13C`) only allows force 0/5 (F-21). **EXP-10** (C2 hook at `0x8003D180`) lets force 3 gain EXP while `control[3]==1`. Static checks 39/39, tests pass. Not yet run.
+- Unit layout: level `+0x19A`, EXP `+0x19B`, laguz gauge `+0x19C` (F-22).
+- Next: EXP-10 runtime test (slots 4/5 before and after a partner battle); EXP-08 B (Prologue) when convenient.
+
+## 2026-10-27 — Session 1j: COOP-P1 package
+
+- **EXP-08**: C2 hook on phase advance (`0x8014D3B4`) sets `control[3]` = 1 if force 3 has units, otherwise 2. It replaces EXP-01's per-frame AR write.
+- **COOP-P1** = EXP-08 + EXP-06 + EXP-07, a single Gecko code to enable. Tests: disassembly of every cave, package equality, 35/35 signatures, 17/17 tests.
+- Next: EXP-08 A (recovery from slot 6) and B (Prologue unchanged), then EXP-09 (full Ch9 with .dtm).
+
 ## 2026-10-27 — Session 1i: EXP-07 PASS (A and B)
 
 - Update: the tester confirmed EXP-07 A(b–d) and B (vanilla yellow AI unaffected with EXP-07 alone). F-18 is closed.

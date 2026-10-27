@@ -52,21 +52,61 @@ class GameTests(unittest.TestCase):
         for addr, word, meaning in SIGNATURES:
             self.assertEqual(dol.u32(addr), word, f"{addr:08X} {meaning}")
 
-    def _gecko_c2(self, name: str, hook: int) -> list[str]:
-        """Return the disassembled cave of a C2 code (minus the branch-back slot)."""
-        import capstone, struct
+    @staticmethod
+    def _gecko_blocks(name: str) -> list[tuple[int, list[int]]]:
+        """Return [(hook address, cave words incl. branch-back slot)] for every C2 block of a code."""
         from tools.install_codes import ROOT as R, parse_sections
         lines = parse_sections((R / "codes/GFEE01.ini").read_text())["Gecko"]
-        start = lines.index("$" + name)
-        header = lines[start + 1]
-        self.assertEqual(header.split()[0], f"C2{hook & 0x1FFFFFF:06X}")
-        nlines = int(header.split()[1], 16)
-        words = [int(w, 16) for line in lines[start + 2:start + 2 + nlines] for w in line.split()]
+        i = lines.index("$" + name) + 1
+        blocks = []
+        while i < len(lines) and not lines[i].startswith("$"):
+            op, count = lines[i].split()
+            assert op.startswith("C2"), f"unexpected Gecko line {lines[i]}"
+            n = int(count, 16)
+            words = [int(w, 16) for line in lines[i + 1:i + 1 + n] for w in line.split()]
+            blocks.append((0x80000000 | int(op[2:], 16), words))
+            i += 1 + n
+        return blocks
+
+    def _gecko_c2(self, name: str, hook: int) -> list[str]:
+        """Return the disassembled cave of a single-block C2 code (minus the branch-back slot)."""
+        import capstone, struct
+        [(addr, words)] = self._gecko_blocks(name)
+        self.assertEqual(addr, hook)
         self.assertEqual(words[-1], 0)  # branch-back slot
         md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
         code = b"".join(struct.pack(">I", w) for w in words[:-1])
         self._cave_words = words[:-1]
         return [f"{i.mnemonic} {i.op_str}".strip() for i in md.disasm(code, 0)]
+
+    def test_exp08_gecko_hook(self):
+        """EXP-08 cave: control[3] = 1 if force 3 has units else 2, then the original instruction."""
+        from tools.fe9.ppc import Dol
+        asm = self._gecko_c2("EXP-08 Yellow control set at each phase change (no per-frame write)", 0x8014D3B4)
+        self.assertEqual(asm, [
+            "lis r12, -0x7fd3", "lwz r12, -0x5d78(r12)", "cmplwi r12, 0", "li r12, 2", "beq 0x18",
+            "li r12, 1", "stb r12, 0x17(r3)", "lbz r0, 0x11(r3)", "nop",
+        ])
+        self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x8014D3B4))
+
+    def test_exp10_gecko_hook(self):
+        """EXP-10 cave: human-controlled force 3 is treated as force 5 by CanGainExp."""
+        from tools.fe9.ppc import Dol
+        asm = self._gecko_c2("EXP-10 Human-controlled yellow units can gain EXP", 0x8003D180)
+        self.assertEqual(asm, [
+            "cmplwi r0, 3", "bne 0x1c", "lis r12, -0x7fcd", "lbz r12, 0x71f(r12)", "cmplwi r12, 1",
+            "bne 0x1c", "li r0, 5", "cmplwi r0, 5", "nop",
+        ])
+        self.assertEqual(self._cave_words[7], Dol(self.disc.read_dol()).u32(0x8003D180))
+
+    def test_coop_p1_package(self):
+        """COOP-P1 is exactly EXP-08 + EXP-06 + EXP-07."""
+        parts = []
+        for name in ("EXP-08 Yellow control set at each phase change (no per-frame write)",
+                     "EXP-06 Units selectable only in their own force's phase",
+                     "EXP-07 Human yellow phase does not hand leftover units to the AI"):
+            parts += self._gecko_blocks(name)
+        self.assertEqual(self._gecko_blocks("COOP-P1 Yellow army human-controlled (Phase 1 package v1)"), parts)
 
     def test_exp06_gecko_hook(self):
         """EXP-06 cave disassembles as intended and replays the original instruction."""

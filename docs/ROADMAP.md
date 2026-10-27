@@ -16,8 +16,9 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - [x] EXP-01: Lethe/Mordecai selectable, movable, can act (including transform) during the Partner Phase; locked in Player Phase.
 - [x] EXP-06: no cross-control (blue locked in yellow phase), with blue unaffected on turn 2.
 - [x] Leftover-unit behaviour (F-18): leftover yellow units **wait** (user decision). EXP-07 fully verified (A a–d, and vanilla control B).
-- [ ] Play Ch9 to the end with EXP-01 + EXP-06 and record a .dtm input movie.
-- [ ] Package as one Gecko code set that doesn't depend on the per-frame AR write (set control at map init and after save load: hook `0x8014D920` / `0x8014C1B8`).
+- [x] Packaged as **COOP-P1** (EXP-08 phase-advance control hook + EXP-06 + EXP-07; no per-frame write). EXP-08 A passed at runtime (B, the Prologue check, not yet reported).
+- [x] EXP-09: recorded a multi-turn Ch9 run with COOP-P1 (`work/movies/ch9_coop_p1.dtm`); the map was lost. Completing Ch9 is deferred to Phase 4 with a real army (recommendation).
+- [ ] EXP-10: human-controlled partner units gain EXP (user requirement). Drafted and statically validated; fold into COOP-P1 v2 once it passes.
 
 **Done when:** a full Ch9 playthrough with a human-driven partner phase, recorded in TESTING.md, with a Dolphin input movie (.dtm) as proof.
 

@@ -49,6 +49,15 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x80028508, 0x8BC40008, "lbz r30,8(r4)             r30 = unit force id"),
     (0x8002858C, 0x801D01A0, "lwz r0,0x1A0(r29)         EXP-06 hook site (original insn)"),
     (0x800285A4, 0x80010024, "lwz r0,0x24(r1)           epilogue, returns r3"),
+    # phase advance: context for the EXP-08 hook (r3 = state, single caller)
+    (0x8002E658, 0x38630708, "addi r3,r3,0x708          caller passes state"),
+    (0x8002E65C, 0x4811ED59, "bl 0x8014D3B4             only call to phase advance"),
+    (0x8014D3B4, 0x88030011, "lbz r0,0x11(r3)           EXP-08 hook site"),
+    # CanGainExp (0x8003D13C): force id must be 0 or 5; EXP-10 hook site
+    (0x8003D174, 0x88030008, "lbz r0,8(r3)              force id"),
+    (0x8003D178, 0x28000000, "cmplwi r0,0               player force may gain EXP"),
+    (0x8003D180, 0x28000005, "cmplwi r0,5               EXP-10 hook site (force 5 allowed)"),
+    (0x8003D188, 0x38600000, "li r3,0                   otherwise no EXP"),
     # phase-end handler 0x8002E670: context for the EXP-07 hook
     (0x8002E684, 0x3BE40708, "addi r31,r4,0x708         r31 = state"),
     (0x8002E6DC, 0x28030000, "cmplwi r3,0               EXP-07 hook site (phase-3 branch)"),

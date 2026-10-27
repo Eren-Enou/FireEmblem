@@ -273,6 +273,75 @@ Steps:
 |---|---|---|---|
 | 2026-10-27 | user | **PASS: A(a–d) and B** | A(b–d): the Enemy Phase ran normally; on turn 2, blue was movable and yellow locked; ending turn 2's yellow phase immediately moved nobody. B (EXP-07 alone, slot 6): the vanilla yellow AI acted normally. Details for A(a): | Codes EXP-01 + EXP-06 + EXP-07, from slot 7. Lethe acted, Mordecai was left, then End. Mordecai stayed put and the phase advanced without a hang. Slot 8 (backup `work/saves/GFEE01.s08_exp07_afterEnd`): Ch9, turn 1, **phase 1 (Enemy)**, Mordecai at his start square (24,18), Lethe at (25,19). Regression test: `SaveStateTests.test_exp07_leftover_waits`. |
 
+## EXP-08 / COOP-P1 — Packaged Phase 1 code set (no per-frame write)
+
+**What changed:** EXP-01 (an AR write of `control[3]=1` every frame) is replaced by **EXP-08**, a C2 hook on the phase-advance function `0x8014D3B4`. It runs once per phase change, before the next phase starts. It sets `control[3]` = 1 if force 3 has units (first-unit pointer `0x802CA288` ≠ 0), otherwise 2 (vanilla CPU). **COOP-P1** = EXP-08 + EXP-06 + EXP-07, with identical lines (`test_coop_p1_package`). Static checks: `test_exp08_gecko_hook`, 35/35 signatures.
+**Why it's robust:** it repairs states and saves made without the mod (slot 6 holds `control[3]=2`) at the first phase change, and chapters with no yellow units keep the vanilla CPU setting, so no empty human phase appears.
+**Known limit:** a state saved *during* a yellow phase with `control[3]=2` stays CPU for that one phase.
+
+**A. Recovery from a pre-mod state**
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable COOP-P1
+   ```
+   This enables only COOP-P1; no AR codes.
+2. Boot the game. Under Properties → Gecko Codes, only **COOP-P1** should be ticked. Load **slot 6** (Ch9 fixture; `control[3]=2` in RAM).
+3. Player Phase: Lethe/Mordecai can't be moved. End the turn.
+4. Yellow phase: save to **slot 8** at the banner. *Expected:* you control Lethe/Mordecai, Ike/Mist/Rolf are locked, and leftover units wait after End.
+
+**B. No yellow units → vanilla**
+1. Same codes. Load **slot 2** (Prologue; no force-3 units).
+2. *Expected:* the tutorial plays exactly as in the unmodded game. The Enemy Phase is AI-controlled, and no extra empty phase waits for input between your turn and the enemy's.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | user | **A PASS**; B not reported | The game ini had COOP-P1 as the only enabled code (written 01:43). Slot 8 (backup `work/saves/GFEE01.s08_exp08_banner`) was saved after loading slot 6, which holds `control[3]=2`. It decodes as Ch9, turn 1, **phase 3, control `01 02 02 01`**, so control was set by the phase-advance hook with no per-frame write. The tester then played yellow phases under COOP-P1 during EXP-09. |
+
+## EXP-09 — Full Chapter 9 playthrough with COOP-P1, recorded as a Dolphin input movie (Phase 1 proof)
+
+1. Codes: COOP-P1 only (as in EXP-08). Boot the game and **load slot 6**.
+2. **Movie → Start Recording Input.** Starting while a game runs makes Dolphin record from a save state (it writes a companion `.dtm.sav`).
+3. Play Chapter 9 to the end, controlling Lethe and Mordecai yourself in every yellow phase. Leave at least one yellow unit unacted at least once, to exercise EXP-07.
+4. **Decline any memory-card save prompt** after the chapter.
+5. **Movie → Stop Recording**, then **Movie → Export Recording…** and save to `work/movies/ch9_coop_p1.dtm`. Keep the `.dtm.sav` next to it; both are git-ignored.
+6. Note anything odd: menus, conversations (e.g. Lethe/Mordecai talk events), shoves, transform behaviour, the boss, the chapter end.
+7. Optional proof check: **Movie → Play Input** with *Read-Only Mode* on, and with COOP-P1 still the only enabled code. It should replay identically.
+
+**Success:** Chapter 9 is completed with a human-controlled yellow army, the recording replays, and issues are noted. → Phase 1 complete.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | user | **PARTIAL: recorded, run lost** | `work/movies/ch9_coop_p1.dtm` (SHA-1 `6739974c…8614`) + `.dtm.sav` (SHA-1 `e2ec6aa8…73d6`; decodes as Ch9, turn 1, Player Phase = slot 6). The DTM header's game MD5 (`f9d17c23…b31f`) matches our image file. The tester controlled the partners for several turns under COOP-P1 and lost the map deliberately to see the outcome. The warp fixture's army is only Ike (Lv 2), Mist and Rolf, so winning is hard. **Finding:** the partners gained no EXP from combat (F-21, vanilla behaviour). Fix: EXP-10. |
+
+**Recommendation:** treat this recorded multi-turn run as the Phase 1 control proof. Defer "complete Chapter 9" to Phase 4, using a save with a real campaign army instead of the warp fixture.
+
+## EXP-10 — Human-controlled yellow units gain EXP
+
+**Cause (static, F-21):** `CanGainExp(unit)` (`0x8003D13C`) only allows force id **0 or 5**. All 25 EXP-related callers go through it (battle EXP `0x80036248`, `AddExp` `0x800351FC`, which writes `0xFF` = "--" otherwise, level-up, UI). So partner units never earning EXP is vanilla behaviour.
+**Change:** Gecko `C203D180` hook (annotated in `codes/GFEE01.ini`). A force-3 unit is treated like force 5 **only while `control[3] == 1`**. CPU-controlled yellow armies (vanilla) are unaffected. Static check: `test_exp10_gecko_hook`, 39/39 signatures.
+
+Steps:
+1. Close Dolphin. Run:
+   ```bash
+   .venv/Scripts/python -m tools.install_codes --enable COOP-P1 --enable EXP-10
+   ```
+2. Boot the game. Under Gecko Codes, COOP-P1 and EXP-10 should be ticked. Load **slot 6**.
+3. Before any partner fights, open Lethe's status screen (cursor on her → R or the info button). Note what the EXP field shows. (*Vanilla:* "--".)
+4. Play until Lethe or Mordecai (transformed) can attack an enemy in a yellow phase. Save to **slot 4** just before confirming the attack.
+5. After the battle, save to **slot 5**, then check:
+   a. Does an EXP bar appear after the partner's battle?
+   b. Does the status screen show a number instead of "--"?
+   c. If EXP passes 100: does the level-up screen appear, and do stats rise?
+   d. Does an enemy-phase counterattack by a partner also give EXP?
+   e. Do blue units still gain EXP normally?
+6. Send me slots 4 and 5. I'll compare the EXP byte (`unit+0x19B`) and the level (`unit+0x19A`).
+
+**Success:** a, b and e yes (c and d if they happen). **Failure modes:** still no EXP (EXP is also gated somewhere else, e.g. when the battle copy is written back to the unit; I'd trace that next), or a crash at the EXP/level-up screen.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| — | — | NOT RUN | |
+
 **Phase 1 status:** the core interaction is achieved on one controller. The yellow army is human-controlled in its own phase, the blue army in its own, with no cross-control in either direction, over two full turns, using EXP-01 + EXP-06.
 
 | Date | Tester | Result | Notes |
