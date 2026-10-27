@@ -1,5 +1,13 @@
 # Progress Log
 
+## 2026-10-27 — Session 1g: EXP-06 PASS (Phase 1 core achieved)
+
+- With EXP-01 + EXP-06, the yellow army is human-controlled in its own phase and blue in its own, with no cross-control, verified over turns 1–2 of Chapter 9.
+- The tester's save landed in slot 6 (fixture slot). It's backed up as `work/saves/GFEE01.s06_exp06_turn2` (Ch9, turn 2, yellow phase), and the fixture is restored to slot 6.
+- New: proc names in the binary (`E_BMapMain`, `E_BMapPlph`, `E_PhaseChange`, …).
+- Open: F-18, the AI moves yellow units the player didn't act with after End. Its cause isn't located yet.
+- Next (pick one): resolve F-18, or start **Phase 2** (local controller ownership: pad 2 drives the yellow phase).
+
 ## 2026-10-27 — Session 1f: EXP-01 partial pass, ownership fix drafted
 
 - **EXP-01:** the yellow army was human-controlled in its own phase. Lethe transformed, both units moved and acted, and the yellow units were locked in the Player Phase. **Bug: blue units were also movable in the yellow phase.**

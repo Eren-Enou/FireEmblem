@@ -102,6 +102,13 @@ The `c` file also has green NPC/event units: Mist, Rhys/Lofa, Marcia, and `*_EV`
 | F-17 | `0x80015648(a, b)` = force relation: 0 same, 1 hostile (either is force 1), 2 allied. | disassembly | VERIFIED-STATIC |
 | F-08 (upd.) | `unit+0x1A0` **bit0 = has acted this phase** (set on Ike, Mist, Lethe and Mordecai after acting in slot 8). `unit+0x18C` = class record, changes on laguz transform (Lethe `JID_BEAST_C/F` → `JID_CAT/F`). | slots 7/8 | VERIFIED-RUNTIME |
 
+### Proc names (2026-10-27)
+Proc scripts start with op `0x2003` + a name pointer. Names found: turn loop = **`E_BMapMain`** (`0x80269334`); human phase proc `0x80284AC8` = **`E_BMapPlph`**; `0x8028D138` (started by `0x8002E408`/`0x800AE3DC`) = **`E_PhaseChange`** (the phase banner, *not* AI as first guessed); others: `E_TurnToken`, `E_TurnAToken`, `E_BMapBGMCtrl`, `E_BMapBGMWaitOpening`, `E_FocusWait`. `0x800C01CC` (run under `E_TurnAToken`) scans turn/phase-triggered events (type 6, turn range, phase match). It is not the AI.
+
+| ID | Finding | Evidence | Confidence |
+|---|---|---|---|
+| F-18 | With control[3]=1, yellow units that **haven't acted when the player ends the phase are then moved by the AI**. The step responsible hasn't been located yet. Candidates: phase-end handler `0x8002E670` (the phase-3 branch at `0x8002E6DC`) or the AI driver it starts. | EXP-06 tester observation | Behaviour VERIFIED-RUNTIME; cause unknown |
+
 ### Implication
 
 FE9 already models four forces with an explicit per-force **human/CPU control byte**. The selection code already contains the branches that let a non-player force be driven by a human during its own phase. The smallest Phase 1 lever is therefore one byte, not new selection or menu code: `0x8033071F := 1`.

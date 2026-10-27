@@ -33,7 +33,9 @@ Working slots (copies; safe to overwrite):
 | 2 | `GFEE01.s02` | byte copy of s01 | baseline for EXP-00 and EXP-02 |
 | 3 | `GFEE01.s03` | `patch_state s01 → set 80330718=09` (copy also in `work/states/`) | EXP-03 (failed; keep for reference) |
 | 4, 8 | — | tester | EXP-04 observations |
-| 6 | — | tester | Chapter 9 fixture produced by EXP-05 |
+| 6 | `GFEE01.s06` | tester (EXP-05) | **Chapter 9 fixture.** Restore with `cp work/saves/GFEE01.s06_ch9_fixture Dolphin-x64/User/StateSaves/GFEE01.s06` |
+| 7 | `GFEE01.s07` | tester (EXP-01) | Chapter 9, turn 1, yellow phase banner (start point for yellow-phase tests) |
+| 9 | — | tester | free. If saving to slot 9 fails, use Emulation → Save State → Save State to Selected Slot after picking slot 9, or use slot 8. |
 
 Memory card: during the EXP-03 playthrough the **game itself** saved to the card at 00:44 (SHA-1 now `7afef93c…d325`, after Chapter 1 per slot 7). The pre-test card is still in `work/saves/2026-10-27_baseline/`, and the 00:44 version is backed up in `work/saves/2026-10-27_0044_card/`. Our tools never write the card.
 
@@ -236,7 +238,11 @@ Steps:
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
-| — | — | NOT RUN | |
+| 2026-10-27 | user | **PASS** (a–f) | Codes EXP-01 + EXP-06, from slot 7. Yellow phase: Ike, Mist and Rolf couldn't move; Lethe and Mordecai could. The Enemy Phase ran normally. Turn 2: blue movable, yellow locked. The tester couldn't save to slot 9 and saved to **slot 6** instead. That state is backed up as `work/saves/GFEE01.s06_exp06_turn2` (SHA-1 `e8f52444…8a8d`) and decodes as Ch9, **turn 2, phase 3**, control `01 02 02 01`. The Chapter 9 fixture was restored to slot 6 afterwards (SHA-1 `d8430d71…25a0` re-checked). Regression test: `SaveStateTests.test_exp06_turn2_snapshot`. |
+
+**Observation (open, F-18):** if Lethe or Mordecai hadn't acted when the player ended the yellow phase, **the AI moved them** after End. This is not a failure of EXP-06, but it matters for co-op: player 2 ending the phase early hands the leftover units to the AI. See ROADMAP Phase 1 remaining items.
+
+**Phase 1 status:** the core interaction is achieved on one controller. The yellow army is human-controlled in its own phase, the blue army in its own, with no cross-control in either direction, over two full turns, using EXP-01 + EXP-06.
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|

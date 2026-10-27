@@ -2,21 +2,22 @@
 
 Each milestone is done only when its completion criteria are demonstrated by a repeatable test in TESTING.md.
 
-## Phase 0 — Research & environment validation  *(in progress: static work done, runtime baseline pending)*
+## Phase 0 — Research & environment validation  *(done 2026-10-27)*
 - [x] Identify the image: GFEE01 rev 0 NTSC-U; record hashes (`tools/verify_game.py`).
 - [x] Reproducible tooling: CISO/ISO reader, LZ77, pack, dispos parser, DOL disassembly helpers, tests.
 - [x] Survey community resources and record what each actually demonstrates (RESEARCH.md §1).
 - [x] Locate the faction model: unit table, force table, phase byte, **per-force control-mode byte** (RESEARCH.md §4).
 - [x] Feasibility assessment and the smallest experiment (EXP-01).
-- [ ] EXP-00 baseline confirmed at runtime in Chapter 9.
+- [x] Runtime baseline confirmed from decoded save states (EXP-00 A; Prologue and Chapter 9).
 
-**Done when:** EXP-00 passes.
-
-## Phase 1 — Controllable partner army (offline, one controller)
-- [ ] EXP-01: Lethe/Mordecai selectable, movable, can act, and the phase ends, during the Partner Phase.
-- [ ] Blue army unaffected.
-- [ ] Fix whatever EXP-01 shows to be hard-coded to force 0 (menus, End command, auto-end, AI fallbacks).
-- [ ] Convert the per-frame AR write into a robust Gecko patch that sets control at map init (hook `0x8014D920` path).
+## Phase 1 — Controllable partner army (offline, one controller)  *(core achieved 2026-10-27)*
+- [x] Chapter 9 test fixture (EXP-05).
+- [x] Non-blue human control proven (EXP-04, red army).
+- [x] EXP-01: Lethe/Mordecai selectable, movable, can act (including transform) during the Partner Phase; locked in Player Phase.
+- [x] EXP-06: no cross-control (blue locked in yellow phase), with blue unaffected on turn 2.
+- [ ] Decide and implement leftover-unit behaviour (F-18): today the AI moves yellow units the player didn't act with. Options: (a) keep it as an "auto-finish" convenience; (b) leftover units just wait, like the Player Phase.
+- [ ] Play Ch9 to the end with EXP-01 + EXP-06 and record a .dtm input movie.
+- [ ] Package as one Gecko code set that doesn't depend on the per-frame AR write (set control at map init and after save load: hook `0x8014D920` / `0x8014C1B8`).
 
 **Done when:** a full Ch9 playthrough with a human-driven partner phase, recorded in TESTING.md, with a Dolphin input movie (.dtm) as proof.
 
