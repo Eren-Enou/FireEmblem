@@ -1,1 +1,22 @@
 /Dolphin-x64
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Never commit game data, extracted files, dumps or saves
+*.iso
+*.ciso
+*.gcm
+*.rvz
+*.wbfs
+*.dol
+*.cmp
+*.gci
+*.raw
+*.sav
+*.s0[0-9]
+*.dtm
+/work/
+/dumps/
