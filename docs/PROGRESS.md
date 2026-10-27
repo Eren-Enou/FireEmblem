@@ -216,3 +216,5 @@ Controller routing / Netplay (per user priority).
   - Two turns of Ch9 ran in lockstep: each army answered only to its own player (prompts, Next Unit, moves, auto-end), and the enemy phase and conversations were identical.
   - States saved in both instances decode identically (F-47).
   - Next: combat and a full chapter under Netplay, then the two-machine procedure.
+- **Chapter audit (Priority 5):** `tools/chapter_audit.py` reads every chapter's dispos data and event script (command names and PIDs are plain strings in `Scripts/CNN.cmb`). It writes `docs/CHAPTER_AUDIT.md`, which marks each chapter as runtime verified, statically inspected only, or needing a targeted check (escape objective, transfers, native partners, scripted phases). The "…ByPID" commands are script helpers over the native ones, so the existing hooks apply. Native partner `PID_MELTY` (force 3) appears in Ch18–30.
+- Next: decode the `.cmb` bytecode, so the audit can say which PIDs each `UnitTransferToForce` call moves and to which force; play Ch6's escape objective; flexible deployment in a later chapter; NET-02.
