@@ -586,3 +586,89 @@ EXP-15 v3 is installed in `work/ch1/host`. Slot 3 now holds a Chapter 2 state, s
 4. **Right after the seize**, during the ending conversation, press **Shift+F6**.
 5. Save at the end-of-chapter prompt to **file 3**. At the first Chapter 2 player phase, press **Shift+F7**.
 6. Tell me who is deployed, and send the Base Data screen. Expected: Oscar and Boyd are back as blue units in Chapter 2, as in vanilla. (Same state slots as before: Shift+F6 right after the seize, Shift+F7 in Chapter 2.)
+
+## EXP-16 — Army ownership table across Chapters 1–3 (Phase 4)
+
+**Change:** ownership is separated from the tactical force. `tools/owner_code.py` holds the table (PID → player) and generates EXP-16. The table is currently **Oscar, Boyd → Player 2**; everyone else is Player 1. EXP-16 has five blocks, all using the game's `UnitTransferToForce`:
+- **Apply** at the start of **every** player phase, in any chapter: Player 2 characters in force 0 → 3.
+- **Return** at the entry of `AllUnitEscape`, the chapter transition and the chapter sequence: 3 → 0.
+- **Single-unit return** at the entry of `UnitEscape`, for the escaping unit only (F-40).
+
+It replaces EXP-15: same hook sites, so never enable both. The table is embedded in the code, so Netplay clients get the identical table and nothing is written to save data (RESEARCH "Ownership storage"). Static: `test_exp16_ownership_code` (the ini must match the generator), 100/100 signatures. **Run 1 PASSED through the Ch4 start** (yellow army only in Ch2, because the story forced the Ch3 and Ch4 line-ups).
+
+Test bed: `work/ch1/host` now has **COOP-P3 + EXP-16 + DBG-01**. Its card (backup `work/saves/ch1_card_after_exp15.gci`, SHA-1 `9eb0dd49…f6f6`) holds the end-of-Chapter-1 save from the EXP-15 v3 run.
+
+### Procedure (tester): Chapter 2 and Chapter 3 in one campaign
+1. Start the test bed:
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/ch1/host
+   ```
+   Fresh boot → **Restart Chapter → the "Ch. 2" file** (the one you saved at the end of Chapter 1).
+2. **Chapter 2, turn 1, player phase:** Shift+F2. Expected: Oscar and Boyd are yellow with no code change; Ike and Rhys are blue.
+3. During the chapter, try each of these and note what happens:
+   - **Rhys heals** Oscar or Boyd with his staff (a blue healer on a yellow ally), and gains EXP.
+   - **Counterattack EXP:** an enemy attacks a yellow unit in the enemy phase.
+   - **End the yellow phase** with one yellow unit not yet acted (it should just wait).
+   - **Titania's arrival** around turn 3 (she should be blue): Shift+F3 after she appears.
+4. Seize or clear. During the ending conversation press Shift+F4, then save at the prompt to a **new file** ("Ch. 3").
+5. **Chapter 3, turn 1:** Shift+F5. Expected: Oscar and Boyd yellow again (if the story deploys them), newly met characters blue.
+6. Clear Chapter 3. Shift+F6 during the ending conversation, then save to a new file ("Ch. 4"). At the Chapter 4 start, Shift+F7.
+7. Send the Base Data screen at each chapter start and tell me which slots were saved. I'll decode them: forces, levels, EXP, no duplicates.
+
+**Optional edge checks (from any state above; tell me which you tried):**
+- Let Ike fall. Expected: Game Over as normal.
+- Let a yellow unit (Boyd) fall. Note the death message and whether he is listed as dead or missing afterwards.
+- Battle Save or Suspend mid-chapter during the yellow phase, then resume after a fresh boot.
+
+### Edge-case status (campaign integrity)
+
+| # | Case | Status | Evidence |
+|---|---|---|---|
+| 1 | Ike's defeat → Game Over | Untested | Ike is never moved (Player 1, rejected in the table) |
+| 2 | Yellow-owned character dies | Untested | `UnitDead` / `GetDiedPlayerCount` may count force 0 only (F-40) |
+| 3 | Yellow character escapes / seizes | Seize: only Ike seizes in Ch1–3. Escape: handled by the EXP-16 `UnitEscape` hand-back, untested | F-40 |
+| 4 | Single-unit `UnitEscape` | Static only | F-40, EXP-16 block 5 |
+| 5 | `AllUnitEscape` and chapter cleanup | **Verified** for Chapter 1 → 2 (EXP-15 v3) | F-38, F-39 |
+| 6 | Save/load mid two-army battle | Suspend → fresh boot → resume **verified once** (EXP-15 runs 2/3, forces kept). Battle Save not tested | EXP-15 |
+| 7 | Ending a phase with yellow units unacted | **Verified** (EXP-07, Ch9) | EXP-07 |
+| 8 | Chapter with zero yellow units | **Verified once**: no yellow phase (Prologue) | F-37 |
+| 9 | Recruitment / story appearances | **Verified** Ch2–4: Rhys, Shinon, Gatrie and Soren joined blue (default); Titania's mid-chapter arrival was blue; Marcia behaved as in the original story | EXP-16 run, F-41 |
+| 10 | Units under AI/script control | Only forces 0/3 and table PIDs are moved, by design. Untested | — |
+| 11 | Levelling, healing EXP, promotion | Level-up **verified** (Oscar in Ch1, Boyd twice in Ch2, Lethe in Ch9). Healing EXP plausible (Rhys 0 → 11 in Ch2; target not recorded). Promotion untested | EXP-13, EXP-15, EXP-16 |
+| 12 | Repeated chapter loading without duplicates | **Verified** Ch1 → 2 → 3 → 4 (each Base Data shows everyone once; benched units in force 7) | EXP-15, EXP-16 |
+| 13 | Controller ownership through transitions | **Verified** Ch1 → 2 (port routing follows the phase) | EXP-14, EXP-15 |
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | user (COOP-P3 + EXP-16 + DBG-01) | **PASS Ch2 → Ch3 → Ch4 start** (yellow army only in Ch2; see notes) | **Ch2** (id 3; slots 2–4): Oscar and Boyd were yellow at turn 1 with no code change, Ike and Rhys blue, Titania arrived blue. Oscar 35 → 82 EXP; Boyd lv 2 → 4, 47 → 82; Rhys 0 → 11 (a heal); Ike 2 → 91. **Ch3** (id 4, slot 5): the story forced the line-up to Ike, Titania, Shinon and Gatrie (all with flag `0x10000`, F-41). Oscar, Boyd and Rhys were benched (force 7) with progression intact; Shinon and Gatrie joined blue. **Ch4** (id 5; slots 6–7): Soren joined blue; six deployed, all forced; Oscar and Boyd benched. All four Base Data screens match: everyone appears exactly once, nothing reset. Marcia left after talking to Ike in Ch3, consistent with the original story (F-41). **Not exercised:** no yellow phase in Ch3–4 (no Player 2 character deployed). User request: auto-end for the yellow phase. |
+
+### EXP-16 run 2: Chapter 3 → Chapter 5 start with a yellow army (tester)
+The table is now **Oscar, Boyd, Shinon (`PID_CHINON`), Gatrie (`PID_GATRIE`) → Player 2**. Shinon and Gatrie are forced into the Ch3/Ch4 line-ups (F-41), so Player 2 has units there. Installed in `work/ch1/host` (COOP-P3 + EXP-16 + DBG-01). Card backup before this run: `work/saves/ch1_card_after_exp16_run1.gci` (SHA-1 `8eb1d955…6610`). The card is full (5 files), so overwrite the later files as below.
+1. Start the test bed (fresh boot) → **Restart Chapter → "Ch. 3: Pirates Aground"**. Prep: Fight.
+2. **Ch3, turn 1, player phase:** Shift+F2. Expected: Ike and Titania blue; **Shinon and Gatrie yellow**.
+3. Blue phase with port 1, then the **yellow phase with port 2** (numpad, M, E): move or attack with Shinon and Gatrie. Shift+F3 during the yellow phase.
+4. Clear Ch3. Shift+F4 during the ending conversation, then save over the **"Ch. 4" file** (5th slot).
+5. **Ch4** prep: Fight. Turn 1: Shift+F5. Expected: Shinon and Gatrie yellow; Ike, Titania, Rhys and Soren blue. Play a yellow phase.
+6. Clear Ch4. Shift+F6 during the ending conversation, then save over the **"Ch. 2" file** (3rd slot) → "Ch. 5". At the Ch5 start: Shift+F7.
+7. Send the Base Data screens and tell me which slots you saved.
+
+**Expected at each transition:** Shinon and Gatrie are back in the roster with their EXP; nobody is duplicated or missing.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | user (run 2: table Oscar, Boyd, Shinon, Gatrie → P2) | **PASS Ch3 → Ch4 → Ch5 start** | **Ch3** (id 4; slots 2–3): Shinon and Gatrie yellow at turn 1; a yellow phase ran (slot 3, phase 3). **Ch3 → Ch4** (slots 4–5): all four Ch3 units in the roster; Shinon 0 → 21 EXP, Gatrie 0 → 41. In Ch4 Shinon and Gatrie were yellow again, and Ike, Titania, Rhys and Soren blue (map screenshot: yellow rings on the knight and archer). **Ch4 → Ch5** (slots 6–7): Shinon 44, Gatrie 85, Soren 57, Ike lv 7. **Ch5 (id 6) turn 1: Oscar, Boyd, Shinon and Gatrie yellow; Ike, Titania, Rhys and Soren blue**, eight deployed. Each unit appears exactly once; benched units keep progression. **UI finding:** the in-battle Base Data list shows only force 0, so Player 2's units are missing from it while they are yellow (they appear on the prep screen). **No auto-end in the yellow phase** (user). |
+
+## EXP-17 — Auto-end and Next Unit in the yellow phase
+
+**Change (F-42):** the auto-end check after each action asks "is there a next unit that can act?" through `0x800AA5F0`, which only looked at blue units. Next Unit uses the same function. EXP-17 makes both use the yellow army in the yellow phase; other phases are vanilla. Static: `test_exp17_next_unit_hooks`, 108/108 signatures. **PASSED** (user, 2026-10-27). Installed in `work/ch1/host` (COOP-P3 + EXP-16 + EXP-17 + DBG-01).
+
+1. Fresh boot of the test bed (a state would restore the old code list, F-25) → **Restart Chapter → the "Ch. 5" file**. Map Menu → Options: **Auto End = On**.
+2. Blue phase: move all blue units. Expected: the phase ends by itself, as before.
+3. Yellow phase: press **Next Unit** (port 2 X = the **B** key). Expected: the cursor jumps between **yellow** units only.
+4. Move every yellow unit. Expected: **the yellow phase ends by itself** after the last one waits; the enemy phase starts.
+5. Set Auto End = Off and repeat one turn. Expected: no automatic end, and E → End still works.
+6. If anything is off, press Shift+F2 at that moment.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | user (COOP-P3 + EXP-16 + EXP-17 + DBG-01, Ch5) | **PASS** | Yellow phase: **Next Unit jumped through yellow units only**. After every yellow unit had moved, **the phase ended on its own**. With Auto End off, no phase ended automatically once all units had acted. Packaged as **COOP-P4** = COOP-P3 + EXP-17 (`test_coop_p4_package`). |

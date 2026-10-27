@@ -170,3 +170,29 @@ Controller routing / Netplay (per user priority).
 - **EXP-15 v3 PASSED (user, two runs).** Run A skipped Boyd and Oscar (0 EXP) but kept them. In run B, where they fought in the yellow phase, slot 6 (roster at the ending conversation) shows Oscar lv 3 → 4 with 35 EXP and Boyd with 47 EXP. Chapter 2 turn 1 (slot 7) has Ike, Oscar, Boyd and Rhys blue with identical values, and Titania off-map in force 7 as in vanilla. **Chapter-level success criterion met** for the fixed assignment.
 - Still unchecked: defeat (Ike falls → Game Over), a yellow-assigned unit dying, the single-unit `UnitEscape` command, and battle save/load during a two-army chapter.
 - Next: a persistent owner table (per PID, applied at every chapter start, returned at every chapter-end path) to replace EXP-15's hard-coded PIDs and Chapter 1 check. Then NET-01 (Netplay) with the campaign start.
+
+## 2026-10-27 — Session 1p: reusable army ownership (EXP-16)
+
+- Goal (user): persistent two-player ownership for the whole campaign; first milestone is Chapters 1–3.
+- **EXP-16** replaces EXP-15's Chapter 1-only pair:
+  - `tools/owner_code.py` holds `OWNERS` (PID → player; now Oscar and Boyd → Player 2) and writes the code into `codes/GFEE01.ini`.
+  - Five blocks: apply at every player-phase start (any chapter); return at `AllUnitEscape`, the transition and the chapter sequence; single-unit return at `UnitEscape` (F-40, new).
+  - Everyone not in the table, including new recruits, is Player 1. Ike can't be assigned to Player 2 (the generator refuses).
+- Ownership storage evaluated (RESEARCH): the table is embedded in the code (Netplay-synced, no save writes) for now. A save field or card record is needed later for an in-game assignment screen.
+- Tests 29/29 (`test_exp16_ownership_code` checks the ini against the generator), signatures 100/100. Installed in `work/ch1/host` with COOP-P3 and DBG-01. The test card is backed up (`work/saves/ch1_card_after_exp15.gci`).
+- An edge-case matrix (13 cases, verified vs untested) is now in TESTING.md.
+- Next: the tester plays Chapter 2 → Chapter 3 → Chapter 4 start from the "Ch. 2" card file.
+- **EXP-16 run 1 (user): PASS through the Chapter 4 start.**
+  - Ch2 had a yellow army automatically: Oscar and Boyd yellow at turn 1, Boyd lv 2 → 4, Rhys gained heal EXP, and Titania arrived blue.
+  - Ch3 and Ch4 line-ups were forced by the story (`UnitForcedSally` flag `0x10000`, F-41). Oscar and Boyd were benched (force 7) with progression intact, so there was no yellow army there.
+  - Recruits Shinon, Gatrie and Soren joined blue. Everyone appears exactly once in every Base Data screen.
+  - Marcia leaving in Ch3 matches the original data: her only dispos entry is Ch10.
+- Open from this run:
+  - **Auto-end for the yellow phase** (user request). The vanilla check is not found yet; the phase-start scan is already generic, so it is elsewhere.
+  - A test assignment that covers forced line-ups, so Ch3–4 get a yellow army (for example Shinon/Gatrie → Player 2).
+  - Prep-screen locking compared against a codes-off run.
+- Ownership table extended (user): **Shinon and Gatrie → Player 2**, so the forced Ch3/Ch4 line-ups include a yellow army. Regenerated with `tools.owner_code --write`; tests 29/29, signatures 100/100. Installed in the test bed; the card is backed up. Run 2 procedure is in TESTING.md (Ch3 → Ch5 start).
+- **EXP-16 run 2 (user): PASS Ch3 → Ch5 start.** Shinon and Gatrie were yellow in Ch3 and Ch4, and all four Player 2 characters were yellow in Ch5. EXP carried across every transition (Shinon 0 → 21 → 44, Gatrie 0 → 41 → 85). **The Chapters 1–3 milestone is met.**
+- Findings: the in-battle Base Data list shows force 0 only (UI gap). There is no auto-end in the yellow phase. Static search for the auto-end check (human-phase proc steps, acted-bit tests, `GetUnitSelectState` callers) found none of the routines it would sit in; next is locating the option byte with a two-state memory diff.
+- **Auto-end found (F-42)** from the user's two option states: Auto End = `state+0x9E` bit 0x20. The after-action step `0x80028C90` ends the phase when the next-unit search `0x800AA5F0` finds nobody, but that search was hard-wired to force 0 (and also drives Next Unit, F-28). **EXP-17** (2 tiny C2 blocks) uses force 3 in phase 3. Tests 30/30, signatures 108/108. Installed in the test bed; procedure is in TESTING.md.
+- **EXP-17 PASSED (user, Ch5):** Next Unit cycles yellow units, the yellow phase auto-ends after the last yellow unit acts, and with Auto End off nothing ends automatically. **COOP-P4** = COOP-P3 + EXP-17 is packaged (`test_coop_p4_package`). Install COOP-P4 + EXP-16. Tests 31/31, signatures 108/108.

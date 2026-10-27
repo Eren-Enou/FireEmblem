@@ -220,6 +220,63 @@ class GameTests(unittest.TestCase):
         self.assertIn("cmpwi r0, 2", head)             # Chapter 1
         self.assertIn("lbz r0, 0x719(r12)", head)      # phase
 
+    def test_exp16_ownership_code(self):
+        """EXP-16 in the ini is exactly what tools/owner_code.py generates from its OWNERS table."""
+        import capstone, struct
+        from tools.fe9.ppc import Dol
+        from tools import owner_code as oc
+        dol = Dol(self.disc.read_dol())
+        found = self._gecko_blocks(oc.CODE_NAME)
+        self.assertEqual(found, oc.blocks())  # regenerate with `python -m tools.owner_code --write`
+        hooks = [a for a, _ in found]
+        self.assertEqual(hooks, [0x8002E738, 0x800BA784, 0x8002E0D0, 0x80005F04, 0x800BA8F8])
+        table = oc.pid_table(oc.OWNERS)
+        self.assertNotIn(b"PID_IKE\0", table)
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        for (addr, words), (src, dst) in zip(found, [(0, 3), (3, 0), (3, 0), (3, 0), (3, 0)]):
+            body = words[:-2] if words[-2] == oc.NOP else words[:-1]
+            self.assertEqual(body[-1], dol.u32(addr))  # original instruction replayed
+            code = b"".join(struct.pack(">I", w) for w in body)
+            self.assertIn(table, code)                 # one table, identical in every block
+            start = code.index(table)
+            head = [f"{i.mnemonic} {i.op_str}" for i in md.disasm(code[:start - 4], 0)]
+            text = "\n".join(f"{i.mnemonic} {i.op_str}" for i in md.disasm(code[start + len(table):], 0))
+            self.assertIn(f"cmpwi r0, {src}", text)
+            self.assertIn(f"li r4, {dst}", text)
+            self.assertIn("ori r12, r12, 0xca38", text)
+            self.assertNotIn("lbz r0, 0x718(r12)", head)   # no chapter restriction any more
+            self.assertEqual(addr == 0x8002E738, "lbz r0, 0x719(r12)" in head)   # apply: phase 0 only
+            self.assertEqual(addr == 0x800BA8F8, "cmpw r3, r0" in text)          # escape: that unit only
+        with self.assertRaises(ValueError):
+            oc.pid_table({"PID_IKE": 2})
+
+    def test_exp17_next_unit_hooks(self):
+        """EXP-17: the next-unit search uses force 3 in phase 3 (auto-end + Next Unit), force 0 otherwise."""
+        from tools.fe9.ppc import Dol
+        dol = Dol(self.disc.read_dol())
+        name = "EXP-17 Auto-end and Next Unit use the yellow army in the yellow phase"
+        blocks = self._gecko_blocks(name)
+        self.assertEqual([a for a, _ in blocks], [0x800AA5F8, 0x800AA61C])
+        self.assertEqual((dol.u32(0x800AA5F8), dol.u32(0x800AA61C)), (0x80840000, 0x28000000))
+        pick = ["lis r12, -0x7fcd", "lbz r12, 0x719(r12)", "cmplwi r12, 3", "beq 0x14", "li r12, 0"]
+        import capstone, struct
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        asm = [[f"{i.mnemonic} {i.op_str}".strip() for i in md.disasm(b"".join(struct.pack(">I", w) for w in ws[:-1]), 0)]
+               for _, ws in blocks]
+        self.assertEqual(asm[0], pick + ["mulli r12, r12, 0xc", "lwzx r4, r4, r12"])   # head of force r12
+        self.assertEqual(asm[1], pick + ["cmplw r0, r12", "nop"])                     # start unit in force r12
+
+    def test_coop_p4_package(self):
+        """COOP-P4 is exactly COOP-P3 + EXP-17, with no hook used twice and none shared with EXP-16."""
+        from tools import owner_code as oc
+        parts = self._gecko_blocks("COOP-P3 Two-army co-op, port 1 blue / port 2 yellow (Phase 2 package v1)")
+        parts += self._gecko_blocks("EXP-17 Auto-end and Next Unit use the yellow army in the yellow phase")
+        package = self._gecko_blocks("COOP-P4 Two-army co-op with yellow auto-end and Next Unit (Phase 4 package v1)")
+        self.assertEqual(package, parts)
+        hooks = [a for a, _ in package]
+        self.assertEqual(len(hooks), len(set(hooks)))
+        self.assertFalse(set(hooks) & {a for a, _ in oc.blocks()})
+
     def test_dbg01_enemy_hp(self):
         """DBG-01 (test aid): per-frame C0 routine walking the force 1 list, HP byte +0x1A8 held at 1."""
         import capstone, struct

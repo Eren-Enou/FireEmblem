@@ -126,6 +126,19 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x800BA84C, 0x4BF8376D, "bl 0x8003DFB8             escape unit (force 0 list)"),
     (0x800BA860, 0x38600003, "li r3,3                   mask query 3 = forces 0-3"),
     (0x800BA8B4, 0x4BF83705, "bl 0x8003DFB8             escape/free the rest of forces 0-3"),
+    # Auto-end (F-42): unit done -> if Auto End on (state+0x9E bit 0x20 clear) and no next unit -> end phase
+    (0x80028CBC, 0x60000001, "ori r0,r0,1               mark the unit as acted"),
+    (0x80028CC4, 0x8803009E, "lbz r0,0x9E(state)        option flags"),
+    (0x80028CC8, 0x5400DFFE, "rlwinm r0,r0,27,31,31     bit 0x20 = Auto End off"),
+    (0x80028CD8, 0x48081919, "bl 0x800AA5F0             next unit that can act"),
+    (0x80028CEC, 0x4BFE3921, "bl 0x8000C60C             end the human-phase proc"),
+    (0x80029258, 0x48081399, "bl 0x800AA5F0             Next Unit button"),
+    (0x800AA5F8, 0x80840000, "lwz r4,0(r4)              force 0 head (EXP-17 block 1)"),
+    (0x800AA61C, 0x28000000, "cmplwi r0,0               start unit in force 0? (EXP-17 block 2)"),
+    # UnitEscape 0x800BA8F8(unit id) (script command): unit id byte in r3 -> escape worker (EXP-16 block 5)
+    (0x800BA8F8, 0x9421FFF0, "stwu r1,-0x10(r1)         UnitEscape entry"),
+    (0x800BA900, 0x5463063F, "clrlwi. r3,r3,24          unit id argument"),
+    (0x800BA944, 0x4BF83675, "bl 0x8003DFB8             escape worker"),
     (0x80016C84, 0x38800005, "li r4,5                   to force 5 (roster)"),
     (0x8002E38C, 0x4BFE88CD, "bl 0x80016C58             from the chapter transition 0x8002E0D0"),
 ]
