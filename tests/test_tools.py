@@ -668,6 +668,32 @@ class GameTests(unittest.TestCase):
             self.assertIn(need, asm)
         self.assertEqual(asm[-2], "lwz r12, 0x4c(r24)")
 
+    def test_exp26_prep_draft_code(self):
+        """EXP-26: Z in Choose Units claims/releases/requests/accepts on the highlighted row; no force changes."""
+        from tools.fe9.ppc import Dol
+        from tools import prep_code as pc
+        dol = Dol(self.disc.read_dol())
+        [(addr, words)] = self._gecko_blocks(pc.NAME26)
+        self.assertEqual((addr, words), pc.blocks26()[0])
+        self.assertEqual(dol.u32(addr), pc.LIST_STEP[1])
+        self.assertEqual([dol.u32(a) for a in (0x8012DBE4, 0x8012DBF0, 0x8012DBF4, 0x8012DBFC)],
+                         [0x881F0062, 0x807F003C, 0x1C000024, 0x7C83002E])     # native row -> unit
+        off = dol.addr_to_off(pc.SALLY_LIST_NAME)
+        self.assertEqual(dol.data[off:off + 11], b"E_SallyList")
+        off = dol.addr_to_off(pc.SE26["request"])
+        self.assertEqual(dol.data[off:off + 15], b"SFX_SYS_SELECT1")
+        asm = self._asm(words[:-1])
+        for need in ["lwz r0, 0x14(r31)", "ori r12, r12, 0x5b0e", "andi. r0, r0, 0x10", "lbz r0, 0x62(r31)",
+                     "lwz r3, 0x3c(r31)", "mulli r0, r0, 0x24", "lwzx r28, r3, r0", "ori r12, r12, 0x5bc0",
+                     "cmpwi r0, 5", "oris r11, r11, 0x2000", "oris r11, r11, 0x6000", "xoris r11, r11, 0x4000",
+                     "oris r11, r11, 0x800", "rlwinm r11, r11, 0, 5, 3", "rlwinm r11, r11, 0, 3, 0"]:
+            self.assertIn(need, asm)
+        self.assertNotIn("ori r12, r12, 0xca38", asm)                                # never UnitTransferToForce
+        self.assertIn("stwu r1, -0x30(r1)", asm[-2:])
+        [(_, w25)] = self._gecko_blocks(pc.NAME)
+        self.assertIn("li r5, 0x10", self._asm(w25[:-1]))                              # EXP-25: request = orange
+        self.assertEqual(dol.u32(0x80296088 + 4 * 0x10) >> 8, 0xFFC010)
+
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}
         _date, groups = dispos.parse(files["dispos_n.bin"])

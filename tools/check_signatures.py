@@ -212,6 +212,11 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8012F224, 0x57C5063E, "clrlwi r5,r30,24           cell colour index -> text draw 0x8001003C"),
     (0x8018D91C, 0x38046088, "addi r0,r4,0x6088          text palette 0x80296088 (RGBA per index)"),
     (0x8029610C, 0x6DCFF6FF, ".data palette 0x21 light blue (Player 1)"),
+    (0x802960C8, 0xFFC010FF, ".data palette 0x10 orange (transfer requested)"),
+    (0x8012D6A4, 0x9421FFD0, "stwu r1,-0x30(r1)          list input step entry (EXP-26 hook)"),
+    (0x8012DBE4, 0x881F0062, "lbz r0,0x62(r31)           highlighted row ..."),
+    (0x8012DBFC, 0x7C83002E, "lwzx r4,r3,r0              ... unit = list+0x3C row record +0"),
+    (0x80269183, 0x5346585F, ".data \"SFX_\" SYS_SELECT1 (transfer request)"),
     (0x802960A0, 0xFFFF64FF, ".data palette 0x06 yellow (Player 2)"),
 ]
 

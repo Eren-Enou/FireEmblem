@@ -613,6 +613,45 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 |---|---|---|---|
 | 2026-10-28 | user | **Done (research)** | Normal difficulty. Screenshots of Choose Units ("You can select 1 more. 5/6"), the prep menu, Reposition, Items, Conditions and Options. A on a row did nothing (all forced). States backed up to `work/saves/GFEE01.prepR1_s02..s04`. They gave the list object layout, the row table, the highlighted-row field and the palette (F-58). |
 
+## PREP-03 — Draft and transfers in Choose Units (EXP-26; PREP-01 Step 3)
+
+**What it is:** in preparations, each player presses **Z on their own controller** with a character highlighted in **Choose Units**:
+- **Unassigned** → claimed on your pick. Picks alternate, Player 1 first (as DRAFT-01).
+- **Yours** → released, unless the other player has requested it; then pressing Z **accepts the transfer**.
+- **The other player's** → **request** it (row turns **orange**). Press again to cancel.
+
+Ike and unavailable characters are refused with the buzz. EXP-25's colours show the result at once: light blue = Player 1, yellow = Player 2, orange = transfer requested. Nothing changes forces in prep; EXP-21 turns Player 2's characters yellow at the first blue phase.
+
+**Limit (by design for this step):** the list cursor follows Player 1's controller. Player 2 acts on the row Player 1 highlights.
+
+**Static:** `test_exp26_prep_draft_code`, 176/176 signatures. **Test bed:** `work/ch1/host` = COOP-P6 + EXP-21 + EXP-22 + EXP-25 + **EXP-26** + DBG-01.
+
+**Keys:**
+- Player 1: Z = **D**, cursor = arrows
+- Player 2: Z = **E**
+
+### Procedure (tester, one PC, ~10 minutes)
+1. Fresh boot: `Dolphin-x64/Dolphin.exe --user work/ch1/host` → Restart Chapter → **Ch. 6** → Choose Units. Ike's row is light blue, the rest unassigned.
+2. Highlight **Titania**, press **D** (P1). Sound; her row data turns **light blue**.
+3. Highlight **Soren**, press **D**. **Buzz** (Player 2's pick). Press **E** (P2): sound; **yellow**.
+4. Highlight **Ike**, press **E**: buzz.
+5. **Rhys:** D → light blue. **Oscar:** E → yellow.
+6. **Transfer:** highlight **Titania** (Player 1's). Press **E** (P2 requests): sound; row **orange**. Press **D** (P1 accepts): a different sound; **Titania turns yellow**.
+7. **Cancel:** highlight **Rhys**. **E** → orange; **E** again → back to light blue.
+8. **Release:** highlight **Soren**, **E** → back to unassigned (green).
+9. Press **Shift+F2**. **Fight.** Turn 1, blue phase. Expected: **Titania and Oscar yellow rings**; Ike, Rhys and Soren blue. In the yellow phase, port 2 moves Titania and Oscar. Press **Shift+F3**.
+
+**Report:** each step's outcome, screenshots of steps 6 (orange, then yellow) and 9, and slots 2 and 3.
+
+**Failure modes:**
+- Z does nothing: the gate or input is wrong.
+- The wrong row changes: the row → unit mapping is off.
+- Z also opens something in the list.
+- Colours right in prep but wrong rings in battle.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+
 ## PREP-02 — Ownership colours in the unit lists (EXP-25; PREP-01 Step 2)
 
 **What it is (v2):** in the native unit lists, each character's **data columns on every page** (Class, Lv, EXP, HP, Equipment, …) are coloured by owner. The **name keeps its native colour** (green = forced, and the pick state in Choose Units). That covers Choose Units in preparations and the map menu's Unit list (Base Data) in battle.
