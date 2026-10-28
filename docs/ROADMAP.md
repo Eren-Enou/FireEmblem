@@ -10,7 +10,7 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 |---|---|---|---|
 | **1** | **Character drafting, ownership and deployment**: draft clarity, prep-screen integration, persistent ownership, voluntary transfers, fair per-chapter deployment | `draft-ownership` | **Active.** Ownership storage and the in-battle draft verified (DRAFT-01). Draft v2 (EXP-23) awaiting DRAFT-02 |
 | **2** | **Complete campaign compatibility**: every chapter's events, victory conditions, recruitment, scripted transfers, progression, death, saving and phase behaviour | all | Overarching requirement. `tools/chapter_audit.py` covers all chapters statically; runtime verified: Prologue, Ch1–Ch5, Ch9, Ch6 partly (docs/CHAPTER_AUDIT.md) |
-| 3 | Optional alternating-unit actions; sequential turns stay the default, with a mode switch only if safe | `experiment/alternating-actions` (never merged until proven) | Parked after static research. EXP-24 + ALT-01 ready (docs/ALTERNATING.md) |
+| 3 | Optional alternating-unit actions; sequential turns stay the default, with a mode switch only if safe | `experiment/alternating-actions` (never merged until proven) | Parked after static research. EXP-24 + ALT-01 ready (docs/ALTERNATING.md on that branch) |
 | 4 | Optional shared tactical board: a separate companion interface (markers, notes, movement plans, EXP targets) that never touches the game simulation or Netplay, and is never required | none yet | Not started |
 
 **Working rules:**
@@ -114,5 +114,5 @@ Design (user, 2026-10-27): strictly sequential phases (blue P1 → yellow P2 →
 Deferred; reliable gameplay first.
 
 ## Priority 3 / 4 records
-- Alternating actions: see the experiment section above and docs/ALTERNATING.md (parked).
+- Alternating actions: branch `experiment/alternating-actions` (its docs/ALTERNATING.md and TESTING.md ALT-01). Parked; runtime untested.
 - Shared tactical board: not started. It must stay a separate companion that is never needed to finish a chapter and never touches the emulated game or Netplay.
