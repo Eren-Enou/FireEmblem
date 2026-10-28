@@ -37,7 +37,8 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - [x] Chapter 9 start without save states: a native memory-card save, "Ch. 9: Gallia" (NET-00, F-31).
 - [x] Reproducible host/client setup: `tools/netplay_setup.py` (private `--user` folders, F-32).
 - [x] NET-01: one-PC loopback session (Claude, 2026-10-27): codes and save synced, P1 → GC1 and P2 → GC2, two turns in lockstep, no cross-control, identical game state in both instances.
-- [ ] NET-02: combat and a full chapter under Netplay; then two machines (tester).
+- [x] Shareable Player 2 package: `tools/netplay_package.py` builds a ~12 KB ZIP (README, launcher, checklist, private user folder, codes, manifest, code fingerprint), with no game or save data. Verified at runtime on one PC over Direct (NET-02, 2026-10-27).
+- [ ] NET-02 on two computers via the Traversal Server room code: combat, EXP, 3+ turns, disconnect (tester + friend; plan in TESTING.md).
 - [ ] Play Ch9 to completion online. Document desyncs, disconnects and save handling.
 
 **Done when:** two machines finish Ch9 with no desync, with a written test log.

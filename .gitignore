@@ -20,3 +20,4 @@ __pycache__/
 *.dtm
 /work/
 /dumps/
+/dist/

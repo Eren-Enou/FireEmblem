@@ -14,6 +14,8 @@
 | 2026-10-26 | `verify_game` | OK: GFEE01 rev 0, main.dol SHA-1 `9d00d7d4…8851` |
 | 2026-10-26 | `check_signatures` | 17/17 match |
 | 2026-10-27 | `unittest tests.test_tools` | 9/9 pass (adds save-state decode/round-trip and runtime-model check) |
+| 2026-10-27 | `unittest tests.test_tools` | 41/41 pass (adds `NetplayPackageTests`: client ZIP contents, reproducibility, rejection, fingerprint, PowerShell match) |
+| 2026-10-27 | `netplay_package` | ZIP built and verified: 8 files + empty card folder, 11.5 KB, fingerprint `7031af10d740f4ed` |
 
 ---
 
@@ -516,7 +518,87 @@ Card backup: `work/saves/netplay_ch9_card/01-GFEE-FIREEMBLEM8J.gci` (SHA-1 `d93a
 |---|---|---|---|
 | 2026-10-27 | Claude (computer use; one PC, two instances; host COOP-P5 + EXP-16 + DBG-01; client stick on top-row digits so computer use could drive it) | **PASS (first Netplay session, 2 turns, Ch9)** | **Session:** the host's NetPlay Setup showed the presets (direct, 127.0.0.1:2626, P1-Blue); hosting with the game selected worked, and the client connected. Dolphin **auto-mapped P1-Blue → GC1, P2-Yellow → GC2**. Data menu: "Load Host's Save Data Only" and "Sync AR/Gecko Codes" were ticked. Client chat: "Synchronizing save data… Data received! Synchronizing Gecko codes… Codes received! … Started game". Both games ran in lockstep from boot. **Save sync:** the client saw the host's card (Restart Chapter → Prologue / Ch. 9) and both loaded Ch9 → base → prep → battle. **Cross-control:** blue phase, P2's A and right did nothing; yellow phase, P1's right and A did nothing on the Transformation prompt while P2 answered it; P2 used Next Unit (→ Mordecai), moved Lethe, Wait, Wait; the phase auto-ended; the enemy phase and the turn-2 conversation ran identically. **Desync check:** a state saved in each instance during turn 2's yellow phase (4 s apart) decodes identically (phase 3, turn 2, control `01 02 02 01`, every unit's force, position, HP, EXP and gauge). The force table and the Gecko code area are byte-identical. The only differing bytes are time-varying (`unit+0x74/75`, partner `+0x0/1`, `state+0x5C`). No desync message appeared. The host card was unchanged after the session (SHA-1 `d93a22ae…`). Backups `work/saves/GFEE01.net01_host_t2` and `GFEE01.net01_client_t2`. **Not covered:** combat under Netplay, a full chapter, two machines, Ch1-style ownership (the Ch9 card's army has no table PIDs). |
 
-Two machines come after NET-01: the same folders on each PC (the client folder from `netplay_setup` on the second machine), with the host's IP and port 2626 forwarded (or Dolphin's traversal server).
+Two machines come after NET-01. NET-02 below replaces the "copy the client folder" plan with a shareable ZIP and Dolphin's Traversal Server.
+
+### NET-02 — Two computers over the internet with the Player 2 ZIP (host + friend)
+
+**What the friend gets:** `dist/FE9-Coop-Client-<fingerprint>.zip`, about 12 KB, built by `tools/netplay_package.py`. It contains:
+- `README.txt`: install, join, controls, checklist and test steps
+- `Start-FE9-Coop.bat` and `Check-Setup.bat`, which run `tools/client.ps1`
+- a private Dolphin user folder:
+  - `Config/Dolphin.ini`: cheats on, port 1 = controller, Traversal Server preset, nickname P2-Yellow, Background Input off
+  - `Config/GCPadNew.ini`: the port-1 keyboard layout
+  - `GameSettings/GFEE01.ini`: every code definition, **COOP-P5 + EXP-16** enabled
+  - an empty `GC/USA/Card A/`
+- `MANIFEST.txt`: Dolphin version, game, code fingerprint, and a SHA-256 for every file
+
+The ZIP holds **no** game image, extracted asset, save file or memory card. `verify()` enforces the exact file list, rejects save/disc extensions and local paths, and checks the codes, manifest and settings. The friend supplies Dolphin **2609a** and their own GFEE01 rev 0 copy. The launcher never touches their own Dolphin settings or cards; it starts Dolphin with `--user <package>/User` (F-32).
+
+**Matching definitions:** the *code fingerprint* is the first 16 hex digits of a SHA-256 over the enabled codes (name and normalised code lines). Python (`tools.netplay_package.fingerprint`) and `client.ps1` compute the same value, and a test checks that they agree. For the current `codes/GFEE01.ini` it is **`7031af10d740f4ed`**. Netplay runs the host's codes ("Sync AR/Gecko Codes"); the fingerprint lets both players confirm the definitions before starting.
+
+#### Automated checks (before sending the ZIP)
+```bash
+.venv/Scripts/python -m tools.netplay_package
+```
+This builds and verifies the ZIP, prints every entry and the ZIP's SHA-256. Rebuild whenever `codes/GFEE01.ini` changes, since the file name carries the fingerprint. `NetplayPackageTests` (5 tests) cover: exact contents, reproducible bytes, rejection of a ZIP with a `.gci` or other codes, fingerprint rules, the PowerShell/Python fingerprint match, and that the NET-01 defaults are unchanged.
+
+#### Host setup (Player 1, this PC)
+1. Close Dolphin. Make the host folder. It reads the memory card in `work/saves/net02_card/`, a copy of the `work/ch1/host` card: Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4; SHA-1 `54b5a7f4…`.
+   ```bash
+   .venv/Scripts/python -m tools.netplay_setup --root work/netplay_net --host-only --traversal --card work/saves/net02_card --enable COOP-P5 --enable EXP-16 --force
+   ```
+2. Confirm the host's codes match the package (expect "matches the client package"):
+   ```bash
+   .venv/Scripts/python -m tools.netplay_package --fingerprint work/netplay_net/host
+   ```
+3. Build the ZIP (above) and send it to the friend. The friend follows `README.txt` steps 1–4.
+4. Start the host:
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/netplay_net/host
+   ```
+5. Tools → Start NetPlay… → **Host** tab. Connection Type: Traversal Server (preset); leave "Show in server browser" off. Select *Fire Emblem: Path of Radiance (GFEE01)* → **Host**.
+6. In the NetPlay window, the drop-down at the top of the player list shows the **Room ID**. Click **Copy** and send the 8-character code to the friend privately.
+
+#### Validation checklist (both players, before Start)
+| # | Check | Where | Expected |
+|---|---|---|---|
+| 1 | Same Dolphin version | NetPlay player list, "Revision" column | both `2609a` |
+| 2 | Same game | host: **Checksum → Current game** (SHA1 Digest) | "The hashes match!", digest `a30eca37…0309ace` |
+| 3 | Same code definitions | friend: `Check-Setup.bat`; host: `netplay_package --fingerprint` | both `7031af10d740f4ed` |
+| 4 | Codes synced | host: Data → **Sync AR/Gecko Codes** ticked | ticked (preset) |
+| 5 | Host save data, nothing written back | host: Data → **Load Host's Save Data Only** | ticked (preset; `WriteSaveData = False`) |
+| 6 | Player 1 → GC port 1, Player 2 → GC port 2 | player list "Mapping"; host: **Assign Controller Ports** | P1-Blue `GC1`, P2-Yellow `GC2`, ports 3–4 empty |
+| 7 | Friend's pad | `Check-Setup.bat` | all lines `[OK]` |
+
+**Port assignment:** Dolphin maps the first player to GC1 and the second to GC2 by default (F-47). If not, the host opens **Assign Controller Ports**, puts P1-Blue in GameCube Port 1 and P2-Yellow in Port 2, and leaves Ports 3 and 4 as None. Each player's *local* controller 1 plays the GC port assigned to them. EXP-14 then routes port 2 to the yellow phase and port 1 to everything else.
+
+#### Manual test plan (two computers; about 30 minutes)
+Start: the host clicks **Start**. Both chats must show "All players' saves synchronized" and "All players' codes synchronized" (friend: "Data received!", "Codes received!").
+
+| Step | Action | Expected | Record |
+|---|---|---|---|
+| T1 | Host: Title → Restart Chapter → **Ch. 3: Pirates Aground** → skip scenes (Enter) → Begin now? Yes | both screens reach the turn 1 map together | time to reach the map |
+| T2 | Blue phase, friend presses X and the arrows | nothing happens on either screen | — |
+| T3 | Host moves Ike and Titania (arrows, X, Wait), then D → End | units move on both screens; a **yellow (partner) phase** starts | — |
+| T4 | Yellow phase, host presses arrows/X | nothing happens | — |
+| T5 | Friend moves Shinon and Gatrie (yellow rings); one **attacks** a bandit; then D → End | moves and combat play identically on both screens; the EXP bar fills | the unit's EXP before/after (Status) |
+| T6 | Enemy phase | enemy moves and counters are identical on both screens | any counter EXP |
+| T7 | Play turns 2–4 the same way; note any level-up screen | level-up shows on both screens with the same stat gains | the stats gained |
+| T8 | Turn 3, yellow phase: **both** press Shift+F1 (save state; allowed in Netplay, F-47) and send the `.s01` files | `tools.inspect_state` output identical except the file line | — |
+| T9 | Keep playing toward the boss, or stop after turn 4 | — | turn reached, any "desync" chat line (with the turn and last action) |
+| T10 | **Disconnect:** in a new session, in the yellow phase, the friend closes their NetPlay window → Yes | host chat "P2-Yellow has left"; both games stop | what each screen did |
+| T11 | Afterwards, the host checks the card | `work/netplay_net/host/GC/USA/Card A/*.gci` SHA-1 still `54b5a7f4…` | — |
+
+**Success:** every Expected holds over 3+ turns with combat and EXP on both sides, no desync message, and T8 identical. **Failure modes:**
+- Traversal join fails ("Could not communicate with host"): retry with a new room code. Then try host Direct Connection on 2626 with port forwarding (the client switches its Connection Type to Direct).
+- Version mismatch: install the same Dolphin build on both.
+- Digest mismatch: wrong dump or revision.
+- AI plays the yellow phase: codes did not sync.
+- A desync line in the chat.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-27 | Claude (computer use; **one PC**: host `work/netplay_net/host`, client = the extracted ZIP started by its own `Start-FE9-Coop.bat`) | **PARTIAL: package PASS over Direct; Traversal join not verified** | **Launcher:** `Start-FE9-Coop.bat` found Dolphin, took the game folder, printed all `[OK]` and fingerprint `7031af10d740f4ed`, and started Dolphin with the package's user folder. `Check-Setup.bat` flagged a wrong exe ("not version 2609a") and a missing game folder correctly. **Traversal:** the host registered and received an 8-character Room ID. The packaged client (Traversal preset, room code pasted) failed twice with "Failed to connect to server: Could not communicate with host". A same-PC/same-NAT join like this relies on NAT loopback; this run doesn't establish whether two separate networks would connect, and the real two-PC run decides. **Direct 127.0.0.1:2626:** connected. Player list: P1-Blue `GC1`, P2-Yellow `GC2`, both `2609a`. **Checksum → Current game: "The hashes match!"**, digest `a30eca376ab9b2b4dd8b1a9136772a62c0309ace` (= `DolphinTool verify`). Data menu: Load Host's Save Data Only and Sync AR/Gecko Codes ticked. Chats: saves and codes synchronized / Data received / Codes received. The client saw the host card (Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4). In Ch. 3 turn 1, Shinon and Gatrie had yellow rings on both screens. Blue phase: the client's X and arrows did nothing; the host ended the phase. Yellow phase: the host's keys did nothing; the client's keys moved the (yellow) cursor, opened the map menu and chose End. The enemy phase was identical on both screens: Ike was attacked, killed with a counter and reached Lv 5, HP 13/21 on both. **Turn 2 states** (host `work/saves/GFEE01.net02_host_t2`, client `GFEE01.net02_pkgclient_t2`) decode **identically** (chapter id 4, phase 0, turn 2, control `01 02 02 01`, every unit's force/position/HP/level/EXP). **Disconnect:** the client quit NetPlay in turn 2 → host chat "P2-Yellow has left" and **both games stopped**; the host's room stayed open with P1 only. The host card was unchanged (SHA-1 `54b5a7f4…`); the client's own card folder stayed empty (Netplay used `GC/NetPlayTemp`). **Driver note:** under Netplay, very short synthetic key taps were sometimes missed; 0.15–0.3 s holds worked. **Not covered:** a Traversal connection between two networks, a yellow-unit attack under Netplay, 3+ turns, two machines. |
 
 ## EXP-15 — Chapter 1 with two armies (Phase 4 proof, fixed assignment)
 

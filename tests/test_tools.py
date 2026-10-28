@@ -12,6 +12,83 @@ ROOT = Path(__file__).resolve().parents[1]
 IMAGE = ROOT / "Dolphin-x64/Games/Fire Emblem - Path of Radiance (USA).ciso"
 
 
+class NetplayPackageTests(unittest.TestCase):
+    """The shareable Player 2 ZIP (NET-02): exact contents, matching codes, reproducible bytes."""
+
+    def test_build_verifies_and_is_reproducible(self):
+        import tempfile, zipfile
+        from tools import netplay_package as npk
+        with tempfile.TemporaryDirectory() as d:
+            a, b = npk.build(Path(d) / "a.zip"), npk.build(Path(d) / "b.zip")
+            self.assertEqual(npk.verify(a), [])
+            self.assertEqual(a.read_bytes(), b.read_bytes())
+            self.assertLess(a.stat().st_size, 64 * 1024)
+            with zipfile.ZipFile(a) as z:
+                names = z.namelist()
+                ini = z.read(f"{npk.TOP}/User/Config/Dolphin.ini").decode()
+            self.assertFalse(any(n.lower().endswith((".gci", ".iso", ".ciso", ".sav", ".dol")) for n in names))
+            self.assertIn("TraversalChoice = traversal", ini)
+            self.assertNotIn("ISOPath", ini)
+
+    def test_verify_rejects_save_data_and_other_codes(self):
+        import tempfile, zipfile
+        from tools import netplay_package as npk
+        from tools.install_codes import build_ini
+        with tempfile.TemporaryDirectory() as d:
+            good = npk.build(Path(d) / "good.zip")
+            bad = Path(d) / "bad.zip"
+            with zipfile.ZipFile(good) as src, zipfile.ZipFile(bad, "w") as dst:
+                for i in src.infolist():
+                    data = src.read(i)
+                    if i.filename.endswith("GameSettings/GFEE01.ini"):
+                        data = build_ini(npk.PACKAGE_CODES + ["DBG-01"], verbose=False).encode()
+                    dst.writestr(i, data)
+                dst.writestr(f"{npk.TOP}/User/GC/USA/Card A/01-GFEE-FIREEMBLEM8J.gci", b"x")
+            problems = " ".join(npk.verify(bad))
+            self.assertIn("forbidden entry", problems)
+            self.assertIn("code fingerprint", problems)
+            self.assertIn("MANIFEST hash mismatch", problems)
+
+    def test_fingerprint_rules(self):
+        from tools import netplay_package as npk
+        from tools.install_codes import build_ini
+        text = build_ini(npk.PACKAGE_CODES, verbose=False)
+        fp = npk.fingerprint(text)
+        spaced = "\r\n".join(l.replace(" ", "\t ").lower() if not l.startswith(("$", "[")) else l
+                             for l in text.split("\n"))   # line endings and code-line spacing/case only
+        self.assertEqual(npk.fingerprint(spaced), fp)
+        self.assertEqual([n.split()[0] for _k, n, _c in npk.enabled_codes(text)], ["EXP-16", "COOP-P5"])  # definition order
+        self.assertNotEqual(npk.fingerprint(build_ini(npk.PACKAGE_CODES + ["DBG-01"], verbose=False)), fp)
+        self.assertNotEqual(npk.fingerprint(build_ini(["COOP-P5"], verbose=False)), fp)
+
+    def test_client_script_computes_the_same_fingerprint(self):
+        """tools/client.ps1 (Windows PowerShell) and Python must agree on the fingerprint."""
+        import shutil, subprocess, tempfile
+        from tools import netplay_package as npk
+        from tools.install_codes import build_ini
+        if not shutil.which("powershell"):
+            self.skipTest("Windows PowerShell not available")
+        with tempfile.TemporaryDirectory() as d:
+            for codes in (npk.PACKAGE_CODES, ["COOP-P3", "DBG-02"]):
+                ini = Path(d) / "GFEE01.ini"
+                text = build_ini(codes, verbose=False)
+                ini.write_bytes(text.replace("\n", "\r\n").encode())
+                out = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                                      str(npk.SOURCE / "tools/client.ps1"), "-PrintFingerprint", str(ini)],
+                                     capture_output=True, text=True, timeout=60).stdout.strip()
+                self.assertEqual(out, npk.fingerprint(text))
+
+    def test_netplay_setup_traversal_host_keeps_net01_defaults(self):
+        from tools.netplay_setup import dolphin_ini
+        net01 = dolphin_ini(Path("G"), "P1-Blue", True)
+        self.assertIn("TraversalChoice = direct", net01)
+        self.assertIn("BackgroundInput = True", net01)
+        net02 = dolphin_ini(Path("G"), "P1-Blue", True, traversal=True)
+        for need in ("TraversalChoice = traversal", "TraversalServer = stun.dolphin-emu.org",
+                     "BackgroundInput = False", "SyncCodes = True", "WriteSaveData = False", "SIDevice1 = 6"):
+            self.assertIn(need, net02)
+
+
 class LZ77Tests(unittest.TestCase):
     def test_roundtrip(self):
         rng = random.Random(9)

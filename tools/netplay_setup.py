@@ -17,8 +17,13 @@ game with EXP-05, Prologue won, saved when prompted; file 2 = "Ch. 9: Gallia"). 
 the slot 6 state: Dolphin refuses to load states during Netplay, and a suspend made from that state is
 rejected as "not the original Memory Card" (RESEARCH F-31). Title > Restart Chapter > Ch. 9 instead.
 
+Internet session (NET-02): --host-only --traversal makes just the host folder, hosting through Dolphin's
+Traversal Server (room code) with Background Input off; Player 2 uses the ZIP from tools/netplay_package.
+--card DIR picks the host's memory card files (default: the Chapter 9 card above).
+
 Usage: python -m tools.netplay_setup [--root work/netplay] [--enable CODE ...] [--client-stick numpad|digits] [--force]
        python -m tools.netplay_setup --root work/ch1 --enable COOP-P3 --enable EXP-15   (Chapter 1 test bed)
+       python -m tools.netplay_setup --root work/netplay_net --host-only --traversal --card work/saves/net02_card            --enable COOP-P5 --enable EXP-16                                            (NET-02 host)
 Launch: Dolphin-x64/Dolphin.exe --user work/netplay/host   (and --user work/netplay/client)
 """
 
@@ -38,7 +43,7 @@ PORT = 2626
 _DIGITS = {"Main Stick/Up": "8", "Main Stick/Down": "5", "Main Stick/Left": "4", "Main Stick/Right": "6"}
 
 
-def dolphin_ini(games: Path, nickname: str, host: bool) -> str:
+def dolphin_ini(games: Path, nickname: str, host: bool, traversal: bool = False) -> str:
     sections = {
         "General": {"ISOPaths": "1", "ISOPath0": str(games)},
         "Analytics": {"Enabled": "False", "PermissionAsked": "True"},
@@ -48,6 +53,11 @@ def dolphin_ini(games: Path, nickname: str, host: bool) -> str:
         "NetPlay": {"Nickname": nickname, "TraversalChoice": "direct", "Address": "127.0.0.1",
                     "HostPort": str(PORT), "ConnectPort": str(PORT)},
     }
+    if traversal:
+        # One player per PC: keys only reach the focused game window (typing in the chat moves nothing).
+        sections["Input"]["BackgroundInput"] = "False"
+        sections["NetPlay"].update({"TraversalChoice": "traversal", "TraversalServer": "stun.dolphin-emu.org",
+                                    "TraversalPort": "6262"})
     if host:
         # Start from the host's memory card, and discard what the session writes (first experiments).
         sections["NetPlay"].update({"SyncSaves": "True", "SyncCodes": "True", "WriteSaveData": "False"})
@@ -58,9 +68,9 @@ def dolphin_ini(games: Path, nickname: str, host: bool) -> str:
 
 
 def make_user(dest: Path, games: Path, nickname: str, pad: dict[str, str], codes: str | None,
-              pad2: dict[str, str] | None = None) -> None:
+              pad2: dict[str, str] | None = None, traversal: bool = False) -> None:
     (dest / "Config").mkdir(parents=True)
-    (dest / "Config/Dolphin.ini").write_text(dolphin_ini(games, nickname, codes is not None))
+    (dest / "Config/Dolphin.ini").write_text(dolphin_ini(games, nickname, codes is not None, traversal))
     pads = set_ini("", "GCPad1", pad)
     if pad2:
         pads = set_ini(pads, "GCPad2", pad2)
@@ -79,6 +89,9 @@ def main() -> int:
     ap.add_argument("--client-stick", choices=["numpad", "digits"], default="numpad",
                     help="client stick keys; 'digits' = top-row 8/5/4/6 for drivers without a keypad")
     ap.add_argument("--force", action="store_true", help="replace existing host/client folders")
+    ap.add_argument("--host-only", action="store_true", help="make only the host folder (Player 2 uses the ZIP)")
+    ap.add_argument("--traversal", action="store_true", help="host through Dolphin's Traversal Server")
+    ap.add_argument("--card", type=Path, default=CH9_CARD, help="folder with the host's .gci card files")
     args = ap.parse_args()
 
     root = args.root.resolve()
@@ -86,7 +99,7 @@ def main() -> int:
         print("refusing: --root must not be inside Dolphin-x64/User", file=sys.stderr)
         return 1
     host, client = root / "host", root / "client"
-    for d in (host, client):
+    for d in (host,) if args.host_only else (host, client):
         if d.exists():
             if not args.force:
                 print(f"{d} exists (use --force to recreate it; its memory card is lost)", file=sys.stderr)
@@ -96,17 +109,20 @@ def main() -> int:
     games = (args.dolphin / "Games").resolve()
     client_keys = {**_KEYS, **(_DIGITS if args.client_stick == "digits" else {})}
     make_user(host, games, "P1-Blue", PORT1_KEYBOARD, build_ini(args.enable or ["COOP-P3"], verbose=False),
-              pad2=keyboard_layout(client_keys))
-    make_user(client, games, "P2-Yellow", keyboard_layout(client_keys), None)
-    for gci in sorted(CH9_CARD.glob("*.gci")):
+              pad2=keyboard_layout(client_keys), traversal=args.traversal)
+    if not args.host_only:
+        make_user(client, games, "P2-Yellow", keyboard_layout(client_keys), None)
+    for gci in sorted(args.card.glob("*.gci")):
         shutil.copy2(gci, host / "GC/USA/Card A" / gci.name)
 
     exe = (args.dolphin / "Dolphin.exe").resolve()
     print(f"host:   {exe} --user {host}")
-    print(f"client: {exe} --user {client}")
-    print(f"host codes: {', '.join(args.enable or ['COOP-P3'])}; port {PORT}; client stick = {args.client_stick}")
-    if not any(CH9_CARD.glob("*.gci")):
-        print(f"note: no card in {CH9_CARD}; make the Chapter 9 card save first (TESTING.md NET-00)")
+    if not args.host_only:
+        print(f"client: {exe} --user {client}")
+    print(f"host codes: {', '.join(args.enable or ['COOP-P3'])}; "
+          f"{'traversal server' if args.traversal else f'port {PORT}'}; client stick = {args.client_stick}")
+    if not any(args.card.glob("*.gci")):
+        print(f"note: no card in {args.card}; make the Chapter 9 card save first (TESTING.md NET-00)")
     return 0
 
 

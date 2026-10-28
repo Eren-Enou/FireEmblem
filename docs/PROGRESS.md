@@ -219,3 +219,22 @@ Controller routing / Netplay (per user priority).
 - **Chapter audit (Priority 5):** `tools/chapter_audit.py` reads every chapter's dispos data and event script (command names and PIDs are plain strings in `Scripts/CNN.cmb`). It writes `docs/CHAPTER_AUDIT.md`, which marks each chapter as runtime verified, statically inspected only, or needing a targeted check (escape objective, transfers, native partners, scripted phases). The "…ByPID" commands are script helpers over the native ones, so the existing hooks apply. Native partner `PID_MELTY` (force 3) appears in Ch18–30.
 - Next: decode the `.cmb` bytecode, so the audit can say which PIDs each `UnitTransferToForce` call moves and to which force; play Ch6's escape objective; flexible deployment in a later chapter; NET-02.
 - **Script bytecode decoded enough for transfers (F-48):** the audit now lists every `UnitTransferToForce[ByPID]` call per chapter as PID → force, with Player-2 characters in bold. This confirms from the script itself the benching seen at runtime (Ch3/Ch4/Ch6). It also flags what to test next: **Ch18 Shinon turning enemy (→ 1)** and **Ch10's temporary story partners (Kieran, Nephenee, Brom → 3)**.
+
+## 2026-10-27 — Session 1r: shareable Netplay client package (NET-02 prep)
+
+- **`tools/netplay_package.py`** builds `dist/FE9-Coop-Client-<fingerprint>.zip` (~12 KB), which the friend unzips next to their own Dolphin 2609a and game copy:
+  - `README.txt`, `Start-FE9-Coop.bat` / `Check-Setup.bat` → `tools/client.ps1`
+  - a private `User/` folder: Traversal Server preset, cheats on, port 1 keyboard, COOP-P5 + EXP-16
+  - `MANIFEST.txt`
+  - Sources are in `netplay/client/`. The build is reproducible, and `--verify` enforces the exact contents with no game or save data.
+- **Code fingerprint** (SHA-256 of the enabled codes, 16 hex digits): computed identically by Python and the PowerShell launcher (tested). `--fingerprint <user dir>` checks the host folder. Current value: `7031af10d740f4ed`.
+- `netplay_setup` gains `--host-only --traversal --card`. The NET-02 host is `work/netplay_net/host`, with the card `work/saves/net02_card/`. The NET-01 defaults and folders are unchanged (tested).
+- **One-PC runtime check (Claude):**
+  - The packaged client, started by its own launcher, connected over Direct.
+  - Game digest match, saves and codes synced, P1 → GC1 and P2 → GC2.
+  - Ch3 yellow phase controlled only by the client.
+  - Identical turn 2 states.
+  - Disconnect stops both games.
+  - The traversal Room ID was issued, but a same-PC traversal join failed (F-49), so the internet path still needs the real two-PC run.
+- Tests 41/41, signatures 122/122.
+- Next: the user and a friend run NET-02 (TESTING.md) and report the results; then Ch6 escape, Ch18/Ch10 checks, flexible deployment.
