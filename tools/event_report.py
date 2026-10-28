@@ -26,7 +26,7 @@ def analyze(disc):
             totals["complete_local_traces" if result["complete_local_trace"] else "incomplete_local_traces"] += 1
             important = [e for e in result["events"] if e["command"] in IMPORTANT or
                          (e["command"] == "set" and any(s in str(e["args"]) for s in ("gf_complete", "gf_gameover")))]
-            if important or any(k in f.trigger(raw) for k in ("inferred_turn_trigger", "tile_event")):
+            if important or any(k in f.trigger(raw) for k in ("inferred_turn_trigger", "tile_event", "conversation_event")):
                 scenes.append({"index": f.index, "name": f.name, "trigger": f.trigger(raw),
                                "complete_local_trace": result["complete_local_trace"],
                                "outcomes": result["outcomes"], "events": important})

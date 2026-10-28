@@ -1165,11 +1165,56 @@
   "runs": {
     "cfg-02": {
       "kind": "static",
-      "description": "All 2075 scene CFGs across 43 containers decode; parser checks only; source GFEE01 rev0 DOL hash anchored."
+      "description": "All 2075 scene CFGs across 43 containers decode; parser checks only; source GFEE01 rev0 DOL hash anchored.",
+      "chapters": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18.1",
+        "18.2",
+        "18.3",
+        "18.4",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31"
+      ],
+      "axes": [
+        "static_cfg"
+      ]
     },
     "escape-model-02": {
       "kind": "script_model",
-      "description": "Four C07 original escape-scene cases with mocked natives: actor, passenger, Ike, carried Ike; no Dolphin claim."
+      "description": "Four C07 original escape-scene cases with mocked natives: actor, passenger, Ike, carried Ike; no Dolphin claim.",
+      "chapters": [
+        "7"
+      ],
+      "axes": [
+        "script_model"
+      ]
     },
     "fixture-prologue-02": {
       "kind": "dolphin",
@@ -1183,7 +1228,13 @@
           "sha256": "8728032b2d3dd931cbcd5889ae4ca59448fb1fdfdbcd56b1be0130ef812d1733"
         }
       ],
-      "description": "Copied Prologue restored in isolated Dolphin; original-unit state captured via UI Save State to File. All intended stable C2 bodies matched live RAM. No unit action demonstrated."
+      "description": "Copied Prologue restored in isolated Dolphin; original-unit state captured via UI Save State to File. All intended stable C2 bodies matched live RAM. No unit action demonstrated.",
+      "chapters": [
+        "1"
+      ],
+      "axes": [
+        "fixture"
+      ]
     },
     "prologue-wait-03": {
       "kind": "dolphin",
@@ -1202,7 +1253,13 @@
           "sha256": "6e1115df705c8d7031fd5df60398b93a41ac3adbd4ce6dbcec27f468a55839f5"
         }
       ],
-      "description": "Native Computer Use toggled port-1 TAS A, selected current tile, moved menu to Wait and confirmed. Enemy-phase Boyd dialogue observed. Capture phase 0 -> 1; Ike unchanged HP/lv/EXP/position; live stable C2 bodies match in both snapshots. prologue_smoke PASS. Analysis/tooling worktree dirty; production codes unchanged."
+      "description": "Native Computer Use toggled port-1 TAS A, selected current tile, moved menu to Wait and confirmed. Enemy-phase Boyd dialogue observed. Capture phase 0 -> 1; Ike unchanged HP/lv/EXP/position; live stable C2 bodies match in both snapshots. prologue_smoke PASS. Analysis/tooling worktree dirty; production codes unchanged.",
+      "chapters": [
+        "1"
+      ],
+      "axes": [
+        "event_runtime"
+      ]
     }
   },
   "next_cases": [

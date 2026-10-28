@@ -205,6 +205,11 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [3, 3, 0], 'inferred_tur
 Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [0, 0, 0], 'inferred_turn_trigger': {'first_turn': 0, 'last_turn': 0, 'phase': 0}}`. Local trace: all explored local paths returned
 
 
+### Scene 13: function_13
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1291, 1791, 1, 28], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_TIAMAT', 'reversible': True, 'key': 'アイクティアマト'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 18: function_18
 
 Trigger metadata: `{'kind': 7, 'argc': 0, 'parameters': []}`. Local trace: all explored local paths returned
@@ -298,7 +303,7 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [0, 0, 1], 'inferred_tur
 
 ### Scene 17: function_17
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [17, 2111, 0, 351]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [17, 2111, 0, 351], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_MARCIA', 'reversible': False, 'key': 'マーシャ会話アイク'}}`. Local trace: all explored local paths returned
 
 - `0x1BBA UnitEscapeByPID('PID_MARCIA')`: 2 explored alternative(s). Example local guards: (UnitGetXByPID('PID_MARCIA') == (UnitGetXByPID('PID_IKE') + 1)) != 0.
 
@@ -613,9 +618,19 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [3, 3, 0], 'inferred_tur
 
 ### Scene 22: function_22
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1079, 2044, 1, 439]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1079, 2044, 1, 439], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_WAYU', 'reversible': True, 'key': '会話アイクワユ'}}`. Local trace: all explored local paths returned
 
 - `0x2BF7 UnitTransferToForceByPID('PID_WAYU', 0)`: 2 explored alternative(s). Example local guards: !(get('グレイルプラハ登場')) != 0.
+
+### Scene 23: function_23
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1079, 2291, 1, 403], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_CHINON', 'reversible': True, 'key': '会話アイクシノン'}}`. Local trace: all explored local paths returned
+
+
+### Scene 24: function_24
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1079, 2280, 1, 420], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_GATRIE', 'reversible': True, 'key': '会話アイクガトリー'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 29: function_29
 
@@ -740,7 +755,7 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [9, 9, 0], 'inferred_tur
 
 ### Scene 21: function_21
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2301, 3098, 0, 376]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2301, 3098, 0, 376], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_ELAICE', 'reversible': False, 'key': 'イレース仲間'}}`. Local trace: all explored local paths returned
 
 - `0x296B UnitTransferToForceByPID('PID_ELAICE', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -879,9 +894,19 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [0, 0, 1], 'inferred_tur
 
 ### Scene 28: function_28
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1510, 2876, 1, 654]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1510, 2876, 1, 654], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_MARCIA', 'reversible': True, 'key': 'マーシャ仲間'}}`. Local trace: all explored local paths returned
 
 - `0x2942 UnitTransferToForceByPID('PID_MARCIA', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
+
+### Scene 29: function_29
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1586, 2600, 0, 667], 'conversation_event': {'actor': 'PID_BOLE', 'target': 'PID_LOFA', 'reversible': False, 'key': 'ヨファボーレ'}}`. Local trace: all explored local paths returned
+
+
+### Scene 30: function_30
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [154, 2600, 0, 680], 'conversation_event': {'actor': 'PID_OSCAR', 'target': 'PID_LOFA', 'reversible': False, 'key': 'ヨファオスカー'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 44: function_44
 
@@ -1001,21 +1026,26 @@ Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: INCON
 Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [1, 1, 2], 'inferred_turn_trigger': {'first_turn': 1, 'last_turn': 1, 'phase': 2}}`. Local trace: all explored local paths returned
 
 
+### Scene 28: function_28
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [220, 3261, 1, 826], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_CEPHERAN_FAKE', 'reversible': True, 'key': 'アイクセフェラン'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 29: function_29
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [3379, 241, 1, 843]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [3379, 241, 1, 843], 'conversation_event': {'actor': 'PID_OSCAR', 'target': 'PID_KEVIN', 'reversible': True, 'key': 'オスカーケビン'}}`. Local trace: all explored local paths returned
 
 - `0x2C5B UnitTransferToForceByPID('PID_KEVIN', 3)`: 1 explored alternative(s). Example local guards: none in this scene.
 
 ### Scene 30: function_30
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [220, 260, 0, 858]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [220, 260, 0, 858], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_NEPENEE', 'reversible': False, 'key': 'アイクネフェニー'}}`. Local trace: all explored local paths returned
 
 - `0x2CA3 UnitTransferToForceByPID('PID_NEPENEE', 3)`: 1 explored alternative(s). Example local guards: none in this scene.
 
 ### Scene 31: function_31
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [220, 251, 0, 875]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [220, 251, 0, 875], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_CHAP', 'reversible': False, 'key': 'アイクチャップ'}}`. Local trace: all explored local paths returned
 
 - `0x2CEB UnitTransferToForceByPID('PID_CHAP', 3)`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -1183,6 +1213,26 @@ Trigger metadata: `{'kind': 0, 'argc': 1, 'parameters': []}`. Local trace: all e
 
 - `0x4248 UnitTransferToForceByPID('PID_ZIHARK', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
+### Scene 31: function_31
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [17, 3953, 0, 766], 'conversation_event': {'actor': 'PID_LETHE', 'target': 'PID_ZIHARK', 'reversible': False, 'key': 'ツイハーク仲間'}}`. Local trace: all explored local paths returned
+
+
+### Scene 32: function_32
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [40, 3953, 0, 766], 'conversation_event': {'actor': 'PID_MORDY', 'target': 'PID_ZIHARK', 'reversible': False, 'key': 'ツイハーク仲間'}}`. Local trace: all explored local paths returned
+
+
+### Scene 33: function_33
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [3953, 17, 0, 766], 'conversation_event': {'actor': 'PID_ZIHARK', 'target': 'PID_LETHE', 'reversible': False, 'key': 'ツイハーク仲間'}}`. Local trace: all explored local paths returned
+
+
+### Scene 34: function_34
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [3953, 40, 0, 766], 'conversation_event': {'actor': 'PID_ZIHARK', 'target': 'PID_MORDY', 'reversible': False, 'key': 'ツイハーク仲間'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 47: function_47
 
 Trigger metadata: `{'kind': 11, 'argc': 0, 'parameters': [570]}`. Local trace: all explored local paths returned
@@ -1233,7 +1283,7 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [2, 2, 2], 'inferred_tur
 
 ### Scene 14: function_14
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2477, 1893, 0, 486]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2477, 1893, 0, 486], 'conversation_event': {'actor': 'PID_JILL', 'target': 'PID_IKE', 'reversible': False, 'key': 'ジル仲間会話'}}`. Local trace: all explored local paths returned
 
 - `0x2239 UnitTransferToForceByPID('PID_JILL', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -1442,15 +1492,55 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [9, 9, 1], 'inferred_tur
 
 ### Scene 36: function_36
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1970, 2166, 0, 570]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1970, 2166, 0, 570], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_STELLA', 'reversible': False, 'key': 'ステラ仲間'}}`. Local trace: all explored local paths returned
 
 - `0x2B65 UnitTransferToForceByPID('PID_STELLA', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
 ### Scene 37: function_37
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2166, 774, 0, 619]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2166, 774, 0, 619], 'conversation_event': {'actor': 'PID_STELLA', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー仲間'}}`. Local trace: all explored local paths returned
 
 - `0x2C15 UnitTransferToForceByPID('PID_GATRIE', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
+
+### Scene 38: function_38
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1970, 774, 0, 581], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話アイク'}}`. Local trace: all explored local paths returned
+
+
+### Scene 39: function_39
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [3489, 774, 0, 600], 'conversation_event': {'actor': 'PID_TIAMAT', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話傭兵団'}}`. Local trace: all explored local paths returned
+
+
+### Scene 40: function_40
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1415, 774, 0, 600], 'conversation_event': {'actor': 'PID_SENERIO', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話傭兵団'}}`. Local trace: all explored local paths returned
+
+
+### Scene 41: function_41
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [3526, 774, 0, 600], 'conversation_event': {'actor': 'PID_MIST', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話傭兵団'}}`. Local trace: all explored local paths returned
+
+
+### Scene 42: function_42
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [196, 774, 0, 600], 'conversation_event': {'actor': 'PID_OSCAR', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話傭兵団'}}`. Local trace: all explored local paths returned
+
+
+### Scene 43: function_43
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [206, 774, 0, 600], 'conversation_event': {'actor': 'PID_BOLE', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話傭兵団'}}`. Local trace: all explored local paths returned
+
+
+### Scene 44: function_44
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [215, 774, 0, 600], 'conversation_event': {'actor': 'PID_LOFA', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話傭兵団'}}`. Local trace: all explored local paths returned
+
+
+### Scene 45: function_45
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1303, 774, 0, 600], 'conversation_event': {'actor': 'PID_KILROY', 'target': 'PID_GATRIE', 'reversible': False, 'key': 'ガトリー会話傭兵団'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 53: function_53
 
@@ -1527,7 +1617,7 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [0, 0, 1], 'inferred_tur
 
 ### Scene 25: function_25
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [224, 2064, 0, 575]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [224, 2064, 0, 575], 'conversation_event': {'actor': 'PID_MARCIA', 'target': 'PID_MAKAROV', 'reversible': False, 'key': 'マカロフ仲間'}}`. Local trace: all explored local paths returned
 
 - `0x1FC5 UnitTransferToForceByPID('PID_MAKAROV', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -1707,6 +1797,31 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [9, 9, 0], 'inferred_tur
 Trigger metadata: `{'kind': 0, 'argc': 1, 'parameters': []}`. Local trace: all explored local paths returned
 
 - `0x1BB4 UnitTransferToForceByPID('PID_DALAHOWE', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
+
+### Scene 30: function_30
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2459, 2003, 0, 902], 'conversation_event': {'actor': 'PID_MIST', 'target': 'PID_DALAHOWE', 'reversible': False, 'key': 'ダラハウ仲間'}}`. Local trace: all explored local paths returned
+
+
+### Scene 31: function_31
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2480, 2003, 0, 902], 'conversation_event': {'actor': 'PID_LOFA', 'target': 'PID_DALAHOWE', 'reversible': False, 'key': 'ダラハウ仲間'}}`. Local trace: all explored local paths returned
+
+
+### Scene 32: function_32
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2501, 2003, 0, 902], 'conversation_event': {'actor': 'PID_SENERIO', 'target': 'PID_DALAHOWE', 'reversible': False, 'key': 'ダラハウ仲間'}}`. Local trace: all explored local paths returned
+
+
+### Scene 33: function_33
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [120, 2003, 0, 902], 'conversation_event': {'actor': 'PID_TOPUCK', 'target': 'PID_DALAHOWE', 'reversible': False, 'key': 'ダラハウ仲間'}}`. Local trace: all explored local paths returned
+
+
+### Scene 34: function_34
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2537, 2003, 0, 902], 'conversation_event': {'actor': 'PID_SOTHE', 'target': 'PID_DALAHOWE', 'reversible': False, 'key': 'ダラハウ仲間'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 48: function_48
 
@@ -2017,6 +2132,21 @@ Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: INCON
 Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: all explored local paths returned
 
 - `0x2CD1 UnitEscapeByPID('PID_NAESALA')`: 4 explored alternative(s). Example local guards: UnitGetByPos(25, 9) != 0 AND UnitCheckExistsByPID('PID_CHINON') != 0 AND UnitCheckExistsByPID('PID_CHINON') != 0 AND UnitCheckExistsByPID('PID_CHINON') != 0 AND UnitCheckExistsByPID('PID_CHINON') != 0 AND UnitGetByPos(25, 9) != 0.
+
+### Scene 21: function_21
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [802, 3449, 1, 605], 'conversation_event': {'actor': 'PID_CHINON', 'target': 'PID_MIST', 'reversible': True, 'key': 'シノン会話ミスト'}}`. Local trace: all explored local paths returned
+
+
+### Scene 22: function_22
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [802, 3502, 1, 569], 'conversation_event': {'actor': 'PID_CHINON', 'target': 'PID_LOFA', 'reversible': True, 'key': 'シノン会話ヨファ'}}`. Local trace: all explored local paths returned
+
+
+### Scene 23: function_23
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [802, 3532, 1, 586], 'conversation_event': {'actor': 'PID_CHINON', 'target': 'PID_KILROY', 'reversible': True, 'key': 'シノン会話キルロイ'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 24: function_24
 
@@ -2403,9 +2533,19 @@ Trigger metadata: `{'kind': 7, 'argc': 0, 'parameters': []}`. Local trace: all e
 
 - `0x33E6 UnitEscapeByPID('PID_NAESALA')`: 2 explored alternative(s). Example local guards: get('ネサラ死亡') != 0 AND !(get('ネサラ退却')) != 0 AND get('ネサラ死亡オンバト') != 0.
 
+### Scene 82: function_82
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [437, 1249, 1, 807], 'conversation_event': {'actor': 'PID_JANAFF', 'target': 'PID_NAESALA', 'reversible': True, 'key': 'ネサラ会話'}}`. Local trace: all explored local paths returned
+
+
+### Scene 83: function_83
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [473, 1249, 1, 807], 'conversation_event': {'actor': 'PID_VULCI', 'target': 'PID_NAESALA', 'reversible': True, 'key': 'ネサラ会話'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 84: function_84
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1249, 3012, 0, 818]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [1249, 3012, 0, 818], 'conversation_event': {'actor': 'PID_NAESALA', 'target': 'PID_RIEUSION', 'reversible': False, 'key': 'ネサラ会話リュシオン'}}`. Local trace: all explored local paths returned
 
 - `0x3559 UnitTransferToForceByPID('PID_NAESALA', 2)`: 3 explored alternative(s). Example local guards: get('カラス兵死亡') != 0.
 
@@ -2483,13 +2623,13 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [1, 1, 1], 'inferred_tur
 
 ### Scene 26: function_26
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2485, 2266, 0, 891]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2485, 2266, 0, 891], 'conversation_event': {'actor': 'PID_JILL', 'target': 'PID_SIHARAMU', 'reversible': False, 'key': '会話ジル−シハラム'}}`. Local trace: all explored local paths returned
 
 - `0x21B1 UnitTransferToForceByPID('PID_JILL', 1)`: 1 explored alternative(s). Example local guards: (PersonGetYellLevel('PID_JILL', 'PID_MIST') == 3) == 0 AND (PersonGetYellLevel('PID_JILL', 'PID_LETHE') == 3) == 0.
 
 ### Scene 27: function_27
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2266, 2485, 0, 891]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2266, 2485, 0, 891], 'conversation_event': {'actor': 'PID_SIHARAMU', 'target': 'PID_JILL', 'reversible': False, 'key': '会話ジル−シハラム'}}`. Local trace: all explored local paths returned
 
 - `0x22BD UnitTransferToForceByPID('PID_JILL', 1)`: 1 explored alternative(s). Example local guards: (PersonGetYellLevel('PID_JILL', 'PID_MIST') == 3) == 0 AND (PersonGetYellLevel('PID_JILL', 'PID_LETHE') == 3) == 0.
 
@@ -2653,7 +2793,7 @@ Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: INCON
 
 ### Scene 36: function_36
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2577, 2846, 0, 865]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2577, 2846, 0, 865], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_TAURONEO', 'reversible': False, 'key': 'タウロニオ仲間'}}`. Local trace: all explored local paths returned
 
 - `0x28CD UnitTransferToForceByPID('PID_TAURONEO', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -2861,7 +3001,7 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [0, 0, 2], 'inferred_tur
 
 ### Scene 38: function_38
 
-Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2942, 1875, 0, 657]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2942, 1875, 0, 657], 'conversation_event': {'actor': 'PID_JILL', 'target': 'PID_HAAR', 'reversible': False, 'key': 'ハール会話'}}`. Local trace: all explored local paths returned
 
 - `0x26B5 UnitTransferToForceByPID('PID_HAAR', 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -2948,6 +3088,36 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [6, 6, 0], 'inferred_tur
 Trigger metadata: `{'kind': 7, 'argc': 0, 'parameters': []}`. Local trace: all explored local paths returned
 
 - `0x2D8D UnitEscapeByPID('PID_BLACKKNIGHT')`: 4 explored alternative(s). Example local guards: get('漆黒の騎士戦闘アイク') != 0 AND !(get('漆黒のとの戦闘後会話')) != 0 AND get('gf_gameover') == 0 AND get('漆黒の騎士戦闘アイクオンマップ') != 0 AND UnitGetByPID('PID_BLACKKNIGHT') != 0.
+
+### Scene 30: function_30
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2286, 2395, 0, 869], 'conversation_event': {'actor': 'PID_ULYSSES', 'target': 'PID_IKE', 'reversible': False, 'key': '会話ユリシーズ⇒アイク'}}`. Local trace: all explored local paths returned
+
+
+### Scene 31: function_31
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2766, 2395, 0, 892], 'conversation_event': {'actor': 'PID_LUCHINO', 'target': 'PID_IKE', 'reversible': False, 'key': '会話ルキノ⇒アイク'}}`. Local trace: all explored local paths returned
+
+
+### Scene 32: function_32
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2395, 2192, 0, 911], 'conversation_event': {'actor': 'PID_IKE', 'target': 'PID_GEOFFRAY', 'reversible': False, 'key': '会話アイク⇒ジョフレ'}}`. Local trace: all explored local paths returned
+
+
+### Scene 33: function_33
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2192, 2286, 1, 932], 'conversation_event': {'actor': 'PID_GEOFFRAY', 'target': 'PID_ULYSSES', 'reversible': True, 'key': '会話ジョフレ⇔ユリシーズ'}}`. Local trace: all explored local paths returned
+
+
+### Scene 34: function_34
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2192, 2766, 1, 957], 'conversation_event': {'actor': 'PID_GEOFFRAY', 'target': 'PID_LUCHINO', 'reversible': True, 'key': '会話ジョフレ⇔ルキノ'}}`. Local trace: all explored local paths returned
+
+
+### Scene 35: function_35
+
+Trigger metadata: `{'kind': 8, 'argc': 0, 'parameters': [2192, 3050, 1, 978], 'conversation_event': {'actor': 'PID_GEOFFRAY', 'target': 'PID_KEVIN', 'reversible': True, 'key': '会話ジョフレ⇔ケビン'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 36: function_36
 

@@ -2,41 +2,41 @@
 
 Baseline: 10d2496 (draft research); stable main 6a81522.
 
-Generated from the user's GFEE01 rev 0 image. Static inventory and local instruction CFGs cover discovered containers; event interpretation is incomplete. Every current-configuration gameplay axis remains untested. Historical reports are retained separately and must not be promoted to current acceptance.
+Generated from the user's GFEE01 rev 0 image. Static inventory and local instruction CFGs cover discovered containers; event interpretation is incomplete. Current evidence columns come from campaign/verification.json. PASS* covers only the named run/event there, never whole-chapter compatibility. Historical reports are retained separately and must not be promoted to current acceptance. Predicate/tile/conversation records are generated in CAMPAIGN_EVENTS.md.
 
-| Chapter | ID | Maps | Static research | Automated | Runtime | Cleared | Transition | Netplay |
+| Chapter | ID | Maps | Static research | Automated | Original event | Cleared | Transition | Netplay two PCs |
 |---|---|---|---|---|---|---|---|---|
-| Prologue: Mercenaries | 1 | bmap01 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.1: The Battle Begins | 2 | bmap02 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.2: Rescue | 3 | bmap03 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.3: Pirates Aground | 4 | bmap04 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.4: Roadside Battle | 5 | bmap05 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.5: Flight! | 6 | bmap06, bmap06_2 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.6: A Brief Diversion | 7 | bmap07 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.7: Shades of Evil | 8 | bmap08, bmap08_2 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.8: Despair and Hope | 9 | bmap09, bmap09_2, bmap09_3, bmap09_4, bmap09_5 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.9: Gallia | 10 | bmap10 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.10: Prisoner Release | 11 | bmap11 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.11: Blood Runs Red | 12 | bmap12, bmap12_2 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.12: A Strange Land | 13 | bmap13 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.13: A Guiding Wind | 14 | bmap14, bmap14_2 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.14: Training | 15 | bmap15 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.15: The Feral Frontier | 16 | bmap16 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.16: The Atonement | 17 | bmap17 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.17: Day Breaks | 18 | bmap18, bmap18_3 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.18: Crimea Marches | 19 | bmap19 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.19: Entrusted | 20 | bmap20 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.20: Defending Talrega | 21 | bmap21 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.21: Without a King | 22 | bmap22 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.22: Solo | 23 | bmap23 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.23: The Great Bridge | 24 | bmap24 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.24: Battle Reunion | 25 | bmap25, bmap25_2 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.25: Strange Lands | 26 | bmap26, bmap26_2 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.26: Clash! | 27 | bmap27 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.27: Moment of Fate | 28 | bmap28 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.27-2: Moment of Fate | 29 | bmap29 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Ch.28: Twisted Tower | 30 | bmap30 | inventory; conditions open | see run log | untested | untested | untested | untested |
-| Endgame: Repatriation | 31 | bmap31, bmap31_2, bmap31_3 | inventory; conditions open | see run log | untested | untested | untested | untested |
+| Prologue: Mercenaries | 1 | bmap01 | inventory; conditions open | see ledger | PASS* | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.1: The Battle Begins | 2 | bmap02 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.2: Rescue | 3 | bmap03 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.3: Pirates Aground | 4 | bmap04 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.4: Roadside Battle | 5 | bmap05 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.5: Flight! | 6 | bmap06, bmap06_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.6: A Brief Diversion | 7 | bmap07 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.7: Shades of Evil | 8 | bmap08, bmap08_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.8: Despair and Hope | 9 | bmap09, bmap09_2, bmap09_3, bmap09_4, bmap09_5 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.9: Gallia | 10 | bmap10 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.10: Prisoner Release | 11 | bmap11 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.11: Blood Runs Red | 12 | bmap12, bmap12_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.12: A Strange Land | 13 | bmap13 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.13: A Guiding Wind | 14 | bmap14, bmap14_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.14: Training | 15 | bmap15 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.15: The Feral Frontier | 16 | bmap16 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.16: The Atonement | 17 | bmap17 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.17: Day Breaks | 18 | bmap18, bmap18_3 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.18: Crimea Marches | 19 | bmap19 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.19: Entrusted | 20 | bmap20 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.20: Defending Talrega | 21 | bmap21 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.21: Without a King | 22 | bmap22 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.22: Solo | 23 | bmap23 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.23: The Great Bridge | 24 | bmap24 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.24: Battle Reunion | 25 | bmap25, bmap25_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.25: Strange Lands | 26 | bmap26, bmap26_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.26: Clash! | 27 | bmap27 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.27: Moment of Fate | 28 | bmap28 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.27-2: Moment of Fate | 29 | bmap29 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.28: Twisted Tower | 30 | bmap30 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Endgame: Repatriation | 31 | bmap31, bmap31_2, bmap31_3 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 
 ## Multipart and special encounters
 
@@ -65,7 +65,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -154,7 +154,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -261,7 +261,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -413,7 +413,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -539,7 +539,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -706,7 +706,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -855,7 +855,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -1020,7 +1020,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -1277,7 +1277,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -1516,7 +1516,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -1714,7 +1714,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -1941,7 +1941,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -2244,7 +2244,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -2424,7 +2424,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -2628,7 +2628,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -2786,7 +2786,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -2927,7 +2927,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -3195,7 +3195,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -3610,7 +3610,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -3879,7 +3879,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -4141,7 +4141,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -4349,7 +4349,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -4606,7 +4606,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -4808,7 +4808,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -5025,7 +5025,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -5245,7 +5245,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -5480,7 +5480,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -5643,7 +5643,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -5815,7 +5815,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -5949,7 +5949,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -6185,7 +6185,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|

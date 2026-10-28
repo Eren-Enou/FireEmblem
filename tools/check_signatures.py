@@ -18,6 +18,20 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-004: kind-8 original conversation identity/direction matching.
+    (0x800BF1E8, 0x9421FFE0, "conversation matching query entry"),
+    (0x800BF22C, 0x2C000008, "conversation matcher selects kind 8"),
+    (0x800BF234, 0xA81E001A, "conversation key pool offset parameter 3"),
+    (0x800BF260, 0xA81E0014, "conversation first identity pool offset"),
+    (0x800BF274, 0xA81E0016, "conversation second identity pool offset"),
+    (0x800BF29C, 0x80C40188, "conversation target character record"),
+    (0x800BF2A0, 0x80850188, "conversation actor character record"),
+    (0x800BF2A4, 0x7C04E040, "conversation compares first identity"),
+    (0x800BF2AC, 0x7C061840, "conversation compares second identity"),
+    (0x800BF2BC, 0xA81E0018, "conversation direction parameter"),
+    (0x800BF2C4, 0x4182001C, "zero direction parameter skips reverse comparison"),
+    (0x800BF2C8, 0x7C041840, "reverse actor identity comparison"),
+    (0x800BF2D0, 0x7C06E040, "reverse target identity comparison"),
     # CAMP-003: original Escape menu availability and kind-5 tile-event query.
     (0x80077438, 0x9421FFF0, "Escape availability entry"),
     (0x8028841C, 0x80077438, "Escape menu availability callback"),

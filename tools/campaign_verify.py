@@ -1,5 +1,6 @@
 """Validate and render campaign evidence; never infer gameplay from static checks."""
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -35,7 +36,29 @@ def validate(ledger):
                             raise ValueError("runtime artifact requires a path and SHA-256")
                     if axis=="netplay_two_pc" and len(set(run.get("machines",[])))<2:
                         raise ValueError("two-PC evidence requires two distinct machine declarations")
+                if row["key"] not in run.get("chapters", []) or axis not in run.get("axes", []):
+                    raise ValueError("evidence scope does not cover this chapter/stage and axis")
     return ledger
+
+
+def check_artifacts(ledger, root):
+    """Check local bytes for runtime PASS claims; hashes do not prove semantics."""
+    validate(ledger)
+    checked = set()
+    for row in ledger["chapters"]:
+        for axis in RUNTIME:
+            claim = row["checks"][axis]
+            if claim["status"] != "PASS":
+                continue
+            for artifact in ledger["runs"][claim["evidence"]]["artifacts"]:
+                path = Path(artifact["path"])
+                path = path if path.is_absolute() else root / path
+                if not path.is_file():
+                    raise ValueError(f"missing evidence artifact: {path}")
+                if hashlib.sha256(path.read_bytes()).hexdigest().lower() != artifact["sha256"].lower():
+                    raise ValueError(f"evidence artifact hash mismatch: {path}")
+                checked.add(path.resolve())
+    return len(checked)
 
 
 def render(ledger):
@@ -60,6 +83,10 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--ledger",type=Path,default=Path("campaign/verification.json"))
     p.add_argument("--out",type=Path,default=Path("docs/VERIFICATION.md"))
+    p.add_argument("--check-artifacts",action="store_true",help="verify local runtime PASS artifact bytes")
+    p.add_argument("--artifact-root",type=Path,default=Path(__file__).resolve().parents[1])
     a=p.parse_args();ledger=validate(json.loads(a.ledger.read_text()))
+    if a.check_artifacts:
+        print(f"verified {check_artifacts(ledger,a.artifact_root)} local runtime evidence artifacts")
     a.out.write_text(render(ledger),encoding="utf-8")
     print(f"validated {len(ledger['chapters'])} chapter/stage records")

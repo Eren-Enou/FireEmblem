@@ -1,5 +1,20 @@
 # Testing
 
+## CAMP-D — conversation metadata and evidence scope
+
+2026-10-28. Static/tooling: 86 tests PASS; 222/222 original DOL signatures match.
+Decoded original kind-8 actor/target PID records, reversible direction and shared
+event keys. Regression cases: Oscar/Kieran, Astrid/Gatrie, opposite Jill/Shiharam
+initiators. These are matching records, not proof the Talk menu or recruitment
+works for Yellow. Original matching query has no unit-force read; upstream target
+eligibility remains open (CAMP-004).
+
+Evidence validation rejects the wrong chapter/stage or axis and rejects missing or
+changed local runtime artifacts. `tools.campaign_verify --check-artifacts` verified
+both recorded Prologue state files. Campaign matrix runtime columns now read the
+same validated ledger as VERIFICATION.md; the inventory no longer invents a
+separate all-untested status. No additional Dolphin run is claimed in this checkpoint.
+
 ## CAMP-C — Escape tile metadata, fixture safety and original Wait action
 
 2026-10-28, isolated campaign clone. **83 tests PASS**, 209/209 signatures match.

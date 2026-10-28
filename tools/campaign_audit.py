@@ -55,8 +55,6 @@ def inventory(disc: DiscReader) -> dict:
                      "script": path, "maps": maps, "caps": sortie_caps(disc, cid), "events": relevant,
                      "static_research": "inventory complete; conditions/reachability incomplete",
                      "automated": "see run log; never implies gameplay",
-                     "runtime_current": "not tested", "cleared_current": "not tested",
-                     "transition_current": "not tested", "netplay_current": "not tested",
                      "historical_evidence": RUNTIME.get(cid, "none documented"),
                      "research": {key: "unresolved; candidates below are not reconstructed behavior" for key in (
                          "victory_conditions", "defeat_and_game_over", "initial_simultaneous_factions",
@@ -66,20 +64,33 @@ def inventory(disc: DiscReader) -> dict:
                          "save_load_interactions", "force_zero_assumptions", "ownership_conflicts")},
                      "unresolved": ["original objective predicates", "script reachability and order",
                                     "available roster vs scripted appearances", "production runtime acceptance"]})
-    return {"baseline": BASELINE, "limitations": "group contents are NOT simultaneous deployment; calls are bounded pattern candidates",
+    return {"baseline": BASELINE, "limitations": "group contents are NOT simultaneous deployment; calls are aligned local CFG sites, not activation proof",
             "chapters": rows, "scripts": scripts}
 
 
-def report(data: dict) -> str:
+def report(data: dict, verification: dict | None = None) -> str:
+    if verification is not None:
+        from tools.campaign_verify import validate
+        validate(verification)
+    def status(cid, axis):
+        if verification is None:
+            return "see ledger"
+        entries = [r["checks"][axis]["status"] for r in verification["chapters"]
+                   if r["key"] == str(cid) or r["key"].startswith(str(cid)+".")]
+        return (entries[0] + ("*" if entries[0] == "PASS" else "")) if entries and len(set(entries)) == 1 else "see stage ledger"
     out = ["# Campaign compatibility matrix", "", f"Baseline: {data['baseline']}.", "",
            "Generated from the user's GFEE01 rev 0 image. Static inventory and local instruction CFGs cover discovered containers; "
-           "event interpretation is incomplete. Every current-configuration gameplay axis remains untested. "
-           "Historical reports are retained separately and must not be promoted to current acceptance.", "",
-           "| Chapter | ID | Maps | Static research | Automated | Runtime | Cleared | Transition | Netplay |",
+           "event interpretation is incomplete. Current evidence columns come from campaign/verification.json. "
+           "PASS* covers only the named run/event there, never whole-chapter compatibility. "
+           "Historical reports are retained separately and must not be promoted to current acceptance. "
+           "Predicate/tile/conversation records are generated in CAMPAIGN_EVENTS.md.", "",
+           "| Chapter | ID | Maps | Static research | Automated | Original event | Cleared | Transition | Netplay two PCs |",
            "|---|---|---|---|---|---|---|---|---|"]
     for row in data["chapters"]:
         maps = ", ".join(m["path"].split("/")[1] for m in row["maps"])
-        out.append(f"| {row['title']} | {row['internal_id']} | {maps} | inventory; conditions open | see run log | untested | untested | untested | untested |")
+        cid = row["internal_id"]
+        out.append(f"| {row['title']} | {cid} | {maps} | inventory; conditions open | see ledger | " +
+                   " | ".join(status(cid, a) for a in ("event_runtime", "chapter_clear", "transition", "netplay_two_pc")) + " |")
     out += ["", "## Multipart and special encounters", "",
             "Internal 18 is Chapter 17, Day Breaks. Both bmap18 and bmap18_3 are inventoried. "
             "The four gameplay stages need separate acceptance: 17-1 untested; 17-2 untested; 17-3 untested; 17-4 untested. "
@@ -102,7 +113,7 @@ def report(data: dict) -> str:
         out += ["", "Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. "
                 "The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.", "",
                 "Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. "
-                "`?` means computed/unknown. Conditional execution and trigger metadata are unresolved.", "",
+                "`?` means computed/unknown. See CAMPAIGN_EVENTS.md for bounded conditions and decoded triggers; normal activation is unresolved.", "",
                 "| Offset | Function | Command | Literal suffix arguments |", "|---|---|---|---|"]
         for c in row["events"]:
             args = ", ".join("?" if a is None else str(a) for a in c["args"])
@@ -116,11 +127,13 @@ def main():
     p.add_argument("--image", type=Path, default=DEFAULT_IMAGE)
     p.add_argument("--out", type=Path, default=Path("docs/CAMPAIGN_MATRIX.md"))
     p.add_argument("--json", type=Path, default=Path("work/campaign_inventory.json"))
+    p.add_argument("--ledger", type=Path, default=Path("campaign/verification.json"))
     args = p.parse_args()
     with DiscReader(args.image) as disc:
         data = inventory(disc)
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(report(data), encoding="utf-8")
+    verification = json.loads(args.ledger.read_text())
+    args.out.write_text(report(data, verification), encoding="utf-8")
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(data, indent=2), encoding="utf-8")
     print(f"{len(data['chapters'])} chapter IDs; {len(data['scripts'])} scripts; wrote {args.out}")

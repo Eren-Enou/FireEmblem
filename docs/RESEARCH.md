@@ -15,6 +15,37 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-004 — conversation actors, direction and consumed keys
+
+VERIFIED-STATIC: original query 0x800BF1E8 matches scene kind 8 at 0x800BF22C.
+Parameter +0x1A is its key string offset (0x800BF234); +0x14/+0x16 are the
+two character-name offsets (0x800BF260/0x800BF274). Character records of the
+current actor/target are read from unit+0x188 (0x800BF29C/0x800BF2A0) and
+compared at 0x800BF2A4/0x800BF2AC. Parameter +0x18 is read at 0x800BF2BC:
+zero skips reverse matching at 0x800BF2C4; nonzero compares the reversed
+identities at 0x800BF2C8/0x800BF2D0. All sites pinned [S]. This matching
+routine does not read the units' tactical forces. Upstream target/menu eligibility
+and real conversation activation are still separate unverified questions.
+
+Decoded consequences (original script records, not runtime recruitment proof):
+
+- C11 scene 29: Oscar / Kieran, reversed pairing permitted. This specifically
+  exercises a stable P2-owned character as the conversation participant.
+- C14 scene 37: Astrid -> Gatrie, one direction. Other Gatrie conversations have
+  their own keys/effects and must not be conflated with recruitment.
+- C19 scenes 21/22/23: Shinon paired with Mist/Rolf/Rhys, reversal permitted.
+  Conversation alone does not establish the later battle/recruitment conditions.
+- C21 scenes 26/27: Jill -> Shiharam and Shiharam -> Jill, each one direction,
+  sharing one consumed key. They are alternative initiators of the same keyed
+  interaction, not two unconditional sequential defections. Scene 26's relationship
+  guards were decoded in CAMP-002; scene 27's effects require independent tracing.
+
+All kind-8 metadata now appears in generated CAMPAIGN_EVENTS.md alongside local
+effect predicates. tools.campaign_verify now requires explicit chapter/stage AND
+axis scope per accepted evidence run, and --check-artifacts verifies local bytes
+against recorded SHA-256 values. This prevents copying Prologue evidence into a
+later-chapter PASS; hashes alone still do not prove semantic correctness.
+
 ### CAMP-003 — original Escape menu and tile metadata
 
 VERIFIED-STATIC: Escape availability callback 0x80077438 is referenced by menu

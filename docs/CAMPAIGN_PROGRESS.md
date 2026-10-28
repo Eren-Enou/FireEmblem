@@ -43,7 +43,7 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
   HP/lv/EXP/position; both states match all stable C2 bodies. prologue_smoke PASS.
   No Yellow-control, clear, transition, save/reload or Netplay claim. Processes stopped.
 
-## Third checkpoint validation
+## Third checkpoint (d933312, pushed)
 
 - 83 tests pass; 209/209 original DOL signatures match.
 - Native Escape menu query traced: kind 5, coordinate pair, action 14 and pool key.
@@ -59,12 +59,23 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 
 ## Next independent work
 
-1. Commit the validated third checkpoint.
+1. Commit conversation metadata and stronger evidence-scope/artifact validation.
 2. Repeat the TAS action path with deterministic frame stepping/recording; DTM
    polling issue remains open, and GUI control still needs observation.
 3. Trace the remaining Escape context veto and test Yellow original-menu eligibility.
 4. Expand per-event fixture requirements and risk coverage beyond script strings.
 5. Improve verification provenance and artifact checks as runtime evidence grows.
+
+## Fourth checkpoint validation
+
+- 86 static/tooling tests; 222 signatures. Both runtime state artifact hashes checked.
+- Decoded original kind-8 conversation actor/target, reversal and consumed key.
+  Oscar/Kieran reversible; Astrid -> Gatrie directional; Jill/Shiharam alternatives
+  share a key. Native matching compares character identity without a force read;
+  upstream menu eligibility and actual recruitment remain unverified.
+- Evidence PASS now requires explicit chapter/stage and axis scope. Missing or
+  changed local artifacts fail the optional byte-verification command.
+- Campaign matrix reads current runtime status from the same ledger/dashboard.
 
 No gameplay assembly correction is accepted yet: identified engine assumptions
 still require normal-path reachability/reproduction. No campaign completion,

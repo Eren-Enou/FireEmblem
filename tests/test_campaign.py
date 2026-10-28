@@ -114,7 +114,7 @@ class CampaignDataTests(unittest.TestCase):
     def test_inventory_never_promotes_static_to_gameplay(self):
         for r in self.data["chapters"]:
             for k in ("runtime_current", "cleared_current", "transition_current", "netplay_current"):
-                self.assertEqual(r[k], "not tested")
+                self.assertNotIn(k, r)  # runtime status belongs only to the validated evidence ledger
 
     def test_escape_routine_force_mask_is_blue_and_roster_only(self):
         from tools.fe9.ppc import Dol
@@ -195,6 +195,22 @@ class CampaignDataTests(unittest.TestCase):
         escape_tiles = [f.trigger(raw)["tile_event"] for f in functions(raw)
                         if f.trigger(raw).get("tile_event", {}).get("action") == "Escape"]
         self.assertEqual([(e["x"], e["y"]) for e in escape_tiles], [(6,2),(7,2)])
+
+    def test_conversation_pairs_direction_and_shared_jill_key(self):
+        raw = self.disc.read_file("Scripts/C11.cmb")
+        event = functions(raw)[29].trigger(raw)["conversation_event"]
+        self.assertEqual((event["actor"],event["target"],event["reversible"]),
+                         ("PID_OSCAR","PID_KEVIN",True))
+        raw = self.disc.read_file("Scripts/C14.cmb")
+        event = functions(raw)[37].trigger(raw)["conversation_event"]
+        self.assertEqual((event["actor"],event["target"],event["reversible"]),
+                         ("PID_STELLA","PID_GATRIE",False))
+        raw = self.disc.read_file("Scripts/C21.cmb")
+        first, second = [functions(raw)[i].trigger(raw)["conversation_event"] for i in (26,27)]
+        self.assertEqual((first["actor"],first["target"]),("PID_JILL","PID_SIHARAMU"))
+        self.assertEqual((second["actor"],second["target"]),(first["target"],first["actor"]))
+        self.assertEqual(first["key"],second["key"])
+        self.assertFalse(first["reversible"] or second["reversible"])
 
     def test_native_registration_recovery_and_rescue_selector(self):
         from tools.native_registry import registrations

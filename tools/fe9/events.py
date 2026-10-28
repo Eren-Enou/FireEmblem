@@ -31,7 +31,10 @@ class Function:
     metadata: list[int]
 
     def trigger(self, raw: bytes) -> dict:
-        """Raw scene kind/parameters; only turn kinds 3/6 have corroborated meaning."""
+        """Decode corroborated turn, tile-action and conversation metadata.
+
+        This describes event matching records, not proof of activation/recruitment.
+        """
         kind, argc, count = raw[self.record + 12:self.record + 15]
         limit = self.record + 20 + count * 2
         if limit > self.code:
@@ -40,18 +43,28 @@ class Function:
         result = {"kind": kind, "argc": argc, "parameters": parameters}
         if kind in (3, 6) and len(parameters) >= 3:
             result["inferred_turn_trigger"] = dict(zip(("first_turn", "last_turn", "phase"), parameters))
+        if kind in (5, 8) and len(parameters) == 4:
+            pool, pool_end = struct.unpack_from("<II", raw, 0x24)
+            def pool_string(offset):
+                start = pool + (offset & 0xFFFF)
+                end = raw.find(b"\0", start, pool_end) if pool <= start < pool_end else -1
+                return raw[start:end].decode("shift_jis", "replace") if end >= 0 else None
         if kind == 5 and len(parameters) == 4:
             # CAMP-003: native query compares +14/+16 against unit x/y,
             # +18 against action code, and resolves unsigned +1A in the pool.
-            pool, pool_end = struct.unpack_from("<II", raw, 0x24)
             offset = parameters[3] & 0xFFFF
-            start = pool + offset
-            end = raw.find(b"\0", start, pool_end) if pool <= start < pool_end else -1
             result["tile_event"] = {"x": parameters[0], "y": parameters[1],
                                     "action_code": parameters[2], "key_pool_offset": offset,
-                                    "key": raw[start:end].decode("shift_jis", "replace") if end >= 0 else None}
+                                    "key": pool_string(offset)}
             if parameters[2] == 14:
                 result["tile_event"]["action"] = "Escape"
+        if kind == 8 and len(parameters) == 4:
+            # CAMP-004: matching compares character identity; nonzero parameter
+            # 2 permits the reversed actor/target pair too.
+            result["conversation_event"] = {"actor": pool_string(parameters[0]),
+                                            "target": pool_string(parameters[1]),
+                                            "reversible": parameters[2] != 0,
+                                            "key": pool_string(parameters[3])}
         return result
 
 
