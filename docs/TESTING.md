@@ -644,6 +644,7 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-10-28 | user | **PASS (all seven checks)** | User report: character claiming, release and reclaim, Yellow control, EXP progression, chapter transition, normal save, and a fresh reload all behaved correctly. No state slots or card changes from this run are on the development PC (`work/ch1/host` card still SHA-1 `54b5a7f4…`, no new states), so the evidence is the user's report. |
 
 ## EXP-20 / COOP-P6 — Cursor jumps to a yellow unit when the yellow phase starts
 

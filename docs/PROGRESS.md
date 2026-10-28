@@ -274,3 +274,7 @@ Controller routing / Netplay (per user priority).
   - unassigned units play as blue
 - `main` keeps the proven COOP-P6 + EXP-16 Netplay build.
 
+## 2026-10-28 — Session 1u: DRAFT-01 passed; draft clarity; alternating-action research
+
+- **DRAFT-01 PASSED** (user, all seven checks: claim, release/reclaim, Yellow control, EXP, chapter transition, save, fresh reload). The flag-word ownership storage is confirmed at runtime.
+

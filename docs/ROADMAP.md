@@ -45,8 +45,9 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 
 ## Phase 5 — Character drafting, persistent ownership and deployment (branch `draft-ownership`)
 - [x] **A. Ownership architecture** (static): ownership in the unit flag word, bits 0x20000000/0x40000000, saved raw with the character (F-52). EXP-21 translates it to forces with EXP-16's hooks; no table is regenerated.
-- [ ] **B. First in-game draft:** EXP-22, L+R on a deployed unit at turn 1, alternating picks, release = undo. Runtime test DRAFT-01 pending.
-- [ ] **C. Persistence and transfers:** survives chapter end and save/reload (DRAFT-01 steps 7–9); owner-to-owner transfer with both players' consent (not started).
+- [x] **B. First in-game draft:** EXP-22, L+R on a deployed unit at turn 1, alternating picks, release = undo. **DRAFT-01 PASSED** (user, 2026-10-28, all seven checks).
+- [ ] **C. Persistence and transfers:** survives chapter end, normal save and fresh reload (**DRAFT-01 PASSED**); owner-to-owner transfer with both players' consent (not started).
+- [ ] **A2. Draft clarity:** in-game feedback for whose pick it is, owned vs unassigned, claim/release, the draft window, and rejections (EXP-22 v2).
 - [ ] **D. Deployment integration:** a chapter with real optional deployment; split slots between players under the original cap; draft undeployed (roster) units.
 - [ ] **E. Netplay acceptance:** the full workflow over two instances, then two computers.
 
