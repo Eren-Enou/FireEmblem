@@ -15,6 +15,30 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-009 — independent loaded event-container chain
+
+VERIFIED-STATIC plus captured-RAM corroboration (CAMP-K), GFEE01 rev0.
+Original iterator0x80013B60 takes null to start;0x80013B68 loads r13-0x7C10.
+Pinned SDA initialization (F-29) gives r13=0x8036EDA0, hence root slot
+**0x80367190**.0x80013B6C reads root+0x28, then the first function pointer.
+For a current function,0x80013B78 reads parent header at+8; after exhausting
+its function table,0x80013B98 advances header+0x1C.0x80013BAC follows further
+headers and0x80013BC8 reads the successor's function table+0x28. All pinned.
+
+Read-only observations in existing accepted Ch6 and Ch9 captures: root points
+to a `cmb\0` header named startup.cmb, linked at+0x1C to C07.cmb or C10.cmb.
+The CAMP-J rejected redirect capture also links to C07.cmb while its chapter
+byte is11. Thus loaded-container identity independently detects that mismatch.
+The header name begins+4 (20-byte field before version+0x18), and pointer fields
+are relocated big-endian in RAM, unlike little-endian offsets on disc.
+
+tools.loaded_scripts bounds the chain, rejects invalid/misaligned/out-of-MEM1
+pointers, invalid magic/names, cycles and excessive depth. Partial/missing chains
+remain inconclusive. Snapshot records names and campaign IDs without assuming
+they prove map geometry, event activation, story history or campaign compatibility.
+state_expect rejects an observed chapter/container mismatch and can require a
+specific loaded container. No RAM write, hook or production change introduced.
+
 ### CAMP-008 — chapter-byte identity can contradict the loaded scenario
 
 VERIFIED-RUNTIME (CAMP-J): native Restart Chapter from the copied Ch6 card plus

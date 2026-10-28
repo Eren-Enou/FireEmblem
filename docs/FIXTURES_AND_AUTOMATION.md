@@ -72,6 +72,13 @@ of an active setup code never certifies natural history. The known historical
 source2 -> target10 transition route remains separate from this failed restart
 route; synthetic loader routes cannot be generalized from one success.
 
+Snapshots also decode the original loaded-CMB chain (RESEARCH CAMP-009).
+Accepted Ch6/Ch9 states independently show C07.cmb/C10.cmb. The rejected redirect
+shows C07.cmb despite chapter11. `state_expect` rejects that contradiction even
+when unit expectations alone would pass. Accepted fixture recipes now explicitly
+require the expected loaded container. Invalid/partial chains are inconclusive;
+container identity remains separate from map geometry and original event activation.
+
 Priority fixture predicates:
 
 - Ch6: original Escape at (13,26); Yellow escape and carried Yellow; Ike last or

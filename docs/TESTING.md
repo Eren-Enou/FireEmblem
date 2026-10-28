@@ -1,5 +1,26 @@
 # Testing
 
+## CAMP-K — Loaded event-script identity cross-check
+
+2026-10-28 after72d11a9; read-only analysis of existing captured states, no new
+Dolphin action. Pinned original script iterator and SDA root; added bounded
+loaded-CMB-chain decoder. Captured Ch6: startup.cmb -> C07.cmb, chapter7.
+Captured Ch9: startup.cmb -> C10.cmb, chapter10. Rejected CAMP-J capture:
+startup.cmb -> **C07.cmb**, chapter byte**11**. The latter now fails both loaded
+script identity and required-prisoner checks. No event acceptance is promoted.
+
+Regenerated Ch6 snapshot passes updated ch6_start.json (now requires C07.cmb).
+Ch10 minimum checks now require C11.cmb in addition to the prisoners. Synthetic
+regressions cover contradictory chapter identity, malformed headers, invalid
+pointers, cycles, chain bounds and missing chains; a local optional regression
+reads all three private captures. Missing private captures skip that regression.
+Snapshot comparisons include event-container evidence; a missing field in one
+snapshot cannot silently compare equal. Header identity does not prove actual
+map geometry, activation, natural flags, event completion or Netplay.
+
+**106 tests PASS; 270/270 signatures match; nine accepted runtime artifacts
+hash-verified.** Stable gameplay fingerprint remains8609ae9f49fd879f.
+
 ## CAMP-J — Restart-card redirect rejected; fixture acceptance hardened
 
 2026-10-28, HEADccc71ac with dirty bootstrap/snapshot tools, Dolphin2609a.

@@ -18,6 +18,13 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-009: loaded CMB chain observed independently of the chapter byte.
+    (0x80013B68, 0x806D83F0, "script iterator reads SDA root (80367190)"),
+    (0x80013B6C, 0x80630028, "script iterator root function table +28"),
+    (0x80013B78, 0x80830008, "script iterator current function parent header +8"),
+    (0x80013B98, 0x8064001C, "script iterator next header +1C"),
+    (0x80013BAC, 0x8063001C, "script iterator follows subsequent header +1C"),
+    (0x80013BC8, 0x80630028, "script iterator successor function table +28"),
     # CAMP-007: original Talk menu -> adjacent-target -> kind8 query chain.
     (0x80078A24, 0x9421FFF0, "Talk availability entry"),
     (0x8002B0A4, 0x9421FFE0, "Talk adjacent-target collection entry"),

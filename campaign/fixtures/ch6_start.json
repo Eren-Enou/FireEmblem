@@ -2,6 +2,7 @@
   "description": "Original Ch6 Restart Chapter -> preparations -> Fight from copied NET02 card; no RAM edits or redirect in this run. Earlier card history is partly documented and includes debug-assisted tests; not a natural-progression certificate.",
   "classification": "native_restart_from_copied_card_history_partly_documented",
   "chapter": 7,
+  "event_script": "C07.cmb",
   "phase": 0,
   "turn": 1,
   "fingerprint": "8609ae9f49fd879f",

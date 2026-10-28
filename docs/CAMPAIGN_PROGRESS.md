@@ -47,6 +47,18 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
   Immutable source and disposable card hashes unchanged; private Dolphin stopped.
 - All103 tests pass; 264 signatures and nine accepted runtime artifact hashes pass.
 
+## Independent loaded-script identity (CAMP-K)
+
+- Traced/pinned original CMB iterator and added bounded read-only header-chain
+  observation to snapshots. Accepted Ch6/Ch9 captures identify C07.cmb/C10.cmb.
+- Rejected redirect independently shows C07.cmb while its chapter byte is11.
+  Fixture checks now reject this contradiction and require named containers in
+  accepted Ch6 and candidate Ch10 recipes. Updated Ch6 expectation passes.
+- Cycle, bad-header/pointer and bound regressions fail closed. Container identity
+  is evidence of loaded scripts only, not map/activation/history or compatibility.
+- All106 tests pass; 270 signatures and nine accepted runtime artifact hashes
+  pass. Stable fingerprint8609ae9f49fd879f; no gameplay patch change.
+
 ## Second checkpoint (82e06d8, pushed)
 
 - Instruction-aligned local CFG decoder: 2075 scenes / 125775 reachable local

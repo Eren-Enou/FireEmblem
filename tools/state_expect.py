@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 TOP = {"description","classification","chapter","phase","turn","control","units",
-       "active_player_pids","absent_pids","fingerprint","allow_debug","allow_synthetic"}
+       "active_player_pids","absent_pids","fingerprint","allow_debug","allow_synthetic","event_script"}
 UNIT = {"pid","force","class","hp","level","exp","gauge","xy","owned","owner",
         "flags_all","flags_none"}
 
@@ -20,6 +20,12 @@ def verify(snapshot, expected):
         raise ValueError("fixture expectation requires a campaign chapter and unit preconditions")
     failures=[]
     evidence,game=snapshot["evidence"],snapshot["game"]
+    scripts=game.get("event_scripts",{})
+    if scripts.get("chapter_matches") is False:
+        failures.append("loaded event script disagrees with chapter byte")
+    if "event_script" in expected and (not scripts.get("complete_chain") or
+                                       expected["event_script"] not in scripts.get("names",[])):
+        failures.append("required loaded event script not verified")
     if not evidence.get("intended_c2_verified"):
         failures.append("intended C2 bodies not verified in live RAM")
     if evidence.get("debug") and not expected.get("allow_debug",False):

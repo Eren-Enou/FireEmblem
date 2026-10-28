@@ -15,6 +15,7 @@ from pathlib import Path
 from tools.inspect_state import STATE, UNITS, load_mem1
 from tools.netplay_package import fingerprint, enabled_codes
 from tools.verify_game import DEFAULT_IMAGE
+from tools.loaded_scripts import inspect as loaded_scripts
 
 
 def configuration_flags(names):
@@ -84,6 +85,7 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
              "intended_c2_verified":bool(observations) and all(o["status"]=="intended C2 body matched" for o in observations),
              "warning": "INI is intended configuration; old savestates may restore different active patches"},
             "game": {"chapter": mem.u8(STATE + 0x10), "phase": mem.u8(STATE + 0x11),
+                     "event_scripts": loaded_scripts(mem,mem.u8(STATE + 0x10)),
                      "turn": mem.u16(STATE + 0x12), "control": list(mem.read(STATE + 0x14, 4)), "units": units}}
 
 
@@ -93,7 +95,11 @@ def differences(a: dict, b: dict) -> list[str]:
         if a["evidence"][key] != b["evidence"][key]:
             out.append(f"configuration mismatch: {key}")
     if a["game"] != b["game"]:
-        for key in ("chapter", "phase", "turn", "control"):
+        for key in ("chapter", "phase", "turn", "control", "event_scripts"):
+            if key not in a["game"] or key not in b["game"]:
+                if key in a["game"] or key in b["game"]:
+                    out.append(f"{key}: missing from one snapshot")
+                continue
             if a["game"][key] != b["game"][key]:
                 out.append(f"{key}: {a['game'][key]} != {b['game'][key]}")
         left = {u["slot"]: u for u in a["game"]["units"]}

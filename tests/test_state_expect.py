@@ -39,6 +39,9 @@ class FixtureExpectationTests(unittest.TestCase):
         result=verify(self.snapshot,expectation)
         self.assertEqual(result["status"],"FAIL")
         self.assertTrue(any("PID_KEVIN" in failure for failure in result["failures"]))
+        self.snapshot["game"]["event_scripts"]={"complete_chain":True,"names":["C07.cmb"],"chapter_matches":False}
+        result=verify(self.snapshot,{"chapter":11,"allow_synthetic":True,"units":[{"pid":"PID_IKE"}]})
+        self.assertEqual(result["failures"],["loaded event script disagrees with chapter byte"])
 
     def test_known_setup_classification_is_not_just_debug_prefix(self):
         from tools.campaign_snapshot import configuration_flags
