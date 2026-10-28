@@ -657,6 +657,7 @@ It is display only. Ownership itself is still made with the verified in-battle d
 | Date | Tester | Result | Notes |
 |---|---|---|---|
 | 2026-10-28 | user (run 1, played Ch. 3 instead of Ch. 6) | **PARTIAL: ownership right, wrong column** | Choose Units before the draft: Ike light blue. In battle, Base Data after the draft: **Ike and Titania light blue, Shinon yellow, Gatrie (unassigned) unchanged**. So the row → unit mapping and the owner rule work. But the colour was on the **Class/Lv/Exp/HP** cells, not the names. On other pages (Equipment Data) there was no colour at all. Cause: `list+0x38[0]` is the first *data page*, not the Name column. **Fix (v2):** colour every data-page cell (column draw `0x8012F154`, all pages) and keep the Name column's native colour, so forced/picked stay readable. Retest = run 2. |
+| 2026-10-28 | user (run 2, EXP-25 v2, Ch. 6) | **PASS** | Choose Units before the draft: **Ike's row data light blue on pages 1, 3 and 6**. The unassigned forced characters keep the native green; names are native everywhere; Ike stayed blue after leaving and re-entering. In battle after the draft, Unit Stats (page 2) and Personal Data (page 4): **Ike, Titania, Soren light blue; Oscar, Rhys yellow**. The owner colour holds on every data page and the names keep their own colour. |
 
 
 ## DRAFT-02 — Draft clarity (EXP-23 = draft v2; replaces EXP-22)
