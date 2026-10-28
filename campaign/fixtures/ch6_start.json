@@ -1,0 +1,19 @@
+{
+  "description": "Original Ch6 Restart Chapter -> preparations -> Fight from copied NET02 card; no RAM edits or redirect in this run. Earlier card history is partly documented and includes debug-assisted tests; not a natural-progression certificate.",
+  "classification": "native_restart_from_copied_card_history_partly_documented",
+  "chapter": 7,
+  "phase": 0,
+  "turn": 1,
+  "fingerprint": "8609ae9f49fd879f",
+  "active_player_pids": ["PID_IKE", "PID_OSCAR", "PID_TIAMAT", "PID_KILROY", "PID_SENERIO"],
+  "absent_pids": ["PID_BOLE"],
+  "units": [
+    {"pid": "PID_IKE", "force": 0, "hp": 26, "level": 10, "exp": 44, "xy": [13, 9], "flags_all": 66560},
+    {"pid": "PID_OSCAR", "force": 3, "hp": 28, "level": 6, "exp": 28, "xy": [14, 9], "flags_all": 66560},
+    {"pid": "PID_TIAMAT", "force": 0},
+    {"pid": "PID_KILROY", "force": 0},
+    {"pid": "PID_SENERIO", "force": 0},
+    {"pid": "PID_CHINON", "force": 7},
+    {"pid": "PID_GATRIE", "force": 7}
+  ]
+}

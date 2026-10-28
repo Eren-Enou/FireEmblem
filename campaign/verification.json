@@ -221,7 +221,9 @@
           "evidence": "escape-model-02"
         },
         "fixture": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch6-native-start-06",
+          "note": "Original restart/prep/Fight path from copied card; earlier history partly documented; Escape not yet exercised"
         },
         "event_runtime": {
           "status": "NOT TESTED"
@@ -1290,6 +1292,31 @@
         }
       ],
       "description": "Restored copied historical EXP-05 Chapter 9 fixture. Ended Blue phase with TAS port 1; port 2 selected normal tutorial No. Lethe transformed to JID_CAT/F gauge20. Port 2 selected original Wait. Captures phase3/control3=1; only Lethe acted bit changes, other captured fields identical. All stable C2 bodies match live RAM. No combat, clear, cleanup, native recruitment, save/reload or Netplay claim."
+    },
+    "ch6-native-start-06": {
+      "kind": "dolphin",
+      "commit": "50c283402d2c77604a08dd88c15a9f4ae186b9a8",
+      "worktree_dirty": false,
+      "fingerprint": "8609ae9f49fd879f",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "native_restart_from_copied_card_history_partly_documented",
+      "chapters": [
+        "7"
+      ],
+      "axes": [
+        "fixture"
+      ],
+      "artifacts": [
+        {
+          "path": "work/ch6_native_start.s02.sav",
+          "sha256": "5f5b35af05abd05df810d7bc3a96161ed6ae687c8b8596b1f47c4311a1a98ef7"
+        },
+        {
+          "path": "work/saves/native_ch6_card_start.gci",
+          "sha256": "b415a97e9645e83f60bdc7380a2e86dd4686077549c6ce1863e30de6ad51de12"
+        }
+      ],
+      "description": "Fresh boot from private NET02 card copy, original Restart Chapter Ch6, normal Start skips of opening dialogue, preparations Fight/Begin Yes. No redirect or RAM edits. Turn1 Blue snapshot has Oscar Yellow, 4 Blue, Shinon/Gatrie away, Boyd absent; all stable live hooks matched. state_expect campaign/fixtures/ch6_start.json PASS. Private card SHA1 unchanged 54b5a7f400b9ec68b6e315a0b2b89a78e5b7218d. Prior card history includes earlier debugging; no natural progression or Escape acceptance inferred."
     }
   },
   "next_cases": [

@@ -59,12 +59,15 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 
 ## Next independent work
 
-1. Commit conversation metadata and stronger evidence-scope/artifact validation.
-2. Repeat the TAS action path with deterministic frame stepping/recording; DTM
-   polling issue remains open, and GUI control still needs observation.
-3. Trace the remaining Escape context veto and test Yellow original-menu eligibility.
-4. Expand per-event fixture requirements and risk coverage beyond script strings.
-5. Improve verification provenance and artifact checks as runtime evidence grows.
+1. Use the native Ch6 start fixture for Yellow original Escape eligibility and
+   roster preservation; then Ike-last completion and original cleanup/save paths.
+2. Trace the remaining Escape context veto. Controlled original-positioning native
+   calls may provide a supplemental synthetic event fixture; never skip Escape itself.
+3. Improve frame stepping/recording. DTM input remains inconclusive; observed TAS
+   controller holds work on both ports and GUI file capture is reliable.
+4. Trace C11/C14/C19 conversation target eligibility before claiming Yellow recruits.
+5. Expand per-event fixture requirements and coverage; later bootstrap destinations
+   remain untested and may lack mandatory roster/story prerequisites.
 
 ## Fourth checkpoint (0fcaa64, pushed)
 
@@ -77,7 +80,7 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
   changed local artifacts fail the optional byte-verification command.
 - Campaign matrix reads current runtime status from the same ledger/dashboard.
 
-## Fifth checkpoint validation
+## Fifth checkpoint (50c2834, pushed)
 
 - Original Ch9 fixture restored in private Dolphin. TAS port 1 ended Blue;
   port 2 selected normal tutorial No, native Lethe transformed into cat gauge20.
@@ -88,6 +91,19 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 - Ch9 fixture/event axes accepted only for this synthetic partner smoke. Combat,
   gauge depletion, cleanup/recruitment, clear, transition, save/reload and Netplay
   remain open. No production code changed. Private process stopped.
+
+## Sixth checkpoint validation
+
+- Fresh private-card boot -> original Ch6 restart -> prep -> Fight -> turn1,
+  without a redirect or RAM edits. Captured accepted fixture; active roster is
+  four Blue plus Yellow Oscar, Shinon/Gatrie away, Boyd absent. Live hooks match.
+- Native private card SHA1 unchanged (54b5a7f4...), immutable ignored card copy
+  retained. Earlier card history partly documented; not a natural-progress claim.
+- Generic state_expect checks explicit fixture preconditions and rejects lost,
+  duplicate/transferred characters or unknown fields. 89 tests/222 signatures;
+  six local runtime artifacts hash-verified. Escape itself is still NOT TESTED.
+- Short new DTM probe again failed to demonstrate A input; TAS remains the
+  demonstrated automation route. All private Dolphin processes stopped.
 
 No gameplay assembly correction is accepted yet: identified engine assumptions
 still require normal-path reachability/reproduction. No campaign completion,

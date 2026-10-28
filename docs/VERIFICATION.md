@@ -10,7 +10,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 | Ch.3: Pirates Aground | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.4: Roadside Battle | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.5: Flight! | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.6: A Brief Diversion | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.6: A Brief Diversion | PASS | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.7: Shades of Evil | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.8: Despair and Hope | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.9: Gallia | PASS | NOT TESTED | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
@@ -46,6 +46,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 - **fixture-prologue-02**: `dolphin`; Copied Prologue restored in isolated Dolphin; original-unit state captured via UI Save State to File. All intended stable C2 bodies matched live RAM. No unit action demonstrated.
 - **prologue-wait-03**: `dolphin`; Native Computer Use toggled port-1 TAS A, selected current tile, moved menu to Wait and confirmed. Enemy-phase Boyd dialogue observed. Capture phase 0 -> 1; Ike unchanged HP/lv/EXP/position; live stable C2 bodies match in both snapshots. prologue_smoke PASS. Analysis/tooling worktree dirty; production codes unchanged.
 - **ch9-partner-wait-05**: `dolphin`; Restored copied historical EXP-05 Chapter 9 fixture. Ended Blue phase with TAS port 1; port 2 selected normal tutorial No. Lethe transformed to JID_CAT/F gauge20. Port 2 selected original Wait. Captures phase3/control3=1; only Lethe acted bit changes, other captured fields identical. All stable C2 bodies match live RAM. No combat, clear, cleanup, native recruitment, save/reload or Netplay claim.
+- **ch6-native-start-06**: `dolphin`; Fresh boot from private NET02 card copy, original Restart Chapter Ch6, normal Start skips of opening dialogue, preparations Fight/Begin Yes. No redirect or RAM edits. Turn1 Blue snapshot has Oscar Yellow, 4 Blue, Shinon/Gatrie away, Boyd absent; all stable live hooks matched. state_expect campaign/fixtures/ch6_start.json PASS. Private card SHA1 unchanged 54b5a7f400b9ec68b6e315a0b2b89a78e5b7218d. Prior card history includes earlier debugging; no natural progression or Escape acceptance inferred.
 
 ## Highest-priority open cases
 

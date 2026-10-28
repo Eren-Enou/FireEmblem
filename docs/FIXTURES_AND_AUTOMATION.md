@@ -21,6 +21,16 @@ start instead. No undocumented GCI checksum/flag rewriting is implemented.
 
 ## Later-chapter bootstrap
 
+For Ch6, prefer the accepted native restart fixture from CAMP-F instead of the
+synthetic redirect. Fresh boot the private NET02 card copy, select Restart Chapter
+> Ch.6, use the normal Start skips for opening dialogue, then Fight > Begin now Yes.
+work/ch6_native_start.s02.sav is the captured turn-1 baseline; its immutable source
+card copy is work/saves/native_ch6_card_start.gci. Earlier card history is only
+partly documented, so this is not labelled naturally progressed. Boyd is absent;
+Oscar is the only stable table-owned Yellow, Shinon/Gatrie are away. Check the
+fixture explicitly with `tools.state_expect SNAPSHOT campaign/fixtures/ch6_start.json`.
+Escape itself has not yet been exercised. All personal cards remain read only.
+
 `python -B -m tools.fixture_bootstrap --root work/bootstrap/ch6 --target 7`
 creates a NEW private profile and empty card directory. It refuses existing
 destinations, requires this clone's work/ boundary, validates stable Gecko capacity,

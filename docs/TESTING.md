@@ -1,5 +1,37 @@
 # Testing
 
+## CAMP-F — Native Chapter 6 restart fixture
+
+2026-10-28, clean runtime source 50c2834; private work/runtime/host, stable
+COOP-P6 + EXP-16, no debug/redirect codes. Fresh boot loaded the copied NET02
+card through original Restart Chapter > Ch.6. Normal Start skipped opening
+dialogue, then preparations > Fight > Begin now Yes. Observed original Escape
+objective and turn 1. Captured NEW work/ch6_native_start.s02.sav through the UI.
+
+**PASS fixture preconditions only:** internal7/phase0/turn1; Ike, Titania, Rhys,
+Soren Blue; Oscar Yellow; Shinon and Gatrie force7; Boyd absent. Ike lv10/44EXP,
+HP26 at (13,9); Oscar lv6/28EXP, HP28 at (14,9). All intended C2 bodies match RAM.
+tools.state_expect with campaign/fixtures/ch6_start.json PASS. It rejects lost,
+duplicate or wrongly transferred expected characters and unknown expectation keys.
+It checks listed fields, not a whole game's consistency or event success.
+
+State SHA-256 5f5b35af05abd05df810d7bc3a96161ed6ae687c8b8596b1f47c4311a1a98ef7.
+Private card SHA-1 unchanged before/after:
+54b5a7f400b9ec68b6e315a0b2b89a78e5b7218d. An immutable ignored copy is preserved
+as work/saves/native_ch6_card_start.gci. No card save was made. Only private
+Dolphin was stopped; personal/source profiles and cards were untouched.
+
+Class: native_restart_from_copied_card_history_partly_documented. The restart
+path itself used no state edits or redirect, but earlier card history includes
+debug-assisted development tests. This is not a natural-progression certificate.
+Oscar's owner-flag fields are unset because EXP-16 uses a fixed PID table, not
+EXP-21's saved flag bits. No ownership loss is inferred from those fields.
+
+**Escape menu/event, roster preservation, clear, transition and native save/reload
+remain NOT TESTED.** This fixture removes the need to manually replay Chapters1–5
+for that investigation. Current validation: 89 tests PASS, 222/222 signatures;
+six local runtime artifacts hash-verified.
+
 ## CAMP-E — Chapter 9 native-partner transformation and port-2 Wait
 
 2026-10-28. Isolated runtime at clean source commit 0fcaa64, Dolphin 2609a,
