@@ -17,6 +17,31 @@ from tools.netplay_package import fingerprint, enabled_codes
 from tools.verify_game import DEFAULT_IMAGE
 
 
+def observe_hooks(mem, dol, text):
+    """Compare intended C2 bodies to RAM; mutable cave data may conservatively mismatch."""
+    observations=[]
+    for kind,name,lines in enabled_codes(text):
+        if kind!="Gecko":continue
+        pos=0
+        while pos<len(lines):
+            command,count=(int(w,16) for w in lines[pos].split());pos+=1
+            if command>>24 in (0xC0,0xC2):
+                payload=[int(w,16) for line in lines[pos:pos+count] for w in line.split()]
+                pos+=count
+                if command>>24!=0xC2:continue
+                hook=0x80000000|(command&0x1FFFFFF)
+                original,actual=dol.u32(hook),mem.u32(hook)
+                status="original instruction" if actual==original else "unmatched patch"
+                if actual!=original and actual>>26==18 and not actual&2:
+                    delta=(actual&0x3FFFFFC)-(0x4000000 if actual&0x2000000 else 0)
+                    target=hook+delta
+                    if 0x80001800<=target<0x80003000:
+                        expected=b"".join(w.to_bytes(4,"big") for w in payload[:-1])
+                        if mem.read(target,len(expected))==expected:status="intended C2 body matched"
+                observations.append({"code":name.split()[0],"hook":hook,"original":original,"actual":actual,"status":status})
+    return observations
+
+
 def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
     info, mem = load_mem1(path, image)
     units = []
@@ -39,9 +64,15 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
                       "death_record": bool(flags & 0x8000), "death_chapter": mem.u8(addr + 0x234)})
     text = ini.read_text()
     names = [n for _, n, _ in enabled_codes(text)]
+    from tools.fe9.disc import DiscReader
+    from tools.fe9.ppc import Dol
+    with DiscReader(image) as disc:
+        observations=observe_hooks(mem,Dol(disc.read_dol()),text)
     return {"schema": 1, "evidence": {"commit": commit, "state_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
              "dolphin": info.dolphin_version, "codes_fingerprint": fingerprint(text), "codes": names,
              "debug": any(n.startswith("DBG-") for n in names),
+             "hooks":observations,
+             "intended_c2_verified":bool(observations) and all(o["status"]=="intended C2 body matched" for o in observations),
              "warning": "INI is intended configuration; old savestates may restore different active patches"},
             "game": {"chapter": mem.u8(STATE + 0x10), "phase": mem.u8(STATE + 0x11),
                      "turn": mem.u16(STATE + 0x12), "control": list(mem.read(STATE + 0x14, 4)), "units": units}}

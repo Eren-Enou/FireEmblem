@@ -15,7 +15,7 @@ from pathlib import Path
 from tools.chapter_audit import RUNTIME, sortie_caps
 from tools.fe9 import dispos, pack
 from tools.fe9.disc import DiscReader
-from tools.fe9.events import calls, functions, message_table
+from tools.fe9.events import calls, functions, instructions, message_table
 from tools.verify_game import DEFAULT_IMAGE
 
 BASELINE = "10d2496 (draft research); stable main 6a81522"
@@ -32,7 +32,8 @@ def inventory(disc: DiscReader) -> dict:
         if path.startswith("Scripts/") and path.endswith(".cmb"):
             raw = disc.read_file(path)
             records = functions(raw)
-            scripts[path] = {"functions": len(records), "function_records": [asdict(f) for f in records],
+            scripts[path] = {"functions": len(records), "function_records": [{**asdict(f), "trigger": f.trigger(raw)} for f in records],
+                             "instructions": sum(len(instructions(raw, f)) for f in records),
                              "calls": calls(raw)}
     rows = []
     for cid in range(1, 32):
@@ -71,7 +72,7 @@ def inventory(disc: DiscReader) -> dict:
 
 def report(data: dict) -> str:
     out = ["# Campaign compatibility matrix", "", f"Baseline: {data['baseline']}.", "",
-           "Generated from the user's GFEE01 rev 0 image. Static inventory is complete for discovered containers; "
+           "Generated from the user's GFEE01 rev 0 image. Static inventory and local instruction CFGs cover discovered containers; "
            "event interpretation is incomplete. Every current-configuration gameplay axis remains untested. "
            "Historical reports are retained separately and must not be promoted to current acceptance.", "",
            "| Chapter | ID | Maps | Static research | Automated | Runtime | Cleared | Transition | Netplay |",
@@ -100,7 +101,7 @@ def report(data: dict) -> str:
                     out.append(f"- `{mp['path'].split('/')[1]}/{g['variant']}:{g['group']}`: {desc}")
         out += ["", "Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. "
                 "The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.", "",
-                "Event candidates in file order; function boundaries prevent treating the whole script as one sequence. "
+                "Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. "
                 "`?` means computed/unknown. Conditional execution and trigger metadata are unresolved.", "",
                 "| Offset | Function | Command | Literal suffix arguments |", "|---|---|---|---|"]
         for c in row["events"]:

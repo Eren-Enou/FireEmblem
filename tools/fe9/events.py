@@ -1,8 +1,8 @@
-"""Bounded FE9 event-call inventory, NOT a complete CMB interpreter.
+"""Instruction-aligned FE9 scene CFGs, NOT a complete game/event interpreter.
 
-Calls are candidate 38/string-offset/argc patterns inside function code regions.
-Computed arguments, branch semantics and reachability remain unresolved. Literal
-suffixes are decoded conservatively; missing arguments precede the suffix.
+Signed operands, local branches and literal argument suffixes are decoded.
+Native effects and scene activation remain unresolved. Unknown operations and
+branches into operands fail closed instead of becoming command-string guesses.
 """
 from __future__ import annotations
 
@@ -29,6 +29,59 @@ class Function:
     end: int
     name: str
     metadata: list[int]
+
+    def trigger(self, raw: bytes) -> dict:
+        """Raw scene kind/parameters; only turn kinds 3/6 have corroborated meaning."""
+        kind, argc, count = raw[self.record + 12:self.record + 15]
+        limit = self.record + 20 + count * 2
+        if limit > self.code:
+            return {"kind": kind, "error": "parameter range exceeds header"}
+        parameters = list(struct.unpack_from(f"<{count}h", raw, self.record + 20))
+        result = {"kind": kind, "argc": argc, "parameters": parameters}
+        if kind in (3, 6) and len(parameters) >= 3:
+            result["inferred_turn_trigger"] = dict(zip(("first_turn", "last_turn", "phase"), parameters))
+        return result
+
+
+# FE9 VM dispatch at 0x80011EDC / table 0x80283F90. Corroborated by StanH's
+# original notes: https://feuniverse.us/t/fe9-and-fe10-event-script-doc-notes/6143
+# Widths are operands only; FE10's extended local-call instruction is NOT used.
+WIDTHS = {0: 0, **{i: 1 if i % 2 else 2 for i in range(1, 25)},
+          0x19: 1, 0x1A: 2, 0x1B: 4, 0x1C: 1, 0x1D: 2, 0x1E: 4,
+          **{i: 0 for i in range(0x1F, 0x37)}, 0x37: 1, 0x38: 3, 0x39: 0,
+          **{i: 2 for i in range(0x3A, 0x3F)}, 0x3F: 0, 0x40: 4, 0x41: 1}
+
+
+def instructions(raw: bytes, function: Function) -> list[dict]:
+    """Decode instruction boundaries and branch targets; reject unknown/truncated opcodes."""
+    decoded, pending = {}, [function.code]
+    while pending:
+        pos = pending.pop()
+        if pos in decoded:
+            continue
+        if not function.code <= pos < function.end:
+            raise ValueError(f"branch outside function at {pos:X}")
+        op = raw[pos]
+        if op not in WIDTHS:
+            raise ValueError(f"unknown FE9 opcode {op:02X} at {pos:X}")
+        width = WIDTHS[op]
+        if pos + 1 + width > function.end:
+            raise ValueError(f"truncated operand at {pos:X}")
+        operand = raw[pos + 1:pos + 1 + width]
+        value = int.from_bytes(operand, "big", signed=True) if operand else None
+        target = pos + 1 + value if 0x3A <= op <= 0x3E else None
+        nxt = pos + 1 + width
+        decoded[pos] = {"offset": pos, "opcode": op, "operand": value,
+                        "raw_operand": operand.hex(), "next": nxt, "target": target}
+        if target is not None:
+            pending.append(target)
+        if op not in (0x39, 0x3A):
+            pending.append(nxt)
+    ordered = sorted(decoded.values(), key=lambda i: i["offset"])
+    for left, right in zip(ordered, ordered[1:]):
+        if left["next"] > right["offset"]:
+            raise ValueError(f"branch enters operand at {right['offset']:X}")
+    return ordered
 
 
 def functions(raw: bytes) -> list[Function]:
@@ -62,28 +115,31 @@ def calls(raw: bytes) -> list[dict]:
     strings = script_strings(raw)
     result = []
     for function in functions(raw):
-        for pos in range(function.code, function.end - 3):
-            if raw[pos] != 0x38:
+        code = instructions(raw, function)
+        for index, insn in enumerate(code):
+            if insn["opcode"] != 0x38:
                 continue
+            pos = insn["offset"]
             name = strings.get(int.from_bytes(raw[pos + 1:pos + 3], "big"))
             argc = raw[pos + 3]
-            if not name or argc > 16 or not name.isascii() or not name.replace("_", "").isalnum():
-                continue
-            args, cursor = [], pos
-            while len(args) < argc:
-                if cursor - 2 >= function.code and raw[cursor - 2] in (0x19, 0x1C):
-                    op, value = raw[cursor - 2:cursor]
-                    args.append(value if op == 0x19 else strings.get(value))
-                    cursor -= 2
-                elif cursor - 3 >= function.code and raw[cursor - 3] == 0x1D:
-                    args.append(strings.get(int.from_bytes(raw[cursor - 2:cursor], "big")))
-                    cursor -= 3
+            if name is None:
+                raise ValueError(f"call name missing at {pos:X}")
+            args, cursor, previous = [], pos, index - 1
+            while len(args) < argc and previous >= 0:
+                prev = code[previous]
+                if prev["next"] != cursor:
+                    break
+                if prev["opcode"] in (0x19, 0x1A, 0x1B):
+                    args.append(prev["operand"])
+                elif prev["opcode"] in (0x1C, 0x1D, 0x1E):
+                    args.append(strings.get(prev["operand"]))
                 else:
                     break
+                cursor, previous = prev["offset"], previous - 1
             result.append({"offset": pos, "function": function.index, "function_name": function.name,
                            "command": name, "argc": argc,
                            "args": [None] * (argc - len(args)) + list(reversed(args)),
-                           "argument_status": "literal suffix only; u8 integers",
+                           "argument_status": "aligned literal suffix; signed FE9 operands",
                            "preceding_bytes": raw[max(function.code, pos - 16):pos].hex(),
-                           "reachability": "unresolved"})
+                           "reachability": "reachable in local CFG; external event activation unresolved"})
     return result

@@ -18,6 +18,16 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-002: FE9 VM decoding and escape passenger selector.
+    (0x80011F18, 0x28000041, "VM dispatch highest FE9 opcode is 0x41"),
+    (0x80011F28, 0x38633F90, "VM dispatch table at 0x80283F90"),
+    (0x800127F4, 0x7C050774, "number.8 sign-extends operand"),
+    (0x800128F8, 0x7C050774, "string.8 sign-extends pool offset"),
+    (0x8028D41C, 0x800BD7C0, "UnitGet selector 4 dispatch"),
+    (0x800BD7C0, 0x807F0194, "UnitGet selector 4 loads rescue-linked unit"),
+    (0x800BD5B8, 0x4BF59625, "UnitGetByPID wrapper calls faction-independent PID lookup"),
+    (0x80016C10, 0x80040188, "PID lookup scans character identity, not tactical faction"),
+    (0x800B7174, 0x38800005, "Join creates group in roster force 5"),
     # Campaign audit CAMP-001: escape objective mask excludes tactical yellow.
     (0x801B71B4, 0x38600001, "PlayerEscapeCount: mask force 0 enabled"),
     (0x801B71C4, 0x38C00000, "PlayerEscapeCount: mask force 3 disabled"),

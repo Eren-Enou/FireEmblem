@@ -9,7 +9,7 @@ stored as plain strings). It then flags what matters for the two-army system:
   transfer      UnitTransferToForce[ByPID]                          -> story moves units between forces
   forced        UnitForcedSally[ByPID] / UnitDontMoveSally[ByPID]   -> fixed line-ups (F-41, F-46)
   sortie        Sally*                                              -> scripted deployment
-  join          Join                                                -> recruitment mid-chapter
+  join          Join                                                -> roster group creation; not recruitment proof
   phase         BMSetPhase                                          -> scripted phase changes
   partners      force 3 units in the dispos data (native yellow partners, e.g. Lethe in Ch9)
   owned         Player 2 PIDs from tools/owner_code.OWNERS that the chapter deploys or scripts
@@ -68,7 +68,7 @@ def script_strings(raw: bytes) -> dict[int, str]:
     out, o = {}, base
     while o < end:
         e = raw.index(b"\0", o)
-        out[o - base] = raw[o:e].decode("latin-1")
+        out[o - base] = raw[o:e].decode("shift_jis", "replace")
         o = e + 1
     return out
 

@@ -1,5 +1,34 @@
 # Testing
 
+## CAMP-B — CFGs, script models, evidence gates and offline DOL proof
+
+2026-10-28, isolated campaign branch. Latest validation: 77 tests pass across
+tests.test_tools, tests.test_campaign, tests.test_dol_patch, tests.test_verification;
+193/193 signatures match. Tests cover all 2075 scene CFGs, signed operands,
+Jill/Reyson guards, four Ch6 escape cases with mocked natives, native registration
+recovery, synthetic DOL hook/return construction, and rejection of unsupported
+gameplay/Netplay claims. These are static/tooling passes.
+
+Runtime: native DTM playback restored the copied Prologue scenario. The UI
+Emulation > Save State > Save State to File flow produced
+work/runtime_observe.s02.sav (the dialog appended .sav). Decoding confirms
+chapter 1 / phase 0 and original Ike state. Snapshot inspection matched ALL
+intended stable COOP-P6 + EXP-16 C2 bodies in live RAM, fingerprint
+8609ae9f49fd879f. Merely reading an intended INI is no longer enough: snapshot
+reports contain live hook/body observations and intended_c2_verified.
+
+Still INCONCLUSIVE: synthetic movie A input did not demonstrate unit selection
+or a completed action. The isolated process was stopped. No later chapter,
+objective, transition, gameplay save or Netplay result is claimed here.
+
+The DTM prototype requires an existing project recording's settings header;
+minimal settings caused a region/config warning. It refuses existing destinations
+and clears disc-change/card-clear flags. Tests validate format and file safety,
+not gameplay. Original recordings/states were read only.
+
+Generated artifacts: CAMPAIGN_EVENTS.md, VERIFICATION.md, campaign/verification.json.
+Offline executable migration findings and synthetic-only proof: NATIVE_PATCHING.md.
+
 ## CAMP-A — isolated campaign/tooling milestone (2026-10-28)
 
 Clone `FireEmblemCampaignAudit`, branch `codex/campaign-compatibility`, baseline

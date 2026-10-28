@@ -71,11 +71,11 @@ class EventDecoderTests(unittest.TestCase):
         raw[0x35:0x39] = b"\x38\x00\x00\x02"
         struct.pack_into("<II", raw, 0x50, 0x60, 0)
         struct.pack_into("<5I", raw, 0x60, 0, 0x74, 0, 0, 0)
-        raw[0x74:0x7B] = b"\x07\x19\x03\x38\x00\x00\x02"
+        raw[0x74:0x7D] = b"\x01\x00\x19\x03\x38\x00\x00\x02\x39"
         found = calls(bytes(raw))
         self.assertEqual(len(found), 1)
         self.assertEqual(found[0]["args"], [None, 3])
-        self.assertEqual(found[0]["offset"], 0x77)
+        self.assertEqual(found[0]["offset"], 0x78)
 
 
 IMAGE = ROOT / "Dolphin-x64/Games/Fire Emblem - Path of Radiance (USA).ciso"
@@ -125,6 +125,88 @@ class CampaignDataTests(unittest.TestCase):
                              [0x38800000, 0x38A00000, 0x38C00000, 0x38E00000,
                               0x39000001, 0x39200000, 0x39400000])
 
+    def test_every_script_has_valid_local_instruction_boundaries(self):
+        from tools.fe9.events import instructions
+        count = 0
+        for path in self.data["scripts"]:
+            raw = self.disc.read_file(path)
+            for f in functions(raw):
+                code = instructions(raw, f)
+                bounds = {i["offset"] for i in code}
+                for i in code:
+                    if i["target"] is not None:
+                        self.assertIn(i["target"], bounds)
+                count += 1
+        self.assertEqual(count, 2075)
+
+    def test_jill_defection_has_relationship_guards(self):
+        from tools.fe9.event_paths import trace
+        result = trace(self.disc.read_file("Scripts/C21.cmb"), 26)
+        self.assertTrue(result["complete_local_trace"])
+        transfers = [e for e in result["events"] if e["command"] == "UnitTransferToForceByPID"]
+        self.assertEqual(len(transfers), 1)
+        self.assertEqual(transfers[0]["args"], ["'PID_JILL'", "1"])
+        self.assertEqual(transfers[0]["conditions"], [
+            "(PersonGetYellLevel('PID_JILL', 'PID_MIST') == 3) == 0",
+            "(PersonGetYellLevel('PID_JILL', 'PID_LETHE') == 3) == 0"])
+
+    def test_reyson_transfer_is_guarded_by_empty_roster_setup(self):
+        from tools.fe9.event_paths import trace
+        result = trace(self.disc.read_file("Scripts/C23.cmb"), 25)
+        transfers = [e for e in result["events"] if e["command"] == "UnitTransferToForceByPID"]
+        self.assertTrue(transfers)
+        for event in transfers:
+            self.assertEqual(event["args"], ["'PID_RIEUSION'", "6"])
+            self.assertIn("(ForceGetCount(5) == 0) != 0", event["conditions"])
+            self.assertIn("Normal() != 0", event["conditions"])
+
+    def test_ch6_original_escape_script_counts_carried_units_and_ike(self):
+        from tools.fe9.event_vm import execute
+        raw = self.disc.read_file("Scripts/C07.cmb")
+        for actor, passenger, expected_count, complete in [(2,0,1,False),(2,3,2,False),
+                                                          (1,0,1,True),(2,1,2,True)]:
+            world = {"count":0,"complete":False,"escaped":[]}
+            def native(name,args):
+                if name=="MindGetMe": return actor
+                if name=="UnitGetByPID": return 1
+                if name=="UnitGet":
+                    self.assertEqual(args,[actor,4]);return passenger
+                if name=="BMGetValue": return world["count"]
+                if name=="BMSetValue": world["count"]=args[1]
+                if name=="UnitEscape": world["escaped"].append(args[0])
+                if name=="set" and args==["gf_complete"]: world["complete"]=True
+                return 0
+            execute(raw,1,native)
+            self.assertEqual(world,{"count":expected_count,"complete":complete,"escaped":[actor]})
+
+    def test_native_registration_recovery_and_rescue_selector(self):
+        from tools.native_registry import registrations
+        from tools.fe9.ppc import Dol
+        dol=Dol(self.disc.read_dol())
+        found=registrations(dol)
+        self.assertEqual(len(found),406)
+        symbols={r["name"]:r for r in found}
+        self.assertEqual((symbols["UnitGet"]["function"],symbols["UnitGet"]["argc"]),(0x800BD704,2))
+        self.assertEqual(dol.u32(0x8028D41C),0x800BD7C0)
+        self.assertEqual(dol.u32(0x800BD7C0),0x807F0194)
+
+
+class MovieBuilderTests(unittest.TestCase):
+    def test_binary_records_and_overwrite_refusal(self):
+        from tools.dtm_script import movie,build
+        data=movie([{"polls":2,"buttons":["A"]}])
+        self.assertEqual(data[:4],b"DTM\x1A")
+        self.assertEqual(len(data),272)
+        self.assertEqual(data[256:264],b"\x02\x40\0\0\x80\x80\x80\x80")
+        with tempfile.TemporaryDirectory() as tmp:
+            state=Path(tmp)/"fixture";state.write_bytes(b"original fixture")
+            out=Path(tmp)/"test.dtm"
+            template=bytearray(data[:256]);template[137]=1
+            build(state,[{"polls":1}],out,bytes(template))
+            self.assertEqual(Path(str(out)+".sav").read_bytes(),state.read_bytes())
+            with self.assertRaisesRegex(ValueError,"refusing"):
+                build(state,[{"polls":1}],out,bytes(template))
+
 
 class SnapshotTests(unittest.TestCase):
     @unittest.skipUnless((ROOT / "work/saves/2026-10-27_baseline/GFEE01.s01").exists() and IMAGE.exists(),
@@ -139,6 +221,7 @@ class SnapshotTests(unittest.TestCase):
         ike = next(u for u in data["game"]["units"] if u["pid"] == "PID_IKE")
         self.assertEqual((ike["force"], ike["hp"], ike["owner"]), (0, 19, None))
         self.assertIn("intended configuration", data["evidence"]["warning"])
+        self.assertFalse(data["evidence"]["intended_c2_verified"])
 
     def test_same_fields_with_different_files_match_but_config_mismatch_fails(self):
         from tools.campaign_snapshot import differences

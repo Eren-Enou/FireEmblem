@@ -17,6 +17,29 @@ Confidence labels:
 
 ### CAMP-001 — isolated campaign branch, 2026-10-28
 
+### CAMP-002 — instruction-aligned VM and native registrations
+
+VERIFIED-STATIC: dispatch at 0x80011EDC uses table 0x80283F90 and max opcode
+0x41 (0x80011F18/0x80011F28). Number/string .8 operands sign-extend at
+0x800127F4/0x800128F8 [S]. Decoder independently resolves all local branch
+targets across 2075 scenes / 125775 instructions (43 script containers).
+
+The 406 literal native registrations include UnitGet at 0x800BD704.
+Selector 4 dispatch 0x8028D41C -> 0x800BD7C0 reads rescue link +0x194 [S].
+C07 scene 1 therefore counts a carrier/passenger separately and sets completion
+for escaping Ike or a carrier of Ike. Four script-model tests use mocked natives;
+they do NOT establish normal event activation or roster behavior in Dolphin.
+
+UnitGetByPID wrapper call 0x800BD5B8 and identity scan 0x80016C10 [S] show
+PID resolution independent of tactical faction in this routine. Join's
+0x800B7174 sets force 5 [S] for group creation; a Join command is not itself
+proof that a character's recruitment conversation occurred.
+
+Original research corroboration (format, not runtime acceptance):
+https://feuniverse.us/t/fe9-and-fe10-event-script-doc-notes/6143.
+
+### CAMP-001 details
+
 VERIFIED-STATIC: PlayerEscapeCount at 0x801B7188 builds mask [1,0,0,0,0,1,0,0].
 Sites 0x801B71B4/0x801B71C4/0x801B71CC enable forces 0/5 and exclude 3;
 0x801B7224 performs the indexed mask read. PlayerEscapeCheck at 0x801B7260

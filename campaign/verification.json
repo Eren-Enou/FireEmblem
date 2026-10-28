@@ -1,0 +1,1195 @@
+{
+  "schema": 1,
+  "chapters": [
+    {
+      "key": "1",
+      "title": "Prologue: Mercenaries",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "PASS",
+          "evidence": "fixture-prologue-02"
+        },
+        "event_runtime": {
+          "status": "INCONCLUSIVE",
+          "note": "scenario restored and snapshot captured; no unit action demonstrated"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "2",
+      "title": "Ch.1: The Battle Begins",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "3",
+      "title": "Ch.2: Rescue",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "4",
+      "title": "Ch.3: Pirates Aground",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "5",
+      "title": "Ch.4: Roadside Battle",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "6",
+      "title": "Ch.5: Flight!",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "7",
+      "title": "Ch.6: A Brief Diversion",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "PASS",
+          "evidence": "escape-model-02"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "8",
+      "title": "Ch.7: Shades of Evil",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "9",
+      "title": "Ch.8: Despair and Hope",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "10",
+      "title": "Ch.9: Gallia",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "11",
+      "title": "Ch.10: Prisoner Release",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "12",
+      "title": "Ch.11: Blood Runs Red",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "13",
+      "title": "Ch.12: A Strange Land",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "14",
+      "title": "Ch.13: A Guiding Wind",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "15",
+      "title": "Ch.14: Training",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "16",
+      "title": "Ch.15: The Feral Frontier",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "17",
+      "title": "Ch.16: The Atonement",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "18.1",
+      "title": "Ch.17: Day Breaks stage 1",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "18.2",
+      "title": "Ch.17: Day Breaks stage 2",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "18.3",
+      "title": "Ch.17: Day Breaks stage 3",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "18.4",
+      "title": "Ch.17: Day Breaks stage 4",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "19",
+      "title": "Ch.18: Crimea Marches",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "20",
+      "title": "Ch.19: Entrusted",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "21",
+      "title": "Ch.20: Defending Talrega",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "22",
+      "title": "Ch.21: Without a King",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "23",
+      "title": "Ch.22: Solo",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "24",
+      "title": "Ch.23: The Great Bridge",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "25",
+      "title": "Ch.24: Battle Reunion",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "26",
+      "title": "Ch.25: Strange Lands",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "27",
+      "title": "Ch.26: Clash!",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "28",
+      "title": "Ch.27: Moment of Fate",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "29",
+      "title": "Ch.27-2: Moment of Fate",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "30",
+      "title": "Ch.28: Twisted Tower",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    },
+    {
+      "key": "31",
+      "title": "Endgame: Repatriation",
+      "checks": {
+        "static_cfg": {
+          "status": "PASS",
+          "evidence": "cfg-02"
+        },
+        "script_model": {
+          "status": "NOT TESTED"
+        },
+        "fixture": {
+          "status": "NOT TESTED"
+        },
+        "event_runtime": {
+          "status": "NOT TESTED"
+        },
+        "chapter_clear": {
+          "status": "NOT TESTED"
+        },
+        "transition": {
+          "status": "NOT TESTED"
+        },
+        "save_reload": {
+          "status": "NOT TESTED"
+        },
+        "netplay_local": {
+          "status": "NOT TESTED"
+        },
+        "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      }
+    }
+  ],
+  "runs": {
+    "cfg-02": {
+      "kind": "static",
+      "description": "All 2075 scene CFGs across 43 containers decode; parser checks only; source GFEE01 rev0 DOL hash anchored."
+    },
+    "escape-model-02": {
+      "kind": "script_model",
+      "description": "Four C07 original escape-scene cases with mocked natives: actor, passenger, Ike, carried Ike; no Dolphin claim."
+    },
+    "fixture-prologue-02": {
+      "kind": "dolphin",
+      "commit": "b9f3816",
+      "fingerprint": "8609ae9f49fd879f",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "natural_baseline_replayed_with_synthetic_input",
+      "artifacts": [
+        {
+          "path": "work/runtime_observe.s02.sav",
+          "sha256": "8728032b2d3dd931cbcd5889ae4ca59448fb1fdfdbcd56b1be0130ef812d1733"
+        }
+      ],
+      "description": "Copied Prologue restored in isolated Dolphin; original-unit state captured via UI Save State to File. All intended stable C2 bodies matched live RAM. No unit action demonstrated."
+    }
+  },
+  "next_cases": [
+    "Ch6 Yellow individual escape, Ike last, transition and fresh reload (natural campaign).",
+    "Ch10 prisoner conversations, temporary Yellow and exit conditions.",
+    "Ch17 all four stage transitions, reinforcements, turn resets and ownership.",
+    "Ch18 Shinon and native Reinforce partners; Ch20 Jill branch conditions.",
+    "Ch27-2 and Endgame special transitions; accepted multiplayer save workflow."
+  ]
+}

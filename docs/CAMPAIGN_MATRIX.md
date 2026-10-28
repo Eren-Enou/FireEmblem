@@ -2,7 +2,7 @@
 
 Baseline: 10d2496 (draft research); stable main 6a81522.
 
-Generated from the user's GFEE01 rev 0 image. Static inventory is complete for discovered containers; event interpretation is incomplete. Every current-configuration gameplay axis remains untested. Historical reports are retained separately and must not be promoted to current acceptance.
+Generated from the user's GFEE01 rev 0 image. Static inventory and local instruction CFGs cover discovered containers; event interpretation is incomplete. Every current-configuration gameplay axis remains untested. Historical reports are retained separately and must not be promoted to current acceptance.
 
 | Chapter | ID | Maps | Static research | Automated | Runtime | Cleared | Transition | Netplay |
 |---|---|---|---|---|---|---|---|---|
@@ -65,28 +65,28 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| AFE | 1 | regist | ØÌÄCxgN«½^[ |
-| B05 | 1 | regist | »Á¿¶áÈ¢P |
-| B0C | 1 | regist | »Á¿¶áÈ¢Q |
-| B13 | 1 | regist | ­©©ÁÄ±¢æP |
-| B1A | 1 | regist | ­©©ÁÄ±¢æQ |
-| B21 | 1 | regist | ÖÖAÜ¾Ü¾ |
-| B28 | 1 | regist | {[í¬ |
-| B30 | 1 | regist | {[S |
-| B38 | 1 | regist | OCQí |
-| B40 | 1 | regist | OCs®Jn |
-| B48 | 1 | regist | OCæ£éÅÍÈ¢© |
-| B50 | 1 | regist | ògÁÄ |
-| B58 | 1 | regist | òg¦ |
-| B60 | 1 | regist | {Xí¬ïb |
-| B68 | 1 | regist | XLf |
-| B70 | 1 | regist | ¿¨f |
-| B78 | 1 | regist | {[SIog |
-| B80 | 1 | regist | OCSIog |
+| AFE | 1 | regist | 木刀捨てイベント起きたターン |
+| B05 | 1 | regist | そっちじゃない１ |
+| B0C | 1 | regist | そっちじゃない２ |
+| B13 | 1 | regist | 早くかかってこいよ１ |
+| B1A | 1 | regist | 早くかかってこいよ２ |
+| B21 | 1 | regist | へへ、まだまだ |
+| B28 | 1 | regist | ボーレ戦闘 |
+| B30 | 1 | regist | ボーレ死亡 |
+| B38 | 1 | regist | グレイル参戦 |
+| B40 | 1 | regist | グレイル行動開始 |
+| B48 | 1 | regist | グレイル頑張るではないか |
+| B50 | 1 | regist | 傷薬使って |
+| B58 | 1 | regist | 傷薬使え |
+| B60 | 1 | regist | ボス戦闘会話 |
+| B68 | 1 | regist | スキルデモ |
+| B70 | 1 | regist | 持ち物デモ |
+| B78 | 1 | regist | ボーレ死亡オンバト |
+| B80 | 1 | regist | グレイル死亡オンバト |
 | C38 | 3 | ChapterMoviePlay | 1 |
 | C8C | 4 | MapLoad | bmap01 |
 | CC3 | 4 | SallySetByGroup | bmap01_mikata_c |
@@ -154,25 +154,25 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
 | C21 | 1 | TalkEvent | MS_02_VIL_02 |
 | CCE | 3 | TalkEvent | MS_02_VIL_03 |
-| D76 | 5 | regist | KâP |
-| D7E | 5 | regist | KâQ |
-| E1F | 8 | regist | ACN{[ |
-| E27 | 8 | regist | ACNIXJ[ |
-| E2F | 8 | regist | ACNeBA}g |
-| E37 | 8 | regist | GboÏX |
-| E3F | 8 | regist | {Xí¬ïb |
-| E47 | 8 | regist | {Xí¬ïbACN |
-| E4F | 8 | regist | {XS |
-| E57 | 8 | regist | §³f |
-| E5F | 8 | regist | Ræf |
-| E67 | 8 | regist | ~of |
-| E6F | 8 | regist | ¿¨f |
+| D76 | 5 | regist | 訪問１ |
+| D7E | 5 | regist | 訪問２ |
+| E1F | 8 | regist | アイクボーレ |
+| E27 | 8 | regist | アイクオスカー |
+| E2F | 8 | regist | アイクティアマト |
+| E37 | 8 | regist | 敵ＣＰ変更 |
+| E3F | 8 | regist | ボス戦闘会話 |
+| E47 | 8 | regist | ボス戦闘会話アイク |
+| E4F | 8 | regist | ボス死亡 |
+| E57 | 8 | regist | 制圧デモ |
+| E5F | 8 | regist | 騎乗デモ |
+| E67 | 8 | regist | 救出デモ |
+| E6F | 8 | regist | 持ち物デモ |
 | EAF | 9 | ChapterMoviePlay | 2 |
 | F04 | 10 | MapLoad | bmap06_2 |
 | F24 | 10 | InstantDispos | bmap06_2_event00_c |
@@ -261,17 +261,17 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| E2A | 1 | regist | n`øÊfN® |
-| EBA | 4 | regist | ACNeBA}g |
-| EC1 | 4 | regist | VmKg[zu |
-| EC8 | 4 | regist | {Xí¬ïbACN |
-| ECF | 4 | regist | {Xí¬ïbeBA}g |
-| ED6 | 4 | regist | {Xí¬ïb |
-| EDD | 4 | regist | n`øÊf |
+| E2A | 1 | regist | 地形効果デモ起動 |
+| EBA | 4 | regist | アイクティアマト |
+| EC1 | 4 | regist | シノンガトリー配置 |
+| EC8 | 4 | regist | ボス戦闘会話アイク |
+| ECF | 4 | regist | ボス戦闘会話ティアマト |
+| ED6 | 4 | regist | ボス戦闘会話 |
+| EDD | 4 | regist | 地形効果デモ |
 | F1F | 5 | ChapterMoviePlay | 3 |
 | FA0 | 6 | MapLoad | bmap06_2 |
 | FC0 | 6 | InstantDispos | bmap06_2_event00_c |
@@ -413,7 +413,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -421,15 +421,15 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | C2E | 0 | TalkEvent | MS_04_VIL_03_B |
 | D19 | 3 | UnitEscape | ?, 0 |
 | D69 | 4 | UnitEscape | ?, 0 |
-| D9E | 5 | regist | KâP |
-| DA6 | 5 | regist | }[VÌCxggK |
-| E37 | 8 | regist | }[VÌCxg |
-| E3F | 8 | regist | }[VïbACN |
-| E47 | 8 | regist | }[VïbeBA}g |
-| E4F | 8 | regist | }[VïbVm |
-| E57 | 8 | regist | }[VïbKg[ |
-| E5F | 8 | regist | {Xí¬ïbACN |
-| E67 | 8 | regist | {Xí¬ïb |
+| D9E | 5 | regist | 訪問１ |
+| DA6 | 5 | regist | マーシャのイベントトリガ |
+| E37 | 8 | regist | マーシャのイベント |
+| E3F | 8 | regist | マーシャ会話アイク |
+| E47 | 8 | regist | マーシャ会話ティアマト |
+| E4F | 8 | regist | マーシャ会話シノン |
+| E57 | 8 | regist | マーシャ会話ガトリー |
+| E5F | 8 | regist | ボス戦闘会話アイク |
+| E67 | 8 | regist | ボス戦闘会話 |
 | EA6 | 9 | InstantDisposRank | bmap04_first |
 | EE7 | 10 | SallySetByGroup | bmap04_mikata_c |
 | F23 | 11 | ChapterMoviePlay | 4 |
@@ -539,7 +539,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -548,10 +548,10 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 13E4 | 5 | regist | F07110811 |
 | 13EB | 5 | regist | F11061106 |
 | 13F3 | 5 | regist | F11051206 |
-| 147B | 8 | regist | {Xí¬ïbACN |
-| 1483 | 8 | regist | {Xí¬ïbeBA}g |
-| 148B | 8 | regist | {Xí¬ïbZlI |
-| 1493 | 8 | regist | {Xí¬ïb |
+| 147B | 8 | regist | ボス戦闘会話アイク |
+| 1483 | 8 | regist | ボス戦闘会話ティアマト |
+| 148B | 8 | regist | ボス戦闘会話セネリオ |
+| 1493 | 8 | regist | ボス戦闘会話 |
 | 14D2 | 9 | InstantDisposRank | bmap05_first_boss |
 | 14DA | 9 | InstantDisposRank | bmap05_first_boss2 |
 | 14E2 | 9 | InstantDisposRank | bmap05_first |
@@ -706,16 +706,16 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
 | E7E | 3 | regist | F16101610 |
 | E85 | 3 | regist | F15161819 |
 | E8C | 3 | regist | F15192322 |
-| F1B | 6 | regist | {Xí¬ïb |
-| F23 | 6 | regist | {Xí¬ïbACN |
-| F2B | 6 | regist | {X/µ½ |
+| F1B | 6 | regist | ボス戦闘会話 |
+| F23 | 6 | regist | ボス戦闘会話アイク |
+| F2B | 6 | regist | ボス倒した |
 | F63 | 7 | InstantDisposRank | bmap06_first |
 | F6C | 7 | ForceGetCount | 1 |
 | F75 | 7 | ForceGetFirst | 1 |
@@ -855,7 +855,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -863,13 +863,13 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | E40 | 1 | DefaultEscapeTalk |  |
 | E66 | 1 | UnitEscape | ?, 0 |
 | F17 | 4 | regist | F08201826 |
-| F6B | 6 | regist | ©Â©égK |
-| F73 | 6 | regist | ©Â©éCxg |
-| F7B | 6 | regist | boÏXgK |
-| F83 | 6 | regist | boÏX |
-| F8B | 6 | regist | Cxg |
-| F93 | 6 | regist | {Xí¬ïb |
-| F9B | 6 | regist | {Xí¬ïbACN |
+| F6B | 6 | regist | 見つかるトリガ |
+| F73 | 6 | regist | 見つかるイベント |
+| F7B | 6 | regist | ＣＰ変更トリガ |
+| F83 | 6 | regist | ＣＰ変更 |
+| F8B | 6 | regist | 増援イベント |
+| F93 | 6 | regist | ボス戦闘会話 |
+| F9B | 6 | regist | ボス戦闘会話アイク |
 | FDA | 7 | InstantDisposRank | bmap07_first |
 | FE2 | 7 | InstantDispos | bmap07_event00_c |
 | FF2 | 7 | ForceGetCount | 1 |
@@ -1020,30 +1020,30 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
 | 170A | 3 | UnitEscape | ?, 0 |
 | 1762 | 4 | UnitEscape | ?, 0 |
-| 18DE | 7 | regist | ó Q |
-| 18E5 | 7 | regist | ó R |
-| 18EC | 7 | regist | ó S |
+| 18DE | 7 | regist | 宝箱２ |
+| 18E5 | 7 | regist | 宝箱３ |
+| 18EC | 7 | regist | 宝箱４ |
 | 18F4 | 7 | regist | F03032011 |
 | 18FC | 7 | regist | F21042205 |
-| 1983 | 10 | regist | \ |
-| 198B | 10 | regist | gK |
-| 1993 | 10 | regist |  |
-| 199B | 10 | regist | ^[ |
-| 19A3 | 10 | regist | ^[gK |
-| 19AB | 10 | regist | OCvnoêgK |
-| 19B3 | 10 | regist | OCvnoê |
-| 19BB | 10 | regist | ïbACNVm |
-| 19C3 | 10 | regist | ïbACNKg[ |
-| 19CB | 10 | regist | ïbACN |
-| 19D3 | 10 | regist | {Xí¬ïb |
-| 19DB | 10 | regist | {Xí¬ïbACN |
-| 19E3 | 10 | regist | {XS |
+| 1983 | 10 | regist | 増援予告 |
+| 198B | 10 | regist | 増援トリガ |
+| 1993 | 10 | regist | 増援 |
+| 199B | 10 | regist | ターン増援 |
+| 19A3 | 10 | regist | ターン増援トリガ |
+| 19AB | 10 | regist | グレイルプラハ登場トリガ |
+| 19B3 | 10 | regist | グレイルプラハ登場 |
+| 19BB | 10 | regist | 会話アイクシノン |
+| 19C3 | 10 | regist | 会話アイクガトリー |
+| 19CB | 10 | regist | 会話アイクワユ |
+| 19D3 | 10 | regist | ボス戦闘会話 |
+| 19DB | 10 | regist | ボス戦闘会話アイク |
+| 19E3 | 10 | regist | ボス死亡 |
 | 1A22 | 11 | InstantDisposRank | bmap08_first |
 | 1A2A | 11 | InstantDispos | bmap08_event_zako_c |
 | 1A39 | 11 | InstantDisposRank | bmap08_first01 |
@@ -1107,7 +1107,7 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 2BF7 | 22 | UnitTransferToForceByPID | PID_WAYU, 0 |
 | 2C52 | 23 | TalkEvent | MS_08_TK_02 |
 | 2C92 | 24 | TalkEvent | MS_08_TK_03 |
-| 2CCA | 25 | LocalDieTalkWithBgmChange | ïbACN, MS_08_DIE_WAYU |
+| 2CCA | 25 | LocalDieTalkWithBgmChange | 会話アイクワユ, MS_08_DIE_WAYU |
 | 2CF8 | 26 | SoundBossTalkStart | BGM_BTL_BOSS1 |
 | 2D00 | 26 | TalkEvent | MS_08_BT_IKE |
 | 2D0D | 26 | SoundBossTalkEnd |  |
@@ -1277,15 +1277,15 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 14CE | 0 | regist | îñPtO |
-| 14D5 | 0 | regist | îñQtO |
-| 14DC | 0 | regist | îñRtO |
-| 14E3 | 0 | regist | îñStO |
-| 14EA | 0 | regist | îñTtO |
+| 14CE | 0 | regist | 情報１フラグ |
+| 14D5 | 0 | regist | 情報２フラグ |
+| 14DC | 0 | regist | 情報３フラグ |
+| 14E3 | 0 | regist | 情報４フラグ |
+| 14EA | 0 | regist | 情報５フラグ |
 | 151F | 1 | TalkEvent | MS_09_INFO_01 |
 | 1572 | 2 | TalkEvent | MS_09_INFO_02 |
 | 157F | 2 | TalkEvent | MS_09_INFO_02_1 |
@@ -1294,11 +1294,11 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 1656 | 4 | TalkEvent | MS_09_INFO_04 |
 | 16BE | 5 | TalkEvent | MS_09_INFO_05 |
 | 1703 | 6 | regist | F12111211 |
-| 1787 | 9 | regist | C[XÔ |
-| 178F | 9 | regist | C[Xí¬ïb |
-| 1797 | 9 | regist | {Xí¬ïb |
-| 179F | 9 | regist | {Xí¬ïbACN |
-| 17A7 | 9 | regist | {XS |
+| 1787 | 9 | regist | イレース仲間 |
+| 178F | 9 | regist | イレース戦闘会話 |
+| 1797 | 9 | regist | ボス戦闘会話 |
+| 179F | 9 | regist | ボス戦闘会話アイク |
+| 17A7 | 9 | regist | ボス死亡 |
 | 17E3 | 10 | InstantDisposRank | bmap09_first |
 | 17EB | 10 | InstantDisposRank | bmap09_elaice |
 | 17F4 | 10 | ForceGetCount | 1 |
@@ -1516,15 +1516,15 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 1202 | 0 | regist | îñPtO |
-| 1209 | 0 | regist | îñQtO |
-| 1210 | 0 | regist | îñRtO |
-| 1217 | 0 | regist | îñStO |
-| 121E | 0 | regist | îñTtO |
+| 1202 | 0 | regist | 情報１フラグ |
+| 1209 | 0 | regist | 情報２フラグ |
+| 1210 | 0 | regist | 情報３フラグ |
+| 1217 | 0 | regist | 情報４フラグ |
+| 121E | 0 | regist | 情報５フラグ |
 | 1253 | 1 | TalkEvent | MS_10_INFO_01 |
 | 1290 | 2 | TalkEvent | MS_10_INFO_02 |
 | 12D6 | 3 | TalkEvent | MS_10_INFO_03 |
@@ -1532,32 +1532,32 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 135C | 5 | TalkEvent | MS_10_INFO_05 |
 | 13C1 | 7 | TalkEvent | MS_10_VIL_02 |
 | 1479 | 9 | TalkEvent | MS_10_VIL_01 |
-| 1587 | 13 | regist | KâP |
-| 158F | 13 | regist | KâQ |
-| 1617 | 16 | regist | yOQ |
-| 161F | 16 | regist | yOQI |
-| 1627 | 16 | regist | yOR |
-| 162F | 16 | regist | yORI |
-| 1637 | 16 | regist | m[}FgKQ |
-| 163F | 16 | regist | m[}FgKR |
-| 1647 | 16 | regist | m[}FCxgQ |
-| 164F | 16 | regist | m[}FCxgR |
-| 1657 | 16 | regist | MS_10_OP02_02Að©½ |
-| 165F | 16 | regist | ºKâjóP |
-| 1667 | 16 | regist | ºKâjóQ |
-| 166F | 16 | regist | Ø°boÏX |
-| 1677 | 16 | regist | }[VÔ |
-| 167F | 16 | regist | t@{[ |
-| 1687 | 16 | regist | t@IXJ[ |
-| 168F | 16 | regist | l_^í¬ |
-| 1697 | 16 | regist | l_^í¬ACN |
-| 169F | 16 | regist | l_^í¬e |
-| 16A7 | 16 | regist | l_^í¬DfB |
-| 16AF | 16 | regist | {Xí¬ïb |
-| 16B7 | 16 | regist | {Xí¬ïbACN |
-| 16BF | 16 | regist | {Xí¬ïbe |
-| 16C7 | 16 | regist | {Xí¬ïbDfB |
-| 16CF | 16 | regist | {XS |
+| 1587 | 13 | regist | 訪問１ |
+| 158F | 13 | regist | 訪問２ |
+| 1617 | 16 | regist | 増援Ｚ０２ |
+| 161F | 16 | regist | 増援Ｚ０２終 |
+| 1627 | 16 | regist | 増援Ｚ０３ |
+| 162F | 16 | regist | 増援Ｚ０３終 |
+| 1637 | 16 | regist | ノーマル：増援トリガ２ |
+| 163F | 16 | regist | ノーマル：増援トリガ３ |
+| 1647 | 16 | regist | ノーマル：増援イベント２ |
+| 164F | 16 | regist | ノーマル：増援イベント３ |
+| 1657 | 16 | regist | MS_10_OP02_02Aを見た |
+| 165F | 16 | regist | 村訪問ｏｒ破壊１ |
+| 1667 | 16 | regist | 村訪問ｏｒ破壊２ |
+| 166F | 16 | regist | 蛮族ＣＰ変更 |
+| 1677 | 16 | regist | マーシャ仲間 |
+| 167F | 16 | regist | ヨファボーレ |
+| 1687 | 16 | regist | ヨファオスカー |
+| 168F | 16 | regist | ネダタ戦闘 |
+| 1697 | 16 | regist | ネダタ戦闘アイク |
+| 169F | 16 | regist | ネダタ戦闘レテ |
+| 16A7 | 16 | regist | ネダタ戦闘モゥディ |
+| 16AF | 16 | regist | ボス戦闘会話 |
+| 16B7 | 16 | regist | ボス戦闘会話アイク |
+| 16BF | 16 | regist | ボス戦闘会話レテ |
+| 16C7 | 16 | regist | ボス戦闘会話モゥディ |
+| 16CF | 16 | regist | ボス死亡 |
 | 1712 | 17 | InstantDisposRank | bmap10_first |
 | 171A | 17 | InstantDisposRank | bmap10_first1 |
 | 1722 | 17 | InstantDisposRank | bmap10_first2 |
@@ -1633,7 +1633,7 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 299E | 29 | TalkEvent | MS_10_TK02 |
 | 29E8 | 30 | TalkEvent | MS_10_TK03_A |
 | 29F3 | 30 | TalkEvent | MS_10_TK03_B |
-| 2A2A | 31 | LocalDieTalkWithBgmChange | }[VÔ, MS_10_DIE_MARCIA |
+| 2A2A | 31 | LocalDieTalkWithBgmChange | マーシャ仲間, MS_10_DIE_MARCIA |
 | 2A52 | 32 | LocalDieTalkWithBgmChange | , MS_10_DIE_LETE |
 | 2A82 | 33 | LocalDieTalkWithBgmChange | , MS_10_DIE_MORDY |
 | 2AB5 | 34 | BMGetPhase |  |
@@ -1714,15 +1714,15 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 13EE | 0 | regist | îñPtO |
-| 13F5 | 0 | regist | îñQtO |
-| 13FC | 0 | regist | îñRtO |
-| 1403 | 0 | regist | îñStO |
-| 140A | 0 | regist | îñTtO |
+| 13EE | 0 | regist | 情報１フラグ |
+| 13F5 | 0 | regist | 情報２フラグ |
+| 13FC | 0 | regist | 情報３フラグ |
+| 1403 | 0 | regist | 情報４フラグ |
+| 140A | 0 | regist | 情報５フラグ |
 | 143F | 1 | TalkEvent | MS_11_INFO_01 |
 | 1486 | 2 | TalkEvent | MS_11_INFO_03 |
 | 14CE | 3 | TalkEvent | MS_11_INFO_04 |
@@ -1732,37 +1732,37 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 15FA | 5 | UnitTransferToForceByPID | PID_CHAP, 0 |
 | 161C | 5 | UnitTransferToForceByPID | PID_NEPENEE, 0 |
 | 1625 | 5 | UnitEscape | ?, 0 |
-| 19A3 | 18 | regist | ó P |
-| 19AB | 18 | regist | ó Q |
-| 19B3 | 18 | regist | ó R |
-| 19BB | 18 | regist | ó S |
-| 19C3 | 18 | regist | ó T |
+| 19A3 | 18 | regist | 宝箱１ |
+| 19AB | 18 | regist | 宝箱２ |
+| 19B3 | 18 | regist | 宝箱３ |
+| 19BB | 18 | regist | 宝箱４ |
+| 19C3 | 18 | regist | 宝箱５ |
 | 19CB | 18 | regist | F0814 |
 | 19D3 | 18 | regist | F1107 |
 | 19DB | 18 | regist | F1914 |
 | 19E3 | 18 | regist | F1905 |
 | 19EB | 18 | regist | F02022109 |
-| 1A6B | 20 | regist | ACNZtF |
-| 1A73 | 20 | regist | IXJ[Pr |
-| 1A7B | 20 | regist | ACNltFj[ |
-| 1A83 | 20 | regist | ACN`bv |
-| 1A8B | 20 | regist | à`bvPB |
-| 1A93 | 20 | regist | àltFj[ |
-| 1A9B | 20 | regist | àZtF |
-| 1AA3 | 20 | regist | àó  |
-| 1AAB | 20 | regist | tHJÔC11 |
-| 1AB3 | 20 | regist | ­©CxggK |
-| 1ABB | 20 | regist | GSÅCxg­® |
-| 1AC3 | 20 | regist | åÔ­©Cxg |
-| 1ACB | 20 | regist | {Xí¬ïb |
-| 1AD3 | 20 | regist | {Xí¬ïbACN |
-| 1ADB | 20 | regist | {Xí¬ïbe |
-| 1AE3 | 20 | regist | {Xí¬ïbDfB |
-| 1AEB | 20 | regist | }jAFCxg |
-| 1AF3 | 20 | regist | PB£E |
-| 1AFB | 20 | regist | `bv£E |
-| 1B03 | 20 | regist | ltFj[£E |
-| 1B0B | 20 | regist | {XS |
+| 1A6B | 20 | regist | アイクセフェラン |
+| 1A73 | 20 | regist | オスカーケビン |
+| 1A7B | 20 | regist | アイクネフェニー |
+| 1A83 | 20 | regist | アイクチャップ |
+| 1A8B | 20 | regist | 扉チャップケヴィン |
+| 1A93 | 20 | regist | 扉ネフェニー |
+| 1A9B | 20 | regist | 扉セフェラン |
+| 1AA3 | 20 | regist | 扉宝箱 |
+| 1AAB | 20 | regist | フォルカ仲間C11 |
+| 1AB3 | 20 | regist | 発見イベントトリガ |
+| 1ABB | 20 | regist | 敵死亡で増援イベント発動 |
+| 1AC3 | 20 | regist | 門番発見イベント |
+| 1ACB | 20 | regist | ボス戦闘会話 |
+| 1AD3 | 20 | regist | ボス戦闘会話アイク |
+| 1ADB | 20 | regist | ボス戦闘会話レテ |
+| 1AE3 | 20 | regist | ボス戦闘会話モゥディ |
+| 1AEB | 20 | regist | マニア：増援イベント |
+| 1AF3 | 20 | regist | ケヴィン離脱 |
+| 1AFB | 20 | regist | チャップ離脱 |
+| 1B03 | 20 | regist | ネフェニー離脱 |
+| 1B0B | 20 | regist | ボス死亡 |
 | 1B4E | 21 | InstantDisposRank | bmap11_first |
 | 1B56 | 21 | InstantDispos | bmap11_first_c |
 | 1B66 | 21 | ForceGetCount | 1 |
@@ -1941,7 +1941,7 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
@@ -1952,41 +1952,41 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 19D4 | 2 | TalkEvent | MS_12_VIL_02_LM |
 | 1A0D | 2 | TalkEvent | MS_12_VIL_02 |
 | 1B21 | 6 | UnitEscape | ?, 0 |
-| 1B7E | 8 | regist | KâP |
-| 1B86 | 8 | regist | KâQ |
-| 1B8E | 8 | regist | KâR |
-| 1BEB | 10 | regist | îñPtO |
-| 1BF3 | 10 | regist | îñQtO |
-| 1BFB | 10 | regist | îñRtO |
-| 1C03 | 10 | regist | îñStO |
-| 1C0B | 10 | regist | îñTtO |
-| 1C13 | 10 | regist | îñUtO |
+| 1B7E | 8 | regist | 訪問１ |
+| 1B86 | 8 | regist | 訪問２ |
+| 1B8E | 8 | regist | 訪問３ |
+| 1BEB | 10 | regist | 情報１フラグ |
+| 1BF3 | 10 | regist | 情報２フラグ |
+| 1BFB | 10 | regist | 情報３フラグ |
+| 1C03 | 10 | regist | 情報４フラグ |
+| 1C0B | 10 | regist | 情報５フラグ |
+| 1C13 | 10 | regist | 情報６フラグ |
 | 1C48 | 11 | TalkEvent | MS_12_INFO_01 |
 | 1C88 | 12 | TalkEvent | MS_12_INFO_02 |
 | 1CDC | 13 | TalkEvent | MS_12_INFO_03 |
 | 1D26 | 14 | TalkEvent | MS_12_INFO_04 |
 | 1D6E | 15 | TalkEvent | MS_12_INFO_05 |
 | 1DB6 | 16 | TalkEvent | MS_12_INFO_06 |
-| 1E07 | 18 | regist | cCn[NÔ |
-| 1E0F | 18 | regist | cCn[Ní¬e |
-| 1E17 | 18 | regist | cCn[Ní¬EfB |
-| 1E1F | 18 | regist | cCn[Ní¬ |
-| 1E27 | 18 | regist | Wí¬ |
-| 1E2F | 18 | regist | Wí¬e |
-| 1E37 | 18 | regist | Wí¬EfB |
-| 1E3F | 18 | regist | ½ÌRmzugK |
-| 1E47 | 18 | regist | ½ÌRmzuCxg |
-| 1E4F | 18 | regist | ½ÌRmí¬ACN |
-| 1E57 | 18 | regist | ½ÌRmí¬eEfB |
-| 1E5F | 18 | regist | ½ÌRmí¬Êí |
-| 1E67 | 18 | regist | ACNÆ½ÌRmÌí¬ãïb |
-| 1E6F | 18 | regist | {Xí¬ACN |
-| 1E77 | 18 | regist | {Xí¬eEfB |
-| 1E7F | 18 | regist | {Xí¬ïb |
-| 1E87 | 18 | regist | {XS |
-| 1E8F | 18 | regist | e©EfBÅW/µ½ |
-| 1E97 | 18 | regist | »êÈOÅW/µ½ |
-| 1E9F | 18 | regist | {Xí¬ïbCxg |
+| 1E07 | 18 | regist | ツイハーク仲間 |
+| 1E0F | 18 | regist | ツイハーク戦闘レテ |
+| 1E17 | 18 | regist | ツイハーク戦闘モウディ |
+| 1E1F | 18 | regist | ツイハーク戦闘 |
+| 1E27 | 18 | regist | ジル戦闘 |
+| 1E2F | 18 | regist | ジル戦闘レテ |
+| 1E37 | 18 | regist | ジル戦闘モウディ |
+| 1E3F | 18 | regist | 漆黒の騎士配置トリガ |
+| 1E47 | 18 | regist | 漆黒の騎士配置イベント |
+| 1E4F | 18 | regist | 漆黒の騎士戦闘アイク |
+| 1E57 | 18 | regist | 漆黒の騎士戦闘レテモウディ |
+| 1E5F | 18 | regist | 漆黒の騎士戦闘通常 |
+| 1E67 | 18 | regist | アイクと漆黒の騎士の戦闘後会話 |
+| 1E6F | 18 | regist | ボス戦闘アイク |
+| 1E77 | 18 | regist | ボス戦闘レテモウディ |
+| 1E7F | 18 | regist | ボス戦闘会話 |
+| 1E87 | 18 | regist | ボス死亡 |
+| 1E8F | 18 | regist | レテかモウディでジル倒した |
+| 1E97 | 18 | regist | それ以外でジル倒した |
+| 1E9F | 18 | regist | ボス戦闘会話イベント |
 | 1EE2 | 19 | InstantDisposRank | bmap12_first |
 | 1EEA | 19 | InstantDisposRank | bmap12_first2 |
 | 1EF2 | 19 | InstantDisposRank | bmap12_first3 |
@@ -2244,17 +2244,17 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 103E | 0 | regist | îñPtO |
-| 1045 | 0 | regist | îñQtO |
-| 104C | 0 | regist | îñRtO |
-| 1053 | 0 | regist | îñStO |
-| 105A | 0 | regist | îñTtO |
-| 1061 | 0 | regist | îñUtO |
-| 1068 | 0 | regist | TUÔ |
+| 103E | 0 | regist | 情報１フラグ |
+| 1045 | 0 | regist | 情報２フラグ |
+| 104C | 0 | regist | 情報３フラグ |
+| 1053 | 0 | regist | 情報４フラグ |
+| 105A | 0 | regist | 情報５フラグ |
+| 1061 | 0 | regist | 情報６フラグ |
+| 1068 | 0 | regist | サザ仲間 |
 | 10AC | 1 | TalkEvent | MS_13_INFO_01 |
 | 10E6 | 1 | TalkEvent | MS_13_INFO_01_02_2A |
 | 1107 | 1 | Join | always_saza |
@@ -2262,11 +2262,11 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 115A | 2 | TalkEvent | MS_13_INFO_03 |
 | 11A2 | 3 | TalkEvent | MS_13_INFO_04 |
 | 11EA | 4 | TalkEvent | MS_13_INFO_05 |
-| 121B | 5 | regist | WÔïb |
-| 1223 | 5 | regist | {Xí¬ïbACN |
-| 122B | 5 | regist | {Xí¬ïbe |
-| 1233 | 5 | regist | {Xí¬ïbEfB |
-| 123B | 5 | regist | {Xí¬ïb |
+| 121B | 5 | regist | ジル仲間会話 |
+| 1223 | 5 | regist | ボス戦闘会話アイク |
+| 122B | 5 | regist | ボス戦闘会話レテ |
+| 1233 | 5 | regist | ボス戦闘会話モウディ |
+| 123B | 5 | regist | ボス戦闘会話 |
 | 127A | 6 | InstantDisposRank | bmap13_first |
 | 1289 | 6 | InstantDisposRank | bmap13_first01 |
 | 1291 | 6 | InstantDisposRank | bmap13_first02 |
@@ -2319,7 +2319,7 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 236D | 19 | DisposSetMode | bmap13_z01_n, bmap13_z01_h, bmap13_z01_m |
 | 239D | 20 | DisposSetMode | bmap13_z02_n, bmap13_z02_h, bmap13_z02_m |
 | 23B5 | 20 | DisposSetMode | bmap13_z02_2_n, bmap13_z02_2_h, bmap13_z02_2_m |
-| 2422 | 22 | LocalDieTalkWithBgmChange | WÔïb, MS_13_DIE_JILL |
+| 2422 | 22 | LocalDieTalkWithBgmChange | ジル仲間会話, MS_13_DIE_JILL |
 | 2450 | 23 | SoundBossTalkStart | BGM_BTL_BOSS1 |
 | 2458 | 23 | TalkEvent | MS_13_BT_IKE |
 | 2465 | 23 | SoundBossTalkEnd |  |
@@ -2424,14 +2424,14 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 1162 | 0 | regist | îñPtO |
-| 1169 | 0 | regist | îñQtO |
-| 1170 | 0 | regist | îñRtO |
-| 1177 | 0 | regist | îñStO |
+| 1162 | 0 | regist | 情報１フラグ |
+| 1169 | 0 | regist | 情報２フラグ |
+| 1170 | 0 | regist | 情報３フラグ |
+| 1177 | 0 | regist | 情報４フラグ |
 | 11AB | 1 | TalkEvent | MS_14_INFO_01 |
 | 11E7 | 2 | TalkEvent | MS_14_INFO_02 |
 | 122E | 3 | TalkEvent | MS_14_INFO_03 |
@@ -2440,21 +2440,21 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 14F2 | 13 | UnitEscape | ?, 0 |
 | 1546 | 14 | UnitEscape | ?, 0 |
 | 157B | 15 | regist | F31293129 |
-| 1583 | 15 | regist | ó P |
-| 158B | 15 | regist | ó Q |
-| 1593 | 15 | regist | ó R |
-| 159B | 15 | regist | ó S |
-| 15A3 | 15 | regist | ó T |
-| 15AB | 15 | regist | ó U |
-| 15B3 | 15 | regist | ó V |
-| 1607 | 17 | regist | XeÔ |
-| 160F | 17 | regist | Kg[ïbACN |
-| 1617 | 17 | regist | Kg[ïbbºc |
-| 161F | 17 | regist | Kg[Ô |
-| 1627 | 17 | regist | {Xí¬ïbACN |
-| 162F | 17 | regist | {Xí¬ïbb |
-| 1637 | 17 | regist | {Xí¬ïb |
-| 163F | 17 | regist | {XS |
+| 1583 | 15 | regist | 宝箱１ |
+| 158B | 15 | regist | 宝箱２ |
+| 1593 | 15 | regist | 宝箱３ |
+| 159B | 15 | regist | 宝箱４ |
+| 15A3 | 15 | regist | 宝箱５ |
+| 15AB | 15 | regist | 宝箱６ |
+| 15B3 | 15 | regist | 宝箱７ |
+| 1607 | 17 | regist | ステラ仲間 |
+| 160F | 17 | regist | ガトリー会話アイク |
+| 1617 | 17 | regist | ガトリー会話傭兵団 |
+| 161F | 17 | regist | ガトリー仲間 |
+| 1627 | 17 | regist | ボス戦闘会話アイク |
+| 162F | 17 | regist | ボス戦闘会話獣 |
+| 1637 | 17 | regist | ボス戦闘会話 |
+| 163F | 17 | regist | ボス死亡 |
 | 1682 | 18 | InstantDisposRank | bmap14_first |
 | 168A | 18 | InstantDisposRank | bmap14_first2 |
 | 16A0 | 18 | InstantDispos | bmap14_beg01_c |
@@ -2554,8 +2554,8 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 2DDA | 43 | TalkEvent | MS_14_TK_G_6 |
 | 2E1A | 44 | TalkEvent | MS_14_TK_G_7 |
 | 2E5A | 45 | TalkEvent | MS_14_TK_G_8 |
-| 2E92 | 46 | LocalDieTalkWithBgmChange | Kg[Ô, MS_14_DIE_GATRIE |
-| 2EBA | 47 | LocalDieTalkWithBgmChange | XeÔ, MS_14_DIE_STELA |
+| 2E92 | 46 | LocalDieTalkWithBgmChange | ガトリー仲間, MS_14_DIE_GATRIE |
+| 2EBA | 47 | LocalDieTalkWithBgmChange | ステラ仲間, MS_14_DIE_STELA |
 | 2EE8 | 48 | SoundBossTalkStart | BGM_BTL_BOSS1 |
 | 2EF0 | 48 | TalkEvent | MS_14_BT_IKE |
 | 2EFD | 48 | SoundBossTalkEnd |  |
@@ -2628,15 +2628,15 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| D32 | 0 | regist | îñPtO |
-| D39 | 0 | regist | îñQtO |
-| D40 | 0 | regist | îñRtO |
-| D47 | 0 | regist | îñStO |
-| D4E | 0 | regist | îñTtO |
+| D32 | 0 | regist | 情報１フラグ |
+| D39 | 0 | regist | 情報２フラグ |
+| D40 | 0 | regist | 情報３フラグ |
+| D47 | 0 | regist | 情報４フラグ |
+| D4E | 0 | regist | 情報５フラグ |
 | D83 | 1 | TalkEvent | MS_15_INFO_02 |
 | DCA | 2 | TalkEvent | MS_15_INFO_03 |
 | E12 | 3 | TalkEvent | MS_15_INFO_04 |
@@ -2644,22 +2644,22 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | F3C | 8 | TalkEvent | MS_15_VIL_03 |
 | FBC | 9 | TalkEvent | MS_15_VIL_02 |
 | 103C | 10 | TalkEvent | MS_15_VIL_01 |
-| 10E7 | 12 | regist | KâP |
-| 10EF | 12 | regist | KâQ |
-| 10F7 | 12 | regist | KâR |
+| 10E7 | 12 | regist | 訪問１ |
+| 10EF | 12 | regist | 訪問２ |
+| 10F7 | 12 | regist | 訪問３ |
 | 10FF | 12 | regist | F16022511 |
-| 1153 | 14 | regist | ~Q©Cxg |
-| 115B | 14 | regist | OYgK |
-| 1163 | 14 | regist | OYCxg |
-| 116B | 14 | regist | eÕ |
-| 1173 | 14 | regist | EfBÕ |
-| 117B | 14 | regist | }JtÔ |
-| 1183 | 14 | regist | }Jtí¬ |
-| 118B | 14 | regist | }Jtí¬}[V |
-| 1193 | 14 | regist | {Xí¬ïb |
-| 119B | 14 | regist | {Xí¬ïbACN |
-| 11A3 | 14 | regist | {Xí¬ïbe |
-| 11AB | 14 | regist | {Xí¬ïbDfB |
+| 1153 | 14 | regist | 降参勧告イベント |
+| 115B | 14 | regist | ラグズ増援トリガ |
+| 1163 | 14 | regist | ラグズ増援イベント |
+| 116B | 14 | regist | レテｖｓ虎 |
+| 1173 | 14 | regist | モウディｖｓ虎 |
+| 117B | 14 | regist | マカロフ仲間 |
+| 1183 | 14 | regist | マカロフ戦闘 |
+| 118B | 14 | regist | マカロフ戦闘マーシャ |
+| 1193 | 14 | regist | ボス戦闘会話 |
+| 119B | 14 | regist | ボス戦闘会話アイク |
+| 11A3 | 14 | regist | ボス戦闘会話レテ |
+| 11AB | 14 | regist | ボス戦闘会話モゥディ |
 | 11E7 | 15 | InstantDisposRank | bmap15_first |
 | 11EF | 15 | InstantDispos | bmap15_first_c |
 | 1227 | 16 | SallySetByGroup | bmap15_mikata_c |
@@ -2786,41 +2786,41 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| F2E | 0 | regist | îñPtO |
-| F35 | 0 | regist | îñQtO |
-| F3C | 0 | regist | îñRtO |
-| F43 | 0 | regist | îñStO |
+| F2E | 0 | regist | 情報１フラグ |
+| F35 | 0 | regist | 情報２フラグ |
+| F3C | 0 | regist | 情報３フラグ |
+| F43 | 0 | regist | 情報４フラグ |
 | F77 | 1 | TalkEvent | MS_16_INFO_01 |
 | FB3 | 2 | TalkEvent | MS_16_INFO_02 |
 | FFA | 3 | TalkEvent | MS_16_INFO_04 |
-| 154F | 14 | regist | \[oPoêgK |
-| 1557 | 14 | regist | »óP |
-| 155F | 14 | regist | »óQ |
-| 1567 | 14 | regist | »óR |
-| 156F | 14 | regist | »óS |
-| 1577 | 14 | regist | »óT |
-| 157F | 14 | regist | »óU |
-| 1587 | 14 | regist | »óV |
-| 158F | 14 | regist | »óW |
-| 1597 | 14 | regist | »óX |
-| 160B | 17 | regist | \[oPÔ |
-| 1613 | 17 | regist | \[oPç©¹ |
-| 161B | 17 | regist | \[oPCxg |
-| 1623 | 17 | regist | {Xí¬ïb |
-| 162B | 17 | regist | {Xí¬ïbACN |
-| 1633 | 17 | regist | {Xí¬ïbe |
-| 163B | 17 | regist | {Xí¬ïbDfB |
-| 1643 | 17 | regist | {Xí¬ïbZlI |
-| 164B | 17 | regist | {Xí¬ïbt@ |
-| 1653 | 17 | regist | {Xí¬ïb~Xg |
-| 165B | 17 | regist | {Xí¬ïbTU |
-| 1663 | 17 | regist | ðIogÅ/µ½ |
-| 166B | 17 | regist | ACNª/µ½ |
-| 1673 | 17 | regist | OYðúRS |
+| 154F | 14 | regist | ソーンバルケ登場トリガ |
+| 1557 | 14 | regist | 砂漠宝１ |
+| 155F | 14 | regist | 砂漠宝２ |
+| 1567 | 14 | regist | 砂漠宝３ |
+| 156F | 14 | regist | 砂漠宝４ |
+| 1577 | 14 | regist | 砂漠宝５ |
+| 157F | 14 | regist | 砂漠宝６ |
+| 1587 | 14 | regist | 砂漠宝７ |
+| 158F | 14 | regist | 砂漠宝８ |
+| 1597 | 14 | regist | 砂漠宝９ |
+| 160B | 17 | regist | ソーンバルケ仲間 |
+| 1613 | 17 | regist | ソーンバルケ顔見せ |
+| 161B | 17 | regist | ソーンバルケイベント |
+| 1623 | 17 | regist | ボス戦闘会話 |
+| 162B | 17 | regist | ボス戦闘会話アイク |
+| 1633 | 17 | regist | ボス戦闘会話レテ |
+| 163B | 17 | regist | ボス戦闘会話モゥディ |
+| 1643 | 17 | regist | ボス戦闘会話セネリオ |
+| 164B | 17 | regist | ボス戦闘会話ヨファ |
+| 1653 | 17 | regist | ボス戦闘会話ミスト |
+| 165B | 17 | regist | ボス戦闘会話サザ |
+| 1663 | 17 | regist | ムワリムをオンバトで倒した |
+| 166B | 17 | regist | アイクがムワリム倒した |
+| 1673 | 17 | regist | ラグズ解放軍死亡 |
 | 16B6 | 18 | InstantDisposRank | bmap16_first |
 | 16BE | 18 | InstantDispos | bmap16_first_c |
 | 172F | 19 | SallySetByGroup | bmap16_mikata_c |
@@ -2927,44 +2927,44 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| D42 | 0 | regist | îñPtO |
-| D49 | 0 | regist | îñQtO |
-| D50 | 0 | regist | îñRtO |
-| D57 | 0 | regist | îñStO |
-| D5E | 0 | regist | îñTtO |
+| D42 | 0 | regist | 情報１フラグ |
+| D49 | 0 | regist | 情報２フラグ |
+| D50 | 0 | regist | 情報３フラグ |
+| D57 | 0 | regist | 情報４フラグ |
+| D5E | 0 | regist | 情報５フラグ |
 | DBC | 1 | TalkEvent | MS_17_INFO_04 |
 | E1A | 2 | TalkEvent | MS_17_INFO_05 |
 | E54 | 2 | TalkEvent | MS_17_INFO_05_A |
 | E83 | 2 | TalkEvent | MS_17_INFO_05_B |
 | 112A | 13 | UnitEscape | ?, 0 |
 | 1182 | 14 | UnitEscape | ?, 0 |
-| 11B7 | 15 | regist | ó P |
-| 11BF | 15 | regist | ó Q |
-| 11C7 | 15 | regist | ó R |
-| 11CF | 15 | regist | ó S |
-| 11D7 | 15 | regist | ó T |
-| 11DF | 15 | regist | ó U |
+| 11B7 | 15 | regist | 宝箱１ |
+| 11BF | 15 | regist | 宝箱２ |
+| 11C7 | 15 | regist | 宝箱３ |
+| 11CF | 15 | regist | 宝箱４ |
+| 11D7 | 15 | regist | 宝箱５ |
+| 11DF | 15 | regist | 宝箱６ |
 | 11E7 | 15 | regist | F1217 |
 | 11EF | 15 | regist | F2410 |
 | 11F7 | 15 | regist | F0309 |
-| 126F | 17 | regist | gKP |
-| 1277 | 17 | regist | gKQ |
-| 127F | 17 | regist | gKR |
-| 1287 | 17 | regist | CxgP |
-| 128F | 17 | regist | CxgQ |
-| 1297 | 17 | regist | CxgR |
-| 129F | 17 | regist | ¯zu |
-| 12A7 | 17 | regist | ¯boÏX |
-| 12AF | 17 | regist | _nEÔ |
-| 12B7 | 17 | regist | _nEí¬qÇà |
-| 12BF | 17 | regist | _nEí¬ |
-| 12C7 | 17 | regist | {Xí¬ïb |
-| 12CF | 17 | regist | {Xí¬ïbACN |
-| 12D7 | 17 | regist | {Xí¬ïbb |
+| 126F | 17 | regist | 増援トリガ１ |
+| 1277 | 17 | regist | 増援トリガ２ |
+| 127F | 17 | regist | 増援トリガ３ |
+| 1287 | 17 | regist | 増援イベント１ |
+| 128F | 17 | regist | 増援イベント２ |
+| 1297 | 17 | regist | 増援イベント３ |
+| 129F | 17 | regist | 盗賊配置 |
+| 12A7 | 17 | regist | 盗賊ＣＰ変更 |
+| 12AF | 17 | regist | ダラハウ仲間 |
+| 12B7 | 17 | regist | ダラハウ戦闘子ども |
+| 12BF | 17 | regist | ダラハウ戦闘 |
+| 12C7 | 17 | regist | ボス戦闘会話 |
+| 12CF | 17 | regist | ボス戦闘会話アイク |
+| 12D7 | 17 | regist | ボス戦闘会話獣 |
 | 131A | 18 | InstantDisposRank | bmap17_first |
 | 1322 | 18 | InstantDispos | bmap17_first_c |
 | 1363 | 19 | SallySetByGroup | bmap17_mikata_c |
@@ -3195,14 +3195,14 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 1F56 | 0 | regist | îñPtO |
-| 1F5D | 0 | regist | îñQtO |
-| 1F64 | 0 | regist | îñRtO |
-| 1F6B | 0 | regist | îñStO |
+| 1F56 | 0 | regist | 情報１フラグ |
+| 1F5D | 0 | regist | 情報２フラグ |
+| 1F64 | 0 | regist | 情報３フラグ |
+| 1F6B | 0 | regist | 情報４フラグ |
 | 1F9F | 1 | TalkEvent | MS_18_INFO_01 |
 | 1FFB | 2 | TalkEvent | MS_18_INFO_02 |
 | 204E | 3 | TalkEvent | MS_18_INFO_04 |
@@ -3210,56 +3210,56 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 2B4B | 31 | regist | F20102710 |
 | 2B53 | 31 | regist | F21112711 |
 | 2B5B | 31 | regist | F06002707 |
-| 2B63 | 31 | regist | ¹³ñ½¿gK |
-| 2B6B | 31 | regist | S2gKP |
-| 2B73 | 31 | regist | S2gKQ |
-| 2B7B | 31 | regist | S3gKQ |
-| 2B83 | 31 | regist | S3gKP |
-| 2B8B | 31 | regist | S3gKS |
-| 2B93 | 31 | regist | S3gKT |
+| 2B63 | 31 | regist | 鳥さんたち増援トリガ |
+| 2B6B | 31 | regist | S2増援トリガ１ |
+| 2B73 | 31 | regist | S2増援トリガ２ |
+| 2B7B | 31 | regist | S3増援トリガ２ |
+| 2B83 | 31 | regist | S3増援トリガ１ |
+| 2B8B | 31 | regist | S3増援トリガ４ |
+| 2B93 | 31 | regist | S3増援トリガ５ |
 | 2B9B | 31 | regist | F28043113 |
 | 2BA3 | 31 | regist | F32043908 |
 | 2BAB | 31 | regist | F46165126 |
 | 2BB3 | 31 | regist | F39204526 |
-| 2BBB | 31 | regist | S3gKR |
-| 2BC3 | 31 | regist | S4gKP |
-| 2C17 | 33 | regist | NAðP |
-| 2C1F | 33 | regist | NAðQ |
-| 2C27 | 33 | regist | NAðR |
-| 2C2F | 33 | regist | ZNVQ |
-| 2C37 | 33 | regist | ZNVR |
-| 2C3F | 33 | regist | ZNVS |
-| 2C47 | 33 | regist | ¡ûÄñ¾Q |
-| 2C4F | 33 | regist | ¡ûÄñ¾R |
-| 2C57 | 33 | regist | ¡ûÄñ¾S |
-| 2C5F | 33 | regist | ¡ûCxgQ |
-| 2C67 | 33 | regist | ¡ûCxgR |
-| 2C6F | 33 | regist | ¡ûCxgS |
-| 2C77 | 33 | regist | GfBO»ÌQ |
-| 2C7F | 33 | regist | ACNA[l |
-| 2C87 | 33 | regist | ACNA[lCxg |
-| 2C8F | 33 | regist | ¹³ñ½¿gK |
-| 2C97 | 33 | regist | ¹³ñ½¿Cxg |
-| 2C9F | 33 | regist | {Xí¬ïb |
-| 2CA7 | 33 | regist | {Xí¬ïbACN |
-| 2CAF | 33 | regist | {Xí¬ïbe |
-| 2CB7 | 33 | regist | {Xí¬ïbDfB |
-| 2CBF | 33 | regist | {Xí¬ïb |
-| 2CC7 | 33 | regist | {Xí¬ïb_nE |
-| 2CD5 | 33 | regist | S4CxgP |
-| 2CDD | 33 | regist | S4CxgQ |
-| 2CE5 | 33 | regist | S4CxgR |
-| 2CED | 33 | regist | S4CxgS |
-| 2CF5 | 33 | regist | S4CxgT |
-| 2CFD | 33 | regist | S4gKP |
-| 2D05 | 33 | regist | S4gKQ |
-| 2D0D | 33 | regist | S2CxgP |
-| 2D15 | 33 | regist | S2CxgQ |
-| 2D1D | 33 | regist | S3CxgP |
-| 2D25 | 33 | regist | S3CxgQ |
-| 2D2D | 33 | regist | S3CxgR |
-| 2D35 | 33 | regist | S3CxgS |
-| 2D3D | 33 | regist | S3CxgT |
+| 2BBB | 31 | regist | S3増援トリガ３ |
+| 2BC3 | 31 | regist | S4増援トリガ１ |
+| 2C17 | 33 | regist | クリア条件１ |
+| 2C1F | 33 | regist | クリア条件２ |
+| 2C27 | 33 | regist | クリア条件３ |
+| 2C2F | 33 | regist | セクション２ |
+| 2C37 | 33 | regist | セクション３ |
+| 2C3F | 33 | regist | セクション４ |
+| 2C47 | 33 | regist | 味方増援呼んだ２ |
+| 2C4F | 33 | regist | 味方増援呼んだ３ |
+| 2C57 | 33 | regist | 味方増援呼んだ４ |
+| 2C5F | 33 | regist | 味方増援イベント２ |
+| 2C67 | 33 | regist | 味方増援イベント３ |
+| 2C6F | 33 | regist | 味方増援イベント４ |
+| 2C77 | 33 | regist | エンディングその２ |
+| 2C7F | 33 | regist | アイクリアーネ |
+| 2C87 | 33 | regist | アイクリアーネイベント |
+| 2C8F | 33 | regist | 鳥さんたち増援トリガ |
+| 2C97 | 33 | regist | 鳥さんたち増援イベント |
+| 2C9F | 33 | regist | ボス戦闘会話 |
+| 2CA7 | 33 | regist | ボス戦闘会話アイク |
+| 2CAF | 33 | regist | ボス戦闘会話レテ |
+| 2CB7 | 33 | regist | ボス戦闘会話モゥディ |
+| 2CBF | 33 | regist | ボス戦闘会話ムワリム |
+| 2CC7 | 33 | regist | ボス戦闘会話ダラハウ |
+| 2CD5 | 33 | regist | S4増援イベント１ |
+| 2CDD | 33 | regist | S4増援イベント２ |
+| 2CE5 | 33 | regist | S4増援イベント３ |
+| 2CED | 33 | regist | S4増援イベント４ |
+| 2CF5 | 33 | regist | S4増援イベント５ |
+| 2CFD | 33 | regist | S4増援トリガ１ |
+| 2D05 | 33 | regist | S4増援トリガ２ |
+| 2D0D | 33 | regist | S2増援イベント１ |
+| 2D15 | 33 | regist | S2増援イベント２ |
+| 2D1D | 33 | regist | S3増援イベント１ |
+| 2D25 | 33 | regist | S3増援イベント２ |
+| 2D2D | 33 | regist | S3増援イベント３ |
+| 2D35 | 33 | regist | S3増援イベント４ |
+| 2D3D | 33 | regist | S3増援イベント５ |
 | 2D7A | 34 | InstantDisposRank | bmap18_first |
 | 2DBB | 35 | SallySetByGroup | bmap18_mikata_c |
 | 2DF1 | 36 | ForceGetCount | 5 |
@@ -3462,13 +3462,13 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 63FD | 86 | TalkEvent | MS_18_EV_C_op_04 |
 | 6408 | 86 | TalkEvent | MS_18_EV_C_op_04_B |
 | 6454 | 86 | InstantDispos | bmap18_event_oliver2_c |
-| 64B3 | 86 | TalkEvent | 8 |
-| 6513 | 86 | TalkEvent | 28 |
-| 6657 | 86 | DisposSetMode | ?, ?, 105 |
+| 64B3 | 86 | TalkEvent | MS_18_EV_C_op_05 |
+| 6513 | 86 | TalkEvent | MS_18_EV_C_op_05_2 |
+| 6657 | 86 | DisposSetMode | bmap18_f03_n, bmap18_f03_h, bmap18_f03_m |
 | 6678 | 86 | UnitEscapeByPID | PID_LEARNE_EV |
 | 6680 | 86 | UnitEscapeByPID | PID_NASIR |
 | 6688 | 86 | UnitEscapeByPID | PID_OLIVER |
-| 66F7 | 86 | TalkEvent | 118 |
+| 66F7 | 86 | TalkEvent | MS_18_EV_C_op_05_3 |
 | 6714 | 86 | ForceGetCount | 0 |
 | 671E | 86 | ForceGetFirst | 0 |
 | 694B | 86 | BMGetTurn |  |
@@ -3481,12 +3481,12 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 6AF8 | 87 | ForceGetFirst | 0 |
 | 6C8E | 88 | BMGetTurn |  |
 | 6D27 | 88 | InstantDispos | bmap18_event_oliver2_c |
-| 6D7C | 88 | TalkEvent | 225 |
+| 6D7C | 88 | TalkEvent | MS_18_EV_C_ed |
 | 6DA7 | 88 | UnitEscapeByPID | PID_OLIVER |
 | 6DDD | 88 | ForceGetFirst | 1 |
 | 6DF2 | 88 | UnitEscape | ?, 0 |
 | 6E1A | 88 | InstantDispos | bmap18_event_narsil_c |
-| 6F89 | 88 | TalkEvent | 244 |
+| 6F89 | 88 | TalkEvent | MS_18_EV_C_ed_XA |
 | 6FE6 | 88 | TalkEvent | MS_18_EV_C_ed_XA_2 |
 | 7019 | 88 | TalkEvent | MS_18_EV_C_ed_XB |
 | 702C | 88 | TalkEvent | MS_18_EV_C_ed_XC |
@@ -3536,26 +3536,26 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 7D41 | 94 | ForceGetFirst | 0 |
 | 7D92 | 94 | InstantDispos | bmap18_event_rieusion_c |
 | 7DA5 | 94 | InstantDispos | bmap18_event_tibarn_c |
-| 7DB8 | 94 | InstantDispos | ? |
-| 7DCB | 94 | InstantDispos | ? |
+| 7DB8 | 94 | InstantDispos | bmap18_event_vulci_c |
+| 7DCB | 94 | InstantDispos | bmap18_event_janaff_c |
 | 7E38 | 94 | InstantDispos | bmap18_event_learne2_c |
-| 7ECB | 94 | TalkEvent | ? |
+| 7ECB | 94 | TalkEvent | MS_18_ED_01 |
 | 7ED7 | 94 | TalkResume |  |
 | 7EE6 | 94 | TalkResume |  |
-| 7F7F | 94 | TalkEvent | ? |
+| 7F7F | 94 | TalkEvent | MS_18_ED_02 |
 | 7F9B | 94 | TalkResume |  |
 | 7FD6 | 94 | AllUnitEscape |  |
 | 7FF9 | 94 | MapLoad | bmap18_3 |
 | 801B | 94 | InstantDispos | bmap18_3_event01_c |
 | 8098 | 94 | Dispos_ForEventSenerio | bmap18_3_event_senerio_c, bmap18_3_event_senerio2_c, 1 |
-| 80AE | 94 | InstantDispos | ? |
-| 8141 | 94 | TalkEvent | ? |
-| 81EE | 94 | TalkEvent | ? |
-| 827E | 94 | TalkEvent | ? |
-| 8312 | 94 | TalkEvent | ? |
+| 80AE | 94 | InstantDispos | bmap18_3_event02_c |
+| 8141 | 94 | TalkEvent | MS_18_ED_03_1 |
+| 81EE | 94 | TalkEvent | MS_18_ED_03_1_2 |
+| 827E | 94 | TalkEvent | MS_18_ED_03_1_3 |
+| 8312 | 94 | TalkEvent | MS_18_ED_03_2 |
 | 836A | 94 | AllUnitEscape |  |
-| 8381 | 94 | TalkEvent | ? |
-| 83B5 | 94 | TalkEvent | ? |
+| 8381 | 94 | TalkEvent | MS_18_ED_04 |
+| 83B5 | 94 | TalkEvent | MS_18_ED_05 |
 | 84BD | 94 | TalkEvent | MS_18_ED_06_00 |
 | 84F4 | 94 | TalkEvent | MS_18_ED_06 |
 | 8572 | 96 | BMGetTurn |  |
@@ -3610,48 +3610,48 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 136E | 0 | regist | îñPtO |
-| 1375 | 0 | regist | îñQtO |
-| 137C | 0 | regist | îñRtO |
-| 1383 | 0 | regist | îñStO |
-| 138A | 0 | regist | îñTtO |
+| 136E | 0 | regist | 情報１フラグ |
+| 1375 | 0 | regist | 情報２フラグ |
+| 137C | 0 | regist | 情報３フラグ |
+| 1383 | 0 | regist | 情報４フラグ |
+| 138A | 0 | regist | 情報５フラグ |
 | 13BF | 1 | TalkEvent | MS_19_INFO_01 |
 | 13FC | 2 | TalkEvent | MS_19_INFO_02 |
 | 144C | 3 | TalkEvent | MS_19_INFO_03 |
-| 15E3 | 10 | regist | ó P |
-| 15EB | 10 | regist | ó Q |
-| 15F3 | 10 | regist | ó R |
+| 15E3 | 10 | regist | 宝箱１ |
+| 15EB | 10 | regist | 宝箱２ |
+| 15F3 | 10 | regist | 宝箱３ |
 | 15FB | 10 | regist | F22082919 |
 | 1603 | 10 | regist | F24202925 |
 | 160B | 10 | regist | F30083623 |
-| 168B | 13 | regist | gKP |
-| 1693 | 13 | regist | gKQ |
-| 169B | 13 | regist | CxgP |
-| 16A3 | 13 | regist | CxgQ |
-| 16AB | 13 | regist | Vmí¬ACN |
-| 16B3 | 13 | regist | Vmí¬eBA}g |
-| 16BB | 13 | regist | Vmí¬~Xg |
-| 16C3 | 13 | regist | Vmí¬t@ |
-| 16CB | 13 | regist | Vmí¬IXJ[ |
-| 16D3 | 13 | regist | Vmí¬{[ |
-| 16DB | 13 | regist | Vmí¬Kg[ |
-| 16E3 | 13 | regist | Vmí¬LC |
-| 16EB | 13 | regist | Vmí¬ZlI |
-| 16F3 | 13 | regist | Vmí¬ |
-| 16FB | 13 | regist | Vmïbt@ |
-| 1703 | 13 | regist | VmïbLC |
-| 170B | 13 | regist | Vmïb~Xg |
-| 1713 | 13 | regist | Vmð/µ½ÌªACN |
-| 171B | 13 | regist | {Xí¬ïbb |
-| 1723 | 13 | regist | {Xí¬ïb¹ |
-| 172B | 13 | regist | {Xí¬ïbVI |
-| 1733 | 13 | regist | {Xí¬ïbACN |
-| 173B | 13 | regist | {Xí¬ïb |
-| 1743 | 13 | regist | VIÔ |
+| 168B | 13 | regist | 増援トリガ１ |
+| 1693 | 13 | regist | 増援トリガ２ |
+| 169B | 13 | regist | 増援イベント１ |
+| 16A3 | 13 | regist | 増援イベント２ |
+| 16AB | 13 | regist | シノン戦闘アイク |
+| 16B3 | 13 | regist | シノン戦闘ティアマト |
+| 16BB | 13 | regist | シノン戦闘ミスト |
+| 16C3 | 13 | regist | シノン戦闘ヨファ |
+| 16CB | 13 | regist | シノン戦闘オスカー |
+| 16D3 | 13 | regist | シノン戦闘ボーレ |
+| 16DB | 13 | regist | シノン戦闘ガトリー |
+| 16E3 | 13 | regist | シノン戦闘キルロイ |
+| 16EB | 13 | regist | シノン戦闘セネリオ |
+| 16F3 | 13 | regist | シノン戦闘 |
+| 16FB | 13 | regist | シノン会話ヨファ |
+| 1703 | 13 | regist | シノン会話キルロイ |
+| 170B | 13 | regist | シノン会話ミスト |
+| 1713 | 13 | regist | シノンを倒したのがアイク |
+| 171B | 13 | regist | ボス戦闘会話獣 |
+| 1723 | 13 | regist | ボス戦闘会話鳥 |
+| 172B | 13 | regist | ボス戦闘会話リュシオン |
+| 1733 | 13 | regist | ボス戦闘会話アイク |
+| 173B | 13 | regist | ボス戦闘会話 |
+| 1743 | 13 | regist | リュシオン仲間 |
 | 1786 | 14 | InstantDisposRank | bmap19_first |
 | 178E | 14 | InstantDisposRank | bmap19_boss |
 | 17A0 | 14 | InstantDisposRank | bmap19_chinon |
@@ -3879,16 +3879,16 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 151A | 0 | regist | îñPtO |
-| 1521 | 0 | regist | îñQtO |
-| 1528 | 0 | regist | îñRtO |
-| 152F | 0 | regist | îñStO |
-| 1536 | 0 | regist | îñTtO |
-| 153D | 0 | regist | îñUtO |
+| 151A | 0 | regist | 情報１フラグ |
+| 1521 | 0 | regist | 情報２フラグ |
+| 1528 | 0 | regist | 情報３フラグ |
+| 152F | 0 | regist | 情報４フラグ |
+| 1536 | 0 | regist | 情報５フラグ |
+| 153D | 0 | regist | 情報６フラグ |
 | 1593 | 1 | TalkEvent | MS_20_INFO_03 |
 | 15A0 | 1 | TalkEvent | MS_20_INFO_03_2 |
 | 1687 | 2 | TalkEvent | MS_20_INFO_04 |
@@ -3899,31 +3899,31 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 21D7 | 68 | regist | F06062516 |
 | 21DF | 68 | regist | F06062524 |
 | 21E7 | 68 | regist | F06062520 |
-| 2247 | 70 | regist | lTïb |
-| 224F | 70 | regist | lTïbVI |
-| 2257 | 70 | regist | lTí¬ |
-| 225F | 70 | regist | lTí¬it |
-| 2267 | 70 | regist | lTí¬EL |
-| 226F | 70 | regist | lTí¬ACN |
-| 2277 | 70 | regist | lTí¬e |
-| 227F | 70 | regist | lTí¬EfB |
-| 2287 | 70 | regist | lTí¬ |
-| 228F | 70 | regist | lTS |
-| 2297 | 70 | regist | gKP |
-| 229F | 70 | regist | gKQ |
-| 22A7 | 70 | regist | CxgP |
-| 22AF | 70 | regist | CxgQ |
-| 22B7 | 70 | regist | lTÞp |
-| 22BF | 70 | regist | {éÔR |
-| 22C7 | 70 | regist | {Xí¬ïbACN |
-| 22CF | 70 | regist | {Xí¬ïbb |
-| 22D7 | 70 | regist | {Xí¬ïb¹ |
-| 22DF | 70 | regist | {Xí¬ïbVI |
-| 22E7 | 70 | regist | {Xí¬ïbcCn[N |
-| 22EF | 70 | regist | {Xí¬ïb\[oP |
-| 22F7 | 70 | regist | {Xí¬ïb |
-| 22FF | 70 | regist | lTSIog |
-| 2307 | 70 | regist | JXºS |
+| 2247 | 70 | regist | ネサラ会話 |
+| 224F | 70 | regist | ネサラ会話リュシオン |
+| 2257 | 70 | regist | ネサラ戦闘 |
+| 225F | 70 | regist | ネサラ戦闘ヤナフ |
+| 2267 | 70 | regist | ネサラ戦闘ウルキ |
+| 226F | 70 | regist | ネサラ戦闘アイク |
+| 2277 | 70 | regist | ネサラ戦闘レテ |
+| 227F | 70 | regist | ネサラ戦闘モウディ |
+| 2287 | 70 | regist | ネサラ戦闘ムワリム |
+| 228F | 70 | regist | ネサラ死亡 |
+| 2297 | 70 | regist | 増援トリガ１ |
+| 229F | 70 | regist | 増援トリガ２ |
+| 22A7 | 70 | regist | 増援イベント１ |
+| 22AF | 70 | regist | 増援イベント２ |
+| 22B7 | 70 | regist | ネサラ退却 |
+| 22BF | 70 | regist | 怒る赤軍 |
+| 22C7 | 70 | regist | ボス戦闘会話アイク |
+| 22CF | 70 | regist | ボス戦闘会話獣 |
+| 22D7 | 70 | regist | ボス戦闘会話鳥 |
+| 22DF | 70 | regist | ボス戦闘会話リュシオン |
+| 22E7 | 70 | regist | ボス戦闘会話ツイハーク |
+| 22EF | 70 | regist | ボス戦闘会話ソーンバルケ |
+| 22F7 | 70 | regist | ボス戦闘会話 |
+| 22FF | 70 | regist | ネサラ死亡オンバト |
+| 2307 | 70 | regist | カラス兵死亡 |
 | 234A | 71 | InstantDisposRank | bmap20_first |
 | 2352 | 71 | InstantDisposRank | bmap20_first2 |
 | 238E | 71 | ForceGetCount | 1 |
@@ -4141,16 +4141,16 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 1052 | 0 | regist | îñPtO |
-| 1059 | 0 | regist | îñQtO |
-| 1060 | 0 | regist | îñRtO |
-| 1067 | 0 | regist | îñStO |
-| 106E | 0 | regist | îñTtO |
-| 1075 | 0 | regist | JÔ |
+| 1052 | 0 | regist | 情報１フラグ |
+| 1059 | 0 | regist | 情報２フラグ |
+| 1060 | 0 | regist | 情報３フラグ |
+| 1067 | 0 | regist | 情報４フラグ |
+| 106E | 0 | regist | 情報５フラグ |
+| 1075 | 0 | regist | カリル仲間 |
 | 10B7 | 1 | TalkEvent | MS_21_INFO_02 |
 | 10F1 | 1 | TalkEvent | MS_21_INFO_02_A |
 | 1109 | 1 | Join | always_kariru |
@@ -4158,36 +4158,36 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 115A | 2 | TalkEvent | MS_21_INFO_05 |
 | 11D2 | 4 | TalkEvent | MS_21_VIL_01 |
 | 1282 | 6 | TalkEvent | MS_21_VIL_02 |
-| 15BF | 14 | regist | KâP |
-| 15C7 | 14 | regist | KâQ |
+| 15BF | 14 | regist | 訪問１ |
+| 15C7 | 14 | regist | 訪問２ |
 | 15CF | 14 | regist | F17032621 |
 | 15D7 | 14 | regist | F19032613 |
 | 15DF | 14 | regist | F15032621 |
 | 15E7 | 14 | regist | F21062612 |
 | 15EF | 14 | regist | F14032621 |
 | 15F7 | 14 | regist | F12171321 |
-| 164B | 16 | regist | gKP |
-| 1653 | 16 | regist | gKQ |
-| 165B | 16 | regist | gKR |
-| 1663 | 16 | regist | CxgP |
-| 166B | 16 | regist | CxgQ |
-| 1673 | 16 | regist | CxgR |
-| 167B | 16 | regist | boÏXgKP |
-| 1683 | 16 | regist | boÏXCxgP |
-| 168B | 16 | regist | lrQPw`wa |
-| 1693 | 16 | regist | ïbW/Vn |
-| 169B | 16 | regist | ïbW/VnI¹ |
-| 16A3 | 16 | regist | Wí¬ïb³RmP |
-| 16AB | 16 | regist | Wí¬ïb³RmQ |
-| 16B3 | 16 | regist | Wí¬ïb³RmR |
-| 16BB | 16 | regist | {Xí¬ïb |
-| 16C3 | 16 | regist | {Xí¬ïbACN |
-| 16CB | 16 | regist | {Xí¬ïbå |
-| 16D3 | 16 | regist | {Xí¬ïbEL/it |
-| 16DB | 16 | regist | {Xí¬ïbVI |
-| 16E3 | 16 | regist | {Xí¬ïbW |
-| 16EB | 16 | regist | {Xí¬ïb^jX |
-| 16F3 | 16 | regist | VnS |
+| 164B | 16 | regist | 増援トリガ１ |
+| 1653 | 16 | regist | 増援トリガ２ |
+| 165B | 16 | regist | 増援トリガ３ |
+| 1663 | 16 | regist | 増援イベント１ |
+| 166B | 16 | regist | 増援イベント２ |
+| 1673 | 16 | regist | 増援イベント３ |
+| 167B | 16 | regist | ＣＰ変更トリガ１ |
+| 1683 | 16 | regist | ＣＰ変更イベント１ |
+| 168B | 16 | regist | ＭＳ２１ＸＡＸＢ |
+| 1693 | 16 | regist | 会話ジル−シハラム |
+| 169B | 16 | regist | 会話ジル−シハラム終了 |
+| 16A3 | 16 | regist | ジル戦闘会話竜騎士１ |
+| 16AB | 16 | regist | ジル戦闘会話竜騎士２ |
+| 16B3 | 16 | regist | ジル戦闘会話竜騎士３ |
+| 16BB | 16 | regist | ボス戦闘会話 |
+| 16C3 | 16 | regist | ボス戦闘会話アイク |
+| 16CB | 16 | regist | ボス戦闘会話牙 |
+| 16D3 | 16 | regist | ボス戦闘会話ウルキ−ヤナフ |
+| 16DB | 16 | regist | ボス戦闘会話リュシオン |
+| 16E3 | 16 | regist | ボス戦闘会話ジル |
+| 16EB | 16 | regist | ボス戦闘会話タニス |
+| 16F3 | 16 | regist | シハラム死亡 |
 | 1736 | 17 | InstantDisposRank | bmap21_first |
 | 1746 | 17 | ForceGetCount | 1 |
 | 174F | 17 | ForceGetFirst | 1 |
@@ -4349,25 +4349,25 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 11F6 | 0 | regist | îñPtO |
-| 11FD | 0 | regist | îñQtO |
-| 1204 | 0 | regist | îñRtO |
-| 120B | 0 | regist | îñStO |
+| 11F6 | 0 | regist | 情報１フラグ |
+| 11FD | 0 | regist | 情報２フラグ |
+| 1204 | 0 | regist | 情報３フラグ |
+| 120B | 0 | regist | 情報４フラグ |
 | 125E | 1 | TalkEvent | MS_22_INFO_02 |
 | 12B9 | 2 | TalkEvent | MS_22_INFO_04 |
 | 18D6 | 22 | UnitEscape | ?, 0 |
-| 190B | 23 | regist | ó P |
-| 1913 | 23 | regist | ó Q |
-| 191B | 23 | regist | ó R |
-| 1923 | 23 | regist | ó S |
-| 192B | 23 | regist | ó T |
-| 1933 | 23 | regist | ó U |
-| 193B | 23 | regist | ó V |
-| 1943 | 23 | regist | ó W |
+| 190B | 23 | regist | 宝箱１ |
+| 1913 | 23 | regist | 宝箱２ |
+| 191B | 23 | regist | 宝箱３ |
+| 1923 | 23 | regist | 宝箱４ |
+| 192B | 23 | regist | 宝箱５ |
+| 1933 | 23 | regist | 宝箱６ |
+| 193B | 23 | regist | 宝箱７ |
+| 1943 | 23 | regist | 宝箱８ |
 | 194B | 23 | regist | F2917 |
 | 1953 | 23 | regist | F2406 |
 | 195B | 23 | regist | F1406 |
@@ -4377,25 +4377,25 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 197B | 23 | regist | F02021029 |
 | 1983 | 23 | regist | F02021329 |
 | 198B | 23 | regist | F02211829 |
-| 1993 | 23 | regist | CiÆACNÌCxggK |
-| 1A1F | 25 | regist | gKP |
-| 1A27 | 25 | regist | gKQ |
-| 1A2F | 25 | regist | gKR |
-| 1A37 | 25 | regist | CxgP |
-| 1A3F | 25 | regist | CxgQ |
-| 1A47 | 25 | regist | CxgR |
-| 1A4F | 25 | regist | CiÆACNÌCxg |
-| 1A57 | 25 | regist | ^EjIÔ |
-| 1A5F | 25 | regist | ^EjIí¬q |
-| 1A67 | 25 | regist | ^EjIí¬ïb |
-| 1A6F | 25 | regist | J^TCí¬ïb |
-| 1A77 | 25 | regist | J^TCí¬ïb^EjI |
-| 1A7F | 25 | regist | {Xí¬ïbACN |
-| 1A87 | 25 | regist | {Xí¬ïbå |
-| 1A8F | 25 | regist | {Xí¬ïbé |
-| 1A97 | 25 | regist | {Xí¬ïbVI |
-| 1A9F | 25 | regist | {Xí¬ïb~Xg |
-| 1AA7 | 25 | regist | {Xí¬ïb |
+| 1993 | 23 | regist | イナとアイクのイベントトリガ |
+| 1A1F | 25 | regist | 増援トリガ１ |
+| 1A27 | 25 | regist | 増援トリガ２ |
+| 1A2F | 25 | regist | 増援トリガ３ |
+| 1A37 | 25 | regist | 増援イベント１ |
+| 1A3F | 25 | regist | 増援イベント２ |
+| 1A47 | 25 | regist | 増援イベント３ |
+| 1A4F | 25 | regist | イナとアイクのイベント |
+| 1A57 | 25 | regist | タウロニオ仲間 |
+| 1A5F | 25 | regist | タウロニオ戦闘子供 |
+| 1A67 | 25 | regist | タウロニオ戦闘会話 |
+| 1A6F | 25 | regist | カタサイ戦闘会話 |
+| 1A77 | 25 | regist | カタサイ戦闘会話タウロニオ |
+| 1A7F | 25 | regist | ボス戦闘会話アイク |
+| 1A87 | 25 | regist | ボス戦闘会話牙 |
+| 1A8F | 25 | regist | ボス戦闘会話鷹 |
+| 1A97 | 25 | regist | ボス戦闘会話リュシオン |
+| 1A9F | 25 | regist | ボス戦闘会話ミスト |
+| 1AA7 | 25 | regist | ボス戦闘会話 |
 | 1AEA | 26 | InstantDisposRank | bmap22_first |
 | 1AF2 | 26 | InstantDispos | bmap22_tauroneo_c |
 | 1B33 | 27 | SallySetByGroup | bmap22_mikata_c |
@@ -4606,15 +4606,15 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| FC6 | 0 | regist | îñPtO |
-| FCD | 0 | regist | îñQtO |
-| FD4 | 0 | regist | îñRtO |
-| FDB | 0 | regist | îñStO |
-| FE2 | 0 | regist | îñTtO |
+| FC6 | 0 | regist | 情報１フラグ |
+| FCD | 0 | regist | 情報２フラグ |
+| FD4 | 0 | regist | 情報３フラグ |
+| FDB | 0 | regist | 情報４フラグ |
+| FE2 | 0 | regist | 情報５フラグ |
 | 1017 | 1 | TalkEvent | MS_23_INFO_02 |
 | 105D | 2 | TalkEvent | MS_23_INFO_05 |
 | 123E | 9 | UnitEscape | ?, 0 |
@@ -4632,20 +4632,20 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 1547 | 18 | regist | F08031409 |
 | 154F | 18 | regist | F14081915 |
 | 1557 | 18 | regist | F03080815 |
-| 15AB | 20 | regist | gKR |
-| 15B3 | 20 | regist | gKS |
-| 15BB | 20 | regist | gKT |
-| 15C3 | 20 | regist | CxgR |
-| 15CB | 20 | regist | CxgS |
-| 15D3 | 20 | regist | CxgT |
-| 15DB | 20 | regist | _¯S |
-| 15E3 | 20 | regist | gi~S |
-| 15EB | 20 | regist | {Xí¬ïb |
-| 15F3 | 20 | regist | {Xí¬ïbACN |
-| 15FB | 20 | regist | {Xí¬ïbb |
-| 1603 | 20 | regist | {Xí¬ïb¹ |
-| 160B | 20 | regist | {Xí¬ïb^EjI |
-| 1613 | 20 | regist | {Xí¬ïbVI |
+| 15AB | 20 | regist | 増援トリガ３ |
+| 15B3 | 20 | regist | 増援トリガ４ |
+| 15BB | 20 | regist | 増援トリガ５ |
+| 15C3 | 20 | regist | 増援イベント３ |
+| 15CB | 20 | regist | 増援イベント４ |
+| 15D3 | 20 | regist | 増援イベント５ |
+| 15DB | 20 | regist | 神官死亡 |
+| 15E3 | 20 | regist | トメナミ死亡 |
+| 15EB | 20 | regist | ボス戦闘会話 |
+| 15F3 | 20 | regist | ボス戦闘会話アイク |
+| 15FB | 20 | regist | ボス戦闘会話獣 |
+| 1603 | 20 | regist | ボス戦闘会話鳥 |
+| 160B | 20 | regist | ボス戦闘会話タウロニオ |
+| 1613 | 20 | regist | ボス戦闘会話リュシオン |
 | 1656 | 21 | InstantDisposRank | bmap23_f_boss |
 | 165E | 21 | InstantDisposRank | bmap23_first |
 | 1666 | 21 | InstantDisposRank | bmap23_first2 |
@@ -4808,15 +4808,15 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 104E | 0 | regist | îñPtO |
-| 1055 | 0 | regist | îñQtO |
-| 105C | 0 | regist | îñRtO |
-| 1063 | 0 | regist | îñStO |
-| 106A | 0 | regist | îñTtO |
+| 104E | 0 | regist | 情報１フラグ |
+| 1055 | 0 | regist | 情報２フラグ |
+| 105C | 0 | regist | 情報３フラグ |
+| 1063 | 0 | regist | 情報４フラグ |
+| 106A | 0 | regist | 情報５フラグ |
 | 109F | 1 | TalkEvent | MS_24_INFO_02 |
 | 10AB | 1 | TalkEvent | MS_24_INFO_02_2 |
 | 1106 | 2 | TalkEvent | MS_24_INFO_04 |
@@ -4825,34 +4825,34 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 14F7 | 26 | regist | F07072714 |
 | 14FF | 26 | regist | F07073014 |
 | 1507 | 26 | regist | F07073414 |
-| 158F | 28 | regist | gKP |
-| 1597 | 28 | regist | gKQ |
-| 159F | 28 | regist | gKR |
-| 15A7 | 28 | regist | CxgP |
-| 15AF | 28 | regist | CxgQ |
-| 15B7 | 28 | regist | CxgR |
-| 15BF | 28 | regist | N~AgK |
-| 15C7 | 28 | regist | N~ACxgP |
-| 15CF | 28 | regist | N~ACxgQ |
-| 15D7 | 28 | regist | n[ÞêCxg |
-| 15DF | 28 | regist | n[ÄoêgK |
-| 15E7 | 28 | regist | n[ÄoêCxg |
-| 15EF | 28 | regist | hSiCgPS |
-| 15F7 | 28 | regist | hSiCgQS |
-| 15FF | 28 | regist | hSiCgRS |
-| 1607 | 28 | regist | n[ïb |
-| 160F | 28 | regist | n[í¬ |
-| 1617 | 28 | regist | n[í¬W |
-| 161F | 28 | regist | n[S |
-| 1627 | 28 | regist | {Xí¬ïb |
-| 162F | 28 | regist | {Xí¬ïbACN |
-| 1637 | 28 | regist | {Xí¬ïbZlI |
-| 163F | 28 | regist | {Xí¬ïbb |
-| 1647 | 28 | regist | {Xí¬ïb¹ |
-| 164F | 28 | regist | {Xí¬ïbW/^EjI |
-| 1657 | 28 | regist | {Xí¬ïbVI |
-| 165F | 28 | regist | {Xí¬ïbn[ |
-| 166D | 28 | regist | N~ACPÏXCxg |
+| 158F | 28 | regist | 増援トリガ１ |
+| 1597 | 28 | regist | 増援トリガ２ |
+| 159F | 28 | regist | 増援トリガ３ |
+| 15A7 | 28 | regist | 増援イベント１ |
+| 15AF | 28 | regist | 増援イベント２ |
+| 15B7 | 28 | regist | 増援イベント３ |
+| 15BF | 28 | regist | クリミア増援トリガ |
+| 15C7 | 28 | regist | クリミア増援イベント１ |
+| 15CF | 28 | regist | クリミア増援イベント２ |
+| 15D7 | 28 | regist | ハール退場イベント |
+| 15DF | 28 | regist | ハール再登場トリガ |
+| 15E7 | 28 | regist | ハール再登場イベント |
+| 15EF | 28 | regist | ドラゴンナイト１死亡 |
+| 15F7 | 28 | regist | ドラゴンナイト２死亡 |
+| 15FF | 28 | regist | ドラゴンナイト３死亡 |
+| 1607 | 28 | regist | ハール会話 |
+| 160F | 28 | regist | ハール戦闘 |
+| 1617 | 28 | regist | ハール戦闘ジル |
+| 161F | 28 | regist | ハール死亡 |
+| 1627 | 28 | regist | ボス戦闘会話 |
+| 162F | 28 | regist | ボス戦闘会話アイク |
+| 1637 | 28 | regist | ボス戦闘会話セネリオ |
+| 163F | 28 | regist | ボス戦闘会話獣 |
+| 1647 | 28 | regist | ボス戦闘会話鳥 |
+| 164F | 28 | regist | ボス戦闘会話ジル−タウロニオ |
+| 1657 | 28 | regist | ボス戦闘会話リュシオン |
+| 165F | 28 | regist | ボス戦闘会話ハール |
+| 166D | 28 | regist | クリミアCP変更イベント |
 | 16AA | 29 | InstantDisposRank | bmap24_first |
 | 16B2 | 29 | InstantDispos | bmap24_first_c |
 | 16FF | 30 | SallySetByGroup | bmap24_mikata_c |
@@ -5025,16 +5025,16 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 11D6 | 0 | regist | îñPtO |
-| 11DD | 0 | regist | îñQtO |
-| 11E4 | 0 | regist | îñRtO |
-| 11EB | 0 | regist | îñStO |
-| 11F2 | 0 | regist | îñTtO |
-| 11F9 | 0 | regist | îñUtO |
+| 11D6 | 0 | regist | 情報１フラグ |
+| 11DD | 0 | regist | 情報２フラグ |
+| 11E4 | 0 | regist | 情報３フラグ |
+| 11EB | 0 | regist | 情報４フラグ |
+| 11F2 | 0 | regist | 情報５フラグ |
+| 11F9 | 0 | regist | 情報６フラグ |
 | 1243 | 1 | TalkEvent | MS_25_INFO_05 |
 | 1286 | 2 | TalkEvent | MS_25_VIL_02 |
 | 1336 | 4 | TalkEvent | MS_25_VIL_01 |
@@ -5047,28 +5047,28 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 1B13 | 17 | regist | F10102520 |
 | 1B1B | 17 | regist | F10212033 |
 | 1B23 | 17 | regist | F21282333 |
-| 1B83 | 19 | regist | gKP |
-| 1B8B | 19 | regist | gKQ |
-| 1B93 | 19 | regist | CxgP |
-| 1B9B | 19 | regist | CxgQ |
-| 1BA3 | 19 | regist | ACNWt |
-| 1BAB | 19 | regist | ½ÌRmí¬ACNI}bv |
-| 1BB3 | 19 | regist | ½ÌRmí¬ACN |
-| 1BBB | 19 | regist | ½ÌRmÞêCxg |
-| 1BC3 | 19 | regist | ½ÌÆÌí¬ãïb |
-| 1BCB | 19 | regist | {Xí¬ïb |
-| 1BD3 | 19 | regist | {Xí¬ïbACN |
-| 1BDB | 19 | regist | {Xí¬ïbb |
-| 1BE3 | 19 | regist | {Xí¬ïb¹ |
-| 1BEB | 19 | regist | {Xí¬ïb^EjI |
-| 1BF3 | 19 | regist | {Xí¬ïbVI |
-| 1C01 | 19 | regist | ïbV[YËACN |
-| 1C09 | 19 | regist | ïbLmËACN |
-| 1C11 | 19 | regist | ïbACNËWt |
-| 1C19 | 19 | regist | ïbWtÌV[Y |
-| 1C21 | 19 | regist | ïbWtÌLm |
-| 1C29 | 19 | regist | ïbWtÌPr |
-| 1C31 | 19 | regist | ½ÌRmí¬ |
+| 1B83 | 19 | regist | 増援トリガ１ |
+| 1B8B | 19 | regist | 増援トリガ２ |
+| 1B93 | 19 | regist | 増援イベント１ |
+| 1B9B | 19 | regist | 増援イベント２ |
+| 1BA3 | 19 | regist | アイクジョフレ |
+| 1BAB | 19 | regist | 漆黒の騎士戦闘アイクオンマップ |
+| 1BB3 | 19 | regist | 漆黒の騎士戦闘アイク |
+| 1BBB | 19 | regist | 漆黒の騎士退場イベント |
+| 1BC3 | 19 | regist | 漆黒のとの戦闘後会話 |
+| 1BCB | 19 | regist | ボス戦闘会話 |
+| 1BD3 | 19 | regist | ボス戦闘会話アイク |
+| 1BDB | 19 | regist | ボス戦闘会話獣 |
+| 1BE3 | 19 | regist | ボス戦闘会話鳥 |
+| 1BEB | 19 | regist | ボス戦闘会話タウロニオ |
+| 1BF3 | 19 | regist | ボス戦闘会話リュシオン |
+| 1C01 | 19 | regist | 会話ユリシーズ⇒アイク |
+| 1C09 | 19 | regist | 会話ルキノ⇒アイク |
+| 1C11 | 19 | regist | 会話アイク⇒ジョフレ |
+| 1C19 | 19 | regist | 会話ジョフレ⇔ユリシーズ |
+| 1C21 | 19 | regist | 会話ジョフレ⇔ルキノ |
+| 1C29 | 19 | regist | 会話ジョフレ⇔ケビン |
+| 1C31 | 19 | regist | 漆黒の騎士戦闘 |
 | 1C6E | 20 | InstantDispos | bmap25_m03_c |
 | 1C7D | 20 | InstantDisposRank | bmap25_first |
 | 1C86 | 20 | ForceGetCount | 1 |
@@ -5245,16 +5245,16 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 12A2 | 0 | regist | îñPtO |
-| 12A9 | 0 | regist | îñQtO |
-| 12B0 | 0 | regist | îñRtO |
-| 12B7 | 0 | regist | îñStO |
-| 12BE | 0 | regist | îñTtO |
-| 12C5 | 0 | regist | SÔ |
+| 12A2 | 0 | regist | 情報１フラグ |
+| 12A9 | 0 | regist | 情報２フラグ |
+| 12B0 | 0 | regist | 情報３フラグ |
+| 12B7 | 0 | regist | 情報４フラグ |
+| 12BE | 0 | regist | 情報５フラグ |
+| 12C5 | 0 | regist | ラルゴ仲間 |
 | 12FB | 1 | TalkEvent | MS_26_INFO_01 |
 | 1342 | 2 | TalkEvent | MS_26_INFO_02 |
 | 1396 | 3 | TalkEvent | MS_26_INFO_05_A |
@@ -5275,41 +5275,41 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 198F | 31 | regist | F03032412 |
 | 1997 | 31 | regist | F04150419 |
 | 199F | 31 | regist | F05140615 |
-| 1A7F | 33 | regist | gKP |
-| 1A87 | 33 | regist | gKQ |
-| 1A8F | 33 | regist | CxgP |
-| 1A97 | 33 | regist | CxgQ |
-| 1A9F | 33 | regist | âgKP |
-| 1AA7 | 33 | regist | âgKQ |
-| 1AAF | 33 | regist | âgKR |
-| 1AB7 | 33 | regist | âgKS |
-| 1ABF | 33 | regist | âgKT |
-| 1AC7 | 33 | regist | âgKU |
-| 1ACF | 33 | regist | âgKV |
-| 1AD7 | 33 | regist | âgKW |
-| 1ADF | 33 | regist | âgKX |
-| 1AE7 | 33 | regist | âgKPO |
-| 1AEF | 33 | regist | âgKPP |
-| 1AF7 | 33 | regist | âboÏXP |
-| 1AFF | 33 | regist | âboÏXQ |
-| 1B07 | 33 | regist | âboÏXR |
-| 1B0F | 33 | regist | âboÏXS |
-| 1B17 | 33 | regist | âboÏXT |
-| 1B1F | 33 | regist | âboÏXU |
-| 1B27 | 33 | regist | âboÏXV |
-| 1B2F | 33 | regist | âboÏXW |
-| 1B37 | 33 | regist | âboÏXX |
-| 1B3F | 33 | regist | âboÏXPO |
-| 1B47 | 33 | regist | âboÏXPP |
-| 1B4F | 33 | regist | {Xí¬ïb |
-| 1B57 | 33 | regist | {Xí¬ïbACN |
-| 1B5F | 33 | regist | {Xí¬ïbb |
-| 1B67 | 33 | regist | {Xí¬ïb¹ |
-| 1B6F | 33 | regist | {Xí¬ïb^EjI |
-| 1B77 | 33 | regist | {Xí¬ïbVI |
-| 1B7F | 33 | regist | {Xí¬ïbn[ |
-| 1B87 | 33 | regist | {Xí¬ïbW |
-| 1B8F | 33 | regist | {Xí¬ïb^jX |
+| 1A7F | 33 | regist | 増援トリガ１ |
+| 1A87 | 33 | regist | 増援トリガ２ |
+| 1A8F | 33 | regist | 増援イベント１ |
+| 1A97 | 33 | regist | 増援イベント２ |
+| 1A9F | 33 | regist | 岩トリガ１ |
+| 1AA7 | 33 | regist | 岩トリガ２ |
+| 1AAF | 33 | regist | 岩トリガ３ |
+| 1AB7 | 33 | regist | 岩トリガ４ |
+| 1ABF | 33 | regist | 岩トリガ５ |
+| 1AC7 | 33 | regist | 岩トリガ６ |
+| 1ACF | 33 | regist | 岩トリガ７ |
+| 1AD7 | 33 | regist | 岩トリガ８ |
+| 1ADF | 33 | regist | 岩トリガ９ |
+| 1AE7 | 33 | regist | 岩トリガ１０ |
+| 1AEF | 33 | regist | 岩トリガ１１ |
+| 1AF7 | 33 | regist | 岩ＣＰ変更１ |
+| 1AFF | 33 | regist | 岩ＣＰ変更２ |
+| 1B07 | 33 | regist | 岩ＣＰ変更３ |
+| 1B0F | 33 | regist | 岩ＣＰ変更４ |
+| 1B17 | 33 | regist | 岩ＣＰ変更５ |
+| 1B1F | 33 | regist | 岩ＣＰ変更６ |
+| 1B27 | 33 | regist | 岩ＣＰ変更７ |
+| 1B2F | 33 | regist | 岩ＣＰ変更８ |
+| 1B37 | 33 | regist | 岩ＣＰ変更９ |
+| 1B3F | 33 | regist | 岩ＣＰ変更１０ |
+| 1B47 | 33 | regist | 岩ＣＰ変更１１ |
+| 1B4F | 33 | regist | ボス戦闘会話 |
+| 1B57 | 33 | regist | ボス戦闘会話アイク |
+| 1B5F | 33 | regist | ボス戦闘会話獣 |
+| 1B67 | 33 | regist | ボス戦闘会話鳥 |
+| 1B6F | 33 | regist | ボス戦闘会話タウロニオ |
+| 1B77 | 33 | regist | ボス戦闘会話リュシオン |
+| 1B7F | 33 | regist | ボス戦闘会話ハール |
+| 1B87 | 33 | regist | ボス戦闘会話ジル |
+| 1B8F | 33 | regist | ボス戦闘会話タニス |
 | 1BD2 | 34 | InstantDisposRank | bmap26_first |
 | 1C13 | 35 | SallySetByGroup | bmap26_mikata_c |
 | 1CD8 | 36 | TalkEvent | MS_26_GMAP_01 |
@@ -5480,25 +5480,25 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| C66 | 0 | regist | îñPtO |
-| C6D | 0 | regist | îñQtO |
-| C74 | 0 | regist | îñRtO |
-| C7B | 0 | regist | îñStO |
-| C82 | 0 | regist | îñTtO |
+| C66 | 0 | regist | 情報１フラグ |
+| C6D | 0 | regist | 情報２フラグ |
+| C74 | 0 | regist | 情報３フラグ |
+| C7B | 0 | regist | 情報４フラグ |
+| C82 | 0 | regist | 情報５フラグ |
 | CB7 | 1 | TalkEvent | MS_27_INFO_01 |
 | CFE | 2 | TalkEvent | MS_27_INFO_02 |
 | D8D | 5 | ForceGetCount | 5 |
-| DA2 | 5 | regist | {Xí¬ïb |
-| DAA | 5 | regist | {Xí¬ïbGVA |
-| DB2 | 5 | regist | {Xí¬ïbACN |
-| DBA | 5 | regist | {Xí¬ïbb |
-| DC2 | 5 | regist | {Xí¬ïb¹ |
-| DCA | 5 | regist | {Xí¬ïbW/^E/nA |
-| DD2 | 5 | regist | {Xí¬ïbVI |
+| DA2 | 5 | regist | ボス戦闘会話 |
+| DAA | 5 | regist | ボス戦闘会話エリンシア |
+| DB2 | 5 | regist | ボス戦闘会話アイク |
+| DBA | 5 | regist | ボス戦闘会話獣 |
+| DC2 | 5 | regist | ボス戦闘会話鳥 |
+| DCA | 5 | regist | ボス戦闘会話ジル−タウロ−ハア |
+| DD2 | 5 | regist | ボス戦闘会話リュシオン |
 | E12 | 6 | InstantDisposRank | bmap27_first |
 | E22 | 6 | ForceGetCount | 1 |
 | E2B | 6 | ForceGetFirst | 1 |
@@ -5643,25 +5643,25 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| D5E | 0 | regist | îñPtO |
-| D65 | 0 | regist | îñQtO |
-| D6C | 0 | regist | îñRtO |
-| D73 | 0 | regist | îñStO |
-| D7A | 0 | regist | îñTtO |
+| D5E | 0 | regist | 情報１フラグ |
+| D65 | 0 | regist | 情報２フラグ |
+| D6C | 0 | regist | 情報３フラグ |
+| D73 | 0 | regist | 情報４フラグ |
+| D7A | 0 | regist | 情報５フラグ |
 | DC7 | 1 | TalkEvent | MS_28_INFO_04 |
 | 1132 | 15 | UnitEscape | ?, 0 |
 | 118A | 16 | UnitEscape | ?, 0 |
-| 1237 | 18 | regist | ó P |
-| 123F | 18 | regist | ó Q |
-| 1247 | 18 | regist | ó R |
-| 124F | 18 | regist | ó S |
-| 1257 | 18 | regist | ó T |
-| 125F | 18 | regist | ó U |
-| 1267 | 18 | regist | ó V |
+| 1237 | 18 | regist | 宝箱１ |
+| 123F | 18 | regist | 宝箱２ |
+| 1247 | 18 | regist | 宝箱３ |
+| 124F | 18 | regist | 宝箱４ |
+| 1257 | 18 | regist | 宝箱５ |
+| 125F | 18 | regist | 宝箱６ |
+| 1267 | 18 | regist | 宝箱７ |
 | 126F | 18 | regist | F2118 |
 | 1277 | 18 | regist | F1118 |
 | 127F | 18 | regist | F0514 |
@@ -5669,13 +5669,13 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 128F | 18 | regist | F1611 |
 | 1297 | 18 | regist | F09042310 |
 | 1318 | 20 | BMGetTurn |  |
-| 1343 | 21 | regist | NAðP |
-| 134B | 21 | regist | {Xí¬ïb |
-| 1353 | 21 | regist | {Xí¬ïbACN |
-| 135B | 21 | regist | {Xí¬ïbb |
-| 1363 | 21 | regist | {Xí¬ïb¹ |
-| 136B | 21 | regist | {Xí¬ïb^EjI |
-| 1373 | 21 | regist | {Xí¬ïbVI |
+| 1343 | 21 | regist | クリア条件１ |
+| 134B | 21 | regist | ボス戦闘会話 |
+| 1353 | 21 | regist | ボス戦闘会話アイク |
+| 135B | 21 | regist | ボス戦闘会話獣 |
+| 1363 | 21 | regist | ボス戦闘会話鳥 |
+| 136B | 21 | regist | ボス戦闘会話タウロニオ |
+| 1373 | 21 | regist | ボス戦闘会話リュシオン |
 | 13B6 | 22 | InstantDisposRank | bmap28_first |
 | 13BE | 22 | InstantDisposRank | bmap28_first2 |
 | 13CE | 22 | ForceGetCount | 1 |
@@ -5815,16 +5815,16 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
 | CF1 | 0 | TalkEvent | MESC_MIST_29 |
 | D13 | 0 | UnitEscape | ?, 0 |
-| DD2 | 5 | regist | £Eµ½ |
-| DDA | 5 | regist | T^[oß |
-| DE2 | 5 | regist | {Xí¬ïbACN |
-| DEA | 5 | regist | {Xí¬ïb~Xg |
+| DD2 | 5 | regist | 離脱した |
+| DDA | 5 | regist | ５ターン経過 |
+| DE2 | 5 | regist | ボス戦闘会話アイク |
+| DEA | 5 | regist | ボス戦闘会話ミスト |
 | E1F | 6 | MapLoad | bmap29 |
 | E57 | 6 | SallySetByGroup | bmap29_mikata_c |
 | E5F | 6 | InstantDisposFirst | bmap29_mikata_c |
@@ -5949,32 +5949,32 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| F5E | 0 | regist | îñPtO |
-| F65 | 0 | regist | îñQtO |
-| F6C | 0 | regist | îñRtO |
-| F73 | 0 | regist | îñStO |
-| F7A | 0 | regist | îñTtO |
+| F5E | 0 | regist | 情報１フラグ |
+| F65 | 0 | regist | 情報２フラグ |
+| F6C | 0 | regist | 情報３フラグ |
+| F73 | 0 | regist | 情報４フラグ |
+| F7A | 0 | regist | 情報５フラグ |
 | FE3 | 1 | TalkEvent | MS_30_INFO_05 |
 | FF0 | 1 | TalkEvent | MS_30_INFO_05_2 |
-| 11EF | 11 | regist | gKP |
-| 125B | 13 | regist | CxgP |
-| 1263 | 13 | regist | lTA[lSCxg |
-| 126B | 13 | regist | lTA[lSgK |
-| 1273 | 13 | regist | eBo[S |
-| 127B | 13 | regist | lTS |
-| 1283 | 13 | regist | A[lS |
-| 128B | 13 | regist | lTïb |
-| 1293 | 13 | regist | {Xí¬ïb |
-| 129B | 13 | regist | {Xí¬ïbACN |
-| 12A3 | 13 | regist | {Xí¬ïbb |
-| 12AB | 13 | regist | {Xí¬ïb¹ |
-| 12B3 | 13 | regist | {Xí¬ïb^EjI |
-| 12BB | 13 | regist | {Xí¬ïbVI |
-| 12C3 | 13 | regist | {Xí¬ïbCi |
+| 11EF | 11 | regist | 増援トリガ１ |
+| 125B | 13 | regist | 増援イベント１ |
+| 1263 | 13 | regist | ネサラリアーネ死亡イベント |
+| 126B | 13 | regist | ネサラリアーネ死亡トリガ |
+| 1273 | 13 | regist | ティバーン死亡 |
+| 127B | 13 | regist | ネサラ死亡 |
+| 1283 | 13 | regist | リアーネ死亡 |
+| 128B | 13 | regist | ネサラ会話 |
+| 1293 | 13 | regist | ボス戦闘会話 |
+| 129B | 13 | regist | ボス戦闘会話アイク |
+| 12A3 | 13 | regist | ボス戦闘会話獣 |
+| 12AB | 13 | regist | ボス戦闘会話鳥 |
+| 12B3 | 13 | regist | ボス戦闘会話タウロニオ |
+| 12BB | 13 | regist | ボス戦闘会話リュシオン |
+| 12C3 | 13 | regist | ボス戦闘会話イナ |
 | 1306 | 14 | InstantDisposRank | bmap30_first |
 | 130E | 14 | InstantDisposRank | bmap30_first_boss |
 | 1324 | 14 | InstantDispos | bmap30_m03_c |
@@ -6185,16 +6185,16 @@ Disposition candidates by variant/group (reinforcement and event groups are sepa
 
 Research checklist: all 15 requested behavioral areas remain open until their conditions are traced. The JSON contains each area explicitly; this listing is an evidence index, not a completed semantic audit.
 
-Event candidates in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
+Instruction-aligned calls in file order; function boundaries prevent treating the whole script as one sequence. `?` means computed/unknown. Conditional execution and trigger metadata are unresolved.
 
 | Offset | Function | Command | Literal suffix arguments |
 |---|---|---|---|
-| 1FB6 | 0 | regist | îñPtO |
-| 1FBD | 0 | regist | îñQtO |
-| 1FC4 | 0 | regist | îñRtO |
-| 1FCB | 0 | regist | îñStO |
-| 1FD2 | 0 | regist | îñTtO |
-| 1FD9 | 0 | regist | îñUtO |
+| 1FB6 | 0 | regist | 情報１フラグ |
+| 1FBD | 0 | regist | 情報２フラグ |
+| 1FC4 | 0 | regist | 情報３フラグ |
+| 1FCB | 0 | regist | 情報４フラグ |
+| 1FD2 | 0 | regist | 情報５フラグ |
+| 1FD9 | 0 | regist | 情報６フラグ |
 | 2019 | 1 | TalkEvent | MS_31_INFO_03 |
 | 2076 | 2 | TalkEvent | MS_31_INFO_04 |
 | 2083 | 2 | TalkEvent | MS_31_INFO_04_2 |
@@ -6204,37 +6204,37 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 242F | 7 | regist | F15154730 |
 | 2437 | 7 | regist | F26313632 |
 | 243F | 7 | regist | F15154719 |
-| 2493 | 9 | regist | ACNãµ½ |
-| 249B | 9 | regist | eBo[S |
-| 24A3 | 9 | regist | uCXí¬ |
-| 24AB | 9 | regist | uCXí¬ACN |
-| 24B3 | 9 | regist | uCXí¬^EjI |
-| 24BB | 9 | regist | uCXí¬Ci |
-| 24C3 | 9 | regist | AVPí¬ïb |
-| 24CB | 9 | regist | AVPí¬ïbACN |
-| 24D3 | 9 | regist | AVPí¬ïbCi |
-| 24DB | 9 | regist | AVPí¬ïbi[V |
-| 24E3 | 9 | regist | AVPí¬ïbGVA |
-| 24EB | 9 | regist | AVPí¬ïb~Xg |
-| 24F3 | 9 | regist | AVPí¬ïbVI |
-| 24FB | 9 | regist | AVPí¬ïbå |
-| 2503 | 9 | regist | AVPí¬ïbEL/it |
-| 250B | 9 | regist | AVPí¬ïb^EjI |
-| 2513 | 9 | regist | AVPí¬ïbW |
-| 251B | 9 | regist | AVPí¬ïbn[ |
-| 2523 | 9 | regist | AVPí¬ïbeBo[ |
-| 252B | 9 | regist | AVPí¬ïblT |
-| 2533 | 9 | regist | AVPí¬ïbWtJ |
-| 253B | 9 | regist | AVQí¬ïbeBo[ |
-| 2543 | 9 | regist | AVQí¬ïblT |
-| 254B | 9 | regist | AVQí¬ïbWtJ |
-| 2553 | 9 | regist | AVi[hPñí¬ã |
-| 255B | 9 | regist | AVi[hP/µ½ |
-| 2563 | 9 | regist | AVi[hPIogÅ/µ½ |
-| 256B | 9 | regist | AVi[hÏgCxg |
-| 2573 | 9 | regist | Äñ¾jbgzuCxg |
-| 257B | 9 | regist | AVi[hQí¬ |
-| 2583 | 9 | regist | AVi[hQí¬ã |
+| 2493 | 9 | regist | アイク激励した |
+| 249B | 9 | regist | ティバーン死亡 |
+| 24A3 | 9 | regist | ブライス戦闘 |
+| 24AB | 9 | regist | ブライス戦闘アイク |
+| 24B3 | 9 | regist | ブライス戦闘タウロニオ |
+| 24BB | 9 | regist | ブライス戦闘イナ |
+| 24C3 | 9 | regist | アシュ１戦闘会話 |
+| 24CB | 9 | regist | アシュ１戦闘会話アイク |
+| 24D3 | 9 | regist | アシュ１戦闘会話イナ |
+| 24DB | 9 | regist | アシュ１戦闘会話ナーシル |
+| 24E3 | 9 | regist | アシュ１戦闘会話エリンシア |
+| 24EB | 9 | regist | アシュ１戦闘会話ミスト |
+| 24F3 | 9 | regist | アシュ１戦闘会話リュシオン |
+| 24FB | 9 | regist | アシュ１戦闘会話牙 |
+| 2503 | 9 | regist | アシュ１戦闘会話ウルキ−ヤナフ |
+| 250B | 9 | regist | アシュ１戦闘会話タウロニオ |
+| 2513 | 9 | regist | アシュ１戦闘会話ジル |
+| 251B | 9 | regist | アシュ１戦闘会話ハール |
+| 2523 | 9 | regist | アシュ１戦闘会話ティバーン |
+| 252B | 9 | regist | アシュ１戦闘会話ネサラ |
+| 2533 | 9 | regist | アシュ１戦闘会話ジフカ |
+| 253B | 9 | regist | アシュ２戦闘会話ティバーン |
+| 2543 | 9 | regist | アシュ２戦闘会話ネサラ |
+| 254B | 9 | regist | アシュ２戦闘会話ジフカ |
+| 2553 | 9 | regist | アシュナード１回戦闘後 |
+| 255B | 9 | regist | アシュナード１倒した |
+| 2563 | 9 | regist | アシュナード１オンバトで倒した |
+| 256B | 9 | regist | アシュナード変身イベント |
+| 2573 | 9 | regist | 呼んだユニット配置イベント |
+| 257B | 9 | regist | アシュナード２戦闘 |
+| 2583 | 9 | regist | アシュナード２戦闘後 |
 | 25C6 | 10 | InstantDisposRank | bmap31_first |
 | 25CE | 10 | InstantDisposRank | bmap31_boss |
 | 260F | 11 | SallySetByGroup | bmap31_mikata_c |
@@ -6535,27 +6535,27 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 6F73 | 67 | UnitEscapeByPID | PID_GEOFFRAY |
 | 6F80 | 67 | UnitEscapeByPID | PID_LARGO |
 | 72E0 | 67 | TalkEvent | MS_31_GED_Mer |
-| 7310 | 67 | TalkEvent | 26 |
-| 731B | 67 | TalkEvent | 46 |
-| 7333 | 67 | TalkEvent | 66 |
-| 733E | 67 | TalkEvent | 86 |
-| 734C | 67 | TalkEvent | 106 |
-| 7374 | 67 | TalkEvent | 126 |
-| 737F | 67 | TalkEvent | 146 |
-| 7387 | 67 | TalkEvent | 166 |
-| 739A | 67 | TalkEvent | 106 |
-| 73B2 | 67 | TalkEvent | 184 |
-| 73C0 | 67 | TalkEvent | 202 |
-| 73D8 | 67 | TalkEvent | 222 |
-| 73EB | 67 | TalkEvent | 106 |
-| 7403 | 67 | TalkEvent | 240 |
-| 7416 | 67 | TalkEvent | 202 |
+| 7310 | 67 | TalkEvent | MS_31_GED_Mer_sen_a |
+| 731B | 67 | TalkEvent | MS_32_GED_Mer_sen_b |
+| 7333 | 67 | TalkEvent | MS_31_GED_Mer_tia_a |
+| 733E | 67 | TalkEvent | MS_32_GED_Mer_tia_b |
+| 734C | 67 | TalkEvent | MS_31_ED_FACE_DEL_5 |
+| 7374 | 67 | TalkEvent | MS_31_GED_Mer_osc_a |
+| 737F | 67 | TalkEvent | MS_32_GED_Mer_osc_b |
+| 7387 | 67 | TalkEvent | MS_31_GED_Mer_mis |
+| 739A | 67 | TalkEvent | MS_31_ED_FACE_DEL_5 |
+| 73B2 | 67 | TalkEvent | MS_31_GED_Mer_bol |
+| 73C0 | 67 | TalkEvent | MS_31_ED_FACE_DEL_4 |
+| 73D8 | 67 | TalkEvent | MS_31_GED_Mer_lof |
+| 73EB | 67 | TalkEvent | MS_31_ED_FACE_DEL_5 |
+| 7403 | 67 | TalkEvent | MS_31_GED_Mer_kil |
+| 7416 | 67 | TalkEvent | MS_31_ED_FACE_DEL_4 |
 | 742E | 67 | TalkEvent | MS_31_GED_Mer_gat |
-| 7441 | 67 | TalkEvent | 106 |
+| 7441 | 67 | TalkEvent | MS_31_ED_FACE_DEL_5 |
 | 7459 | 67 | TalkEvent | MS_31_GED_Mer_chi |
-| 746C | 67 | TalkEvent | 202 |
+| 746C | 67 | TalkEvent | MS_31_ED_FACE_DEL_4 |
 | 7484 | 67 | TalkEvent | MS_31_GED_way |
-| 7497 | 67 | TalkEvent | 106 |
+| 7497 | 67 | TalkEvent | MS_31_ED_FACE_DEL_5 |
 | 74AF | 67 | TalkEvent | MS_31_GED_vol |
 | 74C7 | 67 | TalkEvent | MS_31_ED_WINDOW_DEL |
 | 75C7 | 67 | TalkEvent | MS_31_GED_Cri_a |
@@ -6596,26 +6596,26 @@ Event candidates in file order; function boundaries prevent treating the whole s
 | 79A8 | 67 | TalkEvent | MS_31_ED_WINDOW_DEL |
 | 7A74 | 67 | TalkEvent | MS_31_GED_Gal_a |
 | 7A7F | 67 | TalkEvent | MS_31_GED_Gal_b |
-| 7A9F | 67 | TalkEvent | ? |
-| 7AAA | 67 | TalkEvent | ? |
-| 7ABC | 67 | TalkEvent | îñStO |
-| 7ADE | 67 | TalkEvent | ? |
-| 7AE9 | 67 | TalkEvent | ? |
+| 7A9F | 67 | TalkEvent | MS_31_GED_Gal_2_a |
+| 7AAA | 67 | TalkEvent | MS_31_GED_Gal_2_b |
+| 7ABC | 67 | TalkEvent | MS_31_GED_Gal_mor |
+| 7ADE | 67 | TalkEvent | MS_31_GED_Gal_ret_a |
+| 7AE9 | 67 | TalkEvent | MS_31_GED_Gal_ret_b |
 | 7AF1 | 67 | TalkEvent | MS_31_ED_WINDOW_DEL |
-| 7B93 | 67 | TalkEvent | ? |
-| 7BAB | 67 | TalkEvent | ? |
-| 7BC3 | 67 | TalkEvent | ? |
+| 7B93 | 67 | TalkEvent | MS_31_GED_Pho |
+| 7BAB | 67 | TalkEvent | MS_31_GED_Pho_vul |
+| 7BC3 | 67 | TalkEvent | MS_31_GED_Pho_jan |
 | 7BCB | 67 | TalkEvent | MS_31_ED_WINDOW_DEL |
-| 7CC7 | 67 | TalkEvent | ? |
-| 7CE5 | 67 | TalkEvent | PID_JANAFF |
-| 7D03 | 67 | TalkEvent | ? |
+| 7CC7 | 67 | TalkEvent | MS_31_GED_Day_Open |
+| 7CE5 | 67 | TalkEvent | MS_31_GED_Day_jil |
+| 7D03 | 67 | TalkEvent | MS_31_GED_Day_haa |
 | 7D16 | 67 | TalkEvent | MS_31_ED_FACE_DEL_1 |
 | 7D29 | 67 | TalkEvent | MS_31_ED_FACE_DEL_2 |
-| 7D41 | 67 | TalkEvent | ? |
+| 7D41 | 67 | TalkEvent | MS_31_GED_Day_sot |
 | 7D54 | 67 | TalkEvent | MS_31_ED_FACE_DEL_2 |
-| 7D6C | 67 | TalkEvent | ? |
+| 7D6C | 67 | TalkEvent | MS_31_GED_Day_tau |
 | 7D7F | 67 | TalkEvent | MS_31_ED_FACE_DEL_1 |
-| 7D97 | 67 | TalkEvent | ? |
+| 7D97 | 67 | TalkEvent | MS_31_GED_Day_ela |
 | 7DAA | 67 | TalkEvent | MS_31_ED_FACE_DEL_2 |
 | 7DC2 | 67 | TalkEvent | MS_31_GED_Day_zih_b |
 | 7DCA | 67 | TalkEvent | MS_31_ED_WINDOW_DEL |
