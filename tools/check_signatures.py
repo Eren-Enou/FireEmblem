@@ -157,6 +157,19 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x800BA944, 0x4BF83675, "bl 0x8003DFB8             escape worker"),
     (0x80016C84, 0x38800005, "li r4,5                   to force 5 (roster)"),
     (0x8002E38C, 0x4BFE88CD, "bl 0x80016C58             from the chapter transition 0x8002E0D0"),
+    # Phase-start cursor step 0x8002E444 (turn-loop script 0x80284EE8/0x80284F34, before 0x8002E738): phase 0 only,
+    # option bit 0x40 of state+0x9E clear -> cursor to the first force unit with attribute bit 0 (F-51; EXP-20)
+    (0x80284F34, 0x8002E444, ".data: turn-loop step = cursor step 0x8002E444"),
+    (0x80284F54, 0x8002E738, ".data: next steps reach the human-proc start 0x8002E738"),
+    (0x8002E45C, 0x88830011, "lbz r4,0x11(r3)           phase"),
+    (0x8002E464, 0x40820098, "bne 0x8002E4FC            not phase 0 -> skip (EXP-20 hook)"),
+    (0x8002E468, 0x8803009E, "lbz r0,0x9e(r3)           option byte"),
+    (0x8002E46C, 0x5400D7FF, "rlwinm. r0,r0,26,31,31    option bit 0x40"),
+    (0x8002E490, 0x480D7731, "bl 0x80105BC0             attribute bit 0 of unit+0x1BC"),
+    (0x8002E4B0, 0x887F019E, "lbz r3,0x19e(r31)         cursor move from unit r31 (EXP-20 target)"),
+    (0x8002E4F8, 0x4811E6E1, "bl 0x8014CBD8             move the cursor (state, f1 = x, f2 = y)"),
+    (0x8002E4FC, 0x80010024, "lwz r0,0x24(r1)           epilogue (EXP-20 skip target)"),
+    (0x800292AC, 0x4812392D, "bl 0x8014CBD8             Next Unit moves the cursor the same way"),
 ]
 
 

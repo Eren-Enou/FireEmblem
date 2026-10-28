@@ -245,3 +245,12 @@ Controller routing / Netplay (per user priority).
   `verify()` now also rejects `.exe/.dll/.bat/.cmd/.ps1/.vbs/.lnk`. The ZIP is 7.3 KB, the fingerprint is unchanged (`7031af10d740f4ed`), and tests are 40/40.
 - **First two-computer Netplay session (user + friend, net02-1 ZIP):** the Traversal room-code join works between two networks. Mapping, versions and sync are correct, and play reached Ch3 turn 3 with no desync. Buffer 5 held both games at ~40 FPS; **Buffer 26 gave 59.9 FPS/VPS** (F-50). The README troubleshooting and the NET-02 procedure now say to raise the buffer. Pending: combat/EXP, the state comparison, disconnect.
 - Buffer tuning (user): **18 holds a stable 58–60 FPS** at 23–33 ms ping; it is now the recommended value in the NET-02 procedure and the client README.
+
+## 2026-10-27 — Session 1s: yellow-phase cursor cue (EXP-20, COOP-P6)
+
+- User request: when the yellow phase starts, the cursor should move to a yellow unit as a turn cue.
+- Static finding (F-51): the phase-start step `0x8002E444` moves the cursor to the lord only in phase 0. Next Unit uses the same cursor move (`0x8014CBD8`) after `0x800AA5F0`.
+- **EXP-20**: one C2 hook at `0x8002E464`. In phase 3 with `control[3] == 1` (and the same option bit clear), it moves the cursor to `0x800AA5F0(0)`, the first yellow unit that can act (EXP-17). Phase 0 is unchanged. **COOP-P6** = COOP-P5 + EXP-20.
+- Tests 42/42, signatures 133/133. Installed in `work/ch1/host` (COOP-P6 + EXP-16 + DBG-01) for the tester's one-PC check (TESTING.md EXP-20).
+- The Netplay host and the friend ZIP stay on COOP-P5 + EXP-16 until EXP-20 passes. After that: move the package to COOP-P6 and rebuild the ZIP (the fingerprint changes).
+

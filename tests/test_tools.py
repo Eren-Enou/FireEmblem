@@ -335,6 +335,39 @@ class GameTests(unittest.TestCase):
         self.assertEqual(asm[0], pick + ["mulli r12, r12, 0xc", "lwzx r4, r4, r12"])   # head of force r12
         self.assertEqual(asm[1], pick + ["cmplw r0, r12", "nop"])                     # start unit in force r12
 
+    def test_exp20_yellow_cursor_hook(self):
+        """EXP-20: in a human yellow phase the phase-start cursor step moves the cursor to 0x800AA5F0(0)."""
+        import capstone, struct
+        from tools.fe9.ppc import Dol
+        dol = Dol(self.disc.read_dol())
+        [(addr, words)] = self._gecko_blocks("EXP-20 Yellow phase starts with the cursor on a yellow unit")
+        self.assertEqual(addr, 0x8002E464)
+        self.assertEqual(dol.u32(0x8002E464), 0x40820098)          # bne 0x8002E4FC (phase != 0)
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        asm = [f"{i.mnemonic} {i.op_str}".strip()
+               for i in md.disasm(b"".join(struct.pack(">I", w) for w in words[:-1]), 0)]
+        self.assertEqual(asm, [
+            "beq 0x64", "cmplwi r4, 3", "bne 0x54",
+            "lbz r0, 0x17(r3)", "cmplwi r0, 1", "bne 0x54",
+            "lbz r0, 0x9e(r3)", "rlwinm. r0, r0, 0x1a, 0x1f, 0x1f", "bne 0x54",
+            "li r3, 0", "lis r12, -0x7ff6", "ori r12, r12, 0xa5f0", "mtctr r12", "bctrl",
+            "cmplwi r3, 0", "beq 0x54",
+            "mr r31, r3", "lis r12, -0x7ffe", "ori r12, r12, 0xe4b0", "mtctr r12", "bctr",
+            "lis r12, -0x7ffe", "ori r12, r12, 0xe4fc", "mtctr r12", "bctr",
+            "nop", "nop"])
+        self.assertEqual(words[-1], 0)                             # branch back to 0x8002E468
+        # the jump targets are the vanilla cursor move (unit in r31) and the epilogue
+        self.assertEqual((dol.u32(0x8002E4B0), dol.u32(0x8002E4FC)), (0x887F019E, 0x80010024))
+
+    def test_coop_p6_package(self):
+        """COOP-P6 is exactly COOP-P5 + EXP-20, with no hook used twice."""
+        p5 = self._gecko_blocks("COOP-P5 Two-army co-op, Player 2 characters treated as player units (Phase 4 package v2)")
+        e20 = self._gecko_blocks("EXP-20 Yellow phase starts with the cursor on a yellow unit")
+        p6 = self._gecko_blocks("COOP-P6 Two-army co-op, cursor cue for the yellow phase (Phase 4 package v3)")
+        self.assertEqual(p6, p5 + e20)
+        hooks = [a for a, _ in p6]
+        self.assertEqual(len(hooks), len(set(hooks)))
+
     def test_exp18_base_data_hooks(self):
         """EXP-18: both force-0 unit-list walks continue into force 3 units flagged 0x400 (deployed players)."""
         import capstone, struct
