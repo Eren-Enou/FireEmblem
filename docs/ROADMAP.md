@@ -24,6 +24,8 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - Every behaviour is labelled **working** (a passed TESTING.md entry), **experimental** (experiment branch) or **unverified** (static only).
 
 ### Next concrete milestone: PREP-01 — draft and deployment during preparations (Priority 1)
+**PAUSED 2026-10-28** as a documented experimental milestone. Steps 1–3 are verified (PREP-02, PREP-03); Steps 4–7 wait for later-chapter fixtures and a solution to the Gecko space limit (F-59). Handoff: **docs/HANDOFF.md**.
+
 **Status (2026-10-28):** Milestone A (research) done statically; plan in **docs/PREP.md**.
 - Pick Units = `E_SallyList`; "picked" = flag `0x80000000` toggled by `0x8012C9E8`.
 - Cap = `state+0x544`; the audit now lists caps and forced units for every chapter.

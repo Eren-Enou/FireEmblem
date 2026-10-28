@@ -319,3 +319,11 @@ Controller routing / Netplay (per user priority).
   - Tests 51/51, signatures 176/176. Retest pending.
   - **Project constraint:** the full feature set (COOP-P6 + EXP-21 + draft + prep codes) must fit ≈ 3.2 KB. Slimming EXP-21/EXP-22/EXP-23, or a loader that keeps payloads outside the code list, is now on the plan.- **PREP-03 run 2: PARTIAL PASS.** Claims with Z on each player's own controller in Choose Units work, picks alternate, and the colours carry into battle. Transfer/cancel/release (steps 6–8) are not yet shown, and no states were saved this run.- **PREP-03 PASSED (run 3):** transfer request → accept (Titania P1 → P2, Lv/EXP/HP unchanged), cancel, release; no OFFER left over; Titania and Oscar yellow at turn 1. PREP-01 Step 3 done. Next: Step 4 (prep assignments through chapter end and a reload), then Step 5 (fair deployment under the cap).
 
+## 2026-10-28 — Session 1w: draft-ownership paused as a documented milestone
+
+- User: pause the prep-screen ownership/deployment work; leave a clean, reproducible state and a handoff.
+- **Verified on this branch:** DRAFT-01 (EXP-21 + EXP-22), PREP-02 (EXP-25), PREP-03 (EXP-26).
+- **Unverified:** DRAFT-02/EXP-23 (also over the Gecko budget), PREP-01 Steps 4–7.
+- **Written:** `docs/HANDOFF.md` (implementation, configurations with byte sizes, the Gecko budget, remaining acceptance tests and fixtures, risks, test instructions, next steps) and `AGENTS.md` (a pointer for Codex).
+- No feature changes. Tests 51/51, signatures 176/176. `main` unchanged (`6a81522`, stable).
+
