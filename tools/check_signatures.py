@@ -18,6 +18,31 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-007: original Talk menu -> adjacent-target -> kind8 query chain.
+    (0x80078A24, 0x9421FFF0, "Talk availability entry"),
+    (0x8002B0A4, 0x9421FFE0, "Talk adjacent-target collection entry"),
+    (0x8002CD70, 0x9421FFF0, "conversation target callback entry"),
+    (0x80288960, 0x800789CC, "Talk menu label callback table entry"),
+    (0x80288974, 0x80078A24, "Talk menu availability callback table entry"),
+    (0x8026C5DA, 0x4D4D4D5F, "MMM_TALK label prefix"),
+    (0x800789E0, 0x38630522, "Talk label pool offset"),
+    (0x80078A38, 0x88030016, "Talk availability context +16 gate"),
+    (0x80078A4C, 0x88030012, "Talk availability context +12 gate"),
+    (0x80078A64, 0x4BFB2641, "Talk availability calls adjacent-target collection"),
+    (0x80078A6C, 0x8003F4E0, "Talk availability tests target count"),
+    (0x80078A90, 0x886301A5, "Talk availability reads actor action-state byte"),
+    (0x80078A94, 0x5464E77E, "Talk extracts action-state bits4..6"),
+    (0x8002B0C0, 0x38A54D40, "adjacent-target callback table base"),
+    (0x80284D48, 0x8002CD70, "adjacent-target unit callback table entry"),
+    (0x8002B0EC, 0x8BFC019F, "adjacent-target actor y"),
+    (0x8002B0F4, 0x8BDC019E, "adjacent-target actor x"),
+    (0x8002B114, 0xA01D408E, "adjacent-target precomputed direction mask"),
+    (0x8002B138, 0x8863000D, "adjacent-target occupancy unit ID"),
+    (0x8002B14C, 0x1C800280, "adjacent-target unit slot stride"),
+    (0x8002CD8C, 0x93E30004, "conversation callback stores context target"),
+    (0x8002CD90, 0x48092459, "conversation callback calls kind8 matcher"),
+    (0x8002CDB4, 0x48002935, "conversation callback appends matching unit target"),
+    (0x8002F6F8, 0x90030000, "target append increments count"),
     # CAMP-005: original UnitSetPos fixture setup, GFEE01 rev0.
     (0x801A0E84, 0x9421FFE0, "UnitSetPos native entry"),
     (0x801A0E8C, 0x5463063F, "UnitSetPos takes byte-sized unit ID"),

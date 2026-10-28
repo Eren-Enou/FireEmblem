@@ -23,6 +23,17 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
   1507 campaign scenes. Previous1334/173 counts are historical. No additional
   runtime, chapter-clear, progression or Netplay result is implied.
 
+## Original Talk chain (CAMP-I)
+
+- Reproducible tools.talk_audit follows actual MMM_TALK menu dispatch through
+  adjacent occupancy enumeration and the kind8 conversation matcher. The
+  inspected functions contain no faction comparison or force0 list traversal.
+- Precomputed map direction-mask production, action/context gates, real Yellow
+  conversation and prisoner cleanup remain open. No speculative patch added.
+- Added reusable aligned direct-call references with explicit indirect-call
+  limitation; signed/absolute/relative/wraparound regression cases.
+- All99 tests pass; 264 original signatures match. Stable gameplay unchanged.
+
 ## Second checkpoint (82e06d8, pushed)
 
 - Instruction-aligned local CFG decoder: 2075 scenes / 125775 reachable local

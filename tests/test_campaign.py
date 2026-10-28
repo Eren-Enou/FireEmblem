@@ -215,6 +215,17 @@ class CampaignDataTests(unittest.TestCase):
         self.assertEqual(first["key"],second["key"])
         self.assertFalse(first["reversible"] or second["reversible"])
 
+    def test_original_talk_menu_dispatch_reaches_identity_matcher(self):
+        from tools.fe9.ppc import Dol
+        from tools.talk_audit import analyze
+        data=analyze(Dol(self.disc.read_dol()))
+        self.assertEqual(data["table"], {"menu_availability":0x80078A24,
+                                        "target_callback":0x8002CD70})
+        self.assertIn((0x80078A64,0x8002B0A4),data["Talk availability"]["calls"])
+        self.assertIn((0x8002CD90,0x800BF1E8),data["Conversation target callback"]["calls"])
+        self.assertEqual(data["matcher_direct_callers"],
+                         [0x8002CD90,0x800F88B4,0x800F8EE4,0x801032BC])
+
     def test_native_registration_recovery_and_rescue_selector(self):
         from tools.native_registry import registrations
         from tools.fe9.ppc import Dol

@@ -9,6 +9,19 @@ import capstone
 from .disc import dol_sections
 
 
+def direct_branch_target(address: int, word: int) -> int | None:
+    """Decode PPC I-form b/bl, including AA, sign extension and 32-bit wrap.
+
+    Conditional/indirect branches are intentionally outside this helper's scope.
+    """
+    if word >> 26 != 18:
+        return None
+    displacement = word & 0x03FFFFFC
+    if displacement & 0x02000000:
+        displacement -= 0x04000000
+    return ((0 if word & 2 else address) + displacement) & 0xFFFFFFFF
+
+
 class Dol:
     def __init__(self, data: bytes):
         self.data = data
@@ -31,6 +44,11 @@ class Dol:
 
     def u32(self, addr: int) -> int:
         return struct.unpack_from(">I", self.data, self.addr_to_off(addr))[0]
+
+    def direct_callers(self, target: int) -> list[int]:
+        """Aligned text bl/bla sites only; absence says nothing about bctrl calls."""
+        return [address for address, word in self.text_words()
+                if word & 1 and direct_branch_target(address, word) == target]
 
     def disasm(self, addr: int, count: int) -> list[str]:
         off = self.addr_to_off(addr)

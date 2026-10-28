@@ -15,6 +15,36 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-007 — original Talk menu and adjacent candidate chain
+
+VERIFIED-STATIC, not a Yellow recruitment runtime result. Generated full local
+instruction evidence: `python -m tools.talk_audit` -> TALK_AUDIT.md. All new
+locations below have pinned instructions/data in check_signatures.
+
+- Table0x80288960 links label callback0x800789CC; its pool offset at0x800789E0
+  resolves MMM_TALK at0x8026C5DA. Table0x80288974 selects availability0x80078A24.
+  That callback gates context+0x16 bit0 (0x80078A38) and context+0x12
+  (0x80078A4C), calls candidate collection at0x80078A64, rejects a zero result
+  count at0x80078A6C, then reads actor+0x1A5 at0x80078A90 and extracts bits4..6
+  at0x80078A94 (return2 if nonzero, otherwise0). No direct faction read here.
+- Candidate collection0x8002B0A4 selects callback table0x80284D40 at0x8002B0C0.
+  It reads actor y/x at0x8002B0EC/0x8002B0F4, a precomputed direction mask at
+  0x8002B114, then up/right/down/left occupancy IDs (first at0x8002B138),
+  converts nonzero IDs to unit slots (stride at0x8002B14C), skips nulls and
+  dispatches callback table+8. No force-list enumeration or faction comparison
+  appears in this function. **Production of the precomputed mask is still open.**
+- Table0x80284D48 links callback0x8002CD70: store target at0x8002CD8C,
+  query original kind8 matcher at0x8002CD90, append x/y/unit ID on success at
+  0x8002CDB4. Append increments result count at0x8002F6F8. No extra force gate.
+
+Inference: the inspected original Talk path does not contain the suspected
+force0-only candidate restriction. Context gates, precomputed mask generation,
+live action-state gating, real conversation execution and subsequent prisoner
+cleanup are **not verified**. No compatibility patch is justified by this static
+absence. Reproduce with P2 Oscar adjacent to living Kieran in Chapter10, fresh
+conversation key; execute original Talk, verify faction, key and later roster.
+Original scene29 transfers Kieran to force3; that is not permanent-recruit proof.
+
 ### CAMP-006 — local symbolic samples across native state changes
 
 VERIFIED-TOOLING (CAMP-H): treating repeated get(flag) text as one immutable

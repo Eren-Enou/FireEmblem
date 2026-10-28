@@ -1,5 +1,22 @@
 # Testing
 
+## CAMP-I — Original Talk eligibility chain, static only
+
+2026-10-28, campaign branch after5487d9a. Read-only `tools.talk_audit` follows
+original Talk menu table -> availability -> adjacent occupancy candidates ->
+kind8 matcher callback. Table links/direct calls are pinned and regression
+checked against the owned image. The reusable direct-call decoder has synthetic
+tests for signed, absolute and relative PPC branches, wraparound, non-link b
+exclusion and indirect bctrl exclusion. Missing direct callers never excludes
+indirect calls. See RESEARCH CAMP-007 and generated TALK_AUDIT.md.
+
+**99 tests PASS; 264/264 signatures match.** Stable production code unchanged.
+
+The inspected local path has no force0-only comparison. Precomputed adjacency
+mask production, action/context gates and actual Yellow Talk remain unresolved.
+**NOT TESTED:** prisoner event execution, permanent recruitment, chapter cleanup,
+save/reload and Netplay. No production gameplay change or new runtime PASS.
+
 ## CAMP-H — Stateful-query symbolic tracer correction
 
 2026-10-28, campaign branch after 857261f. Static/tooling PASS: **97 tests**,
