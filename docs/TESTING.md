@@ -652,6 +652,7 @@ Ike and unavailable characters are refused with the buzz. EXP-25's colours show 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
 | 2026-10-28 | user (run 1) | **FAIL: EXP-26 not loaded** | D/E did nothing on any row, not even the refusal buzz on Ike. State `GFEE01.prep03_s02`: the list was open (`E_SallyList` at `0x802A7468`, row 4), but `0x8012D6A4` held the original `stwu`, while EXP-25/21/22's hooks were patched. **Cause: the enabled codes (4000 bytes) exceeded Dolphin's Gecko space (≈ 3248), and EXP-26 came last** (F-59). The units were not protected. **Fix:** EXP-26 rewritten compactly (984 → 672 bytes; same behaviour). The bed drops EXP-22 (DRAFT-01 already verified; the prep draft replaces it here): COOP-P6 + EXP-21 + EXP-25 + EXP-26 + DBG-01 = 2984 bytes. `install_codes` now refuses over-budget sets. Retest = run 2, same steps. |
+| 2026-10-28 | user (run 2, compact EXP-26, 2984-byte bed) | **PARTIAL PASS (steps 1–5)** | Choose Units after the claims: **Ike, Titania, Rhys light blue; Soren, Oscar yellow**. Battle Base Data matches (Titania, Rhys light blue; Oscar, Soren yellow). So the Z claims on each player's own controller, the alternating picks and the owner → battle carry-over work. Steps 6–8 (transfer request/accept, cancel, release) are not shown: the screenshots match the state after step 5, and no new states were saved (slots 2/3 are still run 1's, 01:06). Re-checked the code paths statically; still to confirm at runtime. |
 
 ## PREP-02 — Ownership colours in the unit lists (EXP-25; PREP-01 Step 2)
 

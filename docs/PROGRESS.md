@@ -317,5 +317,5 @@ Controller routing / Netplay (per user priority).
   - The enabled set was 4000 bytes, but Dolphin's Gecko area holds ≈ 3248, and overflowing codes are dropped silently. The EXP-23/DRAFT-02 bed (3664) never fit either.
   - Fixes: EXP-26 rewritten compactly (672 bytes); `install_codes`/`netplay_setup` now refuse over-budget sets (`test_gecko_budget`); the PREP-03 bed drops EXP-22 (2984 bytes).
   - Tests 51/51, signatures 176/176. Retest pending.
-  - **Project constraint:** the full feature set (COOP-P6 + EXP-21 + draft + prep codes) must fit ≈ 3.2 KB. Slimming EXP-21/EXP-22/EXP-23, or a loader that keeps payloads outside the code list, is now on the plan.
+  - **Project constraint:** the full feature set (COOP-P6 + EXP-21 + draft + prep codes) must fit ≈ 3.2 KB. Slimming EXP-21/EXP-22/EXP-23, or a loader that keeps payloads outside the code list, is now on the plan.- **PREP-03 run 2: PARTIAL PASS.** Claims with Z on each player's own controller in Choose Units work, picks alternate, and the colours carry into battle. Transfer/cancel/release (steps 6–8) are not yet shown, and no states were saved this run.
 
