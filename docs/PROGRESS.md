@@ -238,3 +238,8 @@ Controller routing / Netplay (per user priority).
   - The traversal Room ID was issued, but a same-PC traversal join failed (F-49), so the internet path still needs the real two-PC run.
 - Tests 41/41, signatures 122/122.
 - Next: the user and a friend run NET-02 (TESTING.md) and report the results; then Ch6 escape, Ch18/Ch10 checks, flexible deployment.
+- **Package net02-2 (user request):** the ZIP no longer includes the launcher (`Start-FE9-Coop.bat`, `Check-Setup.bat`, `client.ps1`, now removed from the repo). The friend is assumed to have Dolphin 2609a. The README gives manual steps instead:
+  - a Dolphin shortcut with `--user <package>\User`
+  - Config → Paths for the game
+  - `Get-FileHash` on the code file against the hash in the README/manifest
+  `verify()` now also rejects `.exe/.dll/.bat/.cmd/.ps1/.vbs/.lnk`. The ZIP is 7.3 KB, the fingerprint is unchanged (`7031af10d740f4ed`), and tests are 40/40.

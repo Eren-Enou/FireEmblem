@@ -16,7 +16,7 @@ class NetplayPackageTests(unittest.TestCase):
     """The shareable Player 2 ZIP (NET-02): exact contents, matching codes, reproducible bytes."""
 
     def test_build_verifies_and_is_reproducible(self):
-        import tempfile, zipfile
+        import hashlib, tempfile, zipfile
         from tools import netplay_package as npk
         with tempfile.TemporaryDirectory() as d:
             a, b = npk.build(Path(d) / "a.zip"), npk.build(Path(d) / "b.zip")
@@ -27,6 +27,13 @@ class NetplayPackageTests(unittest.TestCase):
                 names = z.namelist()
                 ini = z.read(f"{npk.TOP}/User/Config/Dolphin.ini").decode()
             self.assertFalse(any(n.lower().endswith((".gci", ".iso", ".ciso", ".sav", ".dol")) for n in names))
+            # No Dolphin binaries or launcher scripts: the friend starts their own Dolphin (README step 2).
+            self.assertFalse(any(n.lower().endswith((".exe", ".dll", ".bat", ".cmd", ".ps1")) for n in names))
+            with zipfile.ZipFile(a) as z:
+                readme = z.read(f"{npk.TOP}/README.txt").decode()
+                codes_sha = hashlib.sha256(z.read(f"{npk.TOP}/User/GameSettings/GFEE01.ini")).hexdigest().upper()
+            self.assertIn(codes_sha, readme)    # the Get-FileHash check in README step 4
+            self.assertIn("--user", readme)
             self.assertIn("TraversalChoice = traversal", ini)
             self.assertNotIn("ISOPath", ini)
 
@@ -44,6 +51,7 @@ class NetplayPackageTests(unittest.TestCase):
                         data = build_ini(npk.PACKAGE_CODES + ["DBG-01"], verbose=False).encode()
                     dst.writestr(i, data)
                 dst.writestr(f"{npk.TOP}/User/GC/USA/Card A/01-GFEE-FIREEMBLEM8J.gci", b"x")
+                dst.writestr(f"{npk.TOP}/Start-FE9-Coop.bat", b"@echo off")
             problems = " ".join(npk.verify(bad))
             self.assertIn("forbidden entry", problems)
             self.assertIn("code fingerprint", problems)
@@ -60,23 +68,6 @@ class NetplayPackageTests(unittest.TestCase):
         self.assertEqual([n.split()[0] for _k, n, _c in npk.enabled_codes(text)], ["EXP-16", "COOP-P5"])  # definition order
         self.assertNotEqual(npk.fingerprint(build_ini(npk.PACKAGE_CODES + ["DBG-01"], verbose=False)), fp)
         self.assertNotEqual(npk.fingerprint(build_ini(["COOP-P5"], verbose=False)), fp)
-
-    def test_client_script_computes_the_same_fingerprint(self):
-        """tools/client.ps1 (Windows PowerShell) and Python must agree on the fingerprint."""
-        import shutil, subprocess, tempfile
-        from tools import netplay_package as npk
-        from tools.install_codes import build_ini
-        if not shutil.which("powershell"):
-            self.skipTest("Windows PowerShell not available")
-        with tempfile.TemporaryDirectory() as d:
-            for codes in (npk.PACKAGE_CODES, ["COOP-P3", "DBG-02"]):
-                ini = Path(d) / "GFEE01.ini"
-                text = build_ini(codes, verbose=False)
-                ini.write_bytes(text.replace("\n", "\r\n").encode())
-                out = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                                      str(npk.SOURCE / "tools/client.ps1"), "-PrintFingerprint", str(ini)],
-                                     capture_output=True, text=True, timeout=60).stdout.strip()
-                self.assertEqual(out, npk.fingerprint(text))
 
     def test_netplay_setup_traversal_host_keeps_net01_defaults(self):
         from tools.netplay_setup import dolphin_ini

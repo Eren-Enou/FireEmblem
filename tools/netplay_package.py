@@ -1,11 +1,9 @@
 """Build and verify the shareable Netplay client ZIP for Player 2 (NET-02).
 
-The ZIP is everything a friend needs besides their own Dolphin and their own game copy:
+The ZIP is everything a friend needs besides their own Dolphin (already the right version) and their own
+game copy. It has no launcher or script: the README says how to start Dolphin with the package's folder.
 
-  FE9-Coop-Client/README.txt               install, join (Traversal Server room code), controls, test steps
-  FE9-Coop-Client/Start-FE9-Coop.bat       runs tools/client.ps1: finds Dolphin and the game, checks, starts
-  FE9-Coop-Client/Check-Setup.bat          the validation checklist only
-  FE9-Coop-Client/tools/client.ps1
+  FE9-Coop-Client/README.txt               setup, join (Traversal Server room code), controls, checklist, test steps
   FE9-Coop-Client/User/Config/Dolphin.ini  private user folder: cheats on, port 1 = controller, traversal
   FE9-Coop-Client/User/Config/GCPadNew.ini port 1 keyboard layout (the whole keyboard; one player per PC)
   FE9-Coop-Client/User/GameSettings/GFEE01.ini   all code definitions, PACKAGE_CODES enabled
@@ -13,11 +11,11 @@ The ZIP is everything a friend needs besides their own Dolphin and their own gam
 
 No game data, save data or memory card is included (verify() enforces an exact file list). The host's
 codes are what Netplay actually runs ("Sync AR/Gecko Codes", F-47); the client's copy and the fingerprint
-let both players confirm the definitions match before starting.
+let both players confirm the definitions match before starting; the friend checks the code file's SHA-256
+against MANIFEST.txt with Windows' own Get-FileHash.
 
 Code fingerprint: the first 16 hex digits of SHA-256 over the enabled codes of a GameSettings ini, each as
-"<kind>:$<name>" followed by its code lines (whitespace-normalised, upper case). tools/client.ps1 computes
-the same value; tests check that both agree.
+"<kind>:$<name>" followed by its code lines (whitespace-normalised, upper case).
 
 The archive is reproducible: fixed timestamps and order, so the same sources give the same bytes.
 
@@ -43,7 +41,7 @@ from tools.setup_pads import PORT1_KEYBOARD, set_ini
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "netplay/client"
 PACKAGE_CODES = ["COOP-P5", "EXP-16"]
-PACKAGE_VERSION = "net02-1"
+PACKAGE_VERSION = "net02-2"
 DOLPHIN_VERSION = "2609a"            # F-47; the version NET-01 ran on
 GAME = "GFEE01 rev 0"
 # Dolphin's Verify of the project's copy (DolphinTool verify). Informational: other dump formats agree only
@@ -51,10 +49,11 @@ GAME = "GFEE01 rev 0"
 GAME_SHA1 = "a30eca376ab9b2b4dd8b1a9136772a62c0309ace"
 TRAVERSAL_SERVER, TRAVERSAL_PORT = "stun.dolphin-emu.org", "6262"   # Dolphin's defaults (strings in Dolphin.exe)
 TOP = "FE9-Coop-Client"
-FILES = ["README.txt", "Start-FE9-Coop.bat", "Check-Setup.bat", "tools/client.ps1",
-         "User/Config/Dolphin.ini", "User/Config/GCPadNew.ini", "User/GameSettings/GFEE01.ini", "MANIFEST.txt"]
+FILES = ["README.txt", "User/Config/Dolphin.ini", "User/Config/GCPadNew.ini", "User/GameSettings/GFEE01.ini", "MANIFEST.txt"]
 MAX_BYTES = 256 * 1024
-FORBIDDEN = re.compile(r"\.(gci|sav|raw|dtm|dol|elf|cmp|iso|ciso|gcm|gcz|rvz|wia|wbfs|nkit|s\d\d)$", re.I)
+# Game/save data, and (since net02-2) no Dolphin binaries or launcher scripts.
+FORBIDDEN = re.compile(r"\.(gci|sav|raw|dtm|dol|elf|cmp|iso|ciso|gcm|gcz|rvz|wia|wbfs|nkit|s\d\d"
+                       r"|exe|dll|bat|cmd|ps1|vbs|lnk)$", re.I)
 _EPOCH = (2026, 1, 1, 0, 0, 0)
 
 
@@ -106,17 +105,16 @@ def _crlf(text: str) -> bytes:
 def contents() -> dict[str, bytes]:
     codes = build_ini(PACKAGE_CODES, verbose=False)
     fp = fingerprint(codes)
+    files = {"User/Config/Dolphin.ini": _crlf(dolphin_ini()),
+             "User/Config/GCPadNew.ini": _crlf(set_ini("", "GCPad1", PORT1_KEYBOARD)),
+             "User/GameSettings/GFEE01.ini": _crlf(codes)}
     subst = {"PACKAGE_VERSION": PACKAGE_VERSION, "CODES": " + ".join(PACKAGE_CODES), "FINGERPRINT": fp,
-             "DOLPHIN_VERSION": DOLPHIN_VERSION, "GAME_SHA1": GAME_SHA1}
-    files = {}
-    for name in ("README.txt", "Start-FE9-Coop.bat", "Check-Setup.bat", "tools/client.ps1"):
-        text = (SOURCE / name).read_text(encoding="ascii")
-        for k, v in subst.items():
-            text = text.replace(f"@@{k}@@", v)
-        files[name] = _crlf(text)
-    files["User/Config/Dolphin.ini"] = _crlf(dolphin_ini())
-    files["User/Config/GCPadNew.ini"] = _crlf(set_ini("", "GCPad1", PORT1_KEYBOARD))
-    files["User/GameSettings/GFEE01.ini"] = _crlf(codes)
+             "DOLPHIN_VERSION": DOLPHIN_VERSION, "GAME_SHA1": GAME_SHA1,
+             "CODES_SHA256": hashlib.sha256(files["User/GameSettings/GFEE01.ini"]).hexdigest().upper()}
+    text = (SOURCE / "README.txt").read_text(encoding="ascii")
+    for k, v in subst.items():
+        text = text.replace(f"@@{k}@@", v)
+    files["README.txt"] = _crlf(text)
     manifest = [f"package_version={PACKAGE_VERSION}", f"codes={' + '.join(PACKAGE_CODES)}",
                 f"codes_fingerprint={fp}", f"dolphin_version={DOLPHIN_VERSION}", f"game={GAME}",
                 f"game_sha1={GAME_SHA1}", f"traversal_server={TRAVERSAL_SERVER}", f"traversal_port={TRAVERSAL_PORT}", ""]

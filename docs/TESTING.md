@@ -16,6 +16,7 @@
 | 2026-10-27 | `unittest tests.test_tools` | 9/9 pass (adds save-state decode/round-trip and runtime-model check) |
 | 2026-10-27 | `unittest tests.test_tools` | 41/41 pass (adds `NetplayPackageTests`: client ZIP contents, reproducibility, rejection, fingerprint, PowerShell match) |
 | 2026-10-27 | `netplay_package` | ZIP built and verified: 8 files + empty card folder, 11.5 KB, fingerprint `7031af10d740f4ed` |
+| 2026-10-27 | `netplay_package` (net02-2, no launcher) | ZIP built and verified: 5 files + empty card folder, 7.3 KB; `Get-FileHash` of the extracted code file equals the README value; tests 40/40 |
 
 ---
 
@@ -522,9 +523,8 @@ Two machines come after NET-01. NET-02 below replaces the "copy the client folde
 
 ### NET-02 — Two computers over the internet with the Player 2 ZIP (host + friend)
 
-**What the friend gets:** `dist/FE9-Coop-Client-<fingerprint>.zip`, about 12 KB, built by `tools/netplay_package.py`. It contains:
-- `README.txt`: install, join, controls, checklist and test steps
-- `Start-FE9-Coop.bat` and `Check-Setup.bat`, which run `tools/client.ps1`
+**What the friend gets:** `dist/FE9-Coop-Client-<fingerprint>.zip`, about 7 KB, built by `tools/netplay_package.py`. Since package `net02-2` (user request) it has **no launcher or script**; the friend already has Dolphin 2609a. It contains:
+- `README.txt`: start Dolphin with `--user <package>\User` from a shortcut, add the game folder, check the code file's SHA-256 with `Get-FileHash`, join, controls, checklist and test steps
 - a private Dolphin user folder:
   - `Config/Dolphin.ini`: cheats on, port 1 = controller, Traversal Server preset, nickname P2-Yellow, Background Input off
   - `Config/GCPadNew.ini`: the port-1 keyboard layout
@@ -532,15 +532,15 @@ Two machines come after NET-01. NET-02 below replaces the "copy the client folde
   - an empty `GC/USA/Card A/`
 - `MANIFEST.txt`: Dolphin version, game, code fingerprint, and a SHA-256 for every file
 
-The ZIP holds **no** game image, extracted asset, save file or memory card. `verify()` enforces the exact file list, rejects save/disc extensions and local paths, and checks the codes, manifest and settings. The friend supplies Dolphin **2609a** and their own GFEE01 rev 0 copy. The launcher never touches their own Dolphin settings or cards; it starts Dolphin with `--user <package>/User` (F-32).
+The ZIP holds **no** game image, extracted asset, save file, memory card, Dolphin binary or launcher script. `verify()` enforces the exact file list, rejects save/disc/program/script extensions (`.exe .dll .bat .cmd .ps1 …`) and local paths, and checks the codes, manifest and settings. The friend supplies Dolphin **2609a** and their own GFEE01 rev 0 copy. Starting Dolphin with `--user <package>\User` keeps their own settings and cards untouched (F-32).
 
-**Matching definitions:** the *code fingerprint* is the first 16 hex digits of a SHA-256 over the enabled codes (name and normalised code lines). Python (`tools.netplay_package.fingerprint`) and `client.ps1` compute the same value, and a test checks that they agree. For the current `codes/GFEE01.ini` it is **`7031af10d740f4ed`**. Netplay runs the host's codes ("Sync AR/Gecko Codes"); the fingerprint lets both players confirm the definitions before starting.
+**Matching definitions:** the *code fingerprint* is the first 16 hex digits of a SHA-256 over the enabled codes (name and normalised code lines). The host checks it with `netplay_package --fingerprint`. The friend checks the code file's SHA-256 (printed in their README and `MANIFEST.txt`) with Windows' `Get-FileHash`. For the current `codes/GFEE01.ini` it is **`7031af10d740f4ed`**. Netplay runs the host's codes ("Sync AR/Gecko Codes"); the fingerprint lets both players confirm the definitions before starting.
 
 #### Automated checks (before sending the ZIP)
 ```bash
 .venv/Scripts/python -m tools.netplay_package
 ```
-This builds and verifies the ZIP, prints every entry and the ZIP's SHA-256. Rebuild whenever `codes/GFEE01.ini` changes, since the file name carries the fingerprint. `NetplayPackageTests` (5 tests) cover: exact contents, reproducible bytes, rejection of a ZIP with a `.gci` or other codes, fingerprint rules, the PowerShell/Python fingerprint match, and that the NET-01 defaults are unchanged.
+This builds and verifies the ZIP, prints every entry and the ZIP's SHA-256. Rebuild whenever `codes/GFEE01.ini` changes, since the file name carries the fingerprint. `NetplayPackageTests` (4 tests) cover: exact contents with no launcher, the README hash matching the code file, reproducible bytes, rejection of a ZIP with a `.gci`, a `.bat` or other codes, fingerprint rules, and that the NET-01 defaults are unchanged.
 
 #### Host setup (Player 1, this PC)
 1. Close Dolphin. Make the host folder. It reads the memory card in `work/saves/net02_card/`, a copy of the `work/ch1/host` card: Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4; SHA-1 `54b5a7f4…`.
@@ -551,7 +551,7 @@ This builds and verifies the ZIP, prints every entry and the ZIP's SHA-256. Rebu
    ```bash
    .venv/Scripts/python -m tools.netplay_package --fingerprint work/netplay_net/host
    ```
-3. Build the ZIP (above) and send it to the friend. The friend follows `README.txt` steps 1–4.
+3. Build the ZIP (above) and send it to the friend. The friend follows `README.txt` steps 1–4 (extract, shortcut with `--user`, add the game folder, optional hash check).
 4. Start the host:
    ```bash
    Dolphin-x64/Dolphin.exe --user work/netplay_net/host
@@ -564,11 +564,11 @@ This builds and verifies the ZIP, prints every entry and the ZIP's SHA-256. Rebu
 |---|---|---|---|
 | 1 | Same Dolphin version | NetPlay player list, "Revision" column | both `2609a` |
 | 2 | Same game | host: **Checksum → Current game** (SHA1 Digest) | "The hashes match!", digest `a30eca37…0309ace` |
-| 3 | Same code definitions | friend: `Check-Setup.bat`; host: `netplay_package --fingerprint` | both `7031af10d740f4ed` |
+| 3 | Same code definitions | host: `netplay_package --fingerprint` = the fingerprint in the friend's README; friend: `Get-FileHash` (README step 4) | `7031af10d740f4ed`; hash as in the README |
 | 4 | Codes synced | host: Data → **Sync AR/Gecko Codes** ticked | ticked (preset) |
 | 5 | Host save data, nothing written back | host: Data → **Load Host's Save Data Only** | ticked (preset; `WriteSaveData = False`) |
 | 6 | Player 1 → GC port 1, Player 2 → GC port 2 | player list "Mapping"; host: **Assign Controller Ports** | P1-Blue `GC1`, P2-Yellow `GC2`, ports 3–4 empty |
-| 7 | Friend's pad | `Check-Setup.bat` | all lines `[OK]` |
+| 7 | Friend's pad and settings | friend: Help → About; Config → General → Enable Cheats; Controllers → Port 1 | `2609a`; ticked; Standard Controller |
 
 **Port assignment:** Dolphin maps the first player to GC1 and the second to GC2 by default (F-47). If not, the host opens **Assign Controller Ports**, puts P1-Blue in GameCube Port 1 and P2-Yellow in Port 2, and leaves Ports 3 and 4 as None. Each player's *local* controller 1 plays the GC port assigned to them. EXP-14 then routes port 2 to the yellow phase and port 1 to everything else.
 
