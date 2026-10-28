@@ -528,13 +528,13 @@ Two machines come after NET-01. NET-02 below replaces the "copy the client folde
 - a private Dolphin user folder:
   - `Config/Dolphin.ini`: cheats on, port 1 = controller, Traversal Server preset, nickname P2-Yellow, Background Input off
   - `Config/GCPadNew.ini`: the port-1 keyboard layout
-  - `GameSettings/GFEE01.ini`: every code definition, **COOP-P5 + EXP-16** enabled
+  - `GameSettings/GFEE01.ini`: every code definition, **COOP-P6 + EXP-16** enabled (COOP-P5 + EXP-16 up to net02-2)
   - an empty `GC/USA/Card A/`
 - `MANIFEST.txt`: Dolphin version, game, code fingerprint, and a SHA-256 for every file
 
 The ZIP holds **no** game image, extracted asset, save file, memory card, Dolphin binary or launcher script. `verify()` enforces the exact file list, rejects save/disc/program/script extensions (`.exe .dll .bat .cmd .ps1 …`) and local paths, and checks the codes, manifest and settings. The friend supplies Dolphin **2609a** and their own GFEE01 rev 0 copy. Starting Dolphin with `--user <package>\User` keeps their own settings and cards untouched (F-32).
 
-**Matching definitions:** the *code fingerprint* is the first 16 hex digits of a SHA-256 over the enabled codes (name and normalised code lines). The host checks it with `netplay_package --fingerprint`. The friend checks the code file's SHA-256 (printed in their README and `MANIFEST.txt`) with Windows' `Get-FileHash`. For the current `codes/GFEE01.ini` it is **`7031af10d740f4ed`**. Netplay runs the host's codes ("Sync AR/Gecko Codes"); the fingerprint lets both players confirm the definitions before starting.
+**Matching definitions:** the *code fingerprint* is the first 16 hex digits of a SHA-256 over the enabled codes (name and normalised code lines). The host checks it with `netplay_package --fingerprint`. The friend checks the code file's SHA-256 (printed in their README and `MANIFEST.txt`) with Windows' `Get-FileHash`. For COOP-P6 + EXP-16 (package net02-3) it is **`8609ae9f49fd879f`**; the first internet session ran COOP-P5 + EXP-16 (`7031af10d740f4ed`). Netplay runs the host's codes ("Sync AR/Gecko Codes"); the fingerprint lets both players confirm the definitions before starting.
 
 #### Automated checks (before sending the ZIP)
 ```bash
@@ -545,7 +545,7 @@ This builds and verifies the ZIP, prints every entry and the ZIP's SHA-256. Rebu
 #### Host setup (Player 1, this PC)
 1. Close Dolphin. Make the host folder. It reads the memory card in `work/saves/net02_card/`, a copy of the `work/ch1/host` card: Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4; SHA-1 `54b5a7f4…`.
    ```bash
-   .venv/Scripts/python -m tools.netplay_setup --root work/netplay_net --host-only --traversal --card work/saves/net02_card --enable COOP-P5 --enable EXP-16 --force
+   .venv/Scripts/python -m tools.netplay_setup --root work/netplay_net --host-only --traversal --card work/saves/net02_card --enable COOP-P6 --enable EXP-16 --force
    ```
 2. Confirm the host's codes match the package (expect "matches the client package"):
    ```bash
@@ -564,7 +564,7 @@ This builds and verifies the ZIP, prints every entry and the ZIP's SHA-256. Rebu
 |---|---|---|---|
 | 1 | Same Dolphin version | NetPlay player list, "Revision" column | both `2609a` |
 | 2 | Same game | host: **Checksum → Current game** (SHA1 Digest) | "The hashes match!", digest `a30eca37…0309ace` |
-| 3 | Same code definitions | host: `netplay_package --fingerprint` = the fingerprint in the friend's README; friend: `Get-FileHash` (README step 4) | `7031af10d740f4ed`; hash as in the README |
+| 3 | Same code definitions | host: `netplay_package --fingerprint` = the fingerprint in the friend's README; friend: `Get-FileHash` (README step 4) | `8609ae9f49fd879f` (net02-3); hash as in the README |
 | 4 | Codes synced | host: Data → **Sync AR/Gecko Codes** ticked | ticked (preset) |
 | 5 | Host save data, nothing written back | host: Data → **Load Host's Save Data Only** | ticked (preset; `WriteSaveData = False`) |
 | 6 | Player 1 → GC port 1, Player 2 → GC port 2 | player list "Mapping"; host: **Assign Controller Ports** | P1-Blue `GC1`, P2-Yellow `GC2`, ports 3–4 empty |
@@ -598,14 +598,14 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
-| 2026-10-27 | user (host, this PC) + friend (own PC, the net02-1 ZIP with launcher) | **IN PROGRESS: Traversal join between two networks works** | The friend joined by **room code** (Traversal Server). Both players `2609a Windows`, P1-Blue `GC1`, P2-Yellow `GC2`, saves and codes synchronized, ping 23–33 ms, Host Input Authority off. Both armies are playable together; reached Ch. 3 turn 3 with the yellow units on the map and no desync message. **Speed:** with Buffer 5, both games ran at about 40 FPS/VPS (stretched audio, slow animations), the same on both PCs. **Raising Buffer to 26 gave 59.9 FPS and VPS** and normal sound; **Buffer 18 stays stable at 58–60** and is the recommended setting. Still to report: combat/EXP under Netplay, the turn 3 state comparison, 3+ turns, disconnect. |
+| 2026-10-27 | user (host, this PC) + friend (own PC, the net02-1 ZIP with launcher); codes COOP-P5 + EXP-16 | **PASS (two computers over the internet; disconnect not reported)** | The friend joined by **room code** (Traversal Server). Both players `2609a Windows`, P1-Blue `GC1`, P2-Yellow `GC2`, saves and codes synchronized, ping 23–33 ms, Host Input Authority off. **Speed:** with Buffer 5, both games ran at about 40 FPS/VPS (stretched audio, slow animations), the same on both PCs. Buffer 26 gave 59.9 FPS/VPS, and **Buffer 18 stayed stable at 58–60**, the recommended setting. The user reported that everything ran well. **State comparison:** host and friend each saved two states (backups `work/saves/GFEE01.net02_inet_host_s01/_s02` and `GFEE01.net02_friend_s01/_s02`). Ch. 3 **turn 4, blue phase** and **turn 6, yellow phase** both decode **identically** on the two PCs (control `01 02 02 01`; every unit's force, position, HP, level and EXP). **Combat/EXP under Netplay:** between turns 4 and 6, the yellow units' EXP rose identically on both PCs (Shinon 67, Gatrie 14 → 55), and Ike reached 83 EXP. No desync message. The host card was unchanged afterwards (SHA-1 `54b5a7f4…`). **Not reported:** the disconnect test (T10) on two PCs; it passed on one PC. |
 | 2026-10-27 | Claude (computer use; **one PC**: host `work/netplay_net/host`, client = the extracted ZIP started by its own `Start-FE9-Coop.bat`) | **PARTIAL: package PASS over Direct; Traversal join not verified** | **Launcher:** `Start-FE9-Coop.bat` found Dolphin, took the game folder, printed all `[OK]` and fingerprint `7031af10d740f4ed`, and started Dolphin with the package's user folder. `Check-Setup.bat` flagged a wrong exe ("not version 2609a") and a missing game folder correctly. **Traversal:** the host registered and received an 8-character Room ID. The packaged client (Traversal preset, room code pasted) failed twice with "Failed to connect to server: Could not communicate with host". A same-PC/same-NAT join like this relies on NAT loopback; this run doesn't establish whether two separate networks would connect, and the real two-PC run decides. **Direct 127.0.0.1:2626:** connected. Player list: P1-Blue `GC1`, P2-Yellow `GC2`, both `2609a`. **Checksum → Current game: "The hashes match!"**, digest `a30eca376ab9b2b4dd8b1a9136772a62c0309ace` (= `DolphinTool verify`). Data menu: Load Host's Save Data Only and Sync AR/Gecko Codes ticked. Chats: saves and codes synchronized / Data received / Codes received. The client saw the host card (Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4). In Ch. 3 turn 1, Shinon and Gatrie had yellow rings on both screens. Blue phase: the client's X and arrows did nothing; the host ended the phase. Yellow phase: the host's keys did nothing; the client's keys moved the (yellow) cursor, opened the map menu and chose End. The enemy phase was identical on both screens: Ike was attacked, killed with a counter and reached Lv 5, HP 13/21 on both. **Turn 2 states** (host `work/saves/GFEE01.net02_host_t2`, client `GFEE01.net02_pkgclient_t2`) decode **identically** (chapter id 4, phase 0, turn 2, control `01 02 02 01`, every unit's force/position/HP/level/EXP). **Disconnect:** the client quit NetPlay in turn 2 → host chat "P2-Yellow has left" and **both games stopped**; the host's room stayed open with P1 only. The host card was unchanged (SHA-1 `54b5a7f4…`); the client's own card folder stayed empty (Netplay used `GC/NetPlayTemp`). **Driver note:** under Netplay, very short synthetic key taps were sometimes missed; 0.15–0.3 s holds worked. **Not covered:** a Traversal connection between two networks, a yellow-unit attack under Netplay, 3+ turns, two machines. |
 
 ## EXP-20 / COOP-P6 — Cursor jumps to a yellow unit when the yellow phase starts
 
-**Goal (user):** a clear "your turn" cue for Player 2. At the start of a human yellow phase, the cursor (and camera) moves to a yellow unit that can still act. Vanilla only does this for Ike in the player phase (F-51). **COOP-P6** = COOP-P5 + EXP-20. Static: `test_exp20_yellow_cursor_hook`, `test_coop_p6_package`, 133/133 signatures. Runtime: pending.
+**Goal (user):** a clear "your turn" cue for Player 2. At the start of a human yellow phase, the cursor (and camera) moves to a yellow unit that can still act. Vanilla only does this for Ike in the player phase (F-51). **COOP-P6** = COOP-P5 + EXP-20. Static: `test_exp20_yellow_cursor_hook`, `test_coop_p6_package`, 133/133 signatures. Runtime: **PASS** (user, 2026-10-27).
 
-Installed in the one-PC test bed `work/ch1/host` with COOP-P6 + EXP-16 + DBG-01. It is **not** in the Netplay host or the friend ZIP yet (they stay on COOP-P5 + EXP-16 until this passes).
+Installed in the one-PC test bed `work/ch1/host` with COOP-P6 + EXP-16 + DBG-01. After the pass below, the Netplay host and the friend ZIP moved to **COOP-P6 + EXP-16** (package net02-3, fingerprint `8609ae9f49fd879f`).
 
 ### Procedure (tester, one PC)
 1. Close the Dolphin that uses `work/ch1/host` if it is open. Start it from a **fresh boot**, not a save state: a state restores the code list it was saved with (F-25).
@@ -628,6 +628,7 @@ Installed in the one-PC test bed `work/ch1/host` with COOP-P6 + EXP-16 + DBG-01.
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-10-27 | user (one PC, `work/ch1/host`, COOP-P6 + EXP-16 + DBG-01; fresh boot, Ch. 3) | **PASS** | User: at the start of the yellow phase the cursor swapped to a yellow unit. **Slot 3** (phase 3, turn 2, backup `work/saves/GFEE01.exp20_s03`): cursor `state+0x524/0x528` = (15.5, 21.5) = tile (15,21), which is **Shinon's tile**. Ike, where the vanilla blue-phase step puts the cursor, is at (15,23). Slot 2 (turn 1 yellow phase, `GFEE01.exp20_s02`) has the cursor on (15,21), the tile Shinon moves to in that phase, so it was probably saved mid-move. Option byte `state+0x9E` = `0x15` (bit 0x40 clear). For contrast, the Netplay yellow-phase state without EXP-20 (`GFEE01.net02_inet_host_s02`) has the cursor on Titania's tile (13,8), where the blue phase left it. Not checked: the cursor option turned off, and vanilla chapters without yellow units. |
 
 ## EXP-15 — Chapter 1 with two armies (Phase 4 proof, fixed assignment)
 

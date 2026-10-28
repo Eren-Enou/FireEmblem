@@ -65,7 +65,7 @@ class NetplayPackageTests(unittest.TestCase):
         spaced = "\r\n".join(l.replace(" ", "\t ").lower() if not l.startswith(("$", "[")) else l
                              for l in text.split("\n"))   # line endings and code-line spacing/case only
         self.assertEqual(npk.fingerprint(spaced), fp)
-        self.assertEqual([n.split()[0] for _k, n, _c in npk.enabled_codes(text)], ["EXP-16", "COOP-P5"])  # definition order
+        self.assertEqual([n.split()[0] for _k, n, _c in npk.enabled_codes(text)], ["EXP-16", "COOP-P6"])  # definition order
         self.assertNotEqual(npk.fingerprint(build_ini(npk.PACKAGE_CODES + ["DBG-01"], verbose=False)), fp)
         self.assertNotEqual(npk.fingerprint(build_ini(["COOP-P5"], verbose=False)), fp)
 

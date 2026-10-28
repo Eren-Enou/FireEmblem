@@ -40,8 +40,8 @@ from tools.setup_pads import PORT1_KEYBOARD, set_ini
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "netplay/client"
-PACKAGE_CODES = ["COOP-P5", "EXP-16"]
-PACKAGE_VERSION = "net02-2"
+PACKAGE_CODES = ["COOP-P6", "EXP-16"]
+PACKAGE_VERSION = "net02-3"
 DOLPHIN_VERSION = "2609a"            # F-47; the version NET-01 ran on
 GAME = "GFEE01 rev 0"
 # Dolphin's Verify of the project's copy (DolphinTool verify). Informational: other dump formats agree only

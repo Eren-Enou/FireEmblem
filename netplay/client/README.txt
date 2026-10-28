@@ -41,7 +41,7 @@ Dolphin with it (step 2) leaves your normal Dolphin settings, memory cards and s
      Get-FileHash "C:\Games\FE9-Coop-Client\User\GameSettings\GFEE01.ini"
    The Hash must be (check before changing anything in Gecko Codes, which rewrites the file):
      @@CODES_SHA256@@
-   In Dolphin, right-click the game > Properties > Gecko Codes: "EXP-16 ..." and "COOP-P5 ..." are
+   In Dolphin, right-click the game > Properties > Gecko Codes: the @@CODES@@ codes are
    ticked, and Config > General > Enable Cheats is ticked.
 
 5. JOIN THE HOST

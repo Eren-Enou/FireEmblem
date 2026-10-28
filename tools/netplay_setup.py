@@ -23,7 +23,8 @@ Traversal Server (room code) with Background Input off; Player 2 uses the ZIP fr
 
 Usage: python -m tools.netplay_setup [--root work/netplay] [--enable CODE ...] [--client-stick numpad|digits] [--force]
        python -m tools.netplay_setup --root work/ch1 --enable COOP-P3 --enable EXP-15   (Chapter 1 test bed)
-       python -m tools.netplay_setup --root work/netplay_net --host-only --traversal --card work/saves/net02_card            --enable COOP-P5 --enable EXP-16                                            (NET-02 host)
+       python -m tools.netplay_setup --root work/netplay_net --host-only --traversal --card work/saves/net02_card
+           --enable COOP-P6 --enable EXP-16                                            (NET-02 host)
 Launch: Dolphin-x64/Dolphin.exe --user work/netplay/host   (and --user work/netplay/client)
 """
 

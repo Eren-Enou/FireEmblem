@@ -253,4 +253,7 @@ Controller routing / Netplay (per user priority).
 - **EXP-20**: one C2 hook at `0x8002E464`. In phase 3 with `control[3] == 1` (and the same option bit clear), it moves the cursor to `0x800AA5F0(0)`, the first yellow unit that can act (EXP-17). Phase 0 is unchanged. **COOP-P6** = COOP-P5 + EXP-20.
 - Tests 42/42, signatures 133/133. Installed in `work/ch1/host` (COOP-P6 + EXP-16 + DBG-01) for the tester's one-PC check (TESTING.md EXP-20).
 - The Netplay host and the friend ZIP stay on COOP-P5 + EXP-16 until EXP-20 passes. After that: move the package to COOP-P6 and rebuild the ZIP (the fingerprint changes).
+- **EXP-20 PASSED** (user, one PC). At the start of the yellow phase the cursor swaps to a yellow unit; slot 3 has the cursor on Shinon's tile (F-51).
+- **NET-02 PASSED on two computers over the internet** (user + friend, COOP-P5 + EXP-16). Ch3 reached turn 6 with yellow combat and EXP, and the turn 4 and turn 6 states are identical on both PCs, with no desync (TESTING.md NET-02).
+- The Netplay package and host moved to **COOP-P6 + EXP-16**: package net02-3, fingerprint `8609ae9f49fd879f`, ZIP `dist/FE9-Coop-Client-8609ae9f49fd879f.zip`. The friend needs the new ZIP for the fingerprint/hash check, though the synced host codes are what actually run. The README's Gecko-code check now names the enabled codes from the build.
 
