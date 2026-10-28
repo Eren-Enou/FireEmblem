@@ -59,8 +59,8 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 
 ## Next independent work
 
-1. Use the native Ch6 start fixture for Yellow original Escape eligibility and
-   roster preservation; then Ike-last completion and original cleanup/save paths.
+1. Ch6 Yellow original single Escape now passed in synthetic setup (CAMP-G).
+   Next: carried units, Ike-last completion and original cleanup/save paths.
 2. Trace the remaining Escape context veto. Controlled original-positioning native
    calls may provide a supplemental synthetic event fixture; never skip Escape itself.
 3. Improve frame stepping/recording. DTM input remains inconclusive; observed TAS
@@ -92,7 +92,7 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
   gauge depletion, cleanup/recruitment, clear, transition, save/reload and Netplay
   remain open. No production code changed. Private process stopped.
 
-## Sixth checkpoint validation
+## Sixth checkpoint (0706896, pushed)
 
 - Fresh private-card boot -> original Ch6 restart -> prep -> Fight -> turn1,
   without a redirect or RAM edits. Captured accepted fixture; active roster is
@@ -105,6 +105,24 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 - Short new DTM probe again failed to demonstrate A input; TAS remains the
   demonstrated automation route. All private Dolphin processes stopped.
 
-No gameplay assembly correction is accepted yet: identified engine assumptions
-still require normal-path reachability/reproduction. No campaign completion,
+## Seventh checkpoint validation
+
+- Original port2 Oscar Escape menu > Yes > original speech ran in a controlled
+  native-positioning fixture. Oscar preserved slot2, force3 -> force5, escaped
+  flag set, HP28/lv6/EXP28 and all64 inventory-slot bytes unchanged. Same Chapter6
+  continues turn2 with Ike on-map. Both full intended C2 sets match live RAM.
+- First trial rejected: Emil occupied the gate, causing overlap. Corrected setup
+  moves living boss to vacant adjacent tile, checks vacated exit, then Oscar;
+  no kill/faction/escape/completion command injected. Total3168 Gecko bytes.
+- Safe new-state C2 append verifies handler hash and exact stable list including
+  dynamic branch-back targets; all non-Gecko payload bytes stay identical.
+- Actual enabled-INI validator rejects truncated payloads, bad C2 return slots,
+  missing names, conflicts and overflow for private generated codes too.
+- 94 tests pass; 240 signatures; nine runtime artifact hashes checked. No native
+  card write, production gameplay patch, chapter clear/transition/save or Netplay
+  claim. All isolated Dolphin processes stopped.
+
+No new gameplay assembly correction is accepted yet. Existing single-unit Escape
+hand-back passed one synthetic original-event case; other assumptions still need
+reachability/reproduction. No campaign completion,
 next-chapter transition or new two-PC Netplay result is claimed.

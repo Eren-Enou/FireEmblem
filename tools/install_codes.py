@@ -125,7 +125,66 @@ def build_ini(enable: list[str], verbose: bool = True, *, dolphin: Path | None =
         for n in enabled:
             if verbose:
                 print(f"enabled: {n}")
-    return "\n".join(out_lines) + "\n"
+    text = "\n".join(out_lines) + "\n"
+    if validate:
+        validate_ini(text, dolphin)
+    return text
+
+
+def validate_ini(text: str, dolphin: Path | None = None) -> int:
+    """Validate actual enabled definitions, including generated private fixture codes.
+
+    Returns Gecko bytes. Disabled experiments do not consume capacity. C0/C2
+    payloads are skipped as data, checked for truncation, and C2 hooks must be
+    unique across enabled definitions. This does not prove patch semantics.
+    """
+    sections = parse_sections(text)
+    hooks, total = {}, 0
+    for kind in ("ActionReplay", "Gecko"):
+        definitions, current = {}, None
+        for line in sections.get(kind, []):
+            if line.startswith("$"):
+                current = line[1:]
+                if current in definitions:
+                    raise ValueError(f"duplicate {kind} definition: {current}")
+                definitions[current] = []
+            elif current is not None:
+                definitions[current].append(line)
+        enabled = sections.get(kind + "_Enabled", [])
+        if len(enabled) != len(set(enabled)):
+            raise ValueError(f"duplicate {kind} enabled code")
+        for selection in enabled:
+            if not selection.startswith("$") or selection[1:] not in definitions:
+                raise ValueError(f"undefined enabled {kind} code: {selection}")
+            name, words = selection[1:], []
+            for line in definitions[selection[1:]]:
+                tokens = line.split()
+                if len(tokens) != 2 or any(len(t)!=8 or any(c not in "0123456789abcdefABCDEF" for c in t) for t in tokens):
+                    raise ValueError(f"malformed {kind} line in {name}")
+                words.append(tuple(int(t,16) for t in tokens))
+            if not words:
+                raise ValueError(f"empty enabled {kind} code: {name}")
+            if kind != "Gecko":
+                continue
+            total += len(words) * 8
+            index = 0
+            while index < len(words):
+                command, count = words[index]
+                index += 1
+                if command >> 24 in (0xC0,0xC2):
+                    if count == 0 or index + count > len(words):
+                        raise ValueError(f"truncated/empty assembly payload in {name}")
+                    if command >> 24 == 0xC2:
+                        address = 0x80000000 | (command & 0x1FFFFFF)
+                        if address in hooks:
+                            raise ValueError(f"hook conflict at {address:08X}: {hooks[address]} / {name}")
+                        hooks[address] = name
+                        if words[index+count-1][1] != 0:
+                            raise ValueError(f"C2 return placeholder missing in {name}")
+                    index += count
+    if total > gecko_budget(dolphin):
+        raise ValueError(f"Gecko space exceeded: {total} > {gecko_budget(dolphin)}")
+    return total
 
 
 def main() -> None:

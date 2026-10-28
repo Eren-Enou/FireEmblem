@@ -226,7 +226,9 @@
           "note": "Original restart/prep/Fight path from copied card; earlier history partly documented; Escape not yet exercised"
         },
         "event_runtime": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch6-yellow-escape-07",
+          "note": "Synthetic UnitSetPos setup; original Yellow Escape, same-map roster/EXP/raw inventory preservation only"
         },
         "chapter_clear": {
           "status": "NOT TESTED"
@@ -1317,10 +1319,39 @@
         }
       ],
       "description": "Fresh boot from private NET02 card copy, original Restart Chapter Ch6, normal Start skips of opening dialogue, preparations Fight/Begin Yes. No redirect or RAM edits. Turn1 Blue snapshot has Oscar Yellow, 4 Blue, Shinon/Gatrie away, Boyd absent; all stable live hooks matched. state_expect campaign/fixtures/ch6_start.json PASS. Private card SHA1 unchanged 54b5a7f400b9ec68b6e315a0b2b89a78e5b7218d. Prior card history includes earlier debugging; no natural progression or Escape acceptance inferred."
+    },
+    "ch6-yellow-escape-07": {
+      "kind": "dolphin",
+      "commit": "0706896f1747a47d760530ab9011677388a798cb",
+      "worktree_dirty": true,
+      "fingerprint": "1c319ccbd9a5d46a",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_original_native_positioning",
+      "chapters": [
+        "7"
+      ],
+      "axes": [
+        "event_runtime"
+      ],
+      "artifacts": [
+        {
+          "path": "work/fixtures/ch6_escape_native_v2/before.s02.sav",
+          "sha256": "a3faa84307fd86e444b10d5a6a62dea9f09c110a7a86db6bd732fa21def9a8d3"
+        },
+        {
+          "path": "work/fixtures/ch6_escape_native_v2/after.s02.sav",
+          "sha256": "0da66dbf0ffd922d836976ee765d639df7157466ae3a756cb1a029b2c2f3fe9c"
+        },
+        {
+          "path": "work/fixtures/ch6_escape_native_v2/accepted-config.ini",
+          "sha256": "0444bb96970d3ac691a9fa81d6f3d4bebcd963abd1d30a53b2d85e24d64cdf3d"
+        }
+      ],
+      "description": "DBG-CAMP-POS guard moves living Emil from exit13,26 to vacant13,25 and Oscar from14,9 to13,26 through original UnitSetPos. No death/faction/completion command injected. Native port2 selects Oscar -> Escape -> Yes, observes original Oscar dialogue. Original event preserves slot2 in force5, escaped flag0x4000, HP28/lv6/EXP28 and all64 inventory-slot bytes. Chapter7 continues turn2 with Ike on-map. All stable and setup C2 bodies match RAM. 3168 Gecko bytes. First overlapping-tile fixture rejected; no gameplay fix or natural-route/clear/save/Netplay claim."
     }
   },
   "next_cases": [
-    "Ch6 Yellow individual escape, Ike last, transition and fresh reload (natural campaign).",
+    "Ch6 carried units and Ike-last completion, cleanup/transition and fresh native reload remain unverified; single Yellow Escape passed only in synthetic positioning fixture.",
     "Ch9 native partners: combat EXP, partner cleanup/eventual recruitment and natural chapter history remain unverified.",
     "Ch10 prisoner conversations, temporary Yellow and exit conditions.",
     "Ch17 all four stage transitions, reinforcements, turn resets and ownership.",

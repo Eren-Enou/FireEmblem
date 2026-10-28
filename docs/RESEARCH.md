@@ -15,6 +15,51 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-005 — native positioning fixtures and original Yellow Escape
+
+VERIFIED-STATIC: recovered registration UnitSetPos = 0x801A0E84, argc3
+(unit ID, x, y). Entry/byte-ID gate 0x801A0E84/0x801A0E8C; staging x/y
+0x801A0ED4/0x801A0EE4; original position-helper call 0x801A0EF4; position worker
+0x801A0F04; map refresh 0x801A0F10; unit-display refresh 0x801A0F18 [S].
+This routine is NOT assumed to enforce vacant destinations. The first synthetic
+trial put Oscar on Emil's occupied exit tile; that trial was rejected without
+exercising Escape. Corrected setup moves Emil alive to a vacant adjacent tile.
+
+UnitGetByPos = 0x800BD4C0, argc2. It scans active tactical units using mask query3
+at 0x800BD4E8, compares coordinates at 0x800BD550/0x800BD560, returns0 at
+0x800BD584 when absent, else the unit ID at 0x800BD58C [S]. The corrected setup
+requires vacant (13,25), Emil force1 at (13,26), then checks that the exit was
+vacated before moving Oscar. No death, faction, Escape or completion command
+is injected. Hook = existing human input entry 0x800291D8 (already pinned).
+Guards: chapter7, turn1, human phase3, Oscar force3 at (14,9), alive and not
+linked in a rescue pair. All volatile GPR arguments, r29..31, CR/CTR/XER/LR are preserved around
+original native calls. Full debug configuration: **3168 bytes**, 80 bytes spare;
+production COOP-P6/EXP-16 generators are unchanged.
+
+Private state seed construction verifies Dolphin2609a handler SHA-256
+2b2ff0716aeb9b806cc61181e559041312957f25f04c435bd7da80a78917b33b.
+The GCT header is at 0x80002338, active list at 0x80002340, stable terminator at
+0x80002D28, derived from the tagged handler placement (GECKO_AUDIT.md) and
+confirmed in the captured state. It compares every stable code-list byte except
+validated runtime branch-backs, requires a zero free tail, appends the new C2 and
+terminator in a NEW state, and verifies the decoded result. All other payload
+bytes remain identical. These are handler-memory addresses, pinned by handler
+hash/layout and per-state code-list verification rather than original DOL words.
+
+Inventory accessor 0x80037BD0 checks indexes; stride8 at 0x80037BE4; slots0..3
+at unit+0x1CC (0x80037BE8), slots4..7 at +0x1EC (0x80037C0C), all [S]. Snapshots
+now include all eight raw slots (64 bytes); item semantics beyond these records
+are not fully decoded.
+
+VERIFIED-RUNTIME, synthetic fixture only: native port2 selected Oscar at the
+exit; original menu displayed Escape; original Yes confirmation and Oscar's
+escape dialogue ran. After the original event and phase cycle, Oscar remains
+slot2 in force5 with escaped flag0x4000, HP28/lv6/EXP28 and all64 inventory-slot
+bytes unchanged. Ike remains on-map; chapter7 continues into turn2. All intended
+stable AND fixture C2 bodies match both captured states. See TESTING CAMP-G.
+This establishes the single-unit EXP-16 hand-back path in this fixture, not
+natural traversal, carried units, Ike-last completion, cleanup, save or Netplay.
+
 ### CAMP-004 — conversation actors, direction and consumed keys
 
 VERIFIED-STATIC: original query 0x800BF1E8 matches scene kind 8 at 0x800BF22C.

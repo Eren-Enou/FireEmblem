@@ -59,6 +59,7 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
                       "hp": mem.u8(addr + 0x1A8), "level": mem.u8(addr + 0x19A),
                       "exp": mem.u8(addr + 0x19B), "gauge": mem.u8(addr + 0x19C),
                       "xy": [mem.u8(addr + 0x19E), mem.u8(addr + 0x19F)],
+                      "inventory_slots_hex": mem.read(addr + 0x1CC, 64).hex(),  # CAMP-005, eight original 8-byte slots
                       "flags": flags, "owned": bool(flags & 0x20000000),
                       "owner": 2 if flags & 0x60000000 == 0x60000000 else 1 if flags & 0x20000000 else None,
                       "death_record": bool(flags & 0x8000), "death_chapter": mem.u8(addr + 0x234)})

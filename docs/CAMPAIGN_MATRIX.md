@@ -12,7 +12,7 @@ Generated from the user's GFEE01 rev 0 image. Static inventory and local instruc
 | Ch.3: Pirates Aground | 4 | bmap04 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.4: Roadside Battle | 5 | bmap05 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.5: Flight! | 6 | bmap06, bmap06_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.6: A Brief Diversion | 7 | bmap07 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.6: A Brief Diversion | 7 | bmap07 | inventory; conditions open | see ledger | PASS* | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.7: Shades of Evil | 8 | bmap08, bmap08_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.8: Despair and Hope | 9 | bmap09, bmap09_2, bmap09_3, bmap09_4, bmap09_5 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.9: Gallia | 10 | bmap10 | inventory; conditions open | see ledger | PASS* | NOT TESTED | NOT TESTED | NOT TESTED |

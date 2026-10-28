@@ -1,5 +1,54 @@
 # Testing
 
+## CAMP-G — Original Yellow individual Escape, synthetic positioning fixture
+
+2026-10-28, source HEAD0706896 with dirty analysis/setup tools; Dolphin2609a.
+Stable COOP-P6 + EXP-16 plus separate DBG-CAMP-POS setup: **3168 Gecko bytes**,
+fingerprint **1c319ccbd9a5d46a**. Production patch generators are unchanged.
+
+The seed is a NEW copy of CAMP-F's Chapter6 start. tools.fixture_state verified
+the pinned handler, complete stable GCT list and runtime branch-backs, then
+appended only the setup C2 in free Gecko storage. A regression checks all other
+decompressed payload bytes remain identical. The setup executes original native
+UnitSetPos under chapter7/turn1/humanYellow/position/faction/rescue guards.
+
+**Rejected setup trial:** Emil originally occupies the escape tile (13,26).
+First version overlapped him with Oscar; original target selection exposed the
+bad fixture. Stopped that process without executing Escape. This is a fixture
+FAIL, not a co-op gameplay failure. Corrected setup requires vacant (13,25),
+moves Emil there alive, verifies that (13,26) is vacant, then moves Oscar there.
+No death/faction/escaped/completion flags or commands are injected.
+
+**Runtime PASS — narrow event:** native Computer Use/TAS port1 ended Blue;
+port2 Next Unit located Oscar. Original A selection/current tile produced an
+action menu with **Escape**. Selected Escape, changed original confirmation
+from No to Yes, observed Oscar's original escape speech, advanced it normally.
+The original event removed Oscar from the map; phase cycle reached turn2 Blue.
+
+Before: work/fixtures/ch6_escape_native_v2/before.s02.sav,
+SHA-256 a3faa84307fd86e444b10d5a6a62dea9f09c110a7a86db6bd732fa21def9a8d3.
+Internal7/turn1/phase3; Oscar slot2, force3, (13,26), HP28, lv6, EXP28,
+flags0x10400. Emil force1 at (13,25), HP32.
+
+After: work/fixtures/ch6_escape_native_v2/after.s02.sav,
+SHA-256 0da66dbf0ffd922d836976ee765d639df7157466ae3a756cb1a029b2c2f3fe9c.
+Internal7/turn2/phase0; Oscar **still slot2**, now **force5**, flags0x14411
+(escaped0x4000 set, not dead), HP28/lv6/EXP28 unchanged. All64 bytes of his
+eight raw inventory slots match. Emil remains alive/enemy, HP32; Ike remains
+on-map. Both captures match ALL intended stable and setup C2 bodies in RAM.
+tools.escape_smoke PASS. Private card SHA1 unchanged 54b5a7f4...; no native save
+made. Stopped only this clone's Dolphin afterward.
+
+This validates EXP-16's existing single-unit hand-back for this original event
+in the synthetic fixture. **NOT TESTED:** original traversal/combat to the gate,
+carried units, Ike-last completion, chapter cleanup/transition, native save/reload,
+Netplay or EXP-21 ownership. No new gameplay fix was needed or claimed.
+
+Static/tooling: **94 tests PASS**, **240/240 signatures match**; nine runtime
+artifact files hash-verified. Actual enabled-INI validation now also rejects
+truncated assembly payloads, missing C2 return slots and undefined enabled names,
+including generated private fixture INIs, before profile mutation.
+
 ## CAMP-F — Native Chapter 6 restart fixture
 
 2026-10-28, clean runtime source 50c2834; private work/runtime/host, stable

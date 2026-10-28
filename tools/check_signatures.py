@@ -18,6 +18,25 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-005: original UnitSetPos fixture setup, GFEE01 rev0.
+    (0x801A0E84, 0x9421FFE0, "UnitSetPos native entry"),
+    (0x801A0E8C, 0x5463063F, "UnitSetPos takes byte-sized unit ID"),
+    (0x801A0ED4, 0x98810009, "UnitSetPos stages x argument"),
+    (0x801A0EE4, 0x98A10008, "UnitSetPos stages y argument"),
+    (0x801A0EF4, 0x4BF66E71, "UnitSetPos calls original position helper"),
+    (0x801A0F04, 0x4BE97269, "UnitSetPos calls original position worker"),
+    (0x801A0F10, 0x4BE81A6D, "UnitSetPos refreshes original map state"),
+    (0x801A0F18, 0x4BEAFD79, "UnitSetPos refreshes original unit display"),
+    (0x800BD4C0, 0x9421FFE0, "UnitGetByPos native entry"),
+    (0x800BD4E8, 0x38600003, "UnitGetByPos selects active tactical force mask"),
+    (0x800BD550, 0x8805019E, "UnitGetByPos compares unit x"),
+    (0x800BD560, 0x8805019F, "UnitGetByPos compares unit y"),
+    (0x800BD584, 0x38600000, "UnitGetByPos returns zero when empty"),
+    (0x800BD58C, 0x887F0198, "UnitGetByPos returns found unit ID"),
+    (0x80037BD0, 0x2C040000, "unit indexed inventory accessor begins"),
+    (0x80037BE4, 0x54831838, "unit inventory slot stride is eight bytes"),
+    (0x80037BE8, 0x386301CC, "unit inventory slots 0..3 begin at +1CC"),
+    (0x80037C0C, 0x386301EC, "unit inventory slots 4..7 begin at +1EC"),
     # CAMP-004: kind-8 original conversation identity/direction matching.
     (0x800BF1E8, 0x9421FFE0, "conversation matching query entry"),
     (0x800BF22C, 0x2C000008, "conversation matcher selects kind 8"),

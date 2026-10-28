@@ -67,6 +67,40 @@ hashes, Dolphin version and synthetic classification. Existing manifests are als
 protected. This protects file integrity; it does not make arbitrary RAM edits valid
 game states. The original image and source state are read only.
 
+## Original Escape event with synthetic positioning (CAMP-G)
+
+Create a NEW fixture profile with tools.fixture_position_code --root NEW_WORK_DIR
+--card work/saves/native_ch6_card_start.gci. It adds only DBG-CAMP-POS to stable
+COOP-P6 + EXP-16, checks the actual enabled INI (3168 bytes), and copies the card
+to that new profile. It refuses existing destinations. Production packages do not
+include this code.
+
+Create a NEW seed with tools.fixture_state work/ch6_native_start.s02.sav NEW_STATE.
+The tool accepts only the pinned2609a handler and exact stable list, verifies
+runtime C2 branch-backs, checks the free tail, appends setup code in Gecko memory,
+and verifies the decoded state. All other payload bytes stay identical. This avoids
+restoring an old code list that would discard a newly installed setup hook (F-25).
+Launch the private profile with --exec the copied image and --save_state NEW_STATE.
+
+Use port1 Map Menu > End. At turn1 Yellow, original UnitSetPos moves Emil from
+(13,26) to vacant (13,25), checks the exit is empty, then moves Oscar there from
+(14,9). The first trial omitted the boss move and overlapped two units; it was
+rejected before Escape. Do not reuse that older seed/profile.
+
+Port2 Next Unit locates Oscar. Select him, confirm the current tile, and observe
+Escape in the original menu. Capture a NEW before state. Choose Escape > Yes,
+advance Oscar's original speech, then capture a NEW after state. In CAMP-G this
+reached turn2 Blue with Oscar preserved in slot2/force5, same HP/lv/EXP and all64
+inventory-slot bytes. Capture JSONs with the fixture INI, then run
+tools.escape_smoke BEFORE.json AFTER.json. Both states must match the live stable
+AND setup C2 payloads; the configuration is explicitly debug/synthetic.
+
+This shortcut skips map traversal and combat, but still exercises the original
+Escape menu, confirmation, dialogue and unit cleanup. It does not certify a
+natural chapter clear, carried-unit escape, Ike's completion, transition, native
+save/reload or Netplay. Current accepted files/profile live in the ignored
+work/fixtures/ch6_escape_native_v2 directory; the seed and GCI are never committed.
+
 ## Demonstrated GUI action path (CAMP-C)
 
 1. Launch the private profile with `--exec` the copied image and `--save_state`
