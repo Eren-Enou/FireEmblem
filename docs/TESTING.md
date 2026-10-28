@@ -615,7 +615,7 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 
 ## PREP-02 — Ownership colours in the unit lists (EXP-25; PREP-01 Step 2)
 
-**What it is:** in the native unit lists, each character's **name** is coloured by owner. That covers Choose Units in preparations and the map menu's Unit list (Base Data) in battle.
+**What it is (v2):** in the native unit lists, each character's **data columns on every page** (Class, Lv, EXP, HP, Equipment, …) are coloured by owner. The **name keeps its native colour** (green = forced, and the pick state in Choose Units). That covers Choose Units in preparations and the map menu's Unit list (Base Data) in battle.
 - Player 1, and Ike: **light blue**
 - Player 2: **yellow**
 - unassigned: unchanged (white; green if forced)
@@ -633,14 +633,14 @@ It is display only. Ownership itself is still made with the verified in-battle d
    Dolphin-x64/Dolphin.exe --user work/ch1/host
    ```
    Then Restart Chapter → **Ch. 6** → preparations → **Choose Units**.
-   Expected: **Ike's name light blue**; the others as before (green, since they are forced). Screenshot.
+   Expected: **Ike's row data (Class, Lv, …) light blue**; names unchanged (green, since they are forced). Page through with R/L: the colour stays on every page. Screenshot.
 2. Back → **Fight**. Turn 1, blue phase: draft with L+R.
    - Titania **Q+W**
    - Oscar **O+P**: ring turns yellow
    - Soren **Q+W**
    - Rhys **O+P**: yellow
 3. Map menu (D) → **Unit** (the unit list).
-   Expected: **Ike, Titania, Soren light blue; Oscar, Rhys yellow**. Every other column looks as before. Screenshot.
+   Expected: the data columns of **Ike, Titania, Soren light blue; Oscar, Rhys yellow**, on **every page** (page through). Names keep their native colour. Screenshot.
 4. Press **Shift+F2**.
 5. Optional (persistence preview):
    - Clear Ch. 6, the Escape objective; DBG-01 keeps enemies at 1 HP.
@@ -656,6 +656,8 @@ It is display only. Ownership itself is still made with the verified in-battle d
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-10-28 | user (run 1, played Ch. 3 instead of Ch. 6) | **PARTIAL: ownership right, wrong column** | Choose Units before the draft: Ike light blue. In battle, Base Data after the draft: **Ike and Titania light blue, Shinon yellow, Gatrie (unassigned) unchanged**. So the row → unit mapping and the owner rule work. But the colour was on the **Class/Lv/Exp/HP** cells, not the names. On other pages (Equipment Data) there was no colour at all. Cause: `list+0x38[0]` is the first *data page*, not the Name column. **Fix (v2):** colour every data-page cell (column draw `0x8012F154`, all pages) and keep the Name column's native colour, so forced/picked stay readable. Retest = run 2. |
+
 
 ## DRAFT-02 — Draft clarity (EXP-23 = draft v2; replaces EXP-22)
 

@@ -2,7 +2,9 @@
 
 The unit-list module (Pick Units = E_SallyList in preparations, Base Data in battle) draws every cell through
 0x8012EF5C. Before each cell draw (0x8012F0D4), r5 holds the cell's colour index into the native text palette
-0x80296088 (F-58). EXP-25 changes it for the **Name column only** from the row's unit ownership (F-52):
+0x80296088 (F-58). EXP-25 changes it for every **data-page cell** (columns drawn by 0x8012F154: Class/Lv/
+Exp/HP, Equipment, ... on every page) from the row's unit ownership (F-52). The Name column has its own draw
+(0x80130D34) and keeps its native colour, so forced/picked states stay readable (PREP-02 run 1):
 
   Player 1 (OWNED, not P2) and Ike (unit id 1)  -> 0x21  light blue #6DCFF6
   Player 2 (OWNED | P2)                        -> 0x06  yellow     #FFFF64
@@ -11,7 +13,7 @@ The unit-list module (Pick Units = E_SallyList in preparations, Base Data in bat
 
 Display only: no calls, no writes. Registers at the hook: r24 = column object, r25 = list object,
 r29 = row offset (0x24 per row), r5 = colour index; r0/r11/r12 are free (r0 is reloaded right after).
-Row record = *(list+0x3C) + r29, unit pointer at +0; the Name column is the first entry of list+0x38.
+Row record = *(list+0x3C) + r29, unit pointer at +0; the column's draw method = *(*(r24+0x4C)+0x1C).
 
 Usage: python -m tools.prep_code [--write]
 """
@@ -29,6 +31,7 @@ NAME = "EXP-25 Unit lists show ownership: Player 1 light blue, Player 2 yellow (
 DRAW_HOOK = (0x8012F0D4, 0x8198004C)     # lwz r12,0x4c(r24)
 UNIT_TABLE = 0x802B14E4
 COLOUR_P1, COLOUR_P2 = 0x21, 0x06
+DATA_CELL_DRAW = 0x8012F154                # draw method of the data-page columns (not the Name column)
 
 
 def lwzx(d, a, b): return (31 << 26) | (d << 21) | (a << 16) | (b << 11) | (23 << 1)
@@ -38,7 +41,8 @@ def cmplw(a, b): return (31 << 26) | (a << 16) | (b << 11) | (32 << 1)
 
 def colour_cave() -> list[int]:
     a = Asm()
-    a(lwz(12, 0x38, 25), lwz(12, 0, 12), cmpw(12, 24)); a.br("bne", "done")           # Name column only
+    a(lwz(12, 0x4C, 24), lwz(12, 0x1C, 12), lis(11, DATA_CELL_DRAW >> 16),
+      ori(11, 11, DATA_CELL_DRAW & 0xFFFF), cmpw(12, 11)); a.br("bne", "done")        # data-page cells only
     a(lwz(12, 0x3C, 25), lwzx(12, 12, 29))                                              # row's unit
     a(lis(11, UNIT_TABLE >> 16), ori(11, 11, UNIT_TABLE & 0xFFFF), subf(11, 11, 12),
       lis(0, 2), cmplw(11, 0)); a.br("bge", "done")                                     # a unit-table pointer

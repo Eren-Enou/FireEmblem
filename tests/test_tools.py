@@ -661,7 +661,9 @@ class GameTests(unittest.TestCase):
         self.assertEqual((pal(pc.COLOUR_P1), pal(pc.COLOUR_P2), pal(0), pal(1)), (0x6DCFF6, 0xFFFF64, 0x808080, 0xFFFFFF))
         asm = self._asm(words[:-1])
         self.assertFalse(any(x.startswith(("bl", "bctrl", "stw", "stb")) for x in asm))   # display only
-        for need in ["lwz r12, 0x38(r25)", "cmpw r12, r24", "lwzx r12, r12, r29", "cmpwi r5, 0",
+        self.assertEqual(dol.u32(pc.DATA_CELL_DRAW), 0x9421FFC0)                          # data-cell draw entry
+        for need in ["lwz r12, 0x4c(r24)", "lwz r12, 0x1c(r12)", "ori r11, r11, 0xf154", "cmpw r12, r11",
+                     "lwzx r12, r12, r29", "cmpwi r5, 0",
                      "andis. r0, r11, 0x2000", "andis. r0, r11, 0x4000", "li r5, 0x21", "li r5, 6"]:
             self.assertIn(need, asm)
         self.assertEqual(asm[-2], "lwz r12, 0x4c(r24)")
