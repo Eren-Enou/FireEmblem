@@ -1,4 +1,5 @@
 import json
+import re
 import struct
 import subprocess
 import sys
@@ -146,7 +147,8 @@ class CampaignDataTests(unittest.TestCase):
         transfers = [e for e in result["events"] if e["command"] == "UnitTransferToForceByPID"]
         self.assertEqual(len(transfers), 1)
         self.assertEqual(transfers[0]["args"], ["'PID_JILL'", "1"])
-        self.assertEqual(transfers[0]["conditions"], [
+        conditions=[re.sub(r"@0x[0-9A-F]+#[0-9]+","",c) for c in transfers[0]["conditions"]]
+        self.assertEqual(conditions, [
             "(PersonGetYellLevel('PID_JILL', 'PID_MIST') == 3) == 0",
             "(PersonGetYellLevel('PID_JILL', 'PID_LETHE') == 3) == 0"])
 
@@ -157,8 +159,9 @@ class CampaignDataTests(unittest.TestCase):
         self.assertTrue(transfers)
         for event in transfers:
             self.assertEqual(event["args"], ["'PID_RIEUSION'", "6"])
-            self.assertIn("(ForceGetCount(5) == 0) != 0", event["conditions"])
-            self.assertIn("Normal() != 0", event["conditions"])
+            conditions=[re.sub(r"@0x[0-9A-F]+#[0-9]+","",c) for c in event["conditions"]]
+            self.assertIn("(ForceGetCount(5) == 0) != 0", conditions)
+            self.assertIn("Normal() != 0", conditions)
 
     def test_ch6_original_escape_script_counts_carried_units_and_ike(self):
         from tools.fe9.event_vm import execute

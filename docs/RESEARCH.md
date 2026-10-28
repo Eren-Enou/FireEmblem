@@ -15,6 +15,18 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-006 — local symbolic samples across native state changes
+
+VERIFIED-TOOLING (CAMP-H): treating repeated get(flag) text as one immutable
+expression was unsound across an intervening set(flag). A synthetic bytecode
+regression reaches a transfer with first read0 and second read1 in the concrete
+mocked-native VM. The bounded tracer now assigns each opaque call an offset/visit
+sample identity and invalidates explicitly passed VM-local references. This
+conservatively permits additional paths; it does not model native state effects
+or certify that a world-state combination can occur. Only equality of known
+integer/string literals and integer branch truth are folded. No new game address
+or production patch is introduced. See regenerated CAMPAIGN_EVENTS.md and CAMP-H.
+
 ### CAMP-005 — native positioning fixtures and original Yellow Escape
 
 VERIFIED-STATIC: recovered registration UnitSetPos = 0x801A0E84, argc3

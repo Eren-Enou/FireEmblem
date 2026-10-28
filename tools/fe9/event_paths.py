@@ -3,13 +3,38 @@
 Native functions are opaque expressions. This traces VM branch predicates, not
 native side effects, world-state feasibility, event registration or real gameplay.
 Unsupported instructions and loop/state bounds are explicit incomplete outcomes.
+Opaque query results are distinct per call occurrence; intervening native effects
+must not make a later query reuse an earlier symbolic value.
 """
+import ast
 from tools.fe9.events import functions, instructions
 from tools.chapter_audit import script_strings
 
 BIN = {0x22: "+", 0x23: "-", 0x24: "*", 0x25: "/", 0x26: "%", 0x2A: "|", 0x2B: "&",
        0x2C: "^", 0x2D: "<<", 0x2E: ">>", 0x2F: "==", 0x30: "!=", 0x31: "<", 0x32: "<=",
        0x33: ">", 0x34: ">=", 0x35: "string==", 0x36: "string!="}
+
+
+def integer(value):
+    try:
+        return int(value, 10)
+    except ValueError:
+        return None
+
+
+def binary(left, right, op):
+    """Fold only known equality operands; arithmetic/shift edge cases stay opaque."""
+    a, b = integer(left), integer(right)
+    if op in (0x2F, 0x30) and a is not None and b is not None:
+        return str(int((a == b) if op == 0x2F else (a != b)))
+    if op in (0x35, 0x36) and left[:1] in ("'", '"') and right[:1] in ("'", '"'):
+        try:
+            a, b = ast.literal_eval(left), ast.literal_eval(right)
+            if isinstance(a, str) and isinstance(b, str):
+                return str(int((a == b) if op == 0x35 else (a != b)))
+        except (ValueError, SyntaxError):
+            pass
+    return f"({left} {BIN[op]} {right})"
 
 
 def trace(raw: bytes, index: int, max_states: int = 128, max_steps: int = 4000) -> dict:
@@ -54,9 +79,12 @@ def trace(raw: bytes, index: int, max_states: int = 128, max_steps: int = 4000) 
                     stack.append(val)
                 elif op in BIN:
                     right, left = stack.pop(), stack.pop()
-                    stack.append(f"({left} {BIN[op]} {right})")
+                    stack.append(binary(left, right, op))
                 elif op in (0x27, 0x28, 0x29):
-                    stack.append(f"{ {0x27:'-', 0x28:'~', 0x29:'!'}[op]}({stack.pop()})")
+                    value = stack.pop()
+                    number = integer(value)
+                    stack.append(str(int(number == 0)) if op == 0x29 and number is not None else
+                                 f"{ {0x27:'-', 0x28:'~', 0x29:'!'}[op]}({value})")
                 elif op in (0x37, 0x38):
                     if op == 0x38:
                         name = strings[int.from_bytes(raw[pc + 1:pc + 3], "big")]
@@ -64,9 +92,15 @@ def trace(raw: bytes, index: int, max_states: int = 128, max_steps: int = 4000) 
                     else:
                         name, argc = f"local_{value}", raw[fs[value].record + 13]
                     args = [stack.pop() for _ in range(argc)][::-1]
+                    result = name + "(" + ", ".join(args) + f")@0x{pc:X}#{visited[pc]}"
                     events.append({"offset": pc, "function": index, "command": name, "args": args,
-                                   "conditions": conditions.copy(), "scope": "local symbolic path only"})
-                    stack.append(name + "(" + ", ".join(args) + ")")
+                                   "result": result, "conditions": conditions.copy(), "scope": "local symbolic path only"})
+                    # A native may write a passed VM local reference. Preserve
+                    # previous samples in predicates but invalidate the local.
+                    for arg in args:
+                        if arg.startswith("&v") and arg[2:].isdigit():
+                            variables[int(arg[2:])] = f"v{arg[2:]}@0x{pc:X}#{visited[pc]}"
+                    stack.append(result)
                 elif op == 0x39:
                     outcomes.append({"status": "RETURN", "conditions": conditions.copy()})
                     break
@@ -75,6 +109,14 @@ def trace(raw: bytes, index: int, max_states: int = 128, max_steps: int = 4000) 
                 elif 0x3B <= op <= 0x3E:
                     predicate = stack.pop()
                     on_true = op in (0x3B, 0x3C)
+                    number = integer(predicate)
+                    if number is not None:
+                        if (number != 0) == on_true:
+                            nxt = i["target"]
+                            if op in (0x3C, 0x3E):
+                                stack.append("1" if on_true else "0")
+                        pc = nxt
+                        continue
                     taken_stack = stack.copy()
                     if op in (0x3C, 0x3E):
                         taken_stack.append("1" if on_true else "0")
@@ -96,6 +138,6 @@ def trace(raw: bytes, index: int, max_states: int = 128, max_steps: int = 4000) 
             pc = nxt
     if pending or steps >= max_steps:
         outcomes.append({"status": "INCONCLUSIVE", "reason": "state/step bound"})
-    unique = {(e["offset"], tuple(e["conditions"]), tuple(e["args"])): e for e in events}
+    unique = {(e["offset"], e["result"], tuple(e["conditions"]), tuple(e["args"])): e for e in events}
     return {"function": index, "events": list(unique.values()), "outcomes": outcomes,
             "states": states, "steps": steps, "complete_local_trace": not any(o["status"] == "INCONCLUSIVE" for o in outcomes)}

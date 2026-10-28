@@ -12,6 +12,17 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 - Snapshot comparator and byte-level Gecko report. Stable code fingerprint unchanged.
 - Baseline validation: 64 tests, 184 signatures, DOL identity verified. See TESTING.
 
+## Latest analysis correction (CAMP-H)
+
+- Fixed a tracer soundness bug: repeated native queries now represent distinct
+  observations, so a flag write cannot make a later feasible branch disappear as
+  a false contradiction. Native reference arguments invalidate VM-local values.
+- Three focused regressions include an independently executed mocked flag change.
+  All97 tests pass; 240 signatures and nine runtime artifact hashes pass.
+- Regenerated event report: 1338 finished local traces / 169 incomplete across
+  1507 campaign scenes. Previous1334/173 counts are historical. No additional
+  runtime, chapter-clear, progression or Netplay result is implied.
+
 ## Second checkpoint (82e06d8, pushed)
 
 - Instruction-aligned local CFG decoder: 2075 scenes / 125775 reachable local

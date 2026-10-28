@@ -37,7 +37,9 @@ def analyze(disc):
 def report(data, titles):
     out = ["# Campaign event predicates", "", "Static local CFG/symbolic analysis. Native calls are opaque; "
            "event registration, scene activation, global effects, world-state feasibility and gameplay are NOT proven. "
-           "Infeasible combinations may remain; exact repeated contradictory predicates are pruned. "
+           "Each opaque call result has a distinct @offset#visit identity; queries after state changes "
+           "are not assumed equal to earlier samples. Passed local references are invalidated. "
+           "Infeasible combinations may remain; only exact contradictions about the same sample are pruned. "
            "Incomplete traces may omit later events. Full evidence is in ignored work/event_paths.json.", "",
            "VM format corroboration: https://feuniverse.us/t/fe9-and-fe10-event-script-doc-notes/6143. "
            "Signed operands and interpreter dispatch were independently read from this game's DOL.", "",

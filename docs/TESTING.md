@@ -1,5 +1,25 @@
 # Testing
 
+## CAMP-H — Stateful-query symbolic tracer correction
+
+2026-10-28, campaign branch after 857261f. Static/tooling PASS: **97 tests**,
+**240/240 signatures**, nine runtime artifact hashes verified. No new Dolphin run.
+
+Regression: get(FLAG)==0, set(FLAG), then get(FLAG)!=0 can reach a faction
+transfer. The old tracer gave both queries the same expression and could prune
+that feasible path as contradictory. Each call now has an offset/visit identity;
+only contradictions about the same captured sample can prune a path. Native
+calls with VM-local reference arguments invalidate those locals. Constant equality
+and nonzero integer branches are folded without assuming arbitrary native effects.
+The flag regression also executes independently with the concrete mocked-native VM.
+
+Regenerated C01..31 report: 1507 scenes / 106136 reachable local instructions;
+**1338 finished local traces, 169 INCONCLUSIVE** at the same 24-state/1500-step
+bounds. Earlier checkpoint counts describe the old tracer and are superseded.
+Native state effects, pointer aliases retained by native code, inter-scene calls,
+activation and world-state feasibility remain opaque. Finished traces establish
+only bounded local analysis, never campaign compatibility or event execution.
+
 ## CAMP-G — Original Yellow individual Escape, synthetic positioning fixture
 
 2026-10-28, source HEAD0706896 with dirty analysis/setup tools; Dolphin2609a.
