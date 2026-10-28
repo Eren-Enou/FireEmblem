@@ -1,0 +1,90 @@
+"""Capture comparable FE9 state evidence, or compare two local/remote snapshots.
+
+Does not drive Dolphin or prove an event happened. Save states must be captured
+after the original interaction; record exact configuration/commit with each run.
+Usage: python -m tools.campaign_snapshot STATE --ini USER/GameSettings/GFEE01.ini --out work/run.json
+       python -m tools.campaign_snapshot --compare work/host.json work/client.json
+"""
+from __future__ import annotations
+import argparse
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+from tools.inspect_state import STATE, UNITS, load_mem1
+from tools.netplay_package import fingerprint, enabled_codes
+from tools.verify_game import DEFAULT_IMAGE
+
+
+def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
+    info, mem = load_mem1(path, image)
+    units = []
+    for i in range(159):
+        addr = UNITS + i * 0x280
+        char = mem.u32(addr + 0x188)
+        if not char:
+            continue
+        force = mem.u32(addr + 0x190)
+        flags = mem.u32(addr + 0x1A0)
+        cls = mem.u32(addr + 0x18C)
+        units.append({"slot": i + 1, "pid": mem.cstr(mem.u32(char)),
+                      "class": mem.cstr(mem.u32(cls)) if cls else None,
+                      "force": mem.u8(force + 8) if force else None,
+                      "hp": mem.u8(addr + 0x1A8), "level": mem.u8(addr + 0x19A),
+                      "exp": mem.u8(addr + 0x19B), "gauge": mem.u8(addr + 0x19C),
+                      "xy": [mem.u8(addr + 0x19E), mem.u8(addr + 0x19F)],
+                      "flags": flags, "owned": bool(flags & 0x20000000),
+                      "owner": 2 if flags & 0x60000000 == 0x60000000 else 1 if flags & 0x20000000 else None,
+                      "death_record": bool(flags & 0x8000), "death_chapter": mem.u8(addr + 0x234)})
+    text = ini.read_text()
+    names = [n for _, n, _ in enabled_codes(text)]
+    return {"schema": 1, "evidence": {"commit": commit, "state_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+             "dolphin": info.dolphin_version, "codes_fingerprint": fingerprint(text), "codes": names,
+             "debug": any(n.startswith("DBG-") for n in names),
+             "warning": "INI is intended configuration; old savestates may restore different active patches"},
+            "game": {"chapter": mem.u8(STATE + 0x10), "phase": mem.u8(STATE + 0x11),
+                     "turn": mem.u16(STATE + 0x12), "control": list(mem.read(STATE + 0x14, 4)), "units": units}}
+
+
+def differences(a: dict, b: dict) -> list[str]:
+    out = []
+    for key in ("commit", "dolphin", "codes_fingerprint"):
+        if a["evidence"][key] != b["evidence"][key]:
+            out.append(f"configuration mismatch: {key}")
+    if a["game"] != b["game"]:
+        for key in ("chapter", "phase", "turn", "control"):
+            if a["game"][key] != b["game"][key]:
+                out.append(f"{key}: {a['game'][key]} != {b['game'][key]}")
+        left = {u["slot"]: u for u in a["game"]["units"]}
+        right = {u["slot"]: u for u in b["game"]["units"]}
+        for slot in sorted(left.keys() | right.keys()):
+            if left.get(slot) != right.get(slot):
+                out.append(f"unit slot {slot}: {left.get(slot)} != {right.get(slot)}")
+    return out
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("state", type=Path, nargs="?")
+    p.add_argument("--image", type=Path, default=DEFAULT_IMAGE)
+    p.add_argument("--ini", type=Path)
+    p.add_argument("--out", type=Path)
+    p.add_argument("--compare", type=Path, nargs=2)
+    args = p.parse_args()
+    if args.compare:
+        issues = differences(*(json.loads(f.read_text()) for f in args.compare))
+        print("\n".join(issues) if issues else "MATCH: captured fields only, not complete RAM")
+        return int(bool(issues))
+    if not (args.state and args.ini and args.out):
+        p.error("capture requires STATE --ini --out")
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    data = capture(args.state, args.image, args.ini, commit)
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(data, indent=2))
+    print(f"wrote {args.out}; intended codes {data['evidence']['codes_fingerprint']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

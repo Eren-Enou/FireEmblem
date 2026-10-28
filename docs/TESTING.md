@@ -1,5 +1,31 @@
 # Testing
 
+## CAMP-A — isolated campaign/tooling milestone (2026-10-28)
+
+Clone `FireEmblemCampaignAudit`, branch `codex/campaign-compatibility`, baseline
+`10d2496`. Handoff snapshot read from source commit `53fc0b6`.
+
+| Check | Result | Scope |
+|---|---|---|
+| `python -B -m unittest tests.test_tools tests.test_campaign` | PASS, 64 tests | Static/tooling, including copied baseline-state decoding; not gameplay |
+| `python -B -m tools.check_signatures` | PASS, 184/184 | GFEE01 rev 0 original DOL instructions/data |
+| `python -B -m tools.verify_game --skip-file-hash` | PASS | GFEE01 rev 0; DOL SHA-1 9d00d7d407750b82cb1cfccc56f8aa8a89cc8851 |
+| `python -B -m tools.campaign_audit` | PASS | 31 chapter IDs, 43 script containers, suffix maps, message-derived names |
+| `python -B -m tools.netplay_package --out work/stable-client-regression.zip` | PASS | Package validation/reproducibility suite; stable enabled fingerprint still 8609ae9f49fd879f |
+| Oversized library/package/installer rejection | PASS | No invalid config emitted; installer sentinel and backup untouched |
+| Oversized `netplay_setup --force` | PASS | Temporary sentinel card preserved; validates before deletion |
+| Isolated Dolphin boot | Observed title sequence | Separate executable/image/profile/card only |
+| Campaign runtime, objective, clear, transition, save, Netplay | NOT PERFORMED | Synthetic key taps did not reliably operate menu; snapshot hotkey produced no fixture |
+
+Interpreter: existing Python 3.12.6 venv executable used with `-B`; installed
+Capstone metadata 5.0.9 differs from requirements pin 5.0.7, LZ4 4.4.5. No install
+or environment modification. Outputs and runtime copies are ignored in this clone.
+
+Handler measured 2880 bytes, SHA-256
+2b2ff0716aeb9b806cc61181e559041312957f25f04c435bd7da80a78917b33b.
+See CAMPAIGN_FINDINGS.md for limitations, GECKO_AUDIT.md for storage accounting,
+CAMPAIGN_MATRIX.md for separate chapter evidence axes. No gameplay patch changed.
+
 ## Automated (no emulator needed)
 
 ```bash

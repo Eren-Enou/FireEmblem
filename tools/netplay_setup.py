@@ -100,6 +100,11 @@ def main() -> int:
         print("refusing: --root must not be inside Dolphin-x64/User", file=sys.stderr)
         return 1
     host, client = root / "host", root / "client"
+    try:
+        codes = build_ini(args.enable or ["COOP-P3"], verbose=False, dolphin=args.dolphin)
+    except ValueError as exc:
+        print(f"refusing: {exc}", file=sys.stderr)
+        return 1
     for d in (host,) if args.host_only else (host, client):
         if d.exists():
             if not args.force:
@@ -107,15 +112,9 @@ def main() -> int:
                 return 1
             shutil.rmtree(d)
 
-    from tools.install_codes import check_budget
-    lost = check_budget(args.enable or ["COOP-P3"], args.dolphin)
-    if lost:
-        print("refusing: Dolphin would skip " + ", ".join(n.split()[0] for n in lost) + " (Gecko space, F-59)",
-              file=sys.stderr)
-        return 1
     games = (args.dolphin / "Games").resolve()
     client_keys = {**_KEYS, **(_DIGITS if args.client_stick == "digits" else {})}
-    make_user(host, games, "P1-Blue", PORT1_KEYBOARD, build_ini(args.enable or ["COOP-P3"], verbose=False),
+    make_user(host, games, "P1-Blue", PORT1_KEYBOARD, codes,
               pad2=keyboard_layout(client_keys), traversal=args.traversal)
     if not args.host_only:
         make_user(client, games, "P2-Yellow", keyboard_layout(client_keys), None)

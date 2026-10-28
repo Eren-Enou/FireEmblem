@@ -15,6 +15,21 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-001 — isolated campaign branch, 2026-10-28
+
+VERIFIED-STATIC: PlayerEscapeCount at 0x801B7188 builds mask [1,0,0,0,0,1,0,0].
+Sites 0x801B71B4/0x801B71C4/0x801B71CC enable forces 0/5 and exclude 3;
+0x801B7224 performs the indexed mask read. PlayerEscapeCheck at 0x801B7260
+does the same at 0x801B7284/0x801B7294/0x801B729C, lookup 0x801B72F4.
+All eight instructions pinned [S]. Both inspect escaped flag 0x4000.
+Normal Ch6 call reachability and runtime effect are unresolved; no corrective
+Gecko patch is claimed necessary or working. Details: docs/CAMPAIGN_FINDINGS.md.
+
+The campaign matrix now gets names from Mess/common.m MCTxx. Internal 29 is
+Ch.27-2, 30 is Ch.28, 31 is Endgame. C18 has local Complete18 and turn resets;
+suffix-map and ending-script inventories are necessary. Event calls decoded by
+tools/fe9/events.py remain bounded pattern candidates, not a complete VM trace.
+
 | Item | Value | Confidence |
 |---|---|---|
 | Image | `Dolphin-x64/Games/Fire Emblem - Path of Radiance (USA).ciso` | VERIFIED |

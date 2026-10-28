@@ -18,6 +18,15 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # Campaign audit CAMP-001: escape objective mask excludes tactical yellow.
+    (0x801B71B4, 0x38600001, "PlayerEscapeCount: mask force 0 enabled"),
+    (0x801B71C4, 0x38C00000, "PlayerEscapeCount: mask force 3 disabled"),
+    (0x801B71CC, 0x39000001, "PlayerEscapeCount: mask force 5 enabled"),
+    (0x801B7224, 0x7C0300AE, "PlayerEscapeCount: force-indexed mask lookup"),
+    (0x801B7284, 0x38600001, "PlayerEscapeCheck: mask force 0 enabled"),
+    (0x801B7294, 0x38C00000, "PlayerEscapeCheck: mask force 3 disabled"),
+    (0x801B729C, 0x39000001, "PlayerEscapeCheck: mask force 5 enabled"),
+    (0x801B72F4, 0x7C0300AE, "PlayerEscapeCheck: force-indexed mask lookup"),
     # map init (0x8014D920): phase=0, turn=1, control[0]=1 (human), control[1..3]=2 (CPU)
     (0x8014D950, 0x9BDF0011, "stb r30(=0),0x11(state)   phase = 0"),
     (0x8014D954, 0xB07F0012, "sth r3(=1),0x12(state)    turn = 1"),

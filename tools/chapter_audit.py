@@ -74,55 +74,17 @@ def script_strings(raw: bytes) -> dict[int, str]:
 
 
 def script_transfers(raw: bytes) -> list[tuple[str | None, int | None]]:
-    """(PID, force) of every 2-argument UnitTransferToForce[ByPID] call.
-
-    Bytecode seen in the scripts (F-48): 1C xx / 1D hh ll push a pool string, 19 nn pushes a small int,
-    38 hh ll nn calls the command named at pool offset hhll with nn arguments. A transfer is therefore
-    <push PID> 19 <force> 38 <name> 02; arguments built any other way are reported as None.
-    """
-    st = script_strings(raw)
-    rev = {v: k for k, v in st.items()}
-    found = []
-    for name in ("UnitTransferToForceByPID", "UnitTransferToForce"):
-        if name not in rev:
-            continue
-        off = rev[name]
-        for m in re.finditer(re.escape(bytes([0x38, off >> 8, off & 0xFF, 2])), raw):
-            pre = raw[max(0, m.start() - 8):m.start()]
-            force = pre[-1] if len(pre) >= 2 and pre[-2] == 0x19 else None
-            p = pre[:-2] if force is not None else pre
-            pid = None
-            if len(p) >= 2 and p[-2] == 0x1C:
-                pid = st.get(p[-1])
-            elif len(p) >= 3 and p[-3] == 0x1D:
-                pid = st.get((p[-2] << 8) | p[-1])
-            found.append((pid, force))
-    return found
+    """Bounded, file-ordered transfer candidates; computed arguments stay unknown."""
+    selected = script_calls(raw, ("UnitTransferToForceByPID", "UnitTransferToForce"))
+    return [(args[0] if isinstance(args[0], str) and args[0].startswith("PID_") else None,
+             args[1] if isinstance(args[1], int) else None)
+            for _, args in selected if len(args) == 2]
 
 
 def script_calls(raw: bytes, names: tuple[str, ...]) -> list[tuple[str, list]]:
-    """(command, literal args) for every call of the named commands (bytecode as in script_transfers)."""
-    st = script_strings(raw)
-    rev = {v: k for k, v in st.items()}
-    out = []
-    for name in names:
-        if name not in rev:
-            continue
-        off = rev[name]
-        for m in re.finditer(rb"\x38" + re.escape(bytes([off >> 8, off & 0xFF])) + rb"(.)", raw, re.S):
-            n, pre, args, j = m.group(1)[0], raw[max(0, m.start() - 12):m.start()], [], None
-            j = len(pre)
-            while j > 0 and len(args) < n:
-                if j >= 2 and pre[j - 2] == 0x19:
-                    args.append(pre[j - 1]); j -= 2
-                elif j >= 2 and pre[j - 2] == 0x1C:
-                    args.append(st.get(pre[j - 1])); j -= 2
-                elif j >= 3 and pre[j - 3] == 0x1D:
-                    args.append(st.get((pre[j - 2] << 8) | pre[j - 1])); j -= 3
-                else:
-                    break
-            out.append((name, list(reversed(args)) + [None] * (n - len(args))))
-    return out
+    """Calls restricted to function code, in file order; unknowns precede literal suffixes."""
+    from tools.fe9.events import calls
+    return [(call["command"], call["args"]) for call in calls(raw) if call["command"] in names]
 
 
 def sortie_caps(disc: DiscReader, cid: int) -> dict[str, int]:
@@ -158,6 +120,8 @@ def dispos_units(disc: DiscReader, cid: int) -> dict[int, list[str]]:
 
 
 def audit(disc: DiscReader) -> list[dict]:
+    from tools.fe9.events import message_table
+    titles = message_table(disc.read_file("Mess/common.m"))
     owned = {p for p, o in OWNERS.items() if o == 2}
     rows = []
     for cid in range(1, 32):
@@ -175,7 +139,7 @@ def audit(disc: DiscReader) -> list[dict]:
         transfers = script_transfers(raw) if raw else []
         forced = [a[0] for _n, a in script_calls(raw, ("UnitForcedSallyByPID", "UnitForcedSally"))] if raw else []
         rows.append({
-            "cid": cid, "label": "Prologue" if cid == 1 else f"Ch{cid - 1}",
+            "cid": cid, "label": titles.get(f"MCT{cid:02d}", f"internal {cid}"),
             "allies": allies, "partners": partners, "npcs": sorted(set(units.get(2, []))),
             "enemies": len(units.get(1, [])), "flags": flags, "owned": own_here,
             "transfers": transfers,
@@ -188,7 +152,7 @@ def audit(disc: DiscReader) -> list[dict]:
 def needs(row: dict) -> str:
     """A conservative status: what this chapter still needs before it can be called compatible."""
     if row["runtime"]:
-        return "runtime verified (partly)" if "not yet" in row["runtime"] or "started" in row["runtime"] else "runtime verified"
+        return "historically exercised; see runtime notes (not current acceptance)"
     risky = {"transfer", "escape", "partners", "phase"} & set(row["flags"])
     if risky:
         return "needs targeted check: " + ", ".join(sorted(risky))
@@ -208,7 +172,8 @@ def report(rows: list[dict]) -> str:
                    f"{short(r['partners'])} | {short(r['allies'])} | {short(r['npcs'])} | {r['enemies']} |")
     out += ["", "## Deployment caps and forced units", "",
             "Sortie cap = entries of the chapter's `mikata` group, per difficulty file (F-56): `n`, `h`, `m`, `c`. "
-            "Forced = `UnitForcedSally[ByPID]` arguments (`?` = not a literal). **Optional slots** = Normal cap − forced. "
+            "Forced = `UnitForcedSally[ByPID]` arguments (`?` = not a literal), across all script paths. "
+            "Optional slots are unresolved: calls can refer to story-only units or mutually exclusive paths. "
             "Whether a chapter offers a real choice also needs the recruited roster to exceed the cap; that is checked "
             "at runtime (`state+0x544` at the prep screen), not here.", "",
             "| Chapter | id | cap n / h / m / c | Forced | Optional slots (n) |", "|---|---|---|---|---|"]
@@ -218,7 +183,7 @@ def report(rows: list[dict]) -> str:
         c = r["caps"]
         caps = " / ".join(str(c.get(k, "—")) for k in "nhmc")
         forced = ", ".join((f or "?").removeprefix("PID_") for f in r["forced"]) or "—"
-        opt = (c.get("n", 0) - len(set(r["forced"]))) if c.get("n") is not None else "—"
+        opt = "unresolved"
         out.append(f"| {r['label']} | {r['cid']} | {caps} | {forced} | {opt} |")
     out += ["", "## Runtime notes", ""]
     out += [f"- **{r['label']}** (id {r['cid']}): {r['runtime']}" for r in rows if r["runtime"]]
@@ -241,11 +206,18 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, default=ROOT / "docs/CHAPTER_AUDIT.md")
     ap.add_argument("--image", type=Path, default=DEFAULT_IMAGE)
+    ap.add_argument("--campaign", action="store_true", help="full container inventory with separate evidence axes")
     args = ap.parse_args()
     with DiscReader(args.image) as disc:
-        rows = audit(disc)
-    args.out.write_text(report(rows), encoding="utf-8", newline="\n")
-    print(f"wrote {args.out} ({len(rows)} chapters)")
+        if args.campaign:
+            from tools.campaign_audit import inventory, report as campaign_report
+            data = inventory(disc)
+            output, count = campaign_report(data), len(data["chapters"])
+        else:
+            rows = audit(disc)
+            output, count = report(rows), len(rows)
+    args.out.write_text(output, encoding="utf-8", newline="\n")
+    print(f"wrote {args.out} ({count} chapters)")
     return 0
 
 
