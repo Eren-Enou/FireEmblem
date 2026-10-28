@@ -243,3 +243,4 @@ Controller routing / Netplay (per user priority).
   - Config → Paths for the game
   - `Get-FileHash` on the code file against the hash in the README/manifest
   `verify()` now also rejects `.exe/.dll/.bat/.cmd/.ps1/.vbs/.lnk`. The ZIP is 7.3 KB, the fingerprint is unchanged (`7031af10d740f4ed`), and tests are 40/40.
+- **First two-computer Netplay session (user + friend, net02-1 ZIP):** the Traversal room-code join works between two networks. Mapping, versions and sync are correct, and play reached Ch3 turn 3 with no desync. Buffer 5 held both games at ~40 FPS; **Buffer 26 gave 59.9 FPS/VPS** (F-50). The README troubleshooting and the NET-02 procedure now say to raise the buffer. Pending: combat/EXP, the state comparison, disconnect.
