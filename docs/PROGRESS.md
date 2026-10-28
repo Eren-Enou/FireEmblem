@@ -276,5 +276,10 @@ Controller routing / Netplay (per user priority).
 
 ## 2026-10-28 — Session 1u: DRAFT-01 passed; draft clarity; alternating-action research
 
-- **DRAFT-01 PASSED** (user, all seven checks: claim, release/reclaim, Yellow control, EXP, chapter transition, save, fresh reload). The flag-word ownership storage is confirmed at runtime.
+- **DRAFT-01 PASSED** (user, all seven checks: claim, release/reclaim, Yellow control, EXP, chapter transition, save, fresh reload). The flag-word ownership storage is confirmed at runtime.- **Alternating-actions research (Priority B)** on branch `experiment/alternating-actions` (from `a293a40`):
+  - The game's one "activation complete" point is `0x80028C90`, reached after every action and its post-action event checks (F-55).
+  - EXP-24 (`tools/alt_code.py`) flips the phase byte 0 ↔ 3 there, inside one shared round, then ends the round as phase 3 so exactly one Enemy Phase runs. End during the round skips the yellow phase start.
+  - Feasibility report: docs/ALTERNATING.md. Main risk: the yellow army's phase-start upkeep (forts, statuses, laguz gauge) would never run.
+  - Groups of two are not safer, only fewer switches.
+  - Test bed `work/alt/host`; procedure TESTING.md ALT-01. Runtime untested.
 

@@ -646,6 +646,41 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 |---|---|---|---|
 | 2026-10-28 | user | **PASS (all seven checks)** | User report: character claiming, release and reclaim, Yellow control, EXP progression, chapter transition, normal save, and a fresh reload all behaved correctly. No state slots or card changes from this run are on the development PC (`work/ch1/host` card still SHA-1 `54b5a7f4…`, no new states), so the evidence is the user's report. |
 
+## ALT-01 — EXPERIMENT: alternating unit actions (EXP-24; branch `experiment/alternating-actions` only)
+
+Design and risks: docs/ALTERNATING.md. **Test bed:** `work/alt/host`, a separate folder, so the draft test bed is not touched.
+- Codes: COOP-P6 + EXP-16 + **EXP-24** + DBG-01.
+- Card: a copy of `ch1_card_before_draft01.gci` in `work/saves/alt01_card/`.
+- In Ch. 3, EXP-16's table makes Ike and Titania blue and Shinon and Gatrie yellow: the brief's 2 + 2.
+- Keys: port 1 = arrows / X (A) / D (Z) / Enter; port 2 = numpad / M (A) / E (Z) / Y (Start).
+
+**Static:** `test_exp24_alternating_experiment`, 150/150 signatures.
+
+### Procedure (tester, one PC, ~10 minutes)
+1. Fresh boot:
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/alt/host
+   ```
+   Then Restart Chapter → **Ch. 3** → to the turn 1 map. Check Options → **Auto End is on** (the default).
+2. Blue (port 1): move **Titania** and choose Wait. **Expected: the cursor jumps to Shinon or Gatrie, and only port 2 works now.** Titania stays grey (acted). Press **Shift+F2**.
+3. Yellow (port 2): **attack** a bandit with **Shinon**. Expected after the battle (and any level-up): **the cursor jumps back to Ike**, and only port 1 works.
+4. Blue: **Ike**, Wait. Expected: back to yellow (Gatrie). Shinon and Titania stay grey. Press **Shift+F3**.
+5. Yellow: **Gatrie**, Wait. Every unit has now acted. Expected: **exactly one Enemy Phase** starts (the red banner), with no Partner Phase banner before it.
+6. After the enemy phase, turn 2's **Player Phase** starts, with everyone fresh (not grey). Press **Shift+F4**.
+7. Turn 2: let blue go first, then try **End** from blue's map menu (D → End) while yellow units are still fresh. Expected: the round ends into one Enemy Phase. Yellow forfeits its remaining actions, and there's no Partner Phase.
+
+**Report:** each "Expected" that did or didn't happen, any freeze, a wrong banner or wrong music, and slots 2–4.
+
+**Failure modes:**
+- No handoff at step 2: the hook didn't run, or a control byte isn't 1.
+- Both ports work at once.
+- A Partner Phase appears.
+- Units still grey on turn 2.
+- A freeze after a battle.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+
 ## EXP-20 / COOP-P6 — Cursor jumps to a yellow unit when the yellow phase starts
 
 **Goal (user):** a clear "your turn" cue for Player 2. At the start of a human yellow phase, the cursor (and camera) moves to a yellow unit that can still act. Vanilla only does this for Ike in the player phase (F-51). **COOP-P6** = COOP-P5 + EXP-20. Static: `test_exp20_yellow_cursor_hook`, `test_coop_p6_package`, 133/133 signatures. Runtime: **PASS** (user, 2026-10-27).

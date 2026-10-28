@@ -43,6 +43,12 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 
 **Done when:** two machines finish Ch9 with no desync, with a written test log.
 
+## Experiment — alternating unit actions (branch `experiment/alternating-actions`, never merged)
+- [x] Static design: hand off at the activation-complete step `0x80028C90` by flipping the phase byte; round end as phase 3 → one Enemy Phase (EXP-24, docs/ALTERNATING.md).
+- [ ] ALT-01 gate 1: one Blue → Yellow → Blue handoff keeping acted states.
+- [ ] ALT-01 gate 2: a full shared round with exactly one Enemy Phase and a normal next turn.
+- [ ] Gate 3: trace and replay the yellow army's phase-start upkeep (forts, statuses, laguz gauge) before any campaign use.
+
 ## Phase 5 — Character drafting, persistent ownership and deployment (branch `draft-ownership`)
 - [x] **A. Ownership architecture** (static): ownership in the unit flag word, bits 0x20000000/0x40000000, saved raw with the character (F-52). EXP-21 translates it to forces with EXP-16's hooks; no table is regenerated.
 - [x] **B. First in-game draft:** EXP-22, L+R on a deployed unit at turn 1, alternating picks, release = undo. **DRAFT-01 PASSED** (user, 2026-10-28, all seven checks).

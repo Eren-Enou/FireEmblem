@@ -320,6 +320,11 @@ class GameTests(unittest.TestCase):
             oc.pid_table({"PID_IKE": 2})
 
     @staticmethod
+    def _gecko_names() -> list[str]:
+        from tools.install_codes import ROOT as R, parse_sections
+        return [l[1:] for l in parse_sections((R / "codes/GFEE01.ini").read_text())["Gecko"] if l.startswith("$")]
+
+    @staticmethod
     def _asm(words: list[int]) -> list[str]:
         """Disassemble a cave, skipping embedded data words (capstone stops at them)."""
         import capstone, struct
@@ -369,6 +374,27 @@ class GameTests(unittest.TestCase):
             self.assertEqual(addr == 0x8002E738, "lbz r0, 0x719(r12)" in asm)
             self.assertEqual(addr == 0x800BA8F8, "cmpw r3, r0" in asm)
             self.assertEqual(addr == 0x8002E738, "stb r0, 0x71f(r12)" in asm)
+
+    def test_exp24_alternating_experiment(self):
+        """EXP-24 (experiment): handoff after the acted bit, round end as phase 3, End skips the yellow phase."""
+        from tools.fe9.ppc import Dol
+        from tools import alt_code as ac
+        dol = Dol(self.disc.read_dol())
+        found = self._gecko_blocks(ac.NAME)
+        self.assertEqual(found, ac.blocks())     # regenerate with `python -m tools.alt_code --write`
+        self.assertEqual((dol.u32(0x80028CC4), dol.u32(0x8002E65C)), (ac.ACTED_HOOK[1], ac.ADVANCE_CALL[1]))
+        hand, end = (self._asm(w[:-1]) for _, w in found)
+        for need in ["lbz r31, 0x719(r12)", "lbz r0, 0x71c(r12)", "lbz r0, 0x71f(r12)", "subfic r30, r31, 3",
+                     "stb r30, 0x719(r12)", "ori r12, r12, 0xa5f0", "stb r31, 0x719(r12)", "li r0, 3",
+                     "lfd f2, -0x7d80(r2)", "ori r12, r12, 0xcbd8"]:
+            self.assertIn(need, hand)
+        self.assertEqual(hand[-1], "lbz r0, 0x9e(r3)")
+        for need in ["lwz r12, -0x5d78(r12)", "li r0, 3", "stb r0, 0x719(r12)"]:
+            self.assertIn(need, end)
+        self.assertEqual(end[-5:], ["lis r12, -0x7fec", "ori r12, r12, 0xd3b4", "mtctr r12", "bctrl", "nop"])
+        for code in ("COOP-P6", "COOP-P5"):   # never packaged
+            pkg = [n for n in self._gecko_names() if n.startswith(code + " ")][0]
+            self.assertFalse({a for a, _ in found} & {a for a, _ in self._gecko_blocks(pkg)})
 
     def test_exp22_draft_code(self):
         """EXP-22: turn 1 blue phase, L+R edge per port, cursor unit, lord/partner refusal, alternating picks."""

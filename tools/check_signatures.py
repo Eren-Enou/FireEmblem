@@ -183,6 +183,14 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x800AA7DC, 0x8863000D, "lbz r3,0xd(r3)             unit id at the cursor tile"),
     (0x80105BC0, 0x9421FFF0, "stwu r1,-0x10(r1)          has attribute (bit set, index)"),
     (0x801475FC, 0x9421FFE0, "stwu r1,-0x20(r1)          sound effect (Next Unit's cursor sound)"),
+    # Action completion (F-55; EXP-24 experiment): the human proc's post-action path runs the event checks,
+    # then the unit-finished step 0x80028C90, then returns to the idle loop
+    (0x80284BE8, 0x80269149, ".data: post-action path token E_TaikiToken"),
+    (0x80284BF0, 0x800BF69C, ".data: post-action event check 1 (of 5)"),
+    (0x80284C10, 0x800BE2F4, ".data: post-action event check 5"),
+    (0x80284C18, 0x80028C90, ".data: then the unit-finished step"),
+    (0x80028CB4, 0x80A50000, "lwz r5,0(r5)               current unit (*0x802EF4C8)"),
+    (0x8002E4CC, 0xC8428280, "lfd f2,-0x7d80(r2)         int->float constant for the cursor move"),
 ]
 
 
