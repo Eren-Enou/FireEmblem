@@ -27,8 +27,22 @@ EXP-22 (the draft; turn 1, blue phase only, i.e. the start of every chapter):
     other's unit-> nothing (transfers come later)
   A cursor sound confirms a change (0x801475FC with Next Unit's arguments).
 
-Usage: python -m tools.draft_code            print both codes
-       python -m tools.draft_code --write    insert/replace $EXP-21 and $EXP-22 in codes/GFEE01.ini
+EXP-23 (draft v2, clarity; replaces EXP-22, same input hook, never enable both). Makes the draft readable:
+  green rings   at the turn 1 blue-phase start (hook 0x8002E73C, after EXP-21's apply) every deployed (0x400),
+                unassigned, non-lord force 0 unit is "parked" in force 2 (the native green army) with
+                PARKED = 0x10000000 (another unused flag bit, F-52): blue = Player 1, yellow = Player 2,
+                green = still in the draft (parked units cannot be moved)
+  draft window  open on turn 1 of the blue phase until the first unit acts; closing returns every parked
+                unit to force 0 (blue): at the end of the first action (0x80028CC4, after the acted bit,
+                before the auto-end check) and at the phase advance (0x8002E65C), so the green AI never moves them
+  L+R           claim a green unit on your pick (P1 -> blue, P2 -> yellow), or release your own (-> green)
+  sounds        Player 1 claim SFX_SYS_UNIT_SELECT1, Player 2 claim SFX_SYS_UNIT_CHANGE1, release
+                SFX_SYS_UNIT_CANCEL1; any refusal (not your pick, Ike, a native partner, the other player's
+                unit, no unit, draft closed) SFX_SYS_MISS1
+  whose pick    the side with fewer drafted units picks, Player 1 on a tie (blue units except Ike vs yellow)
+
+Usage: python -m tools.draft_code            print the codes
+       python -m tools.draft_code --write    insert/replace $EXP-21, $EXP-22 and $EXP-23 in codes/GFEE01.ini
 """
 
 from __future__ import annotations
@@ -41,7 +55,8 @@ from tools.owner_code import (_Asm, _d, addi, c2_lines, cmpw, cmpwi, li, lbz, li
 
 ROOT = Path(__file__).resolve().parents[1]
 OWNED, P2 = 0x20000000, 0x40000000
-FORCE_HEAD = {0: (0x802D, -0x5D9C), 3: (0x802D, -0x5D78), 5: (0x802D, -0x5D60), 7: (0x802D, -0x5D48)}
+FORCE_HEAD = {0: (0x802D, -0x5D9C), 2: (0x802D, -0x5D84), 3: (0x802D, -0x5D78), 5: (0x802D, -0x5D60),
+              7: (0x802D, -0x5D48)}
 APPLY_HOOK = (0x8002E738, 0x9421FFF0)
 RETURN_HOOKS = [(0x800BA784, 0x9421FFD0), (0x8002E0D0, 0x9421FFD0), (0x80005F04, 0x9421FFE0)]
 ESCAPE_HOOK = (0x800BA8F8, 0x9421FFF0)
@@ -54,7 +69,14 @@ LR_BITS = 0x0060                            # PAD_TRIGGER_R | PAD_TRIGGER_L
 NAMES = {
     21: "EXP-21 Ownership stored in each unit (flag bits): Player 2 units fight as the yellow army",
     22: "EXP-22 Draft at chapter start: L+R on a unit claims or releases it (alternating picks)",
+    23: "EXP-23 Draft v2: unassigned units green until claimed, distinct sounds, draft ends at the first action",
 }
+PARKED = 0x10000000
+PARK_HOOK = (0x8002E73C, 0x7C0802A6)        # phase-start step, 2nd instruction: mflr r0 (after EXP-21 at 0x8002E738)
+ACTED_HOOK = (0x80028CC4, 0x8803009E)       # unit finished acting, after the acted bit: lbz r0,0x9e(r3)
+ADVANCE_CALL = (0x8002E65C, 0x4811ED59)     # bl 0x8014D3B4 (phase advance; its only call)
+PHASE_ADVANCE = 0x8014D3B4
+SE = {"p1": 0x802691DF, "p2": 0x802747B5, "release": 0x80269193, "miss": 0x80269175}   # sound name strings
 
 
 def andi_(a, s, imm): return _d(28, s, a, imm)
@@ -221,6 +243,139 @@ def flag_bit_usage(dol) -> dict[int, int]:
     return bits
 
 
+def _sound(a: Asm, name: str) -> None:
+    a(lis(3, SE[name] >> 16), ori(3, 3, SE[name] & 0xFFFF), li(4, 0x64)); a.call(PLAY_SE)
+
+
+def _unpark(a: Asm, tag: str) -> None:
+    """Walk force 2; every PARKED unit: clear PARKED, UnitTransferToForce(id, 0). Uses r31/r30."""
+    _head(a, 31, 2)
+    a.label(f"{tag}loop")
+    a(cmpwi(31, 0)); a.br("beq", f"{tag}end")
+    a(lwz(30, 0x184, 31), lwz(0, 0x1A0, 31), andis_(12, 0, PARKED >> 16)); a.br("beq", f"{tag}next")
+    a(rlwinm(0, 0, 0, 4, 2), stw(0, 0x1A0, 31))                                       # clear PARKED
+    a(lbz(3, 0x198, 31), li(4, 0)); a.call(TRANSFER)
+    a.label(f"{tag}next")
+    a(mr(31, 30)); a.br("b", f"{tag}loop")
+    a.label(f"{tag}end")
+
+
+def park_cave() -> list[int]:
+    """Turn 1 blue-phase start: deployed, unassigned, non-lord force 0 units -> force 2 with PARKED."""
+    a = Asm()
+    _prologue(a)
+    a(lis(12, 0x8033), lbz(0, 0x719, 12), cmpwi(0, 0)); a.br("bne", "done")           # blue phase
+    a(lha(0, 0x71A, 12), cmpwi(0, 1)); a.br("bne", "done")                             # turn 1
+    _head(a, 31, 0)
+    a.label("loop")
+    a(cmpwi(31, 0)); a.br("beq", "done")
+    a(lwz(30, 0x184, 31), lwz(0, 0x1A0, 31), andi_(12, 0, 0x400)); a.br("beq", "next")   # deployed
+    a(andis_(12, 0, OWNED >> 16)); a.br("bne", "next")                                    # unassigned
+    a(addi(3, 31, 0x1BC), li(4, 0)); a.call(HAS_ATTR)
+    a(cmpwi(3, 0)); a.br("bne", "next")                                                   # not the lord
+    a(lwz(0, 0x1A0, 31), oris(0, 0, PARKED >> 16), stw(0, 0x1A0, 31))
+    a(lbz(3, 0x198, 31), li(4, 2)); a.call(TRANSFER)                                      # -> green
+    a.label("next")
+    a(mr(31, 30)); a.br("b", "loop")
+    return _epilogue(a, PARK_HOOK[1])
+
+
+def unpark_cave(original: int | None) -> list[int]:
+    """Unpark everything; then the original instruction, or (original None) the phase-advance call."""
+    a = Asm()
+    _prologue(a)
+    _unpark(a, "u")
+    if original is not None:
+        return _epilogue(a, original)
+    a.label("done")
+    a(lwz(0, 0x24, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), lwz(31, 0x10, 1), lwz(30, 0x14, 1),
+      lwz(29, 0x18, 1), addi(1, 1, 0x20))
+    a.call(PHASE_ADVANCE)          # replaces the relative bl (r3 = state restored); the caller restores its LR
+    w = a.words()
+    return w + ([NOP, 0] if len(w) % 2 == 0 else [0])
+
+
+def draft2_cave() -> list[int]:
+    a = Asm()
+    _prologue(a)
+    a(lis(12, 0x8033), lbz(0, 0x719, 12), cmpwi(0, 0)); a.br("beq", "phaseok")
+    a(cmpwi(0, 3)); a.br("bne", "done")                                                # human phases 0 and 3
+    a.label("phaseok")
+    a.br("bl", "past"); a.w.append(0); a.label("past")
+    a(MFLR31, li(30, 0))
+    a.label("port")
+    a(lis(12, PADSTATUS >> 16), ori(12, 12, PADSTATUS & 0xFFFF), mulli(0, 30, 12), lhzx(0, 12, 0))
+    a(andi_(0, 0, LR_BITS), cmpwi(0, LR_BITS), li(0, 1)); a.br("beq", "held"); a(li(0, 0))
+    a.label("held")
+    a(lbzx(29, 31, 30), stbx(0, 31, 30), cmpwi(0, 1)); a.br("bne", "nextport")
+    a(cmpwi(29, 0)); a.br("bne", "nextport")                                           # rising edge only
+    # draft open? turn 1, blue phase, and no unit of forces 0/3 has acted (bit 0x1)
+    a(lis(12, 0x8033), lbz(0, 0x719, 12), cmpwi(0, 0)); a.br("bne", "reject")
+    a(lha(0, 0x71A, 12), cmpwi(0, 1)); a.br("bne", "reject")
+    for n, force in enumerate((0, 3)):
+        _head(a, 12, force)
+        a.label(f"a{n}")
+        a(cmpwi(12, 0)); a.br("beq", f"a{n}end")
+        a(lwz(0, 0x1A0, 12), andi_(0, 0, 1)); a.br("bne", "reject")
+        a(lwz(12, 0x184, 12)); a.br("b", f"a{n}")
+        a.label(f"a{n}end")
+    a.call(CURSOR_UNIT)
+    a(cmpwi(3, 0)); a.br("beq", "reject")
+    a(mr(29, 3), addi(3, 29, 0x1BC), li(4, 0)); a.call(HAS_ATTR)
+    a(cmpwi(3, 0)); a.br("bne", "reject")                                             # never the lord
+    a(lwz(12, 0x190, 29), lbz(0, 8, 12), lwz(11, 0x1A0, 29))
+    a(cmpwi(0, 2)); a.br("bne", "f0")
+    a(andis_(12, 11, PARKED >> 16)); a.br("beq", "reject"); a.br("b", "unassigned")   # green and ours
+    a.label("f0")
+    a(cmpwi(0, 0)); a.br("bne", "f3")
+    a(andis_(12, 11, OWNED >> 16)); a.br("bne", "owned"); a.br("b", "unassigned")
+    a.label("f3")
+    a(cmpwi(0, 3)); a.br("bne", "reject")
+    a(andis_(12, 11, OWNED >> 16)); a.br("beq", "reject"); a.br("b", "owned")         # native partner refused
+    a.label("unassigned")
+    a(li(3, 0))
+    for n, force in enumerate((0, 3, 5, 7)):
+        _head(a, 12, force)
+        a.label(f"c{n}")
+        a(cmpwi(12, 0)); a.br("beq", f"c{n}end")
+        a(lwz(0, 0x1A0, 12), andis_(4, 0, OWNED >> 16)); a.br("beq", f"c{n}nx")
+        a(andis_(4, 0, P2 >> 16), addi(3, 3, 1)); a.br("beq", f"c{n}nx")
+        a(addi(3, 3, -2))
+        a.label(f"c{n}nx")
+        a(lwz(12, 0x184, 12)); a.br("b", f"c{n}")
+        a.label(f"c{n}end")
+    a(cmpwi(30, 0)); a.br("bne", "p2pick")
+    a(cmpwi(3, 0)); a.br("bgt", "reject")                                             # P1 picks if #P1 <= #P2
+    a(lwz(11, 0x1A0, 29), oris(11, 11, OWNED >> 16), rlwinm(11, 11, 0, 4, 2), stw(11, 0x1A0, 29))
+    a(lwz(12, 0x190, 29), lbz(0, 8, 12), cmpwi(0, 0)); a.br("beq", "p1snd")
+    a(lbz(3, 0x198, 29), li(4, 0)); a.call(TRANSFER)                                  # green -> blue
+    a.label("p1snd")
+    _sound(a, "p1"); a.br("b", "nextport")
+    a.label("p2pick")
+    a(cmpwi(3, 0)); a.br("ble", "reject")                                             # P2 picks if #P1 > #P2
+    a(lwz(11, 0x1A0, 29), oris(11, 11, (OWNED | P2) >> 16), rlwinm(11, 11, 0, 4, 2), stw(11, 0x1A0, 29))
+    a(lbz(3, 0x198, 29), li(4, 3)); a.call(TRANSFER)                                  # -> yellow
+    a(li(0, 1), lis(12, 0x8033), stb(0, 0x71F, 12))                                    # control[3] = 1
+    _sound(a, "p2"); a.br("b", "nextport")
+    a.label("owned")
+    a(andis_(12, 11, P2 >> 16), li(0, 0)); a.br("beq", "ownerok"); a(li(0, 1))
+    a.label("ownerok")
+    a(cmpw(0, 30)); a.br("bne", "reject")                                             # only the owner releases
+    a(rlwinm(11, 11, 0, 3, 0), oris(11, 11, PARKED >> 16), stw(11, 0x1A0, 29))        # unassigned, parked
+    a(lbz(3, 0x198, 29), li(4, 2)); a.call(TRANSFER)                                  # -> green
+    _sound(a, "release"); a.br("b", "nextport")
+    a.label("reject")
+    _sound(a, "miss")
+    a.label("nextport")
+    a(addi(30, 30, 1), cmpwi(30, 2)); a.br("blt", "port")
+    return _epilogue(a, INPUT_HOOK[1])
+
+
+def blocks23() -> list[tuple[int, list[int]]]:
+    return [(INPUT_HOOK[0], draft2_cave()), (PARK_HOOK[0], park_cave()),
+            (ACTED_HOOK[0], unpark_cave(ACTED_HOOK[1])), (ADVANCE_CALL[0], unpark_cave(None))]
+
+
 def blocks21() -> list[tuple[int, list[int]]]:
     out = [(APPLY_HOOK[0], move_cave(0, 3, APPLY_HOOK[1], phase=0, set_control=True))]
     out += [(addr, move_cave(3, 0, orig)) for addr, orig in RETURN_HOOKS]
@@ -230,7 +385,7 @@ def blocks21() -> list[tuple[int, list[int]]]:
 
 def code_lines(n: int) -> list[str]:
     lines = [f"${NAMES[n]}"]
-    for addr, words in (blocks21() if n == 21 else [(INPUT_HOOK[0], draft_cave())]):
+    for addr, words in {21: blocks21, 22: lambda: [(INPUT_HOOK[0], draft_cave())], 23: blocks23}[n]():
         lines += c2_lines(addr, words)
     return lines
 
@@ -238,7 +393,7 @@ def code_lines(n: int) -> list[str]:
 def write_ini(path: Path) -> None:
     """Replace the $EXP-21 / $EXP-22 code lines (their comment blocks stay); insert both if missing."""
     lines = path.read_text().split("\n")
-    for n in (21, 22):
+    for n in (21, 22, 23):
         head = next((i for i, l in enumerate(lines) if l.startswith(f"$EXP-{n} ")), None)
         if head is None:
             anchor = next(i for i, l in enumerate(lines) if l.startswith("# DBG-01"))
@@ -258,9 +413,9 @@ def main() -> int:
     args = ap.parse_args()
     if args.write:
         write_ini(ROOT / "codes/GFEE01.ini")
-        print("updated $EXP-21 and $EXP-22 in codes/GFEE01.ini")
+        print("updated $EXP-21, $EXP-22 and $EXP-23 in codes/GFEE01.ini")
     else:
-        print("\n".join(code_lines(21) + [""] + code_lines(22)))
+        print("\n".join(code_lines(21) + [""] + code_lines(22) + [""] + code_lines(23)))
     return 0
 
 

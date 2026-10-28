@@ -601,6 +601,42 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 | 2026-10-27 | user (host, this PC) + friend (own PC, the net02-1 ZIP with launcher); codes COOP-P5 + EXP-16 | **PASS (two computers over the internet; disconnect not reported)** | The friend joined by **room code** (Traversal Server). Both players `2609a Windows`, P1-Blue `GC1`, P2-Yellow `GC2`, saves and codes synchronized, ping 23–33 ms, Host Input Authority off. **Speed:** with Buffer 5, both games ran at about 40 FPS/VPS (stretched audio, slow animations), the same on both PCs. Buffer 26 gave 59.9 FPS/VPS, and **Buffer 18 stayed stable at 58–60**, the recommended setting. The user reported that everything ran well. **State comparison:** host and friend each saved two states (backups `work/saves/GFEE01.net02_inet_host_s01/_s02` and `GFEE01.net02_friend_s01/_s02`). Ch. 3 **turn 4, blue phase** and **turn 6, yellow phase** both decode **identically** on the two PCs (control `01 02 02 01`; every unit's force, position, HP, level and EXP). **Combat/EXP under Netplay:** between turns 4 and 6, the yellow units' EXP rose identically on both PCs (Shinon 67, Gatrie 14 → 55), and Ike reached 83 EXP. No desync message. The host card was unchanged afterwards (SHA-1 `54b5a7f4…`). **Not reported:** the disconnect test (T10) on two PCs; it passed on one PC. |
 | 2026-10-27 | Claude (computer use; **one PC**: host `work/netplay_net/host`, client = the extracted ZIP started by its own `Start-FE9-Coop.bat`) | **PARTIAL: package PASS over Direct; Traversal join not verified** | **Launcher:** `Start-FE9-Coop.bat` found Dolphin, took the game folder, printed all `[OK]` and fingerprint `7031af10d740f4ed`, and started Dolphin with the package's user folder. `Check-Setup.bat` flagged a wrong exe ("not version 2609a") and a missing game folder correctly. **Traversal:** the host registered and received an 8-character Room ID. The packaged client (Traversal preset, room code pasted) failed twice with "Failed to connect to server: Could not communicate with host". A same-PC/same-NAT join like this relies on NAT loopback; this run doesn't establish whether two separate networks would connect, and the real two-PC run decides. **Direct 127.0.0.1:2626:** connected. Player list: P1-Blue `GC1`, P2-Yellow `GC2`, both `2609a`. **Checksum → Current game: "The hashes match!"**, digest `a30eca376ab9b2b4dd8b1a9136772a62c0309ace` (= `DolphinTool verify`). Data menu: Load Host's Save Data Only and Sync AR/Gecko Codes ticked. Chats: saves and codes synchronized / Data received / Codes received. The client saw the host card (Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4). In Ch. 3 turn 1, Shinon and Gatrie had yellow rings on both screens. Blue phase: the client's X and arrows did nothing; the host ended the phase. Yellow phase: the host's keys did nothing; the client's keys moved the (yellow) cursor, opened the map menu and chose End. The enemy phase was identical on both screens: Ike was attacked, killed with a counter and reached Lv 5, HP 13/21 on both. **Turn 2 states** (host `work/saves/GFEE01.net02_host_t2`, client `GFEE01.net02_pkgclient_t2`) decode **identically** (chapter id 4, phase 0, turn 2, control `01 02 02 01`, every unit's force/position/HP/level/EXP). **Disconnect:** the client quit NetPlay in turn 2 → host chat "P2-Yellow has left" and **both games stopped**; the host's room stayed open with P1 only. The host card was unchanged (SHA-1 `54b5a7f4…`); the client's own card folder stayed empty (Netplay used `GC/NetPlayTemp`). **Driver note:** under Netplay, very short synthetic key taps were sometimes missed; 0.15–0.3 s holds worked. **Not covered:** a Traversal connection between two networks, a yellow-unit attack under Netplay, 3+ turns, two machines. |
 
+## DRAFT-02 — Draft clarity (EXP-23 = draft v2; replaces EXP-22)
+
+**What changes for the players (Priority A, user request "understandable without instructions"):**
+- **Green = still in the draft.** On turn 1 of the blue phase, every deployed, unassigned character except Ike has a **green ring** and can't be moved yet. Blue = Player 1, yellow = Player 2.
+- **L+R** on a green unit claims it on your pick: it turns blue (Player 1) or yellow (Player 2). L+R on your own unit releases it, back to green.
+- **Whose pick:** the side with fewer drafted units (blue without Ike vs yellow) picks; Player 1 on a tie.
+- **Sounds:**
+  - Player 1 claim: unit-select sound
+  - Player 2 claim: unit-change sound
+  - release: unit-cancel sound
+  - **any refusal**: the game's "miss" buzz (not your pick, Ike, a partner, the other player's unit, no unit, draft over)
+- **The draft ends at the first action** (any unit finishing Wait, an attack, …) or when the phase ends. Every remaining green unit turns blue and can act. After that, L+R only buzzes.
+
+**Static:** `test_exp23_draft_v2_code`, 151/151 signatures. **Test bed:** `work/ch1/host` = COOP-P6 + EXP-21 + **EXP-23** + DBG-01 (EXP-22 off). The card is untouched since DRAFT-01's backup (`ch1_card_before_draft01.gci`). Keys: Player 1 L+R = **Q+W**, Player 2 L+R = **O+P**.
+
+### Procedure (tester, one PC, ~10 minutes)
+1. Close Dolphin, then fresh boot: `Dolphin-x64/Dolphin.exe --user work/ch1/host` → Restart Chapter → **Ch. 3**.
+2. Turn 1, blue phase. Expected: **Ike blue; Titania, Shinon, Gatrie green.** Put the cursor on Titania and press X (A): she can't be selected to move.
+3. Titania, **O+P** (P2). Expected: **buzz** (it's Player 1's pick).
+4. Titania, **Q+W** (P1). Unit-select sound; **blue**.
+5. Shinon, **O+P** (P2). A different sound; **yellow**.
+6. Ike, **O+P**: buzz. Shinon, **Q+W**: buzz (not yours).
+7. Shinon, **O+P**: release sound, **green**. **O+P** again: yellow. Leave **Gatrie green**. Press **Shift+F2**.
+8. Move **Ike** and choose Wait. Expected: **Gatrie turns blue at once** and can now be moved by Player 1; the phase does not end early. **Q+W** anywhere now: buzz (draft over).
+9. End the blue phase. Yellow phase: Shinon is yours (port 2); **O+P** buzzes. Press **Shift+F3**.
+10. Optional, a second run: Restart Chapter → Ch. 3 again → claim one unit → **End the phase without acting** (D → End). Expected: any green unit turns blue before the yellow phase, and no green unit moves on its own later in the turn.
+
+**Report:** each "Expected" that did or didn't happen, plus slots 2 and 3. **Failure modes:**
+- Units green at turn 2 or later.
+- A green unit moved by the AI.
+- The blue phase ending after Ike's Wait in step 8, with Gatrie never acting.
+- No sounds at all, or a crash on L+R.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+
 ## DRAFT-01 — In-game draft with persistent ownership (EXP-21 + EXP-22; drafting Milestones A–C, first pass)
 
 **What it is:**

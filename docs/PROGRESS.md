@@ -276,5 +276,10 @@ Controller routing / Netplay (per user priority).
 
 ## 2026-10-28 — Session 1u: DRAFT-01 passed; draft clarity; alternating-action research
 
-- **DRAFT-01 PASSED** (user, all seven checks: claim, release/reclaim, Yellow control, EXP, chapter transition, save, fresh reload). The flag-word ownership storage is confirmed at runtime.
+- **DRAFT-01 PASSED** (user, all seven checks: claim, release/reclaim, Yellow control, EXP, chapter transition, save, fresh reload). The flag-word ownership storage is confirmed at runtime.- **Draft clarity (Priority A): EXP-23 = draft v2** (replaces EXP-22; DRAFT-01's behaviour stays available as EXP-22).
+  - Unassigned deployed units are parked green (force 2 + PARKED 0x10000000) on turn 1 and can't be moved until claimed.
+  - The first unit action closes the draft (unpark after the acted bit, before auto-end), as does the phase advance.
+  - Distinct sounds by name for each player's claim, release, and refusals (F-54).
+  - Not achieved yet: a visual "whose pick" cue (the cursor colour source is unknown). On-screen text would need a message-lookup hook.
+  - Tests 46/46, signatures 151/151. Test bed switched to COOP-P6 + EXP-21 + EXP-23 + DBG-01. Procedure: TESTING.md DRAFT-02.
 

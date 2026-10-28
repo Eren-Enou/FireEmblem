@@ -370,6 +370,39 @@ class GameTests(unittest.TestCase):
             self.assertEqual(addr == 0x800BA8F8, "cmpw r3, r0" in asm)
             self.assertEqual(addr == 0x8002E738, "stb r0, 0x71f(r12)" in asm)
 
+    def test_exp23_draft_v2_code(self):
+        """EXP-23: green parking at turn 1, unpark on first action and phase advance, four named sounds."""
+        from tools.fe9.ppc import Dol
+        from tools import draft_code as dc
+        dol = Dol(self.disc.read_dol())
+        found = self._gecko_blocks(dc.NAMES[23])
+        self.assertEqual(found, dc.blocks23())   # regenerate with `python -m tools.draft_code --write`
+        self.assertEqual([a for a, _ in found], [0x800291D8, 0x8002E73C, 0x80028CC4, 0x8002E65C])
+        self.assertEqual(found[0][0], self._gecko_blocks(dc.NAMES[22])[0][0])   # replaces EXP-22: never both
+        for addr, orig in (dc.INPUT_HOOK, dc.PARK_HOOK, dc.ACTED_HOOK, dc.ADVANCE_CALL):
+            self.assertEqual(dol.u32(addr), orig)
+        for key, name in (("p1", "SFX_SYS_UNIT_SELECT1"), ("p2", "SFX_SYS_UNIT_CHANGE1"),
+                          ("release", "SFX_SYS_UNIT_CANCEL1"), ("miss", "SFX_SYS_MISS1")):
+            off = dol.addr_to_off(dc.SE[key])
+            self.assertEqual(dol.data[off:off + len(name) + 1], name.encode() + b"\0")
+        inp, park, acted, adv = (self._asm(w[:-1]) for _, w in found)
+        for need in ["andi. r0, r0, 1", "andis. r12, r11, 0x1000", "oris r11, r11, 0x1000", "li r4, 2",
+                     "rlwinm r11, r11, 0, 4, 2", "oris r11, r11, 0x6000", "ori r3, r3, 0x9175"]:
+            self.assertIn(need, inp)
+        self.assertIn("stwu r1, -0x30(r1)", inp[-2:])                              # original replayed
+        for need in ["lha r0, 0x71a(r12)", "andi. r12, r0, 0x400", "andis. r12, r0, 0x2000",
+                     "oris r0, r0, 0x1000", "li r4, 2", "ori r12, r12, 0x5bc0"]:
+            self.assertIn(need, park)
+        self.assertEqual(park[-1], "mflr r0")                                     # original replayed
+        for asm in (acted, adv):
+            self.assertIn("lwz r31, -0x5d84(r12)", asm)                          # force 2 head
+            self.assertIn("andis. r12, r0, 0x1000", asm)                         # only PARKED units
+            self.assertIn("rlwinm r0, r0, 0, 4, 2", asm)
+            self.assertIn("li r4, 0", asm)
+        self.assertEqual(acted[-1], "lbz r0, 0x9e(r3)")
+        self.assertEqual(adv[-5:], ["lis r12, -0x7fec", "ori r12, r12, 0xd3b4", "mtctr r12", "bctrl", "nop"])
+        self.assertEqual((dol.u32(0x80028CBC), dol.u32(0x80028CC0)), (0x60000001, 0x900501A0))   # acted bit set before
+
     def test_exp22_draft_code(self):
         """EXP-22: turn 1 blue phase, L+R edge per port, cursor unit, lord/partner refusal, alternating picks."""
         from tools.fe9.ppc import Dol

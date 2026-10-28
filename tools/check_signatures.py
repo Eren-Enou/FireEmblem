@@ -183,6 +183,14 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x800AA7DC, 0x8863000D, "lbz r3,0xd(r3)             unit id at the cursor tile"),
     (0x80105BC0, 0x9421FFF0, "stwu r1,-0x10(r1)          has attribute (bit set, index)"),
     (0x801475FC, 0x9421FFE0, "stwu r1,-0x20(r1)          sound effect (Next Unit's cursor sound)"),
+    # EXP-23 (draft v2): park after EXP-21's apply, unpark after the acted bit and around the phase advance
+    (0x8002E73C, 0x7C0802A6, "mflr r0                    phase-start step, 2nd instruction (EXP-23 park)"),
+    (0x80028CC4, 0x8803009E, "lbz r0,0x9e(r3)            after the acted bit, before auto-end (EXP-23 unpark)"),
+    (0x8002E65C, 0x4811ED59, "bl 0x8014D3B4              phase advance call (EXP-23 unpark)"),
+    (0x80269175, 0x5346585F, ".data \"SFX_\" SYS_MISS1 (refusal sound)"),
+    (0x802691DF, 0x5346585F, ".data \"SFX_\" SYS_UNIT_SELECT1 (Player 1 claim)"),
+    (0x802747B5, 0x5346585F, ".data \"SFX_\" SYS_UNIT_CHANGE1 (Player 2 claim)"),
+    (0x80269193, 0x5346585F, ".data \"SFX_\" SYS_UNIT_CANCEL1 (release)"),
 ]
 
 
