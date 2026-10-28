@@ -13,7 +13,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 | Ch.6: A Brief Diversion | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.7: Shades of Evil | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.8: Despair and Hope | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.9: Gallia | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.9: Gallia | PASS | NOT TESTED | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.10: Prisoner Release | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.11: Blood Runs Red | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.12: A Strange Land | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
@@ -45,10 +45,12 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 - **escape-model-02**: `script_model`; Four C07 original escape-scene cases with mocked natives: actor, passenger, Ike, carried Ike; no Dolphin claim.
 - **fixture-prologue-02**: `dolphin`; Copied Prologue restored in isolated Dolphin; original-unit state captured via UI Save State to File. All intended stable C2 bodies matched live RAM. No unit action demonstrated.
 - **prologue-wait-03**: `dolphin`; Native Computer Use toggled port-1 TAS A, selected current tile, moved menu to Wait and confirmed. Enemy-phase Boyd dialogue observed. Capture phase 0 -> 1; Ike unchanged HP/lv/EXP/position; live stable C2 bodies match in both snapshots. prologue_smoke PASS. Analysis/tooling worktree dirty; production codes unchanged.
+- **ch9-partner-wait-05**: `dolphin`; Restored copied historical EXP-05 Chapter 9 fixture. Ended Blue phase with TAS port 1; port 2 selected normal tutorial No. Lethe transformed to JID_CAT/F gauge20. Port 2 selected original Wait. Captures phase3/control3=1; only Lethe acted bit changes, other captured fields identical. All stable C2 bodies match live RAM. No combat, clear, cleanup, native recruitment, save/reload or Netplay claim.
 
 ## Highest-priority open cases
 
 - Ch6 Yellow individual escape, Ike last, transition and fresh reload (natural campaign).
+- Ch9 native partners: combat EXP, partner cleanup/eventual recruitment and natural chapter history remain unverified.
 - Ch10 prisoner conversations, temporary Yellow and exit conditions.
 - Ch17 all four stage transitions, reinforcements, turn resets and ownership.
 - Ch18 Shinon and native Reinforce partners; Ch20 Jill branch conditions.

@@ -12,6 +12,23 @@ def ledger():
 
 
 class EvidenceTests(unittest.TestCase):
+    def test_partner_smoke_rejects_changed_roster_and_ownership(self):
+        from tools.partner_smoke import verify
+        lethe={"pid":"PID_LETHE","force":3,"class":"JID_CAT/F","gauge":20,"hp":34,
+               "xy":[25,18],"flags":0x80000,"owned":False,"owner":None}
+        mordy={**lethe,"pid":"PID_MORDY","class":"JID_BEAST_T","hp":41,"xy":[24,18]}
+        before={"evidence":{"commit":"abc","dolphin":"2609a","codes_fingerprint":"stable",
+                            "intended_c2_verified":True,"debug":False,"state_sha256":"before"},
+                "game":{"chapter":10,"phase":3,"turn":1,"control":[1,2,2,1],"units":[lethe,mordy]}}
+        after=copy.deepcopy(before);after["evidence"]["state_sha256"]="after"
+        after["game"]["units"][0]["flags"]|=1
+        self.assertEqual(verify(before,after)["status"],"PASS")
+        after["game"]["units"][1]["hp"]-=1
+        self.assertEqual(verify(before,after)["status"],"FAIL")
+        after["game"]["units"][1]["hp"]+=1
+        before["game"]["units"][0]["owned"]=True
+        self.assertEqual(verify(before,after)["status"],"FAIL")
+
     def test_evidence_cannot_be_reused_for_wrong_chapter_or_axis(self):
         data=ledger()
         data["chapters"][0]["checks"]["static_cfg"]={"status":"PASS","evidence":"static"}

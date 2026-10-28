@@ -92,3 +92,19 @@ exclusive outputs and manifest. Multi-controller poll ordering is unsupported.
 No later chapter, chapter clear, story transition, native save/reload or Netplay
 result is accepted by this smoke test. The generated verification dashboard keeps
 those axes separate.
+
+## Demonstrated Ch9 native-partner smoke (CAMP-E)
+
+Restore the copied historical GFEE01.s06_ch9_fixture with the same private profile.
+TAS port 1 opens Map Menu (Z), selects End, confirms A. At the original transformation
+tutorial, port 2 selects No and confirms A. Lethe transforms at the Yellow phase.
+Release A between each new confirmation. Select Lethe, confirm her current tile,
+move the original action menu to Wait and confirm. Pause before/after captures
+through Save State to File, as above. `tools.partner_smoke BEFORE.json AFTER.json`
+checks that the phase remains 3, native partners remain unassigned, Lethe is a cat,
+and only her acted bit changes among captured game fields. This passed in CAMP-E.
+
+This fixture and its earlier Ch9 GCI descend from a Prologue chapter redirect.
+They can test these local partner interactions; they cannot establish natural
+recruitment/story history or certify a chapter clear/transition. Full gauges over
+several phases, combat EXP and cleanup still require additional cases.

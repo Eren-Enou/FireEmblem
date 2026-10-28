@@ -1,5 +1,41 @@
 # Testing
 
+## CAMP-E — Chapter 9 native-partner transformation and port-2 Wait
+
+2026-10-28. Isolated runtime at clean source commit 0fcaa64, Dolphin 2609a,
+COOP-P6 + EXP-16 fingerprint 8609ae9f49fd879f; no debug codes. Restored the copied
+historical EXP-05 work/saves/GFEE01.s06_ch9_fixture. **Synthetic redirected history**,
+not a naturally progressed campaign. Private profile work/runtime/host only.
+
+Native Computer Use/TAS port 1: Map Menu > End advanced Blue -> Yellow. The
+original Transformation tutorial Yes/No appeared. TAS port 2 moved the choice to
+No and confirmed it (normal tutorial option); Lethe transformed into a cat.
+Port 2 selected Lethe, confirmed her original tile and chose original Wait.
+Observed her grey acted sprite while Mordecai remained available. Paused and
+captured new before/after state files using Save State to File. No card save made.
+Stopped only the isolated process afterward.
+
+**PASS, narrow native-partner smoke:** both captures are internal chapter 10,
+turn 1, phase 3, control[3]=1. Lethe is force 3, unassigned, JID_CAT/F, gauge20,
+HP34, lv3, EXP0, (25,18). Only her captured flags change 0x80000 -> 0x80001.
+Mordecai remains force 3, unassigned, JID_BEAST_T, gauge4, HP41, (24,18), flags
+0x80000. All other captured game fields are identical; all intended stable C2
+bodies match live RAM before/after. `tools.partner_smoke` PASS.
+
+Before: work/ch9_yellow_before.s02.sav,
+SHA-256 54f141736b839b4c1c09cf8944a9fde4c08defacf91285b3b7f0ced2c82a3af5.
+After: work/ch9_yellow_after.s02.sav,
+SHA-256 4e57bd16d676cda66e7ddf8f935e8928dda1dac2a9b1c44b0840fa54f65b3676.
+`tools.campaign_verify --check-artifacts` verifies all four current runtime files.
+
+NOT TESTED here: combat EXP, full transformation depletion/reversion, explicit
+negative cross-control, end-phase leftover behavior, recruitment, cleanup,
+chapter clear/transition, native save/reload or Netplay. The tutorial prompt
+responding to port 2 is an observation, not full controller isolation coverage.
+
+Static/tooling validation after adding this smoke verifier: 87 tests PASS,
+222/222 signatures match. No production patch/generator changed.
+
 ## CAMP-D — conversation metadata and evidence scope
 
 2026-10-28. Static/tooling: 86 tests PASS; 222/222 original DOL signatures match.

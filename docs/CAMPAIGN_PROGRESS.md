@@ -66,7 +66,7 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 4. Expand per-event fixture requirements and risk coverage beyond script strings.
 5. Improve verification provenance and artifact checks as runtime evidence grows.
 
-## Fourth checkpoint validation
+## Fourth checkpoint (0fcaa64, pushed)
 
 - 86 static/tooling tests; 222 signatures. Both runtime state artifact hashes checked.
 - Decoded original kind-8 conversation actor/target, reversal and consumed key.
@@ -76,6 +76,18 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 - Evidence PASS now requires explicit chapter/stage and axis scope. Missing or
   changed local artifacts fail the optional byte-verification command.
 - Campaign matrix reads current runtime status from the same ledger/dashboard.
+
+## Fifth checkpoint validation
+
+- Original Ch9 fixture restored in private Dolphin. TAS port 1 ended Blue;
+  port 2 selected normal tutorial No, native Lethe transformed into cat gauge20.
+  Port 2 selected original Wait. Fresh captures: phase3/control3=1 remains;
+  only Lethe acted bit changes. Mordecai and other captured fields unchanged.
+- Both live stable C2 payload sets match. tools.partner_smoke PASS; 87 tests,
+  222 signatures; four runtime artifact files hash-verified.
+- Ch9 fixture/event axes accepted only for this synthetic partner smoke. Combat,
+  gauge depletion, cleanup/recruitment, clear, transition, save/reload and Netplay
+  remain open. No production code changed. Private process stopped.
 
 No gameplay assembly correction is accepted yet: identified engine assumptions
 still require normal-path reachability/reproduction. No campaign completion,

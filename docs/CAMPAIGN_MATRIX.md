@@ -15,7 +15,7 @@ Generated from the user's GFEE01 rev 0 image. Static inventory and local instruc
 | Ch.6: A Brief Diversion | 7 | bmap07 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.7: Shades of Evil | 8 | bmap08, bmap08_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.8: Despair and Hope | 9 | bmap09, bmap09_2, bmap09_3, bmap09_4, bmap09_5 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.9: Gallia | 10 | bmap10 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.9: Gallia | 10 | bmap10 | inventory; conditions open | see ledger | PASS* | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.10: Prisoner Release | 11 | bmap11 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.11: Blood Runs Red | 12 | bmap12, bmap12_2 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.12: A Strange Land | 13 | bmap13 | inventory; conditions open | see ledger | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |

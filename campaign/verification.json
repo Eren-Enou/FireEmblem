@@ -323,10 +323,14 @@
           "status": "NOT TESTED"
         },
         "fixture": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch9-partner-wait-05",
+          "note": "Synthetic Ch9 fixture; native Lethe transformation and port-2 Wait only"
         },
         "event_runtime": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch9-partner-wait-05",
+          "note": "Synthetic Ch9 fixture; native Lethe transformation and port-2 Wait only"
         },
         "chapter_clear": {
           "status": "NOT TESTED"
@@ -1260,10 +1264,37 @@
       "axes": [
         "event_runtime"
       ]
+    },
+    "ch9-partner-wait-05": {
+      "kind": "dolphin",
+      "commit": "0fcaa6452d223d4b7e8002a4f231d68e789381ba",
+      "worktree_dirty": false,
+      "fingerprint": "8609ae9f49fd879f",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_chapter_redirect",
+      "chapters": [
+        "10"
+      ],
+      "axes": [
+        "fixture",
+        "event_runtime"
+      ],
+      "artifacts": [
+        {
+          "path": "work/ch9_yellow_before.s02.sav",
+          "sha256": "54f141736b839b4c1c09cf8944a9fde4c08defacf91285b3b7f0ced2c82a3af5"
+        },
+        {
+          "path": "work/ch9_yellow_after.s02.sav",
+          "sha256": "4e57bd16d676cda66e7ddf8f935e8928dda1dac2a9b1c44b0840fa54f65b3676"
+        }
+      ],
+      "description": "Restored copied historical EXP-05 Chapter 9 fixture. Ended Blue phase with TAS port 1; port 2 selected normal tutorial No. Lethe transformed to JID_CAT/F gauge20. Port 2 selected original Wait. Captures phase3/control3=1; only Lethe acted bit changes, other captured fields identical. All stable C2 bodies match live RAM. No combat, clear, cleanup, native recruitment, save/reload or Netplay claim."
     }
   },
   "next_cases": [
     "Ch6 Yellow individual escape, Ike last, transition and fresh reload (natural campaign).",
+    "Ch9 native partners: combat EXP, partner cleanup/eventual recruitment and natural chapter history remain unverified.",
     "Ch10 prisoner conversations, temporary Yellow and exit conditions.",
     "Ch17 all four stage transitions, reinforcements, turn resets and ownership.",
     "Ch18 Shinon and native Reinforce partners; Ch20 Jill branch conditions.",
