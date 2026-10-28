@@ -12,7 +12,7 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 - Snapshot comparator and byte-level Gecko report. Stable code fingerprint unchanged.
 - Baseline validation: 64 tests, 184 signatures, DOL identity verified. See TESTING.
 
-## Second checkpoint validation
+## Second checkpoint (82e06d8, pushed)
 
 - Instruction-aligned local CFG decoder: 2075 scenes / 125775 reachable local
   instructions across all scripts, no unknown opcode or invalid branch targets.
@@ -37,15 +37,32 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
 - DTM playback restored the copied Prologue baseline. GUI Save State to File
   captured a fresh snapshot: chapter 1, phase 0, Ike's original state. Every intended
   COOP-P6 + EXP-16 C2 body matched live RAM, fingerprint 8609ae9f49fd879f.
-- Synthetic A input did not demonstrate unit selection/action. This remains
-  INCONCLUSIVE. No later-chapter fixture accepted. All isolated processes stopped.
+- DTM synthetic A input remains INCONCLUSIVE. Native TAS Input succeeded in a
+  later run: selected Ike, confirmed current tile, selected original Wait and
+  observed enemy-phase Boyd dialogue. Fresh state phase 0 -> 1, Ike unchanged
+  HP/lv/EXP/position; both states match all stable C2 bodies. prologue_smoke PASS.
+  No Yellow-control, clear, transition, save/reload or Netplay claim. Processes stopped.
+
+## Third checkpoint validation
+
+- 83 tests pass; 209/209 original DOL signatures match.
+- Native Escape menu query traced: kind 5, coordinate pair, action 14 and pool key.
+  Ch6 Escape tile (13,26); Ch10 tiles (6,2)/(7,2). No force read in this query,
+  but a separate context veto and real Yellow execution remain to be tested.
+- Generated native usage: 24032 calls, 327/406 native names used across 43 scripts.
+  Escape/death counter helpers have no direct aligned script calls; indirect use open.
+- State edits now bounded to complete MEM1, reject overlaps/empty edits; state
+  writer creates exclusively; synthetic manifest records old/new bytes and hashes.
+- New private bootstrap profiles for Ch6/10/17/Endgame; each 2536 Gecko bytes,
+  empty private card. Construction passed; runtime NOT TESTED. No original roster
+  or story prerequisites are manufactured. FIXTURES_AND_AUTOMATION.md records limits.
 
 ## Next independent work
 
-1. Commit the validated second checkpoint.
-2. Prove a DTM-driven unit action and capture/compare a state; otherwise retain
-   explicit blocker and pursue fixture/bootstrap research independently.
-3. Trace native force-0 event eligibility, especially actual Ch6 escape reachability.
+1. Commit the validated third checkpoint.
+2. Repeat the TAS action path with deterministic frame stepping/recording; DTM
+   polling issue remains open, and GUI control still needs observation.
+3. Trace the remaining Escape context veto and test Yellow original-menu eligibility.
 4. Expand per-event fixture requirements and risk coverage beyond script strings.
 5. Improve verification provenance and artifact checks as runtime evidence grows.
 

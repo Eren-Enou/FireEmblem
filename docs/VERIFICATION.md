@@ -4,7 +4,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 
 | Chapter/stage | CFG | Script model | Fixture | Original event | Cleared | Transition | Save/reload | Netplay local | Netplay two PCs |
 |---|---|---|---|---|---|---|---|---|---|
-| Prologue: Mercenaries | PASS | NOT TESTED | PASS | INCONCLUSIVE | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Prologue: Mercenaries | PASS | NOT TESTED | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.1: The Battle Begins | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.2: Rescue | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.3: Pirates Aground | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
@@ -44,6 +44,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 - **cfg-02**: `static`; All 2075 scene CFGs across 43 containers decode; parser checks only; source GFEE01 rev0 DOL hash anchored.
 - **escape-model-02**: `script_model`; Four C07 original escape-scene cases with mocked natives: actor, passenger, Ike, carried Ike; no Dolphin claim.
 - **fixture-prologue-02**: `dolphin`; Copied Prologue restored in isolated Dolphin; original-unit state captured via UI Save State to File. All intended stable C2 bodies matched live RAM. No unit action demonstrated.
+- **prologue-wait-03**: `dolphin`; Native Computer Use toggled port-1 TAS A, selected current tile, moved menu to Wait and confirmed. Enemy-phase Boyd dialogue observed. Capture phase 0 -> 1; Ike unchanged HP/lv/EXP/position; live stable C2 bodies match in both snapshots. prologue_smoke PASS. Analysis/tooling worktree dirty; production codes unchanged.
 
 ## Highest-priority open cases
 

@@ -1,5 +1,32 @@
 # Testing
 
+## CAMP-C — Escape tile metadata, fixture safety and original Wait action
+
+2026-10-28, isolated campaign clone. **83 tests PASS**, 209/209 signatures match.
+Suite: tests.test_tools, tests.test_campaign, tests.test_dol_patch,
+tests.test_verification, tests.test_fixture_safety. New coverage: original kind-5
+Escape tiles, all-container native-call cross-reference, bounded MEM1 edits,
+exclusive state writer, existing-manifest protection and private bootstrap profiles.
+
+**Runtime PASS, narrow Prologue Wait smoke:** native Computer Use, private
+work/runtime/host, Dolphin 2609a, stable COOP-P6 + EXP-16 fingerprint
+8609ae9f49fd879f. TAS Input port 1 persistent A selected Ike, confirmed the current
+tile; Main Stick selected Wait; A executed it. Observed enemy-phase Boyd dialogue.
+Paused and saved a NEW work/runtime_wait.s02.sav through the GUI. Original card
+and source states were not written. Stopped only the isolated Dolphin process.
+
+Before hash: 8728032b2d3dd931cbcd5889ae4ca59448fb1fdfdbcd56b1be0130ef812d1733.
+After hash: 6e1115df705c8d7031fd5df60398b93a41ac3adbd4ce6dbcec27f468a55839f5.
+tools.prologue_smoke PASS: chapter 1/turn 1, phase 0 -> 1; Ike still force 0,
+(3,9), HP19, lv1, EXP0. Both snapshots match ALL intended stable C2 bodies in RAM.
+Raw flags 0x80500 -> 0x80520; this delta is not asserted to be the acted bit.
+
+This demonstrates an original action through observed GUI automation and state
+verification. It does not accept Yellow control, chapter clear, transition,
+gameplay save/reload or Netplay. DTM synthetic-input action remains INCONCLUSIVE.
+Reproduction and synthetic later-chapter workflow: FIXTURES_AND_AUTOMATION.md.
+Four new bootstrap profiles exist but are NOT TESTED runtime fixtures.
+
 ## CAMP-B — CFGs, script models, evidence gates and offline DOL proof
 
 2026-10-28, isolated campaign branch. Latest validation: 77 tests pass across

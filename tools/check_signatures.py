@@ -18,6 +18,23 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-003: original Escape menu availability and kind-5 tile-event query.
+    (0x80077438, 0x9421FFF0, "Escape availability entry"),
+    (0x8028841C, 0x80077438, "Escape menu availability callback"),
+    (0x80288428, 0x8007749C, "Escape menu action callback"),
+    (0x8026C444, 0x4D4D4D5F, "Escape label MMM_ESC prefix"),
+    (0x80077464, 0x3860000E, "Escape uses tile action code 14"),
+    (0x80077468, 0x8885019E, "Escape reads unit x"),
+    (0x8007746C, 0x88A5019F, "Escape reads unit y"),
+    (0x80077470, 0x480474F9, "Escape queries kind-5 tile event"),
+    (0x800BE968, 0x9421FFE0, "kind-5 event query entry"),
+    (0x800BE9C0, 0x2C000005, "query accepts scene kind 5"),
+    (0x800BE9DC, 0xA81E0014, "query compares parameter 0 to x"),
+    (0x800BE9FC, 0xA81E0016, "query compares parameter 1 to y"),
+    (0x800BEA1C, 0xA81E0018, "query compares parameter 2 to action"),
+    (0x800BEA30, 0xA81E001A, "query resolves parameter 3 as pool offset"),
+    (0x800C273C, 0x80630008, "scene string resolver loads parent ScriptInfo"),
+    (0x800C2744, 0x80630024, "scene string resolver loads parent pool"),
     # CAMP-002: FE9 VM decoding and escape passenger selector.
     (0x80011F18, 0x28000041, "VM dispatch highest FE9 opcode is 0x41"),
     (0x80011F28, 0x38633F90, "VM dispatch table at 0x80283F90"),

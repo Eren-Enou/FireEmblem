@@ -179,6 +179,23 @@ class CampaignDataTests(unittest.TestCase):
             execute(raw,1,native)
             self.assertEqual(world,{"count":expected_count,"complete":complete,"escaped":[actor]})
 
+    def test_original_escape_tile_metadata_and_no_literal_escape_counter_calls(self):
+        from tools.native_usage import analyze
+        data = analyze(self.disc)
+        self.assertEqual(len(data["scripts"]), 43)
+        self.assertEqual(len(data["registrations"]), 406)
+        for name in ("PlayerEscapeCount", "PlayerEscapeCheck", "PlayerDeadCheck", "GetDiedPlayerCount"):
+            self.assertEqual(data["sites"][name], [])
+        self.assertEqual(len(data["sites"]["UnitEscape"]), 45)
+        raw = self.disc.read_file("Scripts/C07.cmb")
+        tile = functions(raw)[2].trigger(raw)["tile_event"]
+        self.assertEqual(tile, {"x": 13, "y": 26, "action_code": 14,
+                                "key_pool_offset": 191, "key": "", "action": "Escape"})
+        raw = self.disc.read_file("Scripts/C11.cmb")
+        escape_tiles = [f.trigger(raw)["tile_event"] for f in functions(raw)
+                        if f.trigger(raw).get("tile_event", {}).get("action") == "Escape"]
+        self.assertEqual([(e["x"], e["y"]) for e in escape_tiles], [(6,2),(7,2)])
+
     def test_native_registration_recovery_and_rescue_selector(self):
         from tools.native_registry import registrations
         from tools.fe9.ppc import Dol

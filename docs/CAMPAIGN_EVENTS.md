@@ -72,9 +72,29 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [0, 0, 1], 'inferred_tur
 
 ### Scene 0: function_0
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 5, 13, 0]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 5, 13, 0], 'tile_event': {'x': 8, 'y': 5, 'action_code': 13, 'key_pool_offset': 0, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0xBE6 set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
+
+### Scene 1: function_1
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [4, 11, 9, 17], 'tile_event': {'x': 4, 'y': 11, 'action_code': 9, 'key_pool_offset': 17, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 2: function_2
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [4, 11, 37, 17], 'tile_event': {'x': 4, 'y': 11, 'action_code': 37, 'key_pool_offset': 17, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [12, 15, 9, 195], 'tile_event': {'x': 12, 'y': 15, 'action_code': 9, 'key_pool_offset': 195, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [12, 15, 37, 195], 'tile_event': {'x': 12, 'y': 15, 'action_code': 37, 'key_pool_offset': 195, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 10: function_10
 
@@ -220,15 +240,25 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [4, 4, 0], 'inferred_tur
 
 ## Ch.3: Pirates Aground — Scripts/C04.cmb
 
+### Scene 0: function_0
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [20, 20, 9, 0], 'tile_event': {'x': 20, 'y': 20, 'action_code': 9, 'key_pool_offset': 0, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 1: function_1
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [20, 20, 37, 0], 'tile_event': {'x': 20, 'y': 20, 'action_code': 37, 'key_pool_offset': 0, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 3: function_3
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 13, 44, 247]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 13, 44, 247], 'tile_event': {'x': 8, 'y': 13, 'action_code': 44, 'key_pool_offset': 247, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0xD19 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
 ### Scene 4: function_4
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 12, 44, 247]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 12, 44, 247], 'tile_event': {'x': 8, 'y': 12, 'action_code': 44, 'key_pool_offset': 247, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0xD69 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -461,6 +491,11 @@ Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: all e
 - `0xE76 set('gf_complete')`: 4 explored alternative(s). Example local guards: UnitGet(MindGetMe(), 4) != 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0 AND (MindGetMe() == UnitGetByPID('PID_IKE')) != 0.
 - `0xE86 set('gf_complete')`: 4 explored alternative(s). Example local guards: UnitGet(MindGetMe(), 4) != 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0 AND (MindGetMe() == UnitGetByPID('PID_IKE')) != 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0.
 
+### Scene 2: function_2
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [13, 26, 14, 191], 'tile_event': {'x': 13, 'y': 26, 'action_code': 14, 'key_pool_offset': 191, 'key': '', 'action': 'Escape'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 12: function_12
 
 Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: INCONCLUSIVE: unsupported operation or exploration bound
@@ -510,15 +545,30 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [2, 2, 0], 'inferred_tur
 
 ## Ch.7: Shades of Evil — Scripts/C08.cmb
 
+### Scene 0: function_0
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [7, 8, 12, 0], 'tile_event': {'x': 7, 'y': 8, 'action_code': 12, 'key_pool_offset': 0, 'key': '宝箱２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 1: function_1
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [9, 8, 12, 61], 'tile_event': {'x': 9, 'y': 8, 'action_code': 12, 'key_pool_offset': 61, 'key': '宝箱３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 2: function_2
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [17, 8, 12, 80], 'tile_event': {'x': 17, 'y': 8, 'action_code': 12, 'key_pool_offset': 80, 'key': '宝箱４'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 3: function_3
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [23, 10, 44, 103]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [23, 10, 44, 103], 'tile_event': {'x': 23, 'y': 10, 'action_code': 44, 'key_pool_offset': 103, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x170A UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
 ### Scene 4: function_4
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [23, 11, 44, 103]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [23, 11, 44, 103], 'tile_event': {'x': 23, 'y': 11, 'action_code': 44, 'key_pool_offset': 103, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1762 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
@@ -747,9 +797,29 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [2, 2, 0], 'inferred_tur
 
 ### Scene 6: function_6
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 23, 13, 255]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 23, 13, 255], 'tile_event': {'x': 6, 'y': 23, 'action_code': 13, 'key_pool_offset': 255, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x138B set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 5, 9, 268], 'tile_event': {'x': 3, 'y': 5, 'action_code': 9, 'key_pool_offset': 268, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 5, 37, 268], 'tile_event': {'x': 3, 'y': 5, 'action_code': 37, 'key_pool_offset': 268, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 9: function_9
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [4, 9, 9, 430], 'tile_event': {'x': 4, 'y': 9, 'action_code': 9, 'key_pool_offset': 430, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 10: function_10
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [4, 9, 37, 430], 'tile_event': {'x': 4, 'y': 9, 'action_code': 37, 'key_pool_offset': 430, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 19: Opening0
 
@@ -852,6 +922,61 @@ Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: INCON
 - `0x1635 set('gf_complete')`: 12 explored alternative(s). Example local guards: UnitGet(MindGetMe(), 4) != 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0 AND (MindGetMe() == UnitGetByPID('PID_KEVIN')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_KEVIN')) != 0 AND (MindGetMe() == UnitGetByPID('PID_CHAP')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_CHAP')) != 0 AND (MindGetMe() == UnitGetByPID('PID_NEPENEE')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_NEPENEE')) != 0 AND (MindGetMe() == UnitGetByPID('PID_IKE')) != 0.
 - `0x1645 set('gf_complete')`: 24 explored alternative(s). Example local guards: UnitGet(MindGetMe(), 4) != 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0 AND (MindGetMe() == UnitGetByPID('PID_KEVIN')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_KEVIN')) != 0 AND (MindGetMe() == UnitGetByPID('PID_CHAP')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_CHAP')) != 0 AND (MindGetMe() == UnitGetByPID('PID_NEPENEE')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_NEPENEE')) != 0 AND (MindGetMe() == UnitGetByPID('PID_IKE')) != 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0.
 
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 5, 12, 483], 'tile_event': {'x': 2, 'y': 5, 'action_code': 12, 'key_pool_offset': 483, 'key': '宝箱１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 3, 12, 543], 'tile_event': {'x': 2, 'y': 3, 'action_code': 12, 'key_pool_offset': 543, 'key': '宝箱２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 3, 12, 564], 'tile_event': {'x': 3, 'y': 3, 'action_code': 12, 'key_pool_offset': 564, 'key': '宝箱３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 9: function_9
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [4, 3, 12, 587], 'tile_event': {'x': 4, 'y': 3, 'action_code': 12, 'key_pool_offset': 587, 'key': '宝箱４'}}`. Local trace: all explored local paths returned
+
+
+### Scene 10: function_10
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [19, 3, 12, 609], 'tile_event': {'x': 19, 'y': 3, 'action_code': 12, 'key_pool_offset': 609, 'key': '宝箱５'}}`. Local trace: all explored local paths returned
+
+
+### Scene 11: function_11
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 2, 14, 629], 'tile_event': {'x': 6, 'y': 2, 'action_code': 14, 'key_pool_offset': 629, 'key': '', 'action': 'Escape'}}`. Local trace: all explored local paths returned
+
+
+### Scene 12: function_12
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [7, 2, 14, 629], 'tile_event': {'x': 7, 'y': 2, 'action_code': 14, 'key_pool_offset': 629, 'key': '', 'action': 'Escape'}}`. Local trace: all explored local paths returned
+
+
+### Scene 13: function_13
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 14, 11, 630], 'tile_event': {'x': 8, 'y': 14, 'action_code': 11, 'key_pool_offset': 630, 'key': 'F0814'}}`. Local trace: all explored local paths returned
+
+
+### Scene 14: function_14
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [11, 7, 11, 658], 'tile_event': {'x': 11, 'y': 7, 'action_code': 11, 'key_pool_offset': 658, 'key': 'F1107'}}`. Local trace: all explored local paths returned
+
+
+### Scene 15: function_15
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [19, 14, 11, 677], 'tile_event': {'x': 19, 'y': 14, 'action_code': 11, 'key_pool_offset': 677, 'key': 'F1914'}}`. Local trace: all explored local paths returned
+
+
+### Scene 16: function_16
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [19, 5, 11, 702], 'tile_event': {'x': 19, 'y': 5, 'action_code': 11, 'key_pool_offset': 702, 'key': 'F1905'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 23: Opening0
 
 Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: INCONCLUSIVE: unsupported operation or exploration bound
@@ -926,15 +1051,45 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [3, 3, 0], 'inferred_tur
 
 ## Ch.11: Blood Runs Red — Scripts/C12.cmb
 
+### Scene 0: function_0
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [26, 6, 9, 0], 'tile_event': {'x': 26, 'y': 6, 'action_code': 9, 'key_pool_offset': 0, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 1: function_1
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [15, 16, 9, 219], 'tile_event': {'x': 15, 'y': 16, 'action_code': 9, 'key_pool_offset': 219, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 2: function_2
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [14, 24, 9, 266], 'tile_event': {'x': 14, 'y': 24, 'action_code': 9, 'key_pool_offset': 266, 'key': '訪問３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [15, 16, 37, 219], 'tile_event': {'x': 15, 'y': 16, 'action_code': 37, 'key_pool_offset': 219, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [14, 24, 37, 266], 'tile_event': {'x': 14, 'y': 24, 'action_code': 37, 'key_pool_offset': 266, 'key': '訪問３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [26, 6, 37, 0], 'tile_event': {'x': 26, 'y': 6, 'action_code': 37, 'key_pool_offset': 0, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 6: function_6
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [23, 26, 44, 331]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [23, 26, 44, 331], 'tile_event': {'x': 23, 'y': 26, 'action_code': 44, 'key_pool_offset': 331, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1B21 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: none in this scene.
 
 ### Scene 7: function_7
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 7, 41, 331]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 7, 41, 331], 'tile_event': {'x': 6, 'y': 7, 'action_code': 41, 'key_pool_offset': 331, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1B4B set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -1150,15 +1305,50 @@ Trigger metadata: `{'kind': 4, 'argc': 0, 'parameters': [31, 29, 31, 29, 1, 276]
 
 - `0x12D7 set('gf_gameover')`: 1 explored alternative(s). Example local guards: none in this scene.
 
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [29, 28, 12, 298], 'tile_event': {'x': 29, 'y': 28, 'action_code': 12, 'key_pool_offset': 298, 'key': '宝箱１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [29, 30, 12, 359], 'tile_event': {'x': 29, 'y': 30, 'action_code': 12, 'key_pool_offset': 359, 'key': '宝箱２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [28, 21, 12, 380], 'tile_event': {'x': 28, 'y': 21, 'action_code': 12, 'key_pool_offset': 380, 'key': '宝箱３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 9: function_9
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [32, 22, 12, 400], 'tile_event': {'x': 32, 'y': 22, 'action_code': 12, 'key_pool_offset': 400, 'key': '宝箱４'}}`. Local trace: all explored local paths returned
+
+
+### Scene 10: function_10
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [36, 22, 12, 421], 'tile_event': {'x': 36, 'y': 22, 'action_code': 12, 'key_pool_offset': 421, 'key': '宝箱５'}}`. Local trace: all explored local paths returned
+
+
+### Scene 11: function_11
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [39, 28, 12, 442], 'tile_event': {'x': 39, 'y': 28, 'action_code': 12, 'key_pool_offset': 442, 'key': '宝箱６'}}`. Local trace: all explored local paths returned
+
+
+### Scene 12: function_12
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [39, 30, 12, 465], 'tile_event': {'x': 39, 'y': 30, 'action_code': 12, 'key_pool_offset': 465, 'key': '宝箱７'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 13: function_13
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [20, 20, 44, 483]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [20, 20, 44, 483], 'tile_event': {'x': 20, 'y': 20, 'action_code': 44, 'key_pool_offset': 483, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x14F2 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: MindGetMe() != 0.
 
 ### Scene 14: function_14
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [21, 20, 44, 483]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [21, 20, 44, 483], 'tile_event': {'x': 21, 'y': 20, 'action_code': 44, 'key_pool_offset': 483, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1546 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: MindGetMe() != 0.
 
@@ -1284,6 +1474,36 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [3790]}`. Local trace: I
 
 ## Ch.14: Training — Scripts/C15.cmb
 
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [5, 4, 37, 249], 'tile_event': {'x': 5, 'y': 4, 'action_code': 37, 'key_pool_offset': 249, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 3, 37, 273], 'tile_event': {'x': 2, 'y': 3, 'action_code': 37, 'key_pool_offset': 273, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [7, 23, 37, 280], 'tile_event': {'x': 7, 'y': 23, 'action_code': 37, 'key_pool_offset': 280, 'key': '訪問３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [5, 4, 9, 249], 'tile_event': {'x': 5, 'y': 4, 'action_code': 9, 'key_pool_offset': 249, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 9: function_9
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 3, 9, 273], 'tile_event': {'x': 2, 'y': 3, 'action_code': 9, 'key_pool_offset': 273, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 10: function_10
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [7, 23, 9, 280], 'tile_event': {'x': 7, 'y': 23, 'action_code': 9, 'key_pool_offset': 280, 'key': '訪問３'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 19: Opening0
 
 Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: all explored local paths returned
@@ -1375,21 +1595,66 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [1, 1, 0], 'inferred_tur
 
 ## Ch.16: The Atonement — Scripts/C17.cmb
 
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [14, 18, 12, 491], 'tile_event': {'x': 14, 'y': 18, 'action_code': 12, 'key_pool_offset': 491, 'key': '宝箱１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [13, 19, 12, 556], 'tile_event': {'x': 13, 'y': 19, 'action_code': 12, 'key_pool_offset': 556, 'key': '宝箱２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [23, 8, 12, 575], 'tile_event': {'x': 23, 'y': 8, 'action_code': 12, 'key_pool_offset': 575, 'key': '宝箱３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [5, 7, 12, 598], 'tile_event': {'x': 5, 'y': 7, 'action_code': 12, 'key_pool_offset': 598, 'key': '宝箱４'}}`. Local trace: all explored local paths returned
+
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [22, 8, 12, 622], 'tile_event': {'x': 22, 'y': 8, 'action_code': 12, 'key_pool_offset': 622, 'key': '宝箱５'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 7, 12, 642], 'tile_event': {'x': 6, 'y': 7, 'action_code': 12, 'key_pool_offset': 642, 'key': '宝箱６'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 9: function_9
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [14, 6, 13, 660]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [14, 6, 13, 660], 'tile_event': {'x': 14, 'y': 6, 'action_code': 13, 'key_pool_offset': 660, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x102B set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
+### Scene 10: function_10
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [12, 17, 11, 673], 'tile_event': {'x': 12, 'y': 17, 'action_code': 11, 'key_pool_offset': 673, 'key': 'F1217'}}`. Local trace: all explored local paths returned
+
+
+### Scene 11: function_11
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [24, 10, 11, 688], 'tile_event': {'x': 24, 'y': 10, 'action_code': 11, 'key_pool_offset': 688, 'key': 'F2410'}}`. Local trace: all explored local paths returned
+
+
+### Scene 12: function_12
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 9, 11, 694], 'tile_event': {'x': 3, 'y': 9, 'action_code': 11, 'key_pool_offset': 694, 'key': 'F0309'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 13: function_13
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 17, 44, 660]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 17, 44, 660], 'tile_event': {'x': 2, 'y': 17, 'action_code': 44, 'key_pool_offset': 660, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x112A UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
 ### Scene 14: function_14
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 16, 44, 660]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [2, 16, 44, 660], 'tile_event': {'x': 2, 'y': 16, 'action_code': 44, 'key_pool_offset': 660, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1182 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
@@ -1450,6 +1715,11 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [661]}`. Local trace: IN
 - `0x21EF AllUnitEscape()`: 1 explored alternative(s). Example local guards: none in this scene.
 
 ## Ch.17: Day Breaks — Scripts/C18.cmb
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [27, 9, 41, 247], 'tile_event': {'x': 27, 'y': 9, 'action_code': 41, 'key_pool_offset': 247, 'key': ''}}`. Local trace: all explored local paths returned
+
 
 ### Scene 36: Opening0
 
@@ -1703,6 +1973,21 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [4517]}`. Local trace: I
 
 ## Ch.18: Crimea Marches — Scripts/C19.cmb
 
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [10, 18, 12, 211], 'tile_event': {'x': 10, 'y': 18, 'action_code': 12, 'key_pool_offset': 211, 'key': '宝箱１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [30, 19, 12, 271], 'tile_event': {'x': 30, 'y': 19, 'action_code': 12, 'key_pool_offset': 271, 'key': '宝箱２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [31, 19, 12, 290], 'tile_event': {'x': 31, 'y': 19, 'action_code': 12, 'key_pool_offset': 290, 'key': '宝箱３'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 18: Opening0
 
 Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: INCONCLUSIVE: unsupported operation or exploration bound
@@ -1780,6 +2065,286 @@ Trigger metadata: `{'kind': 6, 'argc': 0, 'parameters': [1, 1, 0], 'inferred_tur
 Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: all explored local paths returned
 
 - `0x17EF UnitEscape(MindGetMe(), 0)`: 4 explored alternative(s). Example local guards: (UnitGetForce(MindGetMe()) == 2) != 0 AND MindGetMe() != 0 AND (UnitGetX(MindGetMe()) <= 13) != 0.
+
+### Scene 9: function_9
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 14, 44, 654], 'tile_event': {'x': 6, 'y': 14, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 12: function_12
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 6, 44, 654], 'tile_event': {'x': 6, 'y': 6, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 13: function_13
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 8, 44, 654], 'tile_event': {'x': 6, 'y': 8, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 14: function_14
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 9, 44, 654], 'tile_event': {'x': 6, 'y': 9, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 15: function_15
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 10, 44, 654], 'tile_event': {'x': 6, 'y': 10, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 16: function_16
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 11, 44, 654], 'tile_event': {'x': 6, 'y': 11, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 17: function_17
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 12, 44, 654], 'tile_event': {'x': 6, 'y': 12, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 18: function_18
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 13, 44, 654], 'tile_event': {'x': 6, 'y': 13, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 19: function_19
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 15, 44, 654], 'tile_event': {'x': 6, 'y': 15, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 20: function_20
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 16, 44, 654], 'tile_event': {'x': 6, 'y': 16, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 21: function_21
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 17, 44, 654], 'tile_event': {'x': 6, 'y': 17, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 22: function_22
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 18, 44, 654], 'tile_event': {'x': 6, 'y': 18, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 23: function_23
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 19, 44, 654], 'tile_event': {'x': 6, 'y': 19, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 24: function_24
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 20, 44, 654], 'tile_event': {'x': 6, 'y': 20, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 25: function_25
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 21, 44, 654], 'tile_event': {'x': 6, 'y': 21, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 26: function_26
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 22, 44, 654], 'tile_event': {'x': 6, 'y': 22, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 27: function_27
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 23, 44, 654], 'tile_event': {'x': 6, 'y': 23, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 28: function_28
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 24, 44, 654], 'tile_event': {'x': 6, 'y': 24, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 29: function_29
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 25, 44, 654], 'tile_event': {'x': 6, 'y': 25, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 30: function_30
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 26, 44, 654], 'tile_event': {'x': 6, 'y': 26, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 31: function_31
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 28, 44, 654], 'tile_event': {'x': 6, 'y': 28, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 32: function_32
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 29, 44, 654], 'tile_event': {'x': 6, 'y': 29, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 33: function_33
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 31, 44, 654], 'tile_event': {'x': 6, 'y': 31, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 34: function_34
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 32, 44, 654], 'tile_event': {'x': 6, 'y': 32, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 35: function_35
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 34, 44, 654], 'tile_event': {'x': 6, 'y': 34, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 36: function_36
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 35, 44, 654], 'tile_event': {'x': 6, 'y': 35, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 37: function_37
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 6, 44, 654], 'tile_event': {'x': 25, 'y': 6, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 38: function_38
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 7, 44, 654], 'tile_event': {'x': 25, 'y': 7, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 39: function_39
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 8, 44, 654], 'tile_event': {'x': 25, 'y': 8, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 40: function_40
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 9, 44, 654], 'tile_event': {'x': 25, 'y': 9, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 41: function_41
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 10, 44, 654], 'tile_event': {'x': 25, 'y': 10, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 42: function_42
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 11, 44, 654], 'tile_event': {'x': 25, 'y': 11, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 43: function_43
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 12, 44, 654], 'tile_event': {'x': 25, 'y': 12, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 44: function_44
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 13, 44, 654], 'tile_event': {'x': 25, 'y': 13, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 45: function_45
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 14, 44, 654], 'tile_event': {'x': 25, 'y': 14, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 46: function_46
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 15, 44, 654], 'tile_event': {'x': 25, 'y': 15, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 47: function_47
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 16, 44, 654], 'tile_event': {'x': 25, 'y': 16, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 48: function_48
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 17, 44, 654], 'tile_event': {'x': 25, 'y': 17, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 49: function_49
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 18, 44, 654], 'tile_event': {'x': 25, 'y': 18, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 50: function_50
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 19, 44, 654], 'tile_event': {'x': 25, 'y': 19, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 51: function_51
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 20, 44, 654], 'tile_event': {'x': 25, 'y': 20, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 52: function_52
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 21, 44, 654], 'tile_event': {'x': 25, 'y': 21, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 53: function_53
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 22, 44, 654], 'tile_event': {'x': 25, 'y': 22, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 54: function_54
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 23, 44, 654], 'tile_event': {'x': 25, 'y': 23, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 55: function_55
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 24, 44, 654], 'tile_event': {'x': 25, 'y': 24, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 56: function_56
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 25, 44, 654], 'tile_event': {'x': 25, 'y': 25, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 57: function_57
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 26, 44, 654], 'tile_event': {'x': 25, 'y': 26, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 58: function_58
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 27, 44, 654], 'tile_event': {'x': 25, 'y': 27, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 59: function_59
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 28, 44, 654], 'tile_event': {'x': 25, 'y': 28, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 60: function_60
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 29, 44, 654], 'tile_event': {'x': 25, 'y': 29, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 61: function_61
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 30, 44, 654], 'tile_event': {'x': 25, 'y': 30, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 62: function_62
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 31, 44, 654], 'tile_event': {'x': 25, 'y': 31, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 63: function_63
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 32, 44, 654], 'tile_event': {'x': 25, 'y': 32, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 64: function_64
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 33, 44, 654], 'tile_event': {'x': 25, 'y': 33, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 65: function_65
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 34, 44, 654], 'tile_event': {'x': 25, 'y': 34, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
+
+### Scene 66: function_66
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [25, 35, 44, 654], 'tile_event': {'x': 25, 'y': 35, 'action_code': 44, 'key_pool_offset': 654, 'key': ''}}`. Local trace: all explored local paths returned
+
 
 ### Scene 75: function_75
 
@@ -1864,9 +2429,29 @@ Trigger metadata: `{'kind': 14, 'argc': 0, 'parameters': [20, 83, 3]}`. Local tr
 
 - `0x1109 Join('always_kariru')`: 1 explored alternative(s). Example local guards: Check() == 0 AND (DialogGetRes() == 0) != 0.
 
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [11, 5, 37, 400], 'tile_event': {'x': 11, 'y': 5, 'action_code': 37, 'key_pool_offset': 400, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [11, 5, 9, 400], 'tile_event': {'x': 11, 'y': 5, 'action_code': 9, 'key_pool_offset': 400, 'key': '訪問１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [17, 17, 37, 560], 'tile_event': {'x': 17, 'y': 17, 'action_code': 37, 'key_pool_offset': 560, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [17, 17, 9, 560], 'tile_event': {'x': 17, 'y': 17, 'action_code': 9, 'key_pool_offset': 560, 'key': '訪問２'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 11: function_11
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [24, 7, 41, 687]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [24, 7, 41, 687], 'tile_event': {'x': 24, 'y': 7, 'action_code': 41, 'key_pool_offset': 687, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x13BB set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -1962,15 +2547,80 @@ Trigger metadata: `{'kind': 3, 'argc': 0, 'parameters': [0, 0, 1], 'inferred_tur
 
 ## Ch.21: Without a King — Scripts/C22.cmb
 
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [7, 6, 12, 205], 'tile_event': {'x': 7, 'y': 6, 'action_code': 12, 'key_pool_offset': 205, 'key': '宝箱１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [9, 6, 12, 264], 'tile_event': {'x': 9, 'y': 6, 'action_code': 12, 'key_pool_offset': 264, 'key': '宝箱２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [14, 3, 12, 289], 'tile_event': {'x': 14, 'y': 3, 'action_code': 12, 'key_pool_offset': 289, 'key': '宝箱３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [24, 3, 12, 307], 'tile_event': {'x': 24, 'y': 3, 'action_code': 12, 'key_pool_offset': 307, 'key': '宝箱４'}}`. Local trace: all explored local paths returned
+
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [30, 14, 12, 328], 'tile_event': {'x': 30, 'y': 14, 'action_code': 12, 'key_pool_offset': 328, 'key': '宝箱５'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [30, 15, 12, 348], 'tile_event': {'x': 30, 'y': 15, 'action_code': 12, 'key_pool_offset': 348, 'key': '宝箱６'}}`. Local trace: all explored local paths returned
+
+
+### Scene 9: function_9
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 28, 12, 368], 'tile_event': {'x': 16, 'y': 28, 'action_code': 12, 'key_pool_offset': 368, 'key': '宝箱７'}}`. Local trace: all explored local paths returned
+
+
+### Scene 10: function_10
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [18, 28, 12, 390], 'tile_event': {'x': 18, 'y': 28, 'action_code': 12, 'key_pool_offset': 390, 'key': '宝箱８'}}`. Local trace: all explored local paths returned
+
+
+### Scene 11: function_11
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [29, 17, 11, 413], 'tile_event': {'x': 29, 'y': 17, 'action_code': 11, 'key_pool_offset': 413, 'key': 'F2917'}}`. Local trace: all explored local paths returned
+
+
+### Scene 12: function_12
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [24, 6, 11, 440], 'tile_event': {'x': 24, 'y': 6, 'action_code': 11, 'key_pool_offset': 440, 'key': 'F2406'}}`. Local trace: all explored local paths returned
+
+
+### Scene 13: function_13
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [14, 6, 11, 446], 'tile_event': {'x': 14, 'y': 6, 'action_code': 11, 'key_pool_offset': 446, 'key': 'F1406'}}`. Local trace: all explored local paths returned
+
+
+### Scene 14: function_14
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 9, 11, 452], 'tile_event': {'x': 8, 'y': 9, 'action_code': 11, 'key_pool_offset': 452, 'key': 'F0809'}}`. Local trace: all explored local paths returned
+
+
+### Scene 15: function_15
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [17, 26, 11, 458], 'tile_event': {'x': 17, 'y': 26, 'action_code': 11, 'key_pool_offset': 458, 'key': 'F1726'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 19: function_19
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [10, 16, 13, 533]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [10, 16, 13, 533], 'tile_event': {'x': 10, 'y': 16, 'action_code': 13, 'key_pool_offset': 533, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x16D7 set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
 ### Scene 22: function_22
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 23, 44, 533]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 23, 44, 533], 'tile_event': {'x': 16, 'y': 23, 'action_code': 44, 'key_pool_offset': 533, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x18D6 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
@@ -2055,27 +2705,57 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [534]}`. Local trace: IN
 
 ## Ch.22: Solo — Scripts/C23.cmb
 
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 9, 12, 170], 'tile_event': {'x': 6, 'y': 9, 'action_code': 12, 'key_pool_offset': 170, 'key': 'F0306'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 11, 12, 231], 'tile_event': {'x': 6, 'y': 11, 'action_code': 12, 'key_pool_offset': 231, 'key': 'F0308'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 13, 12, 248], 'tile_event': {'x': 6, 'y': 13, 'action_code': 12, 'key_pool_offset': 248, 'key': 'F0310'}}`. Local trace: all explored local paths returned
+
+
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 9, 12, 264], 'tile_event': {'x': 16, 'y': 9, 'action_code': 12, 'key_pool_offset': 264, 'key': 'F2306'}}`. Local trace: all explored local paths returned
+
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 11, 12, 284], 'tile_event': {'x': 16, 'y': 11, 'action_code': 12, 'key_pool_offset': 284, 'key': 'F2308'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 13, 12, 303], 'tile_event': {'x': 16, 'y': 13, 'action_code': 12, 'key_pool_offset': 303, 'key': 'F2310'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 9: function_9
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 9, 44, 323]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 9, 44, 323], 'tile_event': {'x': 3, 'y': 9, 'action_code': 44, 'key_pool_offset': 323, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x123E UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
 ### Scene 10: function_10
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 10, 44, 323]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [3, 10, 44, 323], 'tile_event': {'x': 3, 'y': 10, 'action_code': 44, 'key_pool_offset': 323, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1296 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
 ### Scene 11: function_11
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [19, 9, 44, 323]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [19, 9, 44, 323], 'tile_event': {'x': 19, 'y': 9, 'action_code': 44, 'key_pool_offset': 323, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x12EE UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
 ### Scene 12: function_12
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [19, 10, 44, 323]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [19, 10, 44, 323], 'tile_event': {'x': 19, 'y': 10, 'action_code': 44, 'key_pool_offset': 323, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1346 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
@@ -2139,7 +2819,7 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [3115]}`. Local trace: I
 
 ### Scene 3: function_3
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [15, 7, 13, 253]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [15, 7, 13, 253], 'tile_event': {'x': 15, 'y': 7, 'action_code': 13, 'key_pool_offset': 253, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1137 set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -2208,9 +2888,29 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [254]}`. Local trace: al
 
 ## Ch.24: Battle Reunion — Scripts/C25.cmb
 
+### Scene 2: function_2
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [12, 31, 9, 173], 'tile_event': {'x': 12, 'y': 31, 'action_code': 9, 'key_pool_offset': 173, 'key': 'F1237'}}`. Local trace: all explored local paths returned
+
+
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [12, 31, 37, 173], 'tile_event': {'x': 12, 'y': 31, 'action_code': 37, 'key_pool_offset': 173, 'key': 'F1237'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [34, 12, 9, 339], 'tile_event': {'x': 34, 'y': 12, 'action_code': 9, 'key_pool_offset': 339, 'key': 'F3412'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [34, 12, 37, 339], 'tile_event': {'x': 34, 'y': 12, 'action_code': 37, 'key_pool_offset': 339, 'key': 'F3412'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 7: function_7
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [13, 10, 41, 393]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [13, 10, 41, 393], 'tile_event': {'x': 13, 'y': 10, 'action_code': 41, 'key_pool_offset': 393, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1407 set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -2414,7 +3114,7 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [3744]}`. Local trace: I
 
 ### Scene 3: function_3
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [11, 10, 13, 177]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [11, 10, 13, 177], 'tile_event': {'x': 11, 'y': 10, 'action_code': 13, 'key_pool_offset': 177, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0xD2F set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
@@ -2484,19 +3184,79 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [178]}`. Local trace: IN
 
 ### Scene 2: function_2
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 3, 41, 168]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 3, 41, 168], 'tile_event': {'x': 16, 'y': 3, 'action_code': 41, 'key_pool_offset': 168, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0xE03 set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [4, 7, 12, 181], 'tile_event': {'x': 4, 'y': 7, 'action_code': 12, 'key_pool_offset': 181, 'key': '宝箱１'}}`. Local trace: all explored local paths returned
+
+
+### Scene 4: function_4
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 7, 12, 243], 'tile_event': {'x': 6, 'y': 7, 'action_code': 12, 'key_pool_offset': 243, 'key': '宝箱２'}}`. Local trace: all explored local paths returned
+
+
+### Scene 5: function_5
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [11, 12, 12, 263], 'tile_event': {'x': 11, 'y': 12, 'action_code': 12, 'key_pool_offset': 263, 'key': '宝箱３'}}`. Local trace: all explored local paths returned
+
+
+### Scene 6: function_6
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [28, 7, 12, 286], 'tile_event': {'x': 28, 'y': 7, 'action_code': 12, 'key_pool_offset': 286, 'key': '宝箱４'}}`. Local trace: all explored local paths returned
+
+
+### Scene 7: function_7
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [26, 7, 12, 310], 'tile_event': {'x': 26, 'y': 7, 'action_code': 12, 'key_pool_offset': 310, 'key': '宝箱５'}}`. Local trace: all explored local paths returned
+
+
+### Scene 8: function_8
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [21, 12, 12, 329], 'tile_event': {'x': 21, 'y': 12, 'action_code': 12, 'key_pool_offset': 329, 'key': '宝箱６'}}`. Local trace: all explored local paths returned
+
+
+### Scene 9: function_9
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [5, 6, 12, 347], 'tile_event': {'x': 5, 'y': 6, 'action_code': 12, 'key_pool_offset': 347, 'key': '宝箱７'}}`. Local trace: all explored local paths returned
+
+
+### Scene 10: function_10
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [21, 18, 11, 364], 'tile_event': {'x': 21, 'y': 18, 'action_code': 11, 'key_pool_offset': 364, 'key': 'F2118'}}`. Local trace: all explored local paths returned
+
+
+### Scene 11: function_11
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [11, 18, 11, 379], 'tile_event': {'x': 11, 'y': 18, 'action_code': 11, 'key_pool_offset': 379, 'key': 'F1118'}}`. Local trace: all explored local paths returned
+
+
+### Scene 12: function_12
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [5, 14, 11, 385], 'tile_event': {'x': 5, 'y': 14, 'action_code': 11, 'key_pool_offset': 385, 'key': 'F0514'}}`. Local trace: all explored local paths returned
+
+
+### Scene 13: function_13
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [27, 14, 11, 391], 'tile_event': {'x': 27, 'y': 14, 'action_code': 11, 'key_pool_offset': 391, 'key': 'F2714'}}`. Local trace: all explored local paths returned
+
+
+### Scene 14: function_14
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [16, 11, 11, 397], 'tile_event': {'x': 16, 'y': 11, 'action_code': 11, 'key_pool_offset': 397, 'key': 'F1611'}}`. Local trace: all explored local paths returned
+
+
 ### Scene 15: function_15
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 11, 44, 168]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [6, 11, 44, 168], 'tile_event': {'x': 6, 'y': 11, 'action_code': 44, 'key_pool_offset': 168, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x1132 UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
 ### Scene 16: function_16
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [26, 11, 44, 168]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [26, 11, 44, 168], 'tile_event': {'x': 26, 'y': 11, 'action_code': 44, 'key_pool_offset': 168, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x118A UnitEscape(MindGetMe(), 0)`: 1 explored alternative(s). Example local guards: !(MindGetMe()) == 0.
 
@@ -2550,6 +3310,21 @@ Trigger metadata: `{'kind': 0, 'argc': 0, 'parameters': []}`. Local trace: all e
 - `0xC79 set('gf_complete')`: 1 explored alternative(s). Example local guards: (MindGetMe() == UnitGetByPID('PID_IKE')) != 0.
 - `0xC92 set('gf_complete')`: 1 explored alternative(s). Example local guards: (MindGetMe() == UnitGetByPID('PID_IKE')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0.
 - `0xD13 UnitEscape(MindGetMe(), 0)`: 5 explored alternative(s). Example local guards: (MindGetMe() == UnitGetByPID('PID_IKE')) == 0 AND (UnitGet(MindGetMe(), 4) == UnitGetByPID('PID_IKE')) != 0 AND (UnitGetX(UnitGet(MindGetMe(), 4)) == 8) == 0 AND (UnitGetX(UnitGet(MindGetMe(), 4)) == 9) != 0.
+
+### Scene 1: function_1
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 12, 14, 226], 'tile_event': {'x': 8, 'y': 12, 'action_code': 14, 'key_pool_offset': 226, 'key': '', 'action': 'Escape'}}`. Local trace: all explored local paths returned
+
+
+### Scene 2: function_2
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [9, 12, 14, 226], 'tile_event': {'x': 9, 'y': 12, 'action_code': 14, 'key_pool_offset': 226, 'key': '', 'action': 'Escape'}}`. Local trace: all explored local paths returned
+
+
+### Scene 3: function_3
+
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [10, 12, 14, 226], 'tile_event': {'x': 10, 'y': 12, 'action_code': 14, 'key_pool_offset': 226, 'key': '', 'action': 'Escape'}}`. Local trace: all explored local paths returned
+
 
 ### Scene 6: function_6
 
@@ -2607,7 +3382,7 @@ Trigger metadata: `{'kind': 1, 'argc': 0, 'parameters': [65]}`. Local trace: all
 
 ### Scene 2: function_2
 
-Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 7, 13, 274]}`. Local trace: all explored local paths returned
+Trigger metadata: `{'kind': 5, 'argc': 0, 'parameters': [8, 7, 13, 274], 'tile_event': {'x': 8, 'y': 7, 'action_code': 13, 'key_pool_offset': 274, 'key': ''}}`. Local trace: all explored local paths returned
 
 - `0x105B set('gf_complete')`: 1 explored alternative(s). Example local guards: none in this scene.
 

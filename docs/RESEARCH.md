@@ -15,7 +15,30 @@ Confidence labels:
 
 ## 0. Environment facts
 
-### CAMP-001 — isolated campaign branch, 2026-10-28
+### CAMP-003 — original Escape menu and tile metadata
+
+VERIFIED-STATIC: Escape availability callback 0x80077438 is referenced by menu
+table 0x8028841C; action callback 0x8007749C by 0x80288428. Label construction
+resolves MMM_ESC at 0x8026C444 [S]. Availability uses action code 14 at
+0x80077464, unit coordinates +0x19E/+0x19F at 0x80077468/0x8007746C, and calls
+0x800BE968 at 0x80077470 [S]. The callback has a separate context+0x12 veto;
+its meaning is unresolved. The callback and query contain no unit-force read.
+This is not a runtime proof of Yellow menu availability or normal event execution.
+
+The query accepts kind 5 (0x800BE9C0), compares parameters at scene+0x14/+0x16
+against coordinates (0x800BE9DC/0x800BE9FC), +0x18 against action
+(0x800BEA1C), and resolves +0x1A as an unsigned pool offset (0x800BEA30).
+Resolver 0x800C273C/0x800C2744 reads parent ScriptInfo and its pool [S].
+The query rejects a matching event if its key is already present in the chapter
+event-key list; blank key lookup returns false. Key-list side effects remain open.
+Decoded C07 scene 2 is Escape (13,26), empty key; C11 scenes 11/12 are Escape
+(6,2)/(7,2). tools/event_report includes these tile records, beyond command strings.
+
+tools/native_usage cross-references all 43 script containers: 24032 aligned native
+calls, 327 of 406 recovered native names used. No direct aligned call names
+PlayerEscapeCount, PlayerEscapeCheck, PlayerDeadCheck or GetDiedPlayerCount occur.
+Native indirect dispatch/engine callers remain unresolved. This narrows the
+reachability investigation; it does not establish those routines are globally unused.
 
 ### CAMP-002 — instruction-aligned VM and native registrations
 
@@ -51,7 +74,8 @@ Gecko patch is claimed necessary or working. Details: docs/CAMPAIGN_FINDINGS.md.
 The campaign matrix now gets names from Mess/common.m MCTxx. Internal 29 is
 Ch.27-2, 30 is Ch.28, 31 is Endgame. C18 has local Complete18 and turn resets;
 suffix-map and ending-script inventories are necessary. Event calls decoded by
-tools/fe9/events.py remain bounded pattern candidates, not a complete VM trace.
+tools/fe9/events.py now resolve aligned local CFG calls; native semantics and scene
+activation remain outside that decoder.
 
 | Item | Value | Confidence |
 |---|---|---|

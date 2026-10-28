@@ -9,6 +9,19 @@ def ledger():
 
 
 class EvidenceTests(unittest.TestCase):
+    def test_smoke_rejects_same_state_wrong_phase_and_missing_live_hooks(self):
+        from tools.prologue_smoke import verify
+        before = {"evidence": {"commit":"abc", "dolphin":"2609a", "codes_fingerprint":"stable",
+                               "state_sha256":"before", "intended_c2_verified":True, "debug":False},
+                  "game":{"chapter":1,"turn":1,"phase":0,"units":[
+                      {"pid":"PID_IKE","force":0,"hp":19,"level":1,"exp":0,"xy":[3,9]}]}}
+        after = copy.deepcopy(before)
+        self.assertEqual(verify(before, after)["status"], "FAIL")
+        after["game"]["phase"] = 1; after["evidence"]["state_sha256"] = "after"
+        self.assertEqual(verify(before, after)["status"], "PASS")
+        after["evidence"]["intended_c2_verified"] = False
+        self.assertEqual(verify(before, after)["status"], "FAIL")
+
     def test_static_pass_cannot_promote_runtime(self):
         data=ledger();data["chapters"][0]["checks"]["static_cfg"]={"status":"PASS","evidence":"static"}
         validate(data)

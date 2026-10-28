@@ -82,7 +82,10 @@ def write_state(src: Path, dst: Path, payload: bytes) -> None:
         comp = lz4.block.compress(chunk, store_size=False)
         out += struct.pack("<i", len(comp)) + comp
         pos += len(chunk)
-    Path(dst).write_bytes(out)
+    # Exclusive creation is the final safety gate, including concurrent callers.
+    # A preflight exists() check in a CLI cannot protect the original by itself.
+    with Path(dst).open("xb") as stream:
+        stream.write(out)
 
 
 class Mem1:

@@ -17,8 +17,9 @@
           "evidence": "fixture-prologue-02"
         },
         "event_runtime": {
-          "status": "INCONCLUSIVE",
-          "note": "scenario restored and snapshot captured; no unit action demonstrated"
+          "status": "PASS",
+          "evidence": "prologue-wait-03",
+          "note": "Original Wait action only; no chapter clear or Yellow-control claim"
         },
         "chapter_clear": {
           "status": "NOT TESTED"
@@ -1183,6 +1184,25 @@
         }
       ],
       "description": "Copied Prologue restored in isolated Dolphin; original-unit state captured via UI Save State to File. All intended stable C2 bodies matched live RAM. No unit action demonstrated."
+    },
+    "prologue-wait-03": {
+      "kind": "dolphin",
+      "commit": "82e06d8",
+      "worktree_dirty": true,
+      "fingerprint": "8609ae9f49fd879f",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "copied_prologue_with_tas_input",
+      "artifacts": [
+        {
+          "path": "work/runtime_observe.s02.sav",
+          "sha256": "8728032b2d3dd931cbcd5889ae4ca59448fb1fdfdbcd56b1be0130ef812d1733"
+        },
+        {
+          "path": "work/runtime_wait.s02.sav",
+          "sha256": "6e1115df705c8d7031fd5df60398b93a41ac3adbd4ce6dbcec27f468a55839f5"
+        }
+      ],
+      "description": "Native Computer Use toggled port-1 TAS A, selected current tile, moved menu to Wait and confirmed. Enemy-phase Boyd dialogue observed. Capture phase 0 -> 1; Ike unchanged HP/lv/EXP/position; live stable C2 bodies match in both snapshots. prologue_smoke PASS. Analysis/tooling worktree dirty; production codes unchanged."
     }
   },
   "next_cases": [

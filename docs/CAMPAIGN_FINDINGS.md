@@ -48,7 +48,7 @@ is claimed fixed by these tooling corrections.
 
 | Priority | Finding | Evidence | Status / next valid test |
 |---|---|---|---|
-| P1 | Escape objective helpers exclude deployed Yellow | CAMP-001 below | Confirm an actual caller in normal Ch6 objective flow before patching; escape an owned Yellow via the original menu, then Ike last, clear, save and reload Ch7 |
+| P1 | Individual Escape roster preservation remains untested | CAMP-001/003 below | Escape an owned Yellow at (13,26) in Ch6, then Ike last; clear, save and reload Ch7. Mask helpers exclude Yellow but have no direct script calls in all 43 containers |
 | P1 | Full-campaign event semantics remain unresolved | CAMPAIGN_MATRIX and JSON checklist | Decode condition records/branches and test actual interactions; command presence is not proof |
 | P1 | Native Yellow becomes human whenever force 3 is nonempty | EXP-08/07/14; F-18/F-29 | Ch9 partners, Ch10 prisoners, Tanith reinforcements and late partners need separate behavior decisions and acceptance |
 | P1 | Player classification uses deployed-player flag 0x400 | F-43/F-45, EXP-18/19 | Newly recruited P2 units may lack this bit until next map; test recruit, ownership, death and roster preservation |
@@ -68,13 +68,19 @@ construction. See the captured disassembly procedure below.
 
 This confirms routine behavior, NOT a reproduced Ch6 failure. No direct branch
 caller was found in the DOL scan, and the chapter's local escape handler does not
-call either helper by that command name. Their normal reachability is open.
+call either helper by that command name. The full aligned scan now finds neither
+helper in any of the 43 script containers (NATIVE_USAGE.md). Their indirect normal
+reachability is open.
 Patching an unused helper would add bytes without demonstrating campaign benefit.
 
 C07 function 1 reads MindGetMe, resolves Ike, reads/updates BM variable 4, runs
 TalkEvent/DefaultEscapeTalk, moves/fades the escaping unit, calls UnitEscape at
-file offset 0xE66, then has gf_complete setters at 0xE76/0xE86. Branch semantics
-are not decoded, so those setters are not asserted unconditional. The existing
+file offset 0xE66, then has gf_complete setters at 0xE76/0xE86. Local branch/model
+analysis now shows completion only for Ike or a unit carrying Ike; carried units
+increment the escape count separately. Scene 2 calls this helper from the original
+kind-5 Escape tile at (13,26). Original menu availability queries the same event
+kind and coordinates without a force read (CAMP-003); a separate context veto and
+normal runtime execution still need testing. The existing
 ownership UnitEscape hand-back remains the roster-preservation mechanism to test.
 
 ### Native factions and important ordering
@@ -109,7 +115,9 @@ ownership UnitEscape hand-back remains the roster-preservation mechanism to test
   functions 26/27. Preceding calls query PersonGetYellLevel with Mist and Lethe
   and branch into different conversation messages. These support conditional
   relationship-related paths, not an unconditional Jill defection. Exact
-  thresholds and branch predicates remain to be decoded.
+  predicates are now decoded: scene 26 requires BOTH Mist and Lethe query values
+  to differ from 3 (CAMPAIGN_EVENTS.md). The gameplay interpretation of value 3
+  and the separate scene 27 activation still require confirmation.
 - **Ch22 / C23:** Reyson -> 6 at 0x1910 is in function 25, preceded by a DBG flag
   query, roster count and always_dbg_mik_* Join calls. This may be fixture/debug
   setup rather than a normal story death. Do not equate force 6 with a confirmed
