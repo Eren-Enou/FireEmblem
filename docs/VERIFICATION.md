@@ -14,7 +14,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 | Ch.7: Shades of Evil | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.8: Despair and Hope | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.9: Gallia | PASS | NOT TESTED | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.10: Prisoner Release | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.10: Prisoner Release | PASS | NOT TESTED | INCONCLUSIVE | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.11: Blood Runs Red | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.12: A Strange Land | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.13: A Guiding Wind | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
@@ -48,6 +48,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 - **ch9-partner-wait-05**: `dolphin`; Restored copied historical EXP-05 Chapter 9 fixture. Ended Blue phase with TAS port 1; port 2 selected normal tutorial No. Lethe transformed to JID_CAT/F gauge20. Port 2 selected original Wait. Captures phase3/control3=1; only Lethe acted bit changes, other captured fields identical. All stable C2 bodies match live RAM. No combat, clear, cleanup, native recruitment, save/reload or Netplay claim.
 - **ch6-native-start-06**: `dolphin`; Fresh boot from private NET02 card copy, original Restart Chapter Ch6, normal Start skips of opening dialogue, preparations Fight/Begin Yes. No redirect or RAM edits. Turn1 Blue snapshot has Oscar Yellow, 4 Blue, Shinon/Gatrie away, Boyd absent; all stable live hooks matched. state_expect campaign/fixtures/ch6_start.json PASS. Private card SHA1 unchanged 54b5a7f400b9ec68b6e315a0b2b89a78e5b7218d. Prior card history includes earlier debugging; no natural progression or Escape acceptance inferred.
 - **ch6-yellow-escape-07**: `dolphin`; DBG-CAMP-POS guard moves living Emil from exit13,26 to vacant13,25 and Oscar from14,9 to13,26 through original UnitSetPos. No death/faction/completion command injected. Native port2 selects Oscar -> Escape -> Yes, observes original Oscar dialogue. Original event preserves slot2 in force5, escaped flag0x4000, HP28/lv6/EXP28 and all64 inventory-slot bytes. Chapter7 continues turn2 with Ike on-map. All stable and setup C2 bodies match RAM. 3168 Gecko bytes. First overlapping-tile fixture rejected; no gameplay fix or natural-route/clear/save/Netplay claim.
+- **ch10-restart-redirect-rejected-10**: `dolphin`; REJECTED fixture route source7->target11 from copied native Chapter6 restart. RAM chapter11 but original Chapter6 title/map/Emil loaded; all three Chapter10 prisoners absent. Stable C2 bodies matched. state_expect prisoner presence FAIL. No Chapter10 event tested. Original/copied card SHA1 unchanged; private Dolphin stopped. Chapter byte is insufficient to identify a loaded scenario.
 
 ## Highest-priority open cases
 

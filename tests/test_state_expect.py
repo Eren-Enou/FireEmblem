@@ -27,3 +27,21 @@ class FixtureExpectationTests(unittest.TestCase):
             verify(self.snapshot,{**self.expected,"chpater":7})
         self.snapshot["evidence"]["intended_c2_verified"]=False
         self.assertEqual(verify(self.snapshot,self.expected)["status"],"FAIL")
+
+    def test_synthetic_code_requires_explicit_acceptance_and_chapter_byte_is_insufficient(self):
+        self.snapshot["evidence"]["synthetic_setup"]=True
+        self.assertEqual(verify(self.snapshot,self.expected)["status"],"FAIL")
+        self.assertEqual(verify(self.snapshot,{**self.expected,"allow_synthetic":True})["status"],"PASS")
+        import json
+        from pathlib import Path
+        expectation=json.loads((Path(__file__).resolve().parents[1]/"campaign/fixtures/ch10_prisoner_presence.json").read_text())
+        self.snapshot["game"]["chapter"]=11
+        result=verify(self.snapshot,expectation)
+        self.assertEqual(result["status"],"FAIL")
+        self.assertTrue(any("PID_KEVIN" in failure for failure in result["failures"]))
+
+    def test_known_setup_classification_is_not_just_debug_prefix(self):
+        from tools.campaign_snapshot import configuration_flags
+        for name in ("FIXTURE-REDIRECT chapter seed", "EXP-05 Redirect", "DBG-CAMP-POS setup"):
+            self.assertTrue(configuration_flags([name])["synthetic_setup"])
+        self.assertFalse(configuration_flags(["COOP-P6", "EXP-16"])["synthetic_setup"])

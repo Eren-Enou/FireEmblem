@@ -1,0 +1,13 @@
+{
+  "description": "Necessary initial checks for a synthetic Chapter10 prisoner candidate. Presence is insufficient for map/flag/event acceptance. Requires subsequent original Talk and escape evidence; never certifies natural history.",
+  "classification": "synthetic_chapter10_candidate_minimum_only",
+  "chapter": 11,
+  "allow_synthetic": true,
+  "units": [
+    {"pid": "PID_IKE"},
+    {"pid": "PID_OSCAR"},
+    {"pid": "PID_KEVIN"},
+    {"pid": "PID_CHAP"},
+    {"pid": "PID_NEPENEE"}
+  ]
+}

@@ -15,6 +15,17 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-008 — chapter-byte identity can contradict the loaded scenario
+
+VERIFIED-RUNTIME (CAMP-J): native Restart Chapter from the copied Ch6 card plus
+synthetic AR source7->11 produced RAM chapter11 while the original Ch6 title,
+forest/bridge map, starting positions and Emil loaded. Chapter10 prisoners were
+absent; live stable C2 payloads matched. This rejects this fixture route, not
+Chapter10 co-op gameplay. The previously pinned chapter field alone cannot
+identify the loaded script/map. No new game addresses or correction patches.
+Infer a cached/different loader source only as a hypothesis; it was not traced.
+Accept later fixtures only with independent scenario/roster/event checks.
+
 ### CAMP-007 — original Talk menu and adjacent candidate chain
 
 VERIFIED-STATIC, not a Yellow recruitment runtime result. Generated full local

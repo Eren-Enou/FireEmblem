@@ -9,6 +9,40 @@ from tools.patch_state import apply_edits
 
 
 class FixtureSafetyTests(unittest.TestCase):
+    def test_native_card_source_is_copied_and_hashed_without_mutation(self):
+        import hashlib
+        from tools.fixture_bootstrap import create
+        from tools.install_codes import parse_sections
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);source=root/"source.gci"
+            original=b"GFEE01"+bytes(58)+b"synthetic test content"
+            source.write_bytes(original)
+            with patch("tools.fixture_bootstrap.ROOT",root):
+                target=root/"work/ch10"
+                result=create(target,11,source_chapter=7,card=source)
+                sections=parse_sections((target/"User/GameSettings/GFEE01.ini").read_text())
+                self.assertIn("08330718 00000007",sections["ActionReplay"])
+                self.assertIn("00330718 0000000B",sections["ActionReplay"])
+                self.assertEqual((target/"User/GC/USA/Card A/source.gci").read_bytes(),original)
+                self.assertEqual(source.read_bytes(),original)
+                self.assertEqual(result["card"]["sha256"],hashlib.sha256(original).hexdigest())
+                self.assertEqual(result["internal_source"],7)
+                self.assertEqual(result["status"],"NOT TESTED")
+
+    def test_invalid_source_route_and_budget_fail_before_profile_creation(self):
+        from tools.fixture_bootstrap import create
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);source=root/"bad.gci";source.write_bytes(b"other game")
+            with patch("tools.fixture_bootstrap.ROOT",root):
+                target=root/"work/new"
+                for args in ({"source_chapter":7},{"source_chapter":11},
+                             {"source_chapter":0},{"source_chapter":7,"card":source}):
+                    with self.assertRaises(ValueError):create(target,11,**args)
+                    self.assertFalse(target.exists())
+                with patch("tools.fixture_bootstrap.validate_ini",side_effect=ValueError("budget")):
+                    with self.assertRaisesRegex(ValueError,"budget"):create(target,11)
+                self.assertFalse(target.exists())
+
     def test_bootstrap_is_private_new_and_keeps_only_intended_codes_enabled(self):
         from tools.fixture_bootstrap import create
         from tools.install_codes import parse_sections

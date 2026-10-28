@@ -34,6 +34,19 @@ Reference branches main/draft-ownership and source-checkout saves/profiles untou
   limitation; signed/absolute/relative/wraparound regression cases.
 - All99 tests pass; 264 original signatures match. Stable gameplay unchanged.
 
+## Rejected restart redirect (CAMP-J)
+
+- Extended isolated bootstrap with optional read-only native GCI copy/hash and
+  explicit source chapter. Actual INI validates before creating the new profile.
+- Runtime source7->11 on copied Ch6 restart **FAILED fixture acceptance**:
+  RAM chapter11 but original Chapter6 title/map/Emil, no Chapter10 prisoners.
+  Stable live C2 bodies matched. This is not a co-op gameplay failure.
+- New prisoner-presence expectation rejects the candidate. Snapshot marks known
+  active setup codes separately; expectations require explicit allow_synthetic.
+- Diagnostic state/config hashes recorded; Chapter10 fixture INCONCLUSIVE.
+  Immutable source and disposable card hashes unchanged; private Dolphin stopped.
+- All103 tests pass; 264 signatures and nine accepted runtime artifact hashes pass.
+
 ## Second checkpoint (82e06d8, pushed)
 
 - Instruction-aligned local CFG decoder: 2075 scenes / 125775 reachable local

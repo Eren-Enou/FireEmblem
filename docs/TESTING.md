@@ -1,5 +1,36 @@
 # Testing
 
+## CAMP-J — Restart-card redirect rejected; fixture acceptance hardened
+
+2026-10-28, HEADccc71ac with dirty bootstrap/snapshot tools, Dolphin2609a.
+Fresh own profile booted copied native_ch6_card_start.gci; original Restart
+Chapter selected Ch6. Stable COOP-P6 + EXP-16 plus synthetic AR source7->11,
+2536 Gecko bytes, configuration fingerprint214f6ada685dfde5.
+
+**Fixture FAIL, not co-op gameplay FAIL:** original title remained Chapter6
+A Brief Diversion and its forest/bridge map loaded. Captured state chapter byte
+was11, phase0/turn1; Ike(13,9), Oscar(14,9), living Emil(13,26) were original
+Ch6 units. All stable C2 bodies matched live RAM. Kieran/Brom/Nephenee absent.
+`tools.state_expect` with ch10_prisoner_presence.json explicitly FAILS all three
+missing PIDs. No Chapter10 conversation, escape, clear or progression was tested.
+
+Diagnostic state work/bootstrap/ch10_from_ch6/diagnostic.s02.sav SHA-256
+8528bc530b3210471b7621890d97d2ddffe9ee22edabfebe453f0cffb8442dde;
+attempt-config.ini preserves the exact attempted configuration. Rejected attempt
+and artifact hashes are in the ledger; Chapter10 fixture stays INCONCLUSIVE.
+Both immutable source and new private card retained SHA1
+54b5a7f400b9ec68b6e315a0b2b89a78e5b7218d. Only this clone's Dolphin was stopped.
+
+Tool regressions cover read-only GCI input/copy/hash, invalid routes/identity,
+budget rejection before creating a profile, explicit synthetic-code provenance,
+and refusal to accept the chapter byte when required prisoners are absent.
+GCI validation checks directory identity only, not internal checksums/history.
+Other routes remain NOT TESTED; the historical EXP-05 transition route does not
+establish that a native Restart Chapter can be redirected this way.
+
+**103 tests PASS; 264/264 signatures match; nine accepted runtime artifacts
+hash-verified.** Rejected diagnostic state hash independently recorded above.
+
 ## CAMP-I — Original Talk eligibility chain, static only
 
 2026-10-28, campaign branch after5487d9a. Read-only `tools.talk_audit` follows

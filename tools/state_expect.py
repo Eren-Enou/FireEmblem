@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 TOP = {"description","classification","chapter","phase","turn","control","units",
-       "active_player_pids","absent_pids","fingerprint","allow_debug"}
+       "active_player_pids","absent_pids","fingerprint","allow_debug","allow_synthetic"}
 UNIT = {"pid","force","class","hp","level","exp","gauge","xy","owned","owner",
         "flags_all","flags_none"}
 
@@ -24,6 +24,8 @@ def verify(snapshot, expected):
         failures.append("intended C2 bodies not verified in live RAM")
     if evidence.get("debug") and not expected.get("allow_debug",False):
         failures.append("debug codes not allowed by fixture expectation")
+    if evidence.get("synthetic_setup") and not expected.get("allow_synthetic",False):
+        failures.append("active synthetic setup codes not allowed by fixture expectation")
     if "fingerprint" in expected and expected["fingerprint"]!=evidence["codes_fingerprint"]:
         failures.append("configuration fingerprint mismatch")
     for key in ("chapter","phase","turn","control"):

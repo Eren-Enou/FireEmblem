@@ -17,6 +17,14 @@ from tools.netplay_package import fingerprint, enabled_codes
 from tools.verify_game import DEFAULT_IMAGE
 
 
+def configuration_flags(names):
+    """Identify active known setup codes; absence never certifies natural history."""
+    setup=[name for name in names if name.startswith(("FIXTURE-", "DBG-CAMP-"))
+           or name.split()[0] == "EXP-05"]
+    return {"debug": any(name.startswith("DBG-") for name in names),
+            "synthetic_setup": bool(setup), "setup_codes": setup}
+
+
 def observe_hooks(mem, dol, text):
     """Compare intended C2 bodies to RAM; mutable cave data may conservatively mismatch."""
     observations=[]
@@ -71,7 +79,7 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
         observations=observe_hooks(mem,Dol(disc.read_dol()),text)
     return {"schema": 1, "evidence": {"commit": commit, "state_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
              "dolphin": info.dolphin_version, "codes_fingerprint": fingerprint(text), "codes": names,
-             "debug": any(n.startswith("DBG-") for n in names),
+             **configuration_flags(names),
              "hooks":observations,
              "intended_c2_verified":bool(observations) and all(o["status"]=="intended C2 body matched" for o in observations),
              "warning": "INI is intended configuration; old savestates may restore different active patches"},

@@ -29,7 +29,9 @@ card copy is work/saves/native_ch6_card_start.gci. Earlier card history is only
 partly documented, so this is not labelled naturally progressed. Boyd is absent;
 Oscar is the only stable table-owned Yellow, Shinon/Gatrie are away. Check the
 fixture explicitly with `tools.state_expect SNAPSHOT campaign/fixtures/ch6_start.json`.
-Escape itself has not yet been exercised. All personal cards remain read only.
+Single Yellow Escape was exercised later in CAMP-G's synthetic positioning
+fixture; this native starting state alone does not prove Escape. All personal
+cards remain read only.
 
 `python -B -m tools.fixture_bootstrap --root work/bootstrap/ch6 --target 7`
 creates a NEW private profile and empty card directory. It refuses existing
@@ -45,6 +47,30 @@ target event using completion/death/debug cheats. Disable FIXTURE-REDIRECT befor
 further progression and accept the fixture only after inspecting its map, roster,
 original event and snapshot. A missing mandatory character/item is a fixture
 limitation, not a demonstrated campaign bug.
+
+The bootstrap also supports `--source-chapter N --card INPUT.gci`. It reads the
+GCI once, checks GFEE01 directory identity, copies bytes exclusively into the NEW
+profile and records their SHA-256. It does not validate/rewrite GCI checksums or
+certify the supplied source chapter/history. Non-default sources require a card;
+equal source/target and invalid routes fail before profile creation. Actual INI
+validation precedes directory/card mutation.
+
+**CAMP-J rejected route:** source7 -> target11 from the copied Chapter6 restart
+card (`work/bootstrap/ch10_from_ch6`). Original Restart Chapter still loaded the
+Chapter6 title, forest/bridge map and Emil even though the AR code changed RAM's
+chapter byte to11. Living Kieran/Brom/Nephenee were absent. All stable C2 bodies
+matched, so the chapter byte and hook check alone would have falsely suggested a
+valid Chapter10 candidate. The profile/state is diagnostic only; do not reuse it
+for gameplay. No prisoner event or Chapter10 compatibility result was established.
+
+`tools.state_expect SNAPSHOT campaign/fixtures/ch10_prisoner_presence.json`
+rejects this candidate for all three missing prisoners. Those presence checks
+are necessary, not sufficient: still inspect the map, original event setup and
+flags. Active FIXTURE-/DBG-CAMP-/EXP-05 setup codes now appear explicitly in
+snapshot provenance and require `allow_synthetic` in fixture expectations. Absence
+of an active setup code never certifies natural history. The known historical
+source2 -> target10 transition route remains separate from this failed restart
+route; synthetic loader routes cannot be generalized from one success.
 
 Priority fixture predicates:
 
