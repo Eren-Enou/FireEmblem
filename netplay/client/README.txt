@@ -103,8 +103,8 @@ TROUBLESHOOTING
      Loading save states is disabled in Netplay.
    * Keys do nothing: click into the game window first.
    * Slow game, stretched audio, both PCs at the same low FPS (e.g. 40): the host raises Buffer in
-     the NetPlay window (it can be changed while playing). Buffer 26 gave full speed (60 FPS) at
-     23-33 ms ping in the first internet test; the delay it adds hardly matters in this game.
+     the NetPlay window (it can be changed while playing). Buffer 18 kept 58-60 FPS at 23-33 ms
+     ping in the first internet test; the delay it adds hardly matters in this game.
 
 FILES
    README.txt                      this file
