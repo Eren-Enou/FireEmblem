@@ -683,7 +683,7 @@ class GameTests(unittest.TestCase):
         off = dol.addr_to_off(pc.SE26["request"])
         self.assertEqual(dol.data[off:off + 15], b"SFX_SYS_SELECT1")
         asm = self._asm(words[:-1])
-        for need in ["lwz r0, 0x14(r31)", "ori r12, r12, 0x5b0e", "andi. r0, r0, 0x10", "lbz r0, 0x62(r31)",
+        for need in ["lwz r0, 0x14(r31)", "ori r12, r12, 0x5b0e", "rlwinm r0, r0, 0x1c, 0x1f, 0x1f", "lbz r0, 0x62(r31)", "lbzx r0, r10, r9",
                      "lwz r3, 0x3c(r31)", "mulli r0, r0, 0x24", "lwzx r28, r3, r0", "ori r12, r12, 0x5bc0",
                      "cmpwi r0, 5", "oris r11, r11, 0x2000", "oris r11, r11, 0x6000", "xoris r11, r11, 0x4000",
                      "oris r11, r11, 0x800", "rlwinm r11, r11, 0, 5, 3", "rlwinm r11, r11, 0, 3, 0"]:
@@ -693,6 +693,18 @@ class GameTests(unittest.TestCase):
         [(_, w25)] = self._gecko_blocks(pc.NAME)
         self.assertIn("li r5, 0x10", self._asm(w25[:-1]))                              # EXP-25: request = orange
         self.assertEqual(dol.u32(0x80296088 + 4 * 0x10) >> 8, 0xFFC010)
+
+    def test_gecko_budget(self):
+        """F-59: the enabled code sets in use fit Dolphin's Gecko area; the failed PREP-03 set did not."""
+        from tools.install_codes import check_budget, gecko_budget, gecko_sizes
+        self.assertEqual(gecko_budget(), 0x1800 - 2880 - 16)
+        self.assertEqual(check_budget(["COOP-P6", "EXP-16"]), [])                        # stable Netplay release
+        self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-22", "EXP-25", "DBG-01"]), [])   # PREP-02 (passed)
+        self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-26", "DBG-01"]), [])   # PREP-03 retest
+        lost = check_budget(["COOP-P6", "EXP-21", "EXP-22", "EXP-25", "EXP-26", "DBG-01"])         # PREP-03 run 1
+        self.assertTrue(lost and lost[0].startswith("EXP-26"))
+        self.assertTrue(check_budget(["COOP-P6", "EXP-21", "EXP-23", "DBG-01"]))       # the DRAFT-02 bed never fit
+        self.assertEqual([n.split()[0] for n, _ in gecko_sizes(["EXP-21", "COOP-P6"])], ["COOP-P6", "EXP-21"])
 
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}

@@ -624,7 +624,7 @@ Ike and unavailable characters are refused with the buzz. EXP-25's colours show 
 
 **Limit (by design for this step):** the list cursor follows Player 1's controller. Player 2 acts on the row Player 1 highlights.
 
-**Static:** `test_exp26_prep_draft_code`, 176/176 signatures. **Test bed:** `work/ch1/host` = COOP-P6 + EXP-21 + EXP-22 + EXP-25 + **EXP-26** + DBG-01.
+**Static:** `test_exp26_prep_draft_code`, `test_gecko_budget`, 176/176 signatures. **Test bed (run 2):** `work/ch1/host` = COOP-P6 + EXP-21 + EXP-25 + **EXP-26** + DBG-01, 2984 of 3248 Gecko bytes. EXP-22 is off, so there is no L+R draft in battle in this bed.
 
 **Keys:**
 - Player 1: Z = **D**, cursor = arrows
@@ -651,6 +651,7 @@ Ike and unavailable characters are refused with the buzz. EXP-25's colours show 
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-10-28 | user (run 1) | **FAIL: EXP-26 not loaded** | D/E did nothing on any row, not even the refusal buzz on Ike. State `GFEE01.prep03_s02`: the list was open (`E_SallyList` at `0x802A7468`, row 4), but `0x8012D6A4` held the original `stwu`, while EXP-25/21/22's hooks were patched. **Cause: the enabled codes (4000 bytes) exceeded Dolphin's Gecko space (≈ 3248), and EXP-26 came last** (F-59). The units were not protected. **Fix:** EXP-26 rewritten compactly (984 → 672 bytes; same behaviour). The bed drops EXP-22 (DRAFT-01 already verified; the prep draft replaces it here): COOP-P6 + EXP-21 + EXP-25 + EXP-26 + DBG-01 = 2984 bytes. `install_codes` now refuses over-budget sets. Retest = run 2, same steps. |
 
 ## PREP-02 — Ownership colours in the unit lists (EXP-25; PREP-01 Step 2)
 
@@ -711,6 +712,8 @@ It is display only. Ownership itself is still made with the verified in-battle d
   - release: unit-cancel sound
   - **any refusal**: the game's "miss" buzz (not your pick, Ike, a partner, the other player's unit, no unit, draft over)
 - **The draft ends at the first action** (any unit finishing Wait, an attack, …) or when the phase ends. Every remaining green unit turns blue and can act. After that, L+R only buzzes.
+
+**⚠ Not runnable as written (F-59):** COOP-P6 + EXP-21 + EXP-23 + DBG-01 is 3664 bytes, over Dolphin's ≈ 3248-byte Gecko space, so EXP-23 would be silently skipped. `install_codes` now refuses this set. EXP-23 must be slimmed, or another code dropped, before DRAFT-02 can run.
 
 **Static:** `test_exp23_draft_v2_code`, 151/151 signatures. **Test bed:** `work/ch1/host` = COOP-P6 + EXP-21 + **EXP-23** + DBG-01 (EXP-22 off). The card is untouched since DRAFT-01's backup (`ch1_card_before_draft01.gci`). Keys: Player 1 L+R = **Q+W**, Player 2 L+R = **O+P**.
 

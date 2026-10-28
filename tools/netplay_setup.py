@@ -107,6 +107,12 @@ def main() -> int:
                 return 1
             shutil.rmtree(d)
 
+    from tools.install_codes import check_budget
+    lost = check_budget(args.enable or ["COOP-P3"], args.dolphin)
+    if lost:
+        print("refusing: Dolphin would skip " + ", ".join(n.split()[0] for n in lost) + " (Gecko space, F-59)",
+              file=sys.stderr)
+        return 1
     games = (args.dolphin / "Games").resolve()
     client_keys = {**_KEYS, **(_DIGITS if args.client_stick == "digits" else {})}
     make_user(host, games, "P1-Blue", PORT1_KEYBOARD, build_ini(args.enable or ["COOP-P3"], verbose=False),

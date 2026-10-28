@@ -47,6 +47,7 @@ Plan: test Pick Units *mechanics* on the first reachable prep screen (Ch8), and 
 **Input under Netplay:** Netplay syncs both pads, so reading PADStatus[1] in prep is deterministic on both machines. The native list keeps following the current pad (port 1). Player 2's actions are attributed by which raw pad pressed the button. If Player 2 must move the list cursor, the current-pad pointer can be retargeted to port 2 while it's Player 2's pick (EXP-14's mechanism). This is sequential, as the brief allows.
 
 ## 4. Risks
+0. **Gecko space (F-59):** ≈ 3248 bytes for every enabled code. The prep codes must stay compact. A later package of COOP-P6 + EXP-21 + EXP-25 + EXP-26 + the deployment code needs every cave slimmed or a payload loader.
 1. **Story availability:** force 7 / `0x10` units must stay unselectable whatever they own (`0x8012F060`'s order is preserved).
 2. **Forced units:** owner and deployment rules count them first. A forced Player 2 unit deploys and becomes yellow (EXP-21), as in DRAFT-01.
 3. **Chapters without preparations:** the in-battle draft remains for them.

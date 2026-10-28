@@ -90,12 +90,36 @@ NAME26 = "EXP-26 Draft and transfers in Choose Units: Z on your own controller c
 COLOUR_OFFER = 0x10                         # palette orange #FFC010 (transfer requested)
 
 
+FORCE_TABLE = 0x802CA264                    # force list heads, 0xC per force (F-34)
+
+
 def _se(a, name):
-    a(lis(3, SE26[name] >> 16), ori(3, 3, SE26[name] & 0xFFFF), li(4, 0x64)); a.call(PLAY_SE)
+    """Load the sound name and branch to the shared tail (sound, then the next port)."""
+    a(lis(3, SE26[name] >> 16), ori(3, 3, SE26[name] & 0xFFFF)); a.br("b", "sound")
 
 
-def _head(a, reg, force):
-    a(lis(12, 0x802D), lwz(reg, {0: -0x5D9C, 3: -0x5D78, 5: -0x5D60, 7: -0x5D48}[force], 12))
+def _walk(a, tag, body):
+    """For forces 0, 3, 5, 7 (offsets in the byte table at r10): r12 = each unit; body(a) runs per unit."""
+    a(li(9, 0))
+    a.label(f"{tag}f")
+    a(lbzx(0, 10, 9), lis(12, FORCE_TABLE >> 16), ori(12, 12, FORCE_TABLE & 0xFFFF), lwzx(12, 12, 0))
+    a.label(f"{tag}u")
+    a(cmpwi(12, 0)); a.br("beq", f"{tag}n")
+    body(a)
+    a(lwz(12, 0x184, 12)); a.br("b", f"{tag}u")
+    a.label(f"{tag}n")
+    a(addi(9, 9, 1), cmpwi(9, 4)); a.br("blt", f"{tag}f")
+
+
+def _count(a):            # r3 += 1 per Player 1 unit, -1 per Player 2 unit
+    a(lwz(0, 0x1A0, 12), andis_(4, 0, OWNED >> 16)); a.br("beq", "cskip")
+    a(andis_(4, 0, P2 >> 16), addi(3, 3, 1)); a.br("beq", "cskip")
+    a(addi(3, 3, -2))
+    a.label("cskip")
+
+
+def _clear_offer(a):
+    a(lwz(0, 0x1A0, 12), rlwinm(0, 0, 0, 5, 3), stw(0, 0x1A0, 12))
 
 
 def prep_draft_cave() -> list[int]:
@@ -104,12 +128,11 @@ def prep_draft_cave() -> list[int]:
       stw(30, 0x14, 1), stw(29, 0x18, 1), stw(28, 0x1C, 1))
     a(mr(31, 3), lwz(0, 0x14, 31), lis(12, SALLY_LIST_NAME >> 16), ori(12, 12, SALLY_LIST_NAME & 0xFFFF),
       cmpw(0, 12)); a.br("bne", "done")                                                  # Choose Units only
-    a.br("bl", "past"); a.w.append(0); a.label("past")
-    a(MFLR30, li(29, 0))                                                                 # r30 prev, r29 port
+    a.br("bl", "past"); a.w += [0, 0x00243C54]; a.label("past")                         # prev[2]; force offsets
+    a(MFLR30, li(29, 0))                                                                 # r30 data, r29 port
     a.label("port")
     a(lis(12, PADSTATUS >> 16), ori(12, 12, PADSTATUS & 0xFFFF), mulli(0, 29, 12), lhzx(0, 12, 0))
-    a(andi_(0, 0, Z_BIT), cmpwi(0, 0), li(0, 0)); a.br("beq", "held"); a(li(0, 1))
-    a.label("held")
+    a(rlwinm(0, 0, 28, 31, 31))                                                          # r0 = Z held (bit 0x10)
     a(lbzx(28, 30, 29), stbx(0, 30, 29), cmpwi(0, 1)); a.br("bne", "nextport")
     a(cmpwi(28, 0)); a.br("bne", "nextport")                                            # press edge only
     # highlighted unit = *(list+0x3C + list[+0x62] * 0x24)   (0x8012DBE4..0x8012DBFC)
@@ -120,49 +143,34 @@ def prep_draft_cave() -> list[int]:
     a(lwz(12, 0x190, 28), lbz(0, 8, 12), cmpwi(0, 0)); a.br("beq", "avail")
     a(cmpwi(0, 5)); a.br("bne", "reject")                                                # away/unavailable
     a.label("avail")
+    a(addi(10, 30, 4))                                                                   # r10 = force offsets
     a(lwz(11, 0x1A0, 28), andis_(12, 11, OWNED >> 16)); a.br("bne", "owned")
-    # unassigned: whose pick? r3 = #P1 - #P2 over forces 0, 3, 5, 7 (as EXP-22)
-    a(li(3, 0))
-    for n, force in enumerate((0, 3, 5, 7)):
-        _head(a, 12, force)
-        a.label(f"c{n}")
-        a(cmpwi(12, 0)); a.br("beq", f"c{n}end")
-        a(lwz(0, 0x1A0, 12), andis_(4, 0, OWNED >> 16)); a.br("beq", f"c{n}nx")
-        a(andis_(4, 0, P2 >> 16), addi(3, 3, 1)); a.br("beq", f"c{n}nx")
-        a(addi(3, 3, -2))
-        a.label(f"c{n}nx")
-        a(lwz(12, 0x184, 12)); a.br("b", f"c{n}")
-        a.label(f"c{n}end")
+    a(li(3, 0)); _walk(a, "c", _count)                                                  # r3 = #P1 - #P2
     a(lwz(11, 0x1A0, 28), rlwinm(11, 11, 0, 5, 3))                                       # clear OFFER
     a(cmpwi(29, 0)); a.br("bne", "p2pick")
-    a(cmpwi(3, 0)); a.br("bgt", "reject")
-    a(oris(11, 11, OWNED >> 16), stw(11, 0x1A0, 28)); _se(a, "p1"); a.br("b", "nextport")
+    a(cmpwi(3, 0)); a.br("bgt", "reject")                                                # P1 if #P1 <= #P2
+    a(oris(11, 11, OWNED >> 16), stw(11, 0x1A0, 28)); _se(a, "p1")
     a.label("p2pick")
-    a(cmpwi(3, 0)); a.br("ble", "reject")
-    a(oris(11, 11, (OWNED | P2) >> 16), stw(11, 0x1A0, 28)); _se(a, "p2"); a.br("b", "nextport")
+    a(cmpwi(3, 0)); a.br("ble", "reject")                                                # P2 if #P1 > #P2
+    a(oris(11, 11, (OWNED | P2) >> 16), stw(11, 0x1A0, 28)); _se(a, "p2")
     a.label("owned")
     a(andis_(12, 11, P2 >> 16), li(0, 0)); a.br("beq", "ownerok"); a(li(0, 1))
     a.label("ownerok")
-    a(cmpw(0, 29)); a.br("bne", "other")
-    # the owner pressed Z
-    a(andis_(12, 11, OFFER >> 16)); a.br("beq", "release")
-    a(xoris(11, 11, P2 >> 16), rlwinm(11, 11, 0, 5, 3), stw(11, 0x1A0, 28))             # accept: owner flips
-    _se(a, "transfer"); a.br("b", "nextport")
-    a.label("release")
-    a(rlwinm(11, 11, 0, 3, 0), stw(11, 0x1A0, 28)); _se(a, "release"); a.br("b", "nextport")
-    a.label("other")                                                                      # the other player
-    a(andis_(12, 11, OFFER >> 16)); a.br("beq", "request")
-    a(rlwinm(11, 11, 0, 5, 3), stw(11, 0x1A0, 28)); _se(a, "release"); a.br("b", "nextport")   # cancel request
+    a(andis_(12, 11, OFFER >> 16)); a.br("beq", "nooffer")
+    a(rlwinm(11, 11, 0, 5, 3), cmpw(0, 29)); a.br("bne", "cancel")
+    a(xoris(11, 11, P2 >> 16), stw(11, 0x1A0, 28)); _se(a, "transfer")                 # owner accepts: flip
+    a.label("cancel")
+    a(stw(11, 0x1A0, 28)); _se(a, "release")                                            # requester cancels
+    a.label("nooffer")
+    a(cmpw(0, 29)); a.br("bne", "request")
+    a(rlwinm(11, 11, 0, 3, 0), stw(11, 0x1A0, 28)); _se(a, "release")                   # owner releases
     a.label("request")
-    for n, force in enumerate((0, 5, 7)):                                                 # one request at a time
-        _head(a, 12, force)
-        a.label(f"o{n}")
-        a(cmpwi(12, 0)); a.br("beq", f"o{n}end")
-        a(lwz(0, 0x1A0, 12), rlwinm(0, 0, 0, 5, 3), stw(0, 0x1A0, 12), lwz(12, 0x184, 12)); a.br("b", f"o{n}")
-        a.label(f"o{n}end")
-    a(lwz(11, 0x1A0, 28), oris(11, 11, OFFER >> 16), stw(11, 0x1A0, 28)); _se(a, "request"); a.br("b", "nextport")
+    _walk(a, "o", _clear_offer)                                                         # one request at a time
+    a(lwz(11, 0x1A0, 28), oris(11, 11, OFFER >> 16), stw(11, 0x1A0, 28)); _se(a, "request")
     a.label("reject")
     _se(a, "miss")
+    a.label("sound")
+    a(li(4, 0x64)); a.call(PLAY_SE)
     a.label("nextport")
     a(addi(29, 29, 1), cmpwi(29, 2)); a.br("blt", "port")
     a.label("done")

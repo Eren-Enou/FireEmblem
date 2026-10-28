@@ -26,6 +26,8 @@ History: **Phase 1.** **EXP-04 PASSED**: the red army was human-controlled in it
 
 Work on one priority at a time. `main` = the stable Netplay release (COOP-P6 + EXP-16), changed only by merging verified work. Experiments stay isolated.
 
+**Gecko space (F-59):** Dolphin has ≈ 3248 bytes for all enabled Gecko codes. Codes past that are skipped silently. `install_codes` reports the total and refuses an over-budget set. Keep caves compact (shared tails, table-driven loops), and check the total before handing out a test bed or package.
+
 ## Saves and states
 - User originals (never write): `Dolphin-x64/User/StateSaves/GFEE01.s01`, `Dolphin-x64/User/GC/USA/Card A/*.gci`. Backups with SHA-1 are in `work/saves/` (git-ignored).
 - Create new states only with `tools/patch_state.py` (refuses to overwrite), in slots 2+.

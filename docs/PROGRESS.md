@@ -312,5 +312,10 @@ Controller routing / Netplay (per user priority).
   - Ike and away characters are refused.
   - No force changes in prep.
   - Z is free in the list (it only tests A/B/X/Y/Start).
-  - Tests 50/50, signatures 176/176. Test bed adds EXP-26. Procedure: TESTING.md PREP-03.
+  - Tests 50/50, signatures 176/176. Test bed adds EXP-26. Procedure: TESTING.md PREP-03.- **PREP-03 run 1 FAILED, cause found: Gecko space (F-59).**
+  - D/E did nothing. The user's state shows EXP-26 was never written: `0x8012D6A4` was unpatched while the other codes' hooks were in.
+  - The enabled set was 4000 bytes, but Dolphin's Gecko area holds ≈ 3248, and overflowing codes are dropped silently. The EXP-23/DRAFT-02 bed (3664) never fit either.
+  - Fixes: EXP-26 rewritten compactly (672 bytes); `install_codes`/`netplay_setup` now refuse over-budget sets (`test_gecko_budget`); the PREP-03 bed drops EXP-22 (2984 bytes).
+  - Tests 51/51, signatures 176/176. Retest pending.
+  - **Project constraint:** the full feature set (COOP-P6 + EXP-21 + draft + prep codes) must fit ≈ 3.2 KB. Slimming EXP-21/EXP-22/EXP-23, or a loader that keeps payloads outside the code list, is now on the plan.
 

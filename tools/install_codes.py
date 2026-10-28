@@ -32,6 +32,43 @@ def parse_sections(text: str) -> dict[str, list[str]]:
     return sections
 
 
+# Dolphin copies Sys/codehandler.bin to 0x80001800 and the Gecko code list right after it, up to 0x80003000.
+# Codes that don't fit are silently skipped ("Too many GeckoCodes! Ran out of storage space in Game RAM", F-59).
+GECKO_AREA = 0x80003000 - 0x80001800
+DEFAULT_HANDLER_SIZE = 2880                 # Dolphin 2609a Sys/codehandler.bin
+
+
+def gecko_budget(dolphin: Path | None = None) -> int:
+    """Bytes available for the code list (minus the 8-byte header and 8-byte terminator)."""
+    handler = (dolphin / "Sys/codehandler.bin") if dolphin else None
+    size = handler.stat().st_size if handler and handler.exists() else DEFAULT_HANDLER_SIZE
+    return GECKO_AREA - size - 16
+
+
+def gecko_sizes(enable: list[str]) -> list[tuple[str, int]]:
+    """(name, bytes) of each enabled Gecko code in definition order (the order Dolphin writes them)."""
+    lines = parse_sections((ROOT / "codes/GFEE01.ini").read_text()).get("Gecko", [])
+    out, cur = [], None
+    for l in lines:
+        if l.startswith("$"):
+            cur = l[1:] if any(l[1:] == p or l[1:].startswith(p + " ") for p in enable) else None
+            if cur:
+                out.append([cur, 0])
+        elif cur:
+            out[-1][1] += 8
+    return [(n, s) for n, s in out]
+
+
+def check_budget(enable: list[str], dolphin: Path | None = None) -> list[str]:
+    """Names of enabled codes that would not fit (empty = all fit)."""
+    budget, used, lost = gecko_budget(dolphin), 0, []
+    for name, size in gecko_sizes(enable):
+        used += size
+        if used > budget:
+            lost.append(name)
+    return lost
+
+
 def build_ini(enable: list[str], verbose: bool = True) -> str:
     """The GameSettings/GFEE01.ini text: every code from codes/GFEE01.ini, only `enable` switched on."""
     src = parse_sections((ROOT / "codes/GFEE01.ini").read_text())
@@ -55,8 +92,15 @@ def main() -> None:
     ap.add_argument("--dolphin", type=Path, default=ROOT / "Dolphin-x64")
     ap.add_argument("--user", type=Path, help="Dolphin user folder (default: <dolphin>/User)")
     ap.add_argument("--enable", action="append", default=[], help="code name prefix to enable")
+    ap.add_argument("--allow-over-budget", action="store_true", help="install even if codes would not fit")
     args = ap.parse_args()
 
+    lost = check_budget(args.enable, args.dolphin)
+    total = sum(s for _n, s in gecko_sizes(args.enable))
+    print(f"Gecko codes: {total} of {gecko_budget(args.dolphin)} bytes")
+    if lost and not args.allow_over_budget:
+        raise SystemExit("refusing: Dolphin would silently skip " + ", ".join(n.split()[0] for n in lost) +
+                         " (Gecko space is full, F-59). Enable fewer codes, or pass --allow-over-budget.")
     text = build_ini(args.enable)
     dest = (args.user or args.dolphin / "User") / "GameSettings/GFEE01.ini"
     dest.parent.mkdir(parents=True, exist_ok=True)
