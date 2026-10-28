@@ -29,7 +29,10 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - Cap = `state+0x544`; the audit now lists caps and forced units for every chapter.
 - First non-forced chapter: Ch8; first likely bench: Ch10.
 
-Next: Step 2, ownership shown in the Pick Units rows (runtime research needed first: the row-state visuals and the list's current-row field).
+- PREP-R1 (user) gave the list layout, highlighted row and palette (F-58).
+- **Step 2 = EXP-25** (name colours by owner in the native unit lists) is built; runtime test **PREP-02** pending.
+
+Next: Step 3, claim/transfer on the highlighted Pick Units row.
 Move the verified in-battle draft (DRAFT-01/02) to where players naturally choose units: the chapter's preparation screen. Each player owns characters and picks who deploys, under the chapter's original deployment cap.
 
 Steps, in order (each closes with a TESTING.md entry):

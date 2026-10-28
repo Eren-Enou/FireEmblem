@@ -17,7 +17,13 @@ Labels: **[S]** = static, from disassembly and pinned in `tools/check_signatures
 | 7 | Input in prep | The list reads the **current-pad pointer** (`0x8012D6B8`: `lwz r4,-0x7b60(r13)`, F-29). In preparations the phase is 0, so EXP-14 keeps it on port 1, and only Player 1 drives the native list today. Raw `PADStatus[0..1]` (`0x802EF408`) are readable for both ports at any time. | [S] |
 | 8 | Ownership through roster moves, chapters and saves | The flag word is saved raw (F-52). DRAFT-01 passed for a chapter transition, a save and a fresh reload. Benching = clearing `0x80000000`; it leaves the ownership bits alone. | [S] + [R] |
 
-**Still to be found** (Step 2 runtime research): what the list row states 0 / 3 / 0x13 look like, the list object's current-row field, where the sortie bit becomes force 0 placement at battle start, and which difficulty uses dispos file `c`.
+**Found by PREP-R1 (F-58):**
+- The list object is the `E_SallyList` proc instance. Its fields: `+0x38` columns, `+0x3C` rows (unit pointer at +0, 0x24 each), `+0x61` row count, **`+0x62` highlighted row**, `+0x6C` mode.
+- The cell colour is an index into the native palette `0x80296088` (0 grey, 1 white, 0x13 green, 0x21 light blue, 0x06 yellow).
+- Picked units do **not** carry `0x80000000`, so it likely means *benched*.
+- The campaign is on Normal difficulty (dispos file `n`).
+
+**Still to be found:** where the sortie flag becomes force 0 placement at battle start, and which difficulty uses file `c`.
 
 ## 2. Test chapter
 
@@ -31,8 +37,8 @@ Plan: test Pick Units *mechanics* on the first reachable prep screen (Ch8), and 
 
 | Step | What | Hook / data | Risk |
 |---|---|---|---|
-| 2 | **Show ownership in Pick Units**: blue / yellow / unassigned / unavailable | Extend the row-state choice at `0x8012F060`/`0x8012F680` with the ownership bits (forced and away keep priority). Reuse the existing row states first, then the name colour if one exists. | Low: display only |
-| 3 | **Assign in prep**: alternating draft on the highlighted row; one explicit transfer | Hook the list input step `0x8012D6A4`. On a dedicated button (Y, or the EXP-22 L+R on the owner's own pad, read raw from PADStatus), take the row's unit (the list object's row index → unit; field to find) and apply EXP-22's claim/release rules. **Whose pick:** shown in the list's help line (`MESS_LIST_SALLY*` / `MESS_SALLY_HELP*`), not only by sound; this needs the message lookup (F-54). **Transfer:** the owner offers (release to "offered"), the other player accepts on their own pad. A spare bit (0x08000000, unused per F-52) can mark "offered". | Medium: new input in a native menu |
+| 2 | **Show ownership in Pick Units**: blue / yellow / unassigned / unavailable | **EXP-25 (built, PREP-02 pending):** name-column colour from ownership at the cell draw `0x8012F0D4`. Light blue = Player 1 and Ike, yellow = Player 2; unassigned and grey (unavailable) unchanged. Also shows in the battle Unit list. | Low: display only |
+| 3 | **Assign in prep**: alternating draft on the highlighted row; one explicit transfer | Hook the list input step `0x8012D6A4`. On a dedicated button (Y, or the EXP-22 L+R on the owner's own pad, read raw from PADStatus), take the row's unit (`*(*(list+0x3C) + list[+0x62]·0x24)`, F-58) and apply EXP-22's claim/release rules. **Whose pick:** shown in the list's help line (`MESS_LIST_SALLY*` / `MESS_SALLY_HELP*`), not only by sound; this needs the message lookup (F-54). **Transfer:** the owner offers (release to "offered"), the other player accepts on their own pad. A spare bit (0x08000000, unused per F-52) can mark "offered". | Medium: new input in a native menu |
 | 4 | **Persist into battle and through save/reload** | Already provided by EXP-21 + F-52; verify with prep-made assignments. | Low |
 | 5 | **Fair deployment under the cap** | Wrap the toggle callback `0x8012C9E8`. Count the sortie bits per owner against `state+0x544` minus forced. The press must come from the owner's own pad (raw PADStatus edge). Allow selecting only while that owner has fewer than ⌈optional / 2⌉ picked, unless the other player passes (leaves a slot, e.g. "Start on your pad to yield"). The native cap check stays authoritative; nothing raises it. | Medium |
 | 6 | **Confirmation** | Before Fight: both players press Start on their own pad (a "ready" bit per player, kept in the code's data word). Until both are ready, Fight plays the refusal sound. This replaces "the draft ends at the first action". The in-battle draft (EXP-22) stays a fallback for chapters without preparations. Nothing may be left in force 2: EXP-23's parking is not used in prep. | Medium |

@@ -601,6 +601,62 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 | 2026-10-27 | user (host, this PC) + friend (own PC, the net02-1 ZIP with launcher); codes COOP-P5 + EXP-16 | **PASS (two computers over the internet; disconnect not reported)** | The friend joined by **room code** (Traversal Server). Both players `2609a Windows`, P1-Blue `GC1`, P2-Yellow `GC2`, saves and codes synchronized, ping 23–33 ms, Host Input Authority off. **Speed:** with Buffer 5, both games ran at about 40 FPS/VPS (stretched audio, slow animations), the same on both PCs. Buffer 26 gave 59.9 FPS/VPS, and **Buffer 18 stayed stable at 58–60**, the recommended setting. The user reported that everything ran well. **State comparison:** host and friend each saved two states (backups `work/saves/GFEE01.net02_inet_host_s01/_s02` and `GFEE01.net02_friend_s01/_s02`). Ch. 3 **turn 4, blue phase** and **turn 6, yellow phase** both decode **identically** on the two PCs (control `01 02 02 01`; every unit's force, position, HP, level and EXP). **Combat/EXP under Netplay:** between turns 4 and 6, the yellow units' EXP rose identically on both PCs (Shinon 67, Gatrie 14 → 55), and Ike reached 83 EXP. No desync message. The host card was unchanged afterwards (SHA-1 `54b5a7f4…`). **Not reported:** the disconnect test (T10) on two PCs; it passed on one PC. |
 | 2026-10-27 | Claude (computer use; **one PC**: host `work/netplay_net/host`, client = the extracted ZIP started by its own `Start-FE9-Coop.bat`) | **PARTIAL: package PASS over Direct; Traversal join not verified** | **Launcher:** `Start-FE9-Coop.bat` found Dolphin, took the game folder, printed all `[OK]` and fingerprint `7031af10d740f4ed`, and started Dolphin with the package's user folder. `Check-Setup.bat` flagged a wrong exe ("not version 2609a") and a missing game folder correctly. **Traversal:** the host registered and received an 8-character Room ID. The packaged client (Traversal preset, room code pasted) failed twice with "Failed to connect to server: Could not communicate with host". A same-PC/same-NAT join like this relies on NAT loopback; this run doesn't establish whether two separate networks would connect, and the real two-PC run decides. **Direct 127.0.0.1:2626:** connected. Player list: P1-Blue `GC1`, P2-Yellow `GC2`, both `2609a`. **Checksum → Current game: "The hashes match!"**, digest `a30eca376ab9b2b4dd8b1a9136772a62c0309ace` (= `DolphinTool verify`). Data menu: Load Host's Save Data Only and Sync AR/Gecko Codes ticked. Chats: saves and codes synchronized / Data received / Codes received. The client saw the host card (Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4). In Ch. 3 turn 1, Shinon and Gatrie had yellow rings on both screens. Blue phase: the client's X and arrows did nothing; the host ended the phase. Yellow phase: the host's keys did nothing; the client's keys moved the (yellow) cursor, opened the map menu and chose End. The enemy phase was identical on both screens: Ike was attacked, killed with a counter and reached Lv 5, HP 13/21 on both. **Turn 2 states** (host `work/saves/GFEE01.net02_host_t2`, client `GFEE01.net02_pkgclient_t2`) decode **identically** (chapter id 4, phase 0, turn 2, control `01 02 02 01`, every unit's force/position/HP/level/EXP). **Disconnect:** the client quit NetPlay in turn 2 → host chat "P2-Yellow has left" and **both games stopped**; the host's room stayed open with P1 only. The host card was unchanged (SHA-1 `54b5a7f4…`); the client's own card folder stayed empty (Netplay used `GC/NetPlayTemp`). **Driver note:** under Netplay, very short synthetic key taps were sometimes missed; 0.15–0.3 s holds worked. **Not covered:** a Traversal connection between two networks, a yellow-unit attack under Netplay, 3+ turns, two machines. |
 
+## PREP-R1 — Pick Units research run (user, 2026-10-28)
+**Steps:**
+- Ch. 6 file → preparations → Choose Units.
+- Slot 2 with the cursor on row 1, slot 3 on row 3.
+- A on a row.
+- Each prep option.
+- Slot 4 at the formation map.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-10-28 | user | **Done (research)** | Normal difficulty. Screenshots of Choose Units ("You can select 1 more. 5/6"), the prep menu, Reposition, Items, Conditions and Options. A on a row did nothing (all forced). States backed up to `work/saves/GFEE01.prepR1_s02..s04`. They gave the list object layout, the row table, the highlighted-row field and the palette (F-58). |
+
+## PREP-02 — Ownership colours in the unit lists (EXP-25; PREP-01 Step 2)
+
+**What it is:** in the native unit lists, each character's **name** is coloured by owner. That covers Choose Units in preparations and the map menu's Unit list (Base Data) in battle.
+- Player 1, and Ike: **light blue**
+- Player 2: **yellow**
+- unassigned: unchanged (white; green if forced)
+- unavailable: grey
+
+It is display only. Ownership itself is still made with the verified in-battle draft (EXP-22).
+
+**Static:** `test_exp25_list_ownership_colours`, 170/170 signatures.
+
+**Test bed:** `work/ch1/host` = COOP-P6 + EXP-21 + **EXP-22** + **EXP-25** + DBG-01. EXP-23 is off for this test, so only the new display is being tested. Keys: Player 1 L+R = Q+W, Player 2 L+R = O+P.
+
+### Procedure (tester, one PC, ~10 minutes)
+1. Close Dolphin. Fresh boot:
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/ch1/host
+   ```
+   Then Restart Chapter → **Ch. 6** → preparations → **Choose Units**.
+   Expected: **Ike's name light blue**; the others as before (green, since they are forced). Screenshot.
+2. Back → **Fight**. Turn 1, blue phase: draft with L+R.
+   - Titania **Q+W**
+   - Oscar **O+P**: ring turns yellow
+   - Soren **Q+W**
+   - Rhys **O+P**: yellow
+3. Map menu (D) → **Unit** (the unit list).
+   Expected: **Ike, Titania, Soren light blue; Oscar, Rhys yellow**. Every other column looks as before. Screenshot.
+4. Press **Shift+F2**.
+5. Optional (persistence preview):
+   - Clear Ch. 6, the Escape objective; DBG-01 keeps enemies at 1 HP.
+   - Save at the prompt over **"Ch. 9: Gallia"** (file 2, a test copy).
+   - At **Ch. 7**'s Choose Units, Oscar and Rhys should be **yellow** and Titania and Soren **light blue** before anything else happens. Screenshot.
+
+**Report:** whether each expectation held, the screenshots, and slot 2.
+
+**Failure modes:**
+- Wrong rows coloured: the row/unit mapping is off; slot 2 tells me.
+- Colours in other columns.
+- A crash when opening a list.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+
 ## DRAFT-02 — Draft clarity (EXP-23 = draft v2; replaces EXP-22)
 
 **What changes for the players (Priority A, user request "understandable without instructions"):**

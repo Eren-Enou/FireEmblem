@@ -203,6 +203,15 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x80291088, 0x80275B0E, ".data E_SallyList proc header (name)"),
     (0x802910C0, 0x8012D6A4, ".data E_SallyList step: list input"),
     (0x8012D6B8, 0x808D84A0, "lwz r4,-0x7b60(r13)        list input reads the current pad (F-29)"),
+    # Unit-list drawing (F-58; EXP-25)
+    (0x8012F0D4, 0x8198004C, "lwz r12,0x4c(r24)          cell draw: column vtable (EXP-25 hook)"),
+    (0x8012F0DC, 0x8019003C, "lwz r0,0x3c(r25)           row records at list+0x3C"),
+    (0x8012F0F0, 0x7C80EA14, "add r4,r0,r29              row record = list+0x3C + r29 (0x24 per row)"),
+    (0x8012F54C, 0x807E0038, "lwz r3,0x38(r30)           column array at list+0x38"),
+    (0x8012F224, 0x57C5063E, "clrlwi r5,r30,24           cell colour index -> text draw 0x8001003C"),
+    (0x8018D91C, 0x38046088, "addi r0,r4,0x6088          text palette 0x80296088 (RGBA per index)"),
+    (0x8029610C, 0x6DCFF6FF, ".data palette 0x21 light blue (Player 1)"),
+    (0x802960A0, 0xFFFF64FF, ".data palette 0x06 yellow (Player 2)"),
 ]
 
 

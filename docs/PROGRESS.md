@@ -301,5 +301,10 @@ Controller routing / Netplay (per user priority).
   - Test chapters: Ch8 for mechanics, the first bench chapter (likely Ch10) for fairness.
 - **Plan:** docs/PREP.md (Steps 2–7, hooks, risks).
 - Fixes along the way: a failed write had truncated `chapter_audit.py`; it was restored from git before patching. A stray NUL from shell escaping in a test was replaced.
-- Tests 48/48, signatures 162/162.
+- Tests 48/48, signatures 162/162.- **PREP-R1 (user research run, Ch6 prep, Normal):** screenshots and three states.
+  - Decoded the Pick Units list object: the `E_SallyList` proc (`+0x38` columns, `+0x3C` rows with the unit at +0, **`+0x62` highlighted row**).
+  - The cell colour is an index into the native palette `0x80296088`.
+  - Picked units lack `0x80000000` (likely the *benched* bit) (F-58).
+- **PREP-01 Step 2 = EXP-25** (`tools/prep_code.py`): the name column in the native unit lists is coloured by owner. Light blue = Player 1/Ike, yellow = Player 2; unassigned and unavailable unchanged. Display only.
+- Tests 49/49, signatures 170/170. Test bed: COOP-P6 + EXP-21 + EXP-22 + EXP-25 + DBG-01. Procedure: TESTING.md PREP-02.
 

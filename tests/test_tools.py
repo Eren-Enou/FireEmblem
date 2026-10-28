@@ -647,6 +647,25 @@ class GameTests(unittest.TestCase):
         off = dol.addr_to_off(0x80275B0E)
         self.assertEqual(dol.data[off:off + 12], b"E_SallyList\0")
 
+    def test_exp25_list_ownership_colours(self):
+        """EXP-25: name column coloured by owner in the native unit lists (F-58); display only."""
+        from tools.fe9.ppc import Dol
+        from tools import prep_code as pc
+        dol = Dol(self.disc.read_dol())
+        [(addr, words)] = self._gecko_blocks(pc.NAME)
+        self.assertEqual((addr, words), pc.blocks()[0])
+        self.assertEqual(dol.u32(addr), pc.DRAW_HOOK[1])
+        self.assertEqual((dol.u32(0x8012F0DC), dol.u32(0x8012F0F0)), (0x8019003C, 0x7C80EA14))  # row = list+0x3C + r29
+        self.assertEqual((dol.u32(0x8012F54C), dol.u32(0x8012F568)), (0x807E0038, 0x881E006D))  # columns list+0x38
+        pal = lambda i: dol.u32(0x80296088 + 4 * i) >> 8
+        self.assertEqual((pal(pc.COLOUR_P1), pal(pc.COLOUR_P2), pal(0), pal(1)), (0x6DCFF6, 0xFFFF64, 0x808080, 0xFFFFFF))
+        asm = self._asm(words[:-1])
+        self.assertFalse(any(x.startswith(("bl", "bctrl", "stw", "stb")) for x in asm))   # display only
+        for need in ["lwz r12, 0x38(r25)", "cmpw r12, r24", "lwzx r12, r12, r29", "cmpwi r5, 0",
+                     "andis. r0, r11, 0x2000", "andis. r0, r11, 0x4000", "li r5, 0x21", "li r5, 6"]:
+            self.assertIn(need, asm)
+        self.assertEqual(asm[-2], "lwz r12, 0x4c(r24)")
+
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}
         _date, groups = dispos.parse(files["dispos_n.bin"])
