@@ -32,7 +32,7 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - PREP-R1 (user) gave the list layout, highlighted row and palette (F-58).
 - **Step 2 = EXP-25 PASSED** (PREP-02, user, 2026-10-28): owner colours on every data page of the native unit lists (Choose Units and Base Data); names keep their native colour.
 
-- **Step 3 = EXP-26** (draft and two-player-consent transfers in Choose Units, Z on your own controller) is built; runtime test **PREP-03** pending.
+- **Step 3 = EXP-26 PASSED** (PREP-03, user, 2026-10-28): draft, consent-based transfer, cancel and release in Choose Units, carried into battle (Titania transferred P1 → P2 with progression intact).
 
 Next: Step 4, the prep assignments through battle start, chapter end and a reload (with PREP-03 step 9).
 Move the verified in-battle draft (DRAFT-01/02) to where players naturally choose units: the chapter's preparation screen. Each player owns characters and picks who deploys, under the chapter's original deployment cap.
