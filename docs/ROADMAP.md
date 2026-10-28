@@ -2,6 +2,47 @@
 
 Each milestone is done only when its completion criteria are demonstrated by a repeatable test in TESTING.md.
 
+## Development direction (authoritative, user 2026-10-28)
+
+**Long-term objective:** a complete, stable, replayable two-player Path of Radiance campaign, plus optional features that make cooperation more enjoyable.
+
+| Priority | Area | Branch | State |
+|---|---|---|---|
+| **1** | **Character drafting, ownership and deployment**: draft clarity, prep-screen integration, persistent ownership, voluntary transfers, fair per-chapter deployment | `draft-ownership` | **Active.** Ownership storage and the in-battle draft verified (DRAFT-01). Draft v2 (EXP-23) awaiting DRAFT-02 |
+| **2** | **Complete campaign compatibility**: every chapter's events, victory conditions, recruitment, scripted transfers, progression, death, saving and phase behaviour | all | Overarching requirement. `tools/chapter_audit.py` covers all chapters statically; runtime verified: Prologue, Ch1–Ch5, Ch9, Ch6 partly (docs/CHAPTER_AUDIT.md) |
+| 3 | Optional alternating-unit actions; sequential turns stay the default, with a mode switch only if safe | `experiment/alternating-actions` (never merged until proven) | Parked after static research. EXP-24 + ALT-01 ready (docs/ALTERNATING.md) |
+| 4 | Optional shared tactical board: a separate companion interface (markers, notes, movement plans, EXP targets) that never touches the game simulation or Netplay, and is never required | none yet | Not started |
+
+**Working rules:**
+- Work on one priority at a time. Priority 2 work rides along where Priority 1 touches a chapter.
+- Priorities 3 and 4 are not developed further until Priority 1's next milestone is done.
+- `main` is the **known-good stable Netplay release**: COOP-P6 + EXP-16, package net02-3, NET-02 passed. It changes only by merging verified work.
+- The friend ZIP is rebuilt reproducibly from `main` (`tools/netplay_package.py`).
+- Experiments stay on their own branches until proven.
+- Reliable gameplay before features. The smallest safe implementation that validates an idea before any complex UI or redesign.
+- The game image and user saves are read-only.
+- Every behaviour is labelled **working** (a passed TESTING.md entry), **experimental** (experiment branch) or **unverified** (static only).
+
+### Next concrete milestone: PREP-01 — draft and deployment during preparations (Priority 1)
+Move the verified in-battle draft (DRAFT-01/02) to where players naturally choose units: the chapter's preparation screen. Each player owns characters and picks who deploys, under the chapter's original deployment cap.
+
+Steps, in order (each closes with a TESTING.md entry):
+1. **Find a real choice.** Extend `tools/chapter_audit.py` to list, per chapter: the deployment cap, the forced PIDs (`UnitForcedSally*` arguments, decoded like the transfers, F-48), and the recruited roster at that point. Name the first chapter where optional slots exist (F-46: Ch3, Ch4 and Ch6 force every candidate).
+2. **Map the prep screen.** Trace the original "Pick Units" flow: the sally (sortie) list (`BMapSallyCursorProc` and the `Sally*` script commands), where a unit's deployed state is toggled, and how the cap is enforced. Record it as F-entries with pinned signatures. Reuse the native list and cursor, not a new menu.
+3. **Ownership in the prep list.** Show and change ownership on the prep unit list with the same L+R claim/release and alternating picks as EXP-23. Ownership already persists in the unit flag word (F-52), so this adds a second place to edit it, not new storage.
+4. **Fair deployment split.** Within the original cap: the mandatory (forced) units count first, then the optional slots alternate P1, P2, P1, … Each player may only toggle their own characters. An odd slot goes to the player with fewer deployed units (Player 1 on a tie). Chapters with no optional slots skip the split. No cap is raised.
+5. **Acceptance (PREP-01):** on one PC in the chosen chapter:
+   - both players draft and deploy in prep
+   - a benched owned character keeps their ownership and progression
+   - the battle starts with blue and yellow as chosen
+   - chapter end and a reload keep everything
+
+   Then the same over two Dolphin instances (Netplay), then two computers.
+
+Out of scope for PREP-01: owner-to-owner transfers with both players' consent (the next Priority 1 milestone after PREP-01), lifting the Ike-is-Player-1 rule, and any changes to Priorities 3 and 4.
+
+---
+
 ## Phase 0 — Research & environment validation  *(done 2026-10-27)*
 - [x] Identify the image: GFEE01 rev 0 NTSC-U; record hashes (`tools/verify_game.py`).
 - [x] Reproducible tooling: CISO/ISO reader, LZ77, pack, dispos parser, DOL disassembly helpers, tests.
@@ -43,12 +84,12 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 
 **Done when:** two machines finish Ch9 with no desync, with a written test log.
 
-## Phase 5 — Character drafting, persistent ownership and deployment (branch `draft-ownership`)
+## Phase 5 — Character drafting, persistent ownership and deployment (Priority 1; branch `draft-ownership`)
 - [x] **A. Ownership architecture** (static): ownership in the unit flag word, bits 0x20000000/0x40000000, saved raw with the character (F-52). EXP-21 translates it to forces with EXP-16's hooks; no table is regenerated.
 - [x] **B. First in-game draft:** EXP-22, L+R on a deployed unit at turn 1, alternating picks, release = undo. **DRAFT-01 PASSED** (user, 2026-10-28, all seven checks).
 - [ ] **C. Persistence and transfers:** survives chapter end, normal save and fresh reload (**DRAFT-01 PASSED**); owner-to-owner transfer with both players' consent (not started).
 - [ ] **A2. Draft clarity:** EXP-23 (draft v2): green rings = unassigned, blue/yellow = owner, four distinct sounds incl. a refusal buzz, the draft ends at the first action. Whose pick is shown by counts plus the buzz. A pick-coloured cursor still needs research (F-54). Runtime test DRAFT-02 pending.
-- [ ] **D. Deployment integration:** a chapter with real optional deployment; split slots between players under the original cap; draft undeployed (roster) units.
+- [ ] **D. Deployment integration = PREP-01** (see the top of this file): prep-screen draft, fair split of optional slots under the original cap, benched owned characters kept.
 - [ ] **E. Netplay acceptance:** the full workflow over two instances, then two computers.
 
 **Done when:** two players draft, deploy, transfer and carry their own armies through chapters in-game, with no source edits, over Netplay.
@@ -69,5 +110,9 @@ Design (user, 2026-10-27): strictly sequential phases (blue P1 → yellow P2 →
 
 **Done when:** Chapter 1 is completed with two separately commanded armies and Chapter 2 starts normally, with every character's progression and assignment preserved.
 
-## Phase 5 — Quality & balance
-Deferred until Phases 1–3 work.
+## Later — Quality & balance
+Deferred; reliable gameplay first.
+
+## Priority 3 / 4 records
+- Alternating actions: see the experiment section above and docs/ALTERNATING.md (parked).
+- Shared tactical board: not started. It must stay a separate companion that is never needed to finish a chapter and never touches the emulated game or Netplay.

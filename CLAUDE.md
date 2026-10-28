@@ -18,6 +18,14 @@ The original campaign, mechanics and story stay recognisable. Netplay comes from
 
 History: **Phase 1.** **EXP-04 PASSED**: the red army was human-controlled in its own phase via `control[1]=1`, which proves the engine's control-mode mechanism. EXP-02 was inconclusive (no green phase in the Prologue) and EXP-03 failed (a mid-battle chapter patch is ignored). **EXP-05 PASSED**: the Chapter 9 fixture is in slot 6 (backup `work/saves/GFEE01.s06_ch9_fixture`). **EXP-01 PARTIAL PASS**: Lethe/Mordecai are human-controlled in the yellow phase, but blue units were also movable then. Next: **EXP-06** (Gecko ownership hook in `GetUnitSelectState`) from slot 7. Gecko hooks are documented instruction-by-instruction in `codes/GFEE01.ini` and validated by a disassembly test. Controller routing/Netplay is deferred until a non-blue army is human-controlled. See `docs/TESTING.md`.
 
+## Development priorities (authoritative; details in docs/ROADMAP.md)
+1. **Drafting, ownership, deployment** (branch `draft-ownership`). Next milestone: **PREP-01**, the draft and deployment on the preparation screen.
+2. **Complete campaign compatibility** (overarching): audit and verify every chapter, and label each chapter verified or untested.
+3. Optional alternating-unit actions: `experiment/alternating-actions` only, parked.
+4. Optional shared tactical board: a separate companion, never in the simulation. Not started.
+
+Work on one priority at a time. `main` = the stable Netplay release (COOP-P6 + EXP-16), changed only by merging verified work. Experiments stay isolated.
+
 ## Saves and states
 - User originals (never write): `Dolphin-x64/User/StateSaves/GFEE01.s01`, `Dolphin-x64/User/GC/USA/Card A/*.gci`. Backups with SHA-1 are in `work/saves/` (git-ignored).
 - Create new states only with `tools/patch_state.py` (refuses to overwrite), in slots 2+.

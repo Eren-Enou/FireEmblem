@@ -281,5 +281,11 @@ Controller routing / Netplay (per user priority).
   - The first unit action closes the draft (unpark after the acted bit, before auto-end), as does the phase advance.
   - Distinct sounds by name for each player's claim, release, and refusals (F-54).
   - Not achieved yet: a visual "whose pick" cue (the cursor colour source is unknown). On-screen text would need a message-lookup hook.
-  - Tests 46/46, signatures 151/151. Test bed switched to COOP-P6 + EXP-21 + EXP-23 + DBG-01. Procedure: TESTING.md DRAFT-02.
+  - Tests 46/46, signatures 151/151. Test bed switched to COOP-P6 + EXP-21 + EXP-23 + DBG-01. Procedure: TESTING.md DRAFT-02.- **Direction set (user, authoritative):**
+  1. drafting/ownership/deployment
+  2. complete campaign compatibility (overarching)
+  3. optional alternating actions (experiment branch, parked)
+  4. optional shared tactical board (separate companion, not started)
+
+  One priority at a time; `main` stays the stable Netplay release. Next milestone: **PREP-01**, the draft and deployment on the preparation screen (ROADMAP top).
 
