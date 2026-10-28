@@ -191,6 +191,18 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x802691DF, 0x5346585F, ".data \"SFX_\" SYS_UNIT_SELECT1 (Player 1 claim)"),
     (0x802747B5, 0x5346585F, ".data \"SFX_\" SYS_UNIT_CHANGE1 (Player 2 claim)"),
     (0x80269193, 0x5346585F, ".data \"SFX_\" SYS_UNIT_CANCEL1 (release)"),
+    # Preparations (F-56, F-57): sortie slots in the state block, the Pick Units list and its toggle
+    (0x8014CF60, 0x98030544, "stb r0,0x544(r3)           SallySetByGroup: slot count = 0"),
+    (0x8014CCC0, 0x38060545, "addi r0,r6,0x545           slot (x, y) pairs at state+0x545"),
+    (0x800B6DF8, 0x88630056, "lbz r3,0x56(r3)            SallyGetSurplus = state+0x56"),
+    (0x8012C9E8, 0x800401A0, "lwz r0,0x1a0(r4)           Pick Units toggle callback ..."),
+    (0x8012C9F0, 0x6C008000, "xoris r0,r0,0x8000         ... flips bit 0x80000000 (sortie)"),
+    (0x8012C9D0, 0x90830054, "stw r4,0x54(r3)            list action callback slot"),
+    (0x8012F074, 0x806301A0, "lwz r3,0x1a0(r3)           list row state from the flags ..."),
+    (0x8012F098, 0x546003DF, "rlwinm. r0,r3,0,15,15      ... 0x10000 forced -> row state 0x13"),
+    (0x80291088, 0x80275B0E, ".data E_SallyList proc header (name)"),
+    (0x802910C0, 0x8012D6A4, ".data E_SallyList step: list input"),
+    (0x8012D6B8, 0x808D84A0, "lwz r4,-0x7b60(r13)        list input reads the current pad (F-29)"),
 ]
 
 

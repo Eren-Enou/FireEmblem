@@ -624,6 +624,29 @@ class GameTests(unittest.TestCase):
         self.assertIn(("PID_CHINON", 0), ch18)
         self.assertEqual(script_strings(self.disc.read_file("Scripts/C07.cmb"))[0x0A], "PID_IKE")
 
+    def test_sortie_caps_and_forced_units(self):
+        """chapter_audit: sortie cap = mikata entries (F-56); forced units decoded from UnitForcedSally* calls."""
+        from tools.chapter_audit import script_calls, sortie_caps
+        forced = lambda cid: [a[0] for _n, a in script_calls(self.disc.read_file(f"Scripts/C{cid:02d}.cmb"),
+                                                             ("UnitForcedSallyByPID", "UnitForcedSally"))]
+        self.assertEqual(forced(9), ["PID_IKE"])                                   # Ch8: only Ike is forced
+        self.assertEqual(set(forced(7)), {"PID_IKE", "PID_TIAMAT", "PID_OSCAR", "PID_BOLE", "PID_KILROY", "PID_SENERIO"})
+        self.assertEqual(sortie_caps(self.disc, 7), {"c": 6, "h": 6, "m": 6, "n": 6})   # = runtime state+0x544 at Ch6 prep
+        self.assertEqual(sortie_caps(self.disc, 9)["n"], 7)
+        self.assertEqual(sortie_caps(self.disc, 11), {"c": 8, "h": 11, "m": 11, "n": 11})
+
+    def test_prep_sortie_toggle(self):
+        """F-57: Pick Units (E_SallyList) toggles bit 0x80000000 of unit+0x1A0 through its list callback."""
+        from tools.fe9.ppc import Dol
+        dol = Dol(self.disc.read_dol())
+        self.assertEqual([dol.u32(a) for a in (0x8012C9E8, 0x8012C9EC, 0x8012C9F0, 0x8012C9F4, 0x8012C9F8)],
+                         [0x800401A0, 0x38600001, 0x6C008000, 0x900401A0, 0x4E800020])
+        self.assertEqual((dol.u32(0x8012C9C8), dol.u32(0x8012C9D0)), (0x3884C9E8, 0x90830054))   # callback -> obj+0x54
+        self.assertEqual([dol.u32(a) for a in (0x80291088, 0x802910B4, 0x802910C0)],
+                         [0x80275B0E, 0x8012DFA8, 0x8012D6A4])                        # E_SallyList proc steps
+        off = dol.addr_to_off(0x80275B0E)
+        self.assertEqual(dol.data[off:off + 12], b"E_SallyList\0")
+
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}
         _date, groups = dispos.parse(files["dispos_n.bin"])

@@ -100,6 +100,49 @@ def script_transfers(raw: bytes) -> list[tuple[str | None, int | None]]:
     return found
 
 
+def script_calls(raw: bytes, names: tuple[str, ...]) -> list[tuple[str, list]]:
+    """(command, literal args) for every call of the named commands (bytecode as in script_transfers)."""
+    st = script_strings(raw)
+    rev = {v: k for k, v in st.items()}
+    out = []
+    for name in names:
+        if name not in rev:
+            continue
+        off = rev[name]
+        for m in re.finditer(rb"\x38" + re.escape(bytes([off >> 8, off & 0xFF])) + rb"(.)", raw, re.S):
+            n, pre, args, j = m.group(1)[0], raw[max(0, m.start() - 12):m.start()], [], None
+            j = len(pre)
+            while j > 0 and len(args) < n:
+                if j >= 2 and pre[j - 2] == 0x19:
+                    args.append(pre[j - 1]); j -= 2
+                elif j >= 2 and pre[j - 2] == 0x1C:
+                    args.append(st.get(pre[j - 1])); j -= 2
+                elif j >= 3 and pre[j - 3] == 0x1D:
+                    args.append(st.get((pre[j - 2] << 8) | pre[j - 1])); j -= 3
+                else:
+                    break
+            out.append((name, list(reversed(args)) + [None] * (n - len(args))))
+    return out
+
+
+def sortie_caps(disc: DiscReader, cid: int) -> dict[str, int]:
+    """Deployment slots per difficulty file: entries of the chapter's mikata group (F-56).
+
+    SallySetByGroup(bmapNN_mikata_*) (0x8014CF48) resets state+0x544 and stores one (x, y) per group entry at
+    state+0x545+2i, so the entry count is the sortie cap. Keys are the dispos file letters (c, h, m, n).
+    """
+    name = f"zmap/bmap{cid:02d}/dispos.cmp"
+    if name not in disc.files():
+        return {}
+    caps = {}
+    for e in pack.read_pack(disc.read_file(name)):
+        _date, groups = dispos.parse(e.data)
+        for g in groups:
+            if re.fullmatch(rf"bmap{cid:02d}_mikata_[chmn]", g.name):
+                caps[g.name[-1]] = len(g.units)
+    return caps
+
+
 def dispos_units(disc: DiscReader, cid: int) -> dict[int, list[str]]:
     name = f"zmap/bmap{cid:02d}/dispos.cmp"
     if name not in disc.files():
@@ -128,12 +171,15 @@ def audit(disc: DiscReader) -> list[dict]:
         allies = sorted(set(units.get(0, [])))
         own_here = sorted(owned & (set(allies) | {w for w in words if w.startswith("PID_")}))
         script = f"Scripts/C{cid:02d}.cmb"
-        transfers = script_transfers(disc.read_file(script)) if script in disc.files() else []
+        raw = disc.read_file(script) if script in disc.files() else b""
+        transfers = script_transfers(raw) if raw else []
+        forced = [a[0] for _n, a in script_calls(raw, ("UnitForcedSallyByPID", "UnitForcedSally"))] if raw else []
         rows.append({
             "cid": cid, "label": "Prologue" if cid == 1 else f"Ch{cid - 1}",
             "allies": allies, "partners": partners, "npcs": sorted(set(units.get(2, []))),
             "enemies": len(units.get(1, [])), "flags": flags, "owned": own_here,
             "transfers": transfers,
+            "caps": sortie_caps(disc, cid), "forced": forced,
             "runtime": RUNTIME.get(cid, ""),
         })
     return rows
@@ -160,6 +206,20 @@ def report(rows: list[dict]) -> str:
         short = lambda pids: ", ".join(p.removeprefix("PID_") for p in pids) or "—"
         out.append(f"| {r['label']} | {r['cid']} | {needs(r)} | {', '.join(r['flags']) or '—'} | {short(r['owned'])} | "
                    f"{short(r['partners'])} | {short(r['allies'])} | {short(r['npcs'])} | {r['enemies']} |")
+    out += ["", "## Deployment caps and forced units", "",
+            "Sortie cap = entries of the chapter's `mikata` group, per difficulty file (F-56): `n`, `h`, `m`, `c`. "
+            "Forced = `UnitForcedSally[ByPID]` arguments (`?` = not a literal). **Optional slots** = Normal cap − forced. "
+            "Whether a chapter offers a real choice also needs the recruited roster to exceed the cap; that is checked "
+            "at runtime (`state+0x544` at the prep screen), not here.", "",
+            "| Chapter | id | cap n / h / m / c | Forced | Optional slots (n) |", "|---|---|---|---|---|"]
+    for r in rows:
+        if not r["caps"] and not r["forced"]:
+            continue
+        c = r["caps"]
+        caps = " / ".join(str(c.get(k, "—")) for k in "nhmc")
+        forced = ", ".join((f or "?").removeprefix("PID_") for f in r["forced"]) or "—"
+        opt = (c.get("n", 0) - len(set(r["forced"]))) if c.get("n") is not None else "—"
+        out.append(f"| {r['label']} | {r['cid']} | {caps} | {forced} | {opt} |")
     out += ["", "## Runtime notes", ""]
     out += [f"- **{r['label']}** (id {r['cid']}): {r['runtime']}" for r in rows if r["runtime"]]
     owned = {p for p, o in OWNERS.items() if o == 2}

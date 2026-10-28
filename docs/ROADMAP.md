@@ -24,6 +24,12 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 - Every behaviour is labelled **working** (a passed TESTING.md entry), **experimental** (experiment branch) or **unverified** (static only).
 
 ### Next concrete milestone: PREP-01 — draft and deployment during preparations (Priority 1)
+**Status (2026-10-28):** Milestone A (research) done statically; plan in **docs/PREP.md**.
+- Pick Units = `E_SallyList`; "picked" = flag `0x80000000` toggled by `0x8012C9E8`.
+- Cap = `state+0x544`; the audit now lists caps and forced units for every chapter.
+- First non-forced chapter: Ch8; first likely bench: Ch10.
+
+Next: Step 2, ownership shown in the Pick Units rows (runtime research needed first: the row-state visuals and the list's current-row field).
 Move the verified in-battle draft (DRAFT-01/02) to where players naturally choose units: the chapter's preparation screen. Each player owns characters and picks who deploys, under the chapter's original deployment cap.
 
 Steps, in order (each closes with a TESTING.md entry):

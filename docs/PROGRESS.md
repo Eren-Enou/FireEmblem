@@ -289,3 +289,17 @@ Controller routing / Netplay (per user priority).
 
   One priority at a time; `main` stays the stable Netplay release. Next milestone: **PREP-01**, the draft and deployment on the preparation screen (ROADMAP top).
 
+## 2026-10-28 — Session 1v: PREP-01 Milestone A (native preparation workflow research)
+
+- Checked first:
+  - `draft-ownership` = origin (`cad3f31`); tests 46/46, signatures 151/151
+  - **no DRAFT-02 evidence** (empty result table, no new states, test-bed card unchanged), so EXP-23 is treated as unverified
+- **Script commands:** decoded the registration table (406 commands via `0x80013AE8`). `Sally*` commands are native; `SallySetByGroup` fills `state+0x544/0x545` (cap and slots, F-56).
+- **Pick Units = `E_SallyList`:** its toggle callback `0x8012C9E8` flips bit `0x80000000` (the sortie flag), separate from the ownership bits. The row state comes from the flags. The list uses the EXP-18 builder and reads the current pad (port 1 in prep) (F-57).
+- **Audit:** `tools/chapter_audit.py` now lists caps per difficulty file and forced PIDs.
+  - Ch3–Ch7 force nearly everyone; from **Ch8 only Ike** (except Ch26, Ch30).
+  - Test chapters: Ch8 for mechanics, the first bench chapter (likely Ch10) for fairness.
+- **Plan:** docs/PREP.md (Steps 2–7, hooks, risks).
+- Fixes along the way: a failed write had truncated `chapter_audit.py`; it was restored from git before patching. A stray NUL from shell escaping in a test was replaced.
+- Tests 48/48, signatures 162/162.
+
