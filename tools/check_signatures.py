@@ -170,6 +170,19 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8002E4F8, 0x4811E6E1, "bl 0x8014CBD8             move the cursor (state, f1 = x, f2 = y)"),
     (0x8002E4FC, 0x80010024, "lwz r0,0x24(r1)           epilogue (EXP-20 skip target)"),
     (0x800292AC, 0x4812392D, "bl 0x8014CBD8             Next Unit moves the cursor the same way"),
+    # Ownership in the unit flag word (F-52; EXP-21/EXP-22): the card save keeps unit+0x1A0 raw, and every
+    # chapter/map mask keeps bits 25-30
+    (0x8003C994, 0x38BE01A0, "addi r5,r30,0x1a0          unit load: flag word ..."),
+    (0x8003C998, 0x38800004, "li r4,4                    ... read as 4 raw bytes (0x8017A810)"),
+    (0x8003CBBC, 0x38BE01A0, "addi r5,r30,0x1a0          unit save: flag word written raw (0x8017A430)"),
+    (0x8002E038, 0x3C60FF89, "lis r3,-0x77               chapter transition mask 0xFF88C7FE ..."),
+    (0x8002E040, 0x3803C7FE, "addi r0,r3,-0x3802         ... (keeps 0x7E000000)"),
+    (0x8002EA10, 0x3800BBFF, "li r0,-0x4401              map start clears 0x4400 only"),
+    (0x800291D8, 0x9421FFD0, "stwu r1,-0x30(r1)          human-phase input step entry (EXP-22 hook)"),
+    (0x800AA794, 0x3C608033, "lis r3,0x8033              unit under the cursor (map grid 0x802CA518 +0xD)"),
+    (0x800AA7DC, 0x8863000D, "lbz r3,0xd(r3)             unit id at the cursor tile"),
+    (0x80105BC0, 0x9421FFF0, "stwu r1,-0x10(r1)          has attribute (bit set, index)"),
+    (0x801475FC, 0x9421FFE0, "stwu r1,-0x20(r1)          sound effect (Next Unit's cursor sound)"),
 ]
 
 

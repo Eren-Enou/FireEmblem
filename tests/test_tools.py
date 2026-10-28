@@ -319,6 +319,78 @@ class GameTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             oc.pid_table({"PID_IKE": 2})
 
+    @staticmethod
+    def _asm(words: list[int]) -> list[str]:
+        """Disassemble a cave, skipping embedded data words (capstone stops at them)."""
+        import capstone, struct
+        md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_32 | capstone.CS_MODE_BIG_ENDIAN)
+        raw, out, off = b"".join(struct.pack(">I", w) for w in words), [], 0
+        while off < len(raw):
+            n = len(out)
+            for i in md.disasm(raw[off:], off):
+                out.append(f"{i.mnemonic} {i.op_str}".strip()); off = i.address + 4
+            if len(out) == n:
+                out.append(".word"); off += 4
+        return out
+
+    def test_ownership_flag_bits_unused(self):
+        """F-52: bits 25-30 of unit+0x1A0 are never in a narrow mask near any flag access, the chapter
+        transition / map start masks keep them, and the card save reads and writes the word raw."""
+        from tools.fe9.ppc import Dol
+        from tools import draft_code as dc
+        dol = Dol(self.disc.read_dol())
+        bits = dc.flag_bit_usage(dol)
+        self.assertEqual([bits[b] for b in range(25, 31)], [0] * 6)
+        self.assertGreater(bits[10], 0)                       # 0x400 (deployed) is found, so the scan works
+        transition = ((dol.u32(0x8002E038) & 0xFFFF) << 16) + ((dol.u32(0x8002E040) & 0xFFFF) - 0x10000)
+        self.assertEqual(transition & 0xFFFFFFFF, 0xFF88C7FE)
+        for mask in (0xFF88C7FE, 0xFFFFBBFF, 0xFFFFFDBF, 0xFFF77FFF):   # 0x8002E0xx, 0x8002EA10, 0x80050D1C, 0x801D31F0
+            self.assertEqual(mask & (dc.OWNED | dc.P2), dc.OWNED | dc.P2)
+        self.assertEqual((dol.u32(0x8003C994), dol.u32(0x8003C998)), (0x38BE01A0, 0x38800004))   # load 4 raw bytes
+        self.assertEqual(dol.u32(0x8003CBBC), 0x38BE01A0)                                          # save them
+
+    def test_exp21_flag_ownership_code(self):
+        """EXP-21 in the ini is what tools/draft_code.py generates; same hooks as EXP-16, keyed on the P2 bit."""
+        from tools.fe9.ppc import Dol
+        from tools import draft_code as dc, owner_code as oc
+        dol = Dol(self.disc.read_dol())
+        found = self._gecko_blocks(dc.NAMES[21])
+        self.assertEqual(found, dc.blocks21())   # regenerate with `python -m tools.draft_code --write`
+        self.assertEqual([a for a, _ in found], [a for a, _ in oc.blocks()])   # never enable with EXP-16
+        for (addr, words), (src, dst) in zip(found, [(0, 3), (3, 0), (3, 0), (3, 0), (3, 0)]):
+            body = words[:-2] if words[-2] == oc.NOP else words[:-1]
+            self.assertEqual(body[-1], dol.u32(addr))         # original instruction replayed
+            asm = self._asm(body)
+            head = {0: "lwz r31, -0x5d9c(r12)", 3: "lwz r31, -0x5d78(r12)"}[src]
+            self.assertIn(head, asm)
+            self.assertIn("andis. r0, r0, 0x4000", asm)       # only Player 2 units move
+            self.assertIn(f"li r4, {dst}", asm)
+            self.assertIn("lwz r30, 0x184(r31)", asm)         # next read before the transfer unlinks
+            self.assertEqual(addr == 0x8002E738, "lbz r0, 0x719(r12)" in asm)
+            self.assertEqual(addr == 0x800BA8F8, "cmpw r3, r0" in asm)
+            self.assertEqual(addr == 0x8002E738, "stb r0, 0x71f(r12)" in asm)
+
+    def test_exp22_draft_code(self):
+        """EXP-22: turn 1 blue phase, L+R edge per port, cursor unit, lord/partner refusal, alternating picks."""
+        from tools.fe9.ppc import Dol
+        from tools import draft_code as dc
+        dol = Dol(self.disc.read_dol())
+        [(addr, words)] = self._gecko_blocks(dc.NAMES[22])
+        self.assertEqual((addr, words), (dc.INPUT_HOOK[0], dc.draft_cave()))
+        self.assertEqual(dol.u32(addr), dc.INPUT_HOOK[1])
+        asm = self._asm(words[:-1])
+        for need in ["lbz r0, 0x719(r12)", "lha r0, 0x71a(r12)", "cmpwi r0, 1",      # phase 0, turn 1
+                     "ori r12, r12, 0xf408", "mulli r0, r30, 0xc", "andi. r0, r0, 0x60",  # PADStatus[port], L+R
+                     "ori r12, r12, 0xa794", "ori r12, r12, 0x5bc0", "ori r12, r12, 0xca38",
+                     "ori r12, r12, 0x75fc", "andis. r12, r11, 0x2000", "oris r11, r11, 0x6000",
+                     "oris r11, r11, 0x2000", "rlwinm r11, r11, 0, 3, 0", "cmpw r0, r30", "cmpwi r30, 2"]:
+            self.assertIn(need, asm)
+        for head in ("-0x5d9c", "-0x5d78", "-0x5d60", "-0x5d48"):                    # count forces 0/3/5/7
+            self.assertIn(f"lwz r12, {head}(r12)", asm)
+        self.assertEqual(asm[-1], "stwu r1, -0x30(r1)" if words[-2] != 0x60000000 else "nop")
+        self.assertIn("stwu r1, -0x30(r1)", asm)                                     # original replayed
+        self.assertEqual((dol.u32(0x800292BC), dol.u32(0x800292C0)), (0x3C608027, 0x38800064))  # Next Unit's SE args
+
     def test_exp17_next_unit_hooks(self):
         """EXP-17: the next-unit search uses force 3 in phase 3 (auto-end + Next Unit), force 0 otherwise."""
         from tools.fe9.ppc import Dol

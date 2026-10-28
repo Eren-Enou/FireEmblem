@@ -43,6 +43,15 @@ Each milestone is done only when its completion criteria are demonstrated by a r
 
 **Done when:** two machines finish Ch9 with no desync, with a written test log.
 
+## Phase 5 — Character drafting, persistent ownership and deployment (branch `draft-ownership`)
+- [x] **A. Ownership architecture** (static): ownership in the unit flag word, bits 0x20000000/0x40000000, saved raw with the character (F-52). EXP-21 translates it to forces with EXP-16's hooks; no table is regenerated.
+- [ ] **B. First in-game draft:** EXP-22, L+R on a deployed unit at turn 1, alternating picks, release = undo. Runtime test DRAFT-01 pending.
+- [ ] **C. Persistence and transfers:** survives chapter end and save/reload (DRAFT-01 steps 7–9); owner-to-owner transfer with both players' consent (not started).
+- [ ] **D. Deployment integration:** a chapter with real optional deployment; split slots between players under the original cap; draft undeployed (roster) units.
+- [ ] **E. Netplay acceptance:** the full workflow over two instances, then two computers.
+
+**Done when:** two players draft, deploy, transfer and carry their own armies through chapters in-game, with no source edits, over Netplay.
+
 ## Phase 4 — Campaign integration (sequential two-army campaign from Chapter 1)
 Design (user, 2026-10-27): strictly sequential phases (blue P1 → yellow P2 → enemy AI → green), reusing the game's phase system and COOP-P3 routing. Each character belongs to one player at a time and keeps their identity and progression. Ike stays blue.
 - [x] Found the game's own force-transfer path: `UnitTransferToForce`, `SetUnitForce`, unit by PID (F-34). Chapter end moves only force 0 into the roster (F-35).

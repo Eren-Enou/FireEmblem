@@ -601,6 +601,50 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 | 2026-10-27 | user (host, this PC) + friend (own PC, the net02-1 ZIP with launcher); codes COOP-P5 + EXP-16 | **PASS (two computers over the internet; disconnect not reported)** | The friend joined by **room code** (Traversal Server). Both players `2609a Windows`, P1-Blue `GC1`, P2-Yellow `GC2`, saves and codes synchronized, ping 23–33 ms, Host Input Authority off. **Speed:** with Buffer 5, both games ran at about 40 FPS/VPS (stretched audio, slow animations), the same on both PCs. Buffer 26 gave 59.9 FPS/VPS, and **Buffer 18 stayed stable at 58–60**, the recommended setting. The user reported that everything ran well. **State comparison:** host and friend each saved two states (backups `work/saves/GFEE01.net02_inet_host_s01/_s02` and `GFEE01.net02_friend_s01/_s02`). Ch. 3 **turn 4, blue phase** and **turn 6, yellow phase** both decode **identically** on the two PCs (control `01 02 02 01`; every unit's force, position, HP, level and EXP). **Combat/EXP under Netplay:** between turns 4 and 6, the yellow units' EXP rose identically on both PCs (Shinon 67, Gatrie 14 → 55), and Ike reached 83 EXP. No desync message. The host card was unchanged afterwards (SHA-1 `54b5a7f4…`). **Not reported:** the disconnect test (T10) on two PCs; it passed on one PC. |
 | 2026-10-27 | Claude (computer use; **one PC**: host `work/netplay_net/host`, client = the extracted ZIP started by its own `Start-FE9-Coop.bat`) | **PARTIAL: package PASS over Direct; Traversal join not verified** | **Launcher:** `Start-FE9-Coop.bat` found Dolphin, took the game folder, printed all `[OK]` and fingerprint `7031af10d740f4ed`, and started Dolphin with the package's user folder. `Check-Setup.bat` flagged a wrong exe ("not version 2609a") and a missing game folder correctly. **Traversal:** the host registered and received an 8-character Room ID. The packaged client (Traversal preset, room code pasted) failed twice with "Failed to connect to server: Could not communicate with host". A same-PC/same-NAT join like this relies on NAT loopback; this run doesn't establish whether two separate networks would connect, and the real two-PC run decides. **Direct 127.0.0.1:2626:** connected. Player list: P1-Blue `GC1`, P2-Yellow `GC2`, both `2609a`. **Checksum → Current game: "The hashes match!"**, digest `a30eca376ab9b2b4dd8b1a9136772a62c0309ace` (= `DolphinTool verify`). Data menu: Load Host's Save Data Only and Sync AR/Gecko Codes ticked. Chats: saves and codes synchronized / Data received / Codes received. The client saw the host card (Prologue, Ch. 9, Ch. 6, Ch. 3, Ch. 4). In Ch. 3 turn 1, Shinon and Gatrie had yellow rings on both screens. Blue phase: the client's X and arrows did nothing; the host ended the phase. Yellow phase: the host's keys did nothing; the client's keys moved the (yellow) cursor, opened the map menu and chose End. The enemy phase was identical on both screens: Ike was attacked, killed with a counter and reached Lv 5, HP 13/21 on both. **Turn 2 states** (host `work/saves/GFEE01.net02_host_t2`, client `GFEE01.net02_pkgclient_t2`) decode **identically** (chapter id 4, phase 0, turn 2, control `01 02 02 01`, every unit's force/position/HP/level/EXP). **Disconnect:** the client quit NetPlay in turn 2 → host chat "P2-Yellow has left" and **both games stopped**; the host's room stayed open with P1 only. The host card was unchanged (SHA-1 `54b5a7f4…`); the client's own card folder stayed empty (Netplay used `GC/NetPlayTemp`). **Driver note:** under Netplay, very short synthetic key taps were sometimes missed; 0.15–0.3 s holds worked. **Not covered:** a Traversal connection between two networks, a yellow-unit attack under Netplay, 3+ turns, two machines. |
 
+## DRAFT-01 — In-game draft with persistent ownership (EXP-21 + EXP-22; drafting Milestones A–C, first pass)
+
+**What it is:**
+- **Ownership** is stored in each unit's own flag word: `0x20000000` assigned, `0x40000000` Player 2 (F-52). It is saved with the character, so nothing is regenerated, and progression is untouched.
+- **EXP-21** replaces EXP-16's PID table, using the same hooks.
+- **EXP-22** is the draft. On **turn 1 of the blue phase**, a player puts the cursor on a deployed unit and presses **L+R** on their own controller:
+  - **Claim** an unassigned unit, only on your pick. Picks alternate, Player 1 first.
+  - **Release** your own unit; this also gives the pick back.
+  - Ike, native partners and the other player's units are refused.
+  - A cursor sound confirms each change. A Player 2 claim turns the ring yellow at once.
+
+**Static:** `test_ownership_flag_bits_unused`, `test_exp21_flag_ownership_code`, `test_exp22_draft_code`; 144/144 signatures.
+
+**Test bed:** `work/ch1/host` = COOP-P6 + **EXP-21 + EXP-22** + DBG-01 (EXP-16 off). The card was backed up first (`work/saves/ch1_card_before_draft01.gci`, SHA-1 `54b5a7f4…`). Keys: Player 1 L+R = **Q+W**, Player 2 L+R = **O+P** (port 2 stick = numpad, A = M).
+
+### Procedure (tester, one PC, ~15 minutes)
+1. Close Dolphin. Fresh boot (not a save state):
+   ```bash
+   Dolphin-x64/Dolphin.exe --user work/ch1/host
+   ```
+2. Title → **Restart Chapter → Ch. 3: Pirates Aground** → skip to the turn 1 map. Expected: all four units (Ike, Titania, Shinon, Gatrie) blue. Nobody is owned yet; EXP-16's table is gone.
+3. **Draft**, with the cursor on each unit in turn (arrows move the cursor):
+   - **a.** Titania, **Q+W** (P1). Sound; she stays blue.
+   - **b.** Shinon, **Q+W** (P1 again). Nothing: it's Player 2's pick.
+   - **c.** Shinon, **O+P** (P2). Sound; **Shinon's ring turns yellow**.
+   - **d.** Ike, **O+P**. Nothing: Ike is refused.
+   - **e.** Gatrie, **Q+W** (P1). Sound.
+   - **f.** Shinon, **O+P** again. Released: sound, blue again. Then **O+P** once more: yellow again.
+4. Press **Shift+F2** (slot 2). End the blue phase (D → End).
+5. **Yellow phase:** the cursor jumps to Shinon, and only port 2 moves him. Attack a bandit with Shinon and note his EXP. End the phase.
+6. Turn 2: L+R does nothing any more (the draft is only on turn 1).
+7. Clear the chapter: defeat the boss. DBG-01 keeps enemies at 1 HP. At the **Save Data** prompt, save over **"Ch. 9: Gallia"** (file 2; a test copy, backed up).
+8. **Ch. 4** turn 1, blue phase: **Shinon is yellow automatically**; Titania and Gatrie are blue (Ch. 4's line-up is forced, F-41). Press **Shift+F3** (slot 3).
+9. **Reload check:** close Dolphin, fresh boot → Restart Chapter → the file you saved in step 7 → Ch. 4 turn 1: Shinon is **still yellow**, with the EXP from step 5. Press **Shift+F4** (slot 4).
+10. Tell me when slots 2–4 are saved, and what happened at each step. Screenshots of steps 3c, 8 and 9 help.
+
+**Failure modes, and what each tells us:**
+- The sound plays but nothing changes, or L+R does nothing at all: the input read (port/bits) is wrong. Slot 2 tells me the flags.
+- Shinon is blue in Ch. 4: the bit was lost at the chapter end or the save. Slots 3/4 tell me which.
+- A crash or freeze on L+R: stop, and tell me which unit and which step.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+
 ## EXP-20 / COOP-P6 — Cursor jumps to a yellow unit when the yellow phase starts
 
 **Goal (user):** a clear "your turn" cue for Player 2. At the start of a human yellow phase, the cursor (and camera) moves to a yellow unit that can still act. Vanilla only does this for Ike in the player phase (F-51). **COOP-P6** = COOP-P5 + EXP-20. Static: `test_exp20_yellow_cursor_hook`, `test_coop_p6_package`, 133/133 signatures. Runtime: **PASS** (user, 2026-10-27).

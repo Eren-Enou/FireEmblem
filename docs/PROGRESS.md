@@ -257,3 +257,20 @@ Controller routing / Netplay (per user priority).
 - **NET-02 PASSED on two computers over the internet** (user + friend, COOP-P5 + EXP-16). Ch3 reached turn 6 with yellow combat and EXP, and the turn 4 and turn 6 states are identical on both PCs, with no desync (TESTING.md NET-02).
 - The Netplay package and host moved to **COOP-P6 + EXP-16**: package net02-3, fingerprint `8609ae9f49fd879f`, ZIP `dist/FE9-Coop-Client-8609ae9f49fd879f.zip`. The friend needs the new ZIP for the fingerprint/hash check, though the synced host codes are what actually run. The README's Gecko-code check now names the enabled codes from the build.
 
+## 2026-10-27 — Session 1t: drafting goal, Milestones A/B (branch `draft-ownership`)
+
+- New goal (user brief): players draft the roster in-game, own characters persistently, choose deployments and transfer characters. The sequential Blue → Yellow → Enemy phases stay.
+- **Audit:**
+  - EXP-16's table lives in the code, so the split can't change in-game.
+  - Prep screens run before ownership applies (F-46).
+  - The card save writes each unit as a packed `UNIP` record with the flag word copied raw (F-52).
+- **Storage (F-52):** bits 25–30 of `unit+0x1A0` are untouched by game code (scan of all 413 flag accesses + every clearing mask) and survive the save. Chosen: `0x20000000` assigned, `0x40000000` Player 2. Netplay-synced (game memory), and progression is never touched.
+- **EXP-21** (`tools/draft_code.py`): EXP-16's five hooks keyed on the Player 2 bit instead of PIDs; native partners never carry it.
+- **EXP-22:** the draft at turn 1 of the blue phase. L+R on your own controller claims an unassigned deployed unit on your pick (alternating, P1 first, from counts, nothing extra stored) or releases your own. Ike, native partners and the other player's units are refused.
+- Tests 45/45, signatures 144/144. Installed in `work/ch1/host` (COOP-P6 + EXP-21 + EXP-22 + DBG-01); card backed up. Tester procedure: TESTING.md DRAFT-01.
+- Known limits of this first pass:
+  - only deployed units can be drafted (the roster/prep screen is Milestone D)
+  - no owner-to-owner transfer yet (Milestone C)
+  - unassigned units play as blue
+- `main` keeps the proven COOP-P6 + EXP-16 Netplay build.
+
