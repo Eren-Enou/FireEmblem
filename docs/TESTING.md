@@ -1,5 +1,44 @@
 # Testing
 
+## CAMP-O — Manual campaign test pack and private post-Talk copies
+
+2026-10-28. Prepared `work/manual_campaign_v1`: 17 targeted cases plus all34
+chapter/stage continuity cases from the existing verification ledger. Every
+case lists captures, human observations, prerequisites and acceptance limits.
+Later missing saves are explicitly blocked; no new runtime PASS is recorded.
+Exact user instructions: [CAMPAIGN_MANUAL_TESTS.md](CAMPAIGN_MANUAL_TESTS.md).
+
+Prepared separate `ch10_partner_actions_v1` and `ch10_native_resume_v1`
+private profiles/cards under work/fixtures. Both seed copies are byte-identical
+to the accepted after-Talk state SHA256
+558cfc791b073e8f1cd39f8d7cf3bc85aee95b14e95059c909ce334693ca9a74.
+No state edits, positioning, event calls or new codes. All copied source
+state/card/config/bindings hashes rechecked unchanged. Both **3240/3248 bytes**,
+fingerprintc11089d39a0fe037. Launchers are user-run only; native-resume launcher
+omits --save_state. Inherited card identity can make Suspend inconclusive.
+
+tools.campaign_test_pack preserves raw state + intended INI + hashes + snapshot
+in new capture directories, refuses replacement and prints output directly.
+Only the narrow Kieran original Wait/control case has an automated event
+verdict; it requires explicit human observations and matching live codes/C11.
+Other complete bundles remain INCONCLUSIVE for event-specific review. No tool
+automatically modifies the campaign verification ledger or any source profile.
+
+**122 tests PASS; 316/316 signatures match; 16 accepted runtime artifact hashes
+verified.** New regressions reject unit/item loss, stale scripts/hooks, missing
+or false controller observations, invalid paths, overwrite and corrupt evidence;
+every ledger stage has a case. A complete generic bundle still cannot auto-PASS.
+Read-only real-state negative self-check in work/manual_campaign_validation_v1
+captured the identical seed twice: live hooks matched, but review correctly
+FAILed unchanged hashes/no Wait; recapture correctly refused. This is tooling
+verification, not a gameplay execution. No Dolphin launch or input sent.
+
+**NOT TESTED:** Kieran Wait, native post-Talk Suspend/resume, new prisoner escape,
+chapter clear/transition and all newly planned runtime cases. Main and paused
+draft-ownership untouched. Next user action: CH10-PARTNER-WAIT, then optional
+native Suspend attempt; separate geometry-checked prisoner exit setup is needed
+before asking the user to test Ch10 escape/cleanup.
+
 ## CAMP-N — Human Chapter10 original Oscar/Kieran Talk: local PASS
 
 2026-10-28. User executed the supplied manual test, created before/after captures

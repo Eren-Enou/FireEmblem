@@ -4,6 +4,16 @@
 
 - User owns Dolphin input. Prepare/analyze isolated fixtures and continue static
   campaign work; **do not launch or drive Dolphin** without a new user request.
+- Manual test pack prepared: work/manual_campaign_v1, 17 targeted cases and34
+  chapter/stage continuity cases. Exact steps: docs/CAMPAIGN_MANUAL_TESTS.md.
+  Kieran Wait and native Suspend-attempt private profiles/cards prepared from
+  byte-identical successful after-Talk state; no new codes/edits/input. Both3240
+  bytes. Missing later-save/exit fixtures explicitly blocked; no new runtime PASS.
+- User next: CH10-PARTNER-WAIT; optional native Suspend attempt may be blocked
+  by inherited-card identity. Engineering next: independent geometry-checked
+  Ch10 prisoner exit setup and original cleanup conditions, not prison traversal
+  with the weak inherited army. New collector refuses overwritten evidence;
+  generic reports remain INCONCLUSIVE pending event-specific review.
 - User validated the original Chapter10 loader route, Blue->Yellow, P2 Oscar
   Wait and P1 lockout (CAMP-L). Captures corroborate live hooks/C11 and Oscar's
   acted bit; no Talk or natural-campaign acceptance follows from that test.
@@ -18,7 +28,7 @@
 - Original Talk local effect **PASS**: Kieran Green->Yellow, original key set;
   Oscar stays Yellow and acts, identities/items/progression preserved. Selected
   actor occupancy checker corrected; original captures/report preserved.
-- 114 tests,316 signatures,16 accepted runtime artifact hashes pass.
+- 122 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-O).
 - Production stable fingerprint8609ae9f49fd879f unchanged. Next: independent
   Ch10 prisoner escape/cleanup and permanent-recruitment analysis. No chapter
   completion, save/reload or Netplay acceptance follows from this synthetic test.

@@ -1,7 +1,7 @@
 # Chapter10 Oscar–Kieran manual Talk fixture
 
-Prepared independently of the validated Chapter10 profile. **Experimental,
-synthetic setup; original Talk has NOT been executed or verified.** No Dolphin
+Prepared independently of the validated Chapter10 profile. **Synthetic setup;
+original Talk local effect now manually verified (CAMP-N), see recorded result below.** No Dolphin
 launch or input is performed by the preparation or analysis tools.
 
 The fixture is at:

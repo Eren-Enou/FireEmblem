@@ -1,0 +1,428 @@
+[
+  {
+    "id": "CH10-PARTNER-WAIT",
+    "title": "Kieran original Wait immediately after Oscar Talk",
+    "priority": 1,
+    "readiness": "RUNNABLE_PRIVATE_POST_TALK_COPY",
+    "classification": "synthetic_ch10_post_talk",
+    "captures": [
+      "before",
+      "after"
+    ],
+    "observations": [
+      "p1_cannot_command_kieran",
+      "p2_original_wait",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Close the previous Dolphin session. Launch ONLY work/fixtures/ch10_partner_actions_v1/Launch.ps1. It restores a byte-identical copy of the successful after-Talk state in a new private profile. Do not select Restart Chapter; loader setup must not be used for progression.",
+      "At the restored turn1 Yellow map, use Player2 map menu (E) > Options and set Auto End Off. Return to the map. Kieran should be Yellow next to Oscar inside the original cell; Oscar has already acted. Do not end the phase.",
+      "Use Player1 to attempt to select and issue an action to Kieran. It must not permit a command; cursor movement alone is not a failure. Use Player2 to select Kieran, confirm his CURRENT tile, and leave the normal action menu open. Save a new before.sav using Emulation > Save State > Save State to File.",
+      "Choose original Wait with Player2. Do not move, trade, attack, Talk, end phase or advance turns. Capture after.sav on the same turn1 Yellow map. If the phase auto-ends despite Auto End Off, save the resulting state and record the discrepancy instead of editing it.",
+      "Record the three observations in observations.json, capture both files with the supplied CLI and run review. Save a screenshot if a menu is missing or a command fails. This test cannot establish escape or permanent recruitment."
+    ],
+    "acceptance": "Narrow automatic PASS requires both original UI observations and matching C11/live codes; Kieran force3/alive and only his acted bit changes, all roster identities/items/progression and Talk/door/chapter flags preserved."
+  },
+  {
+    "id": "CH10-NATIVE-RESUME",
+    "title": "Native Suspend and fresh boot after prisoner Talk",
+    "priority": 2,
+    "readiness": "RUNNABLE_ATTEMPT; CARD_IDENTITY_MAY_BLOCK",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after"
+    ],
+    "observations": [
+      "native_suspend_accepted",
+      "fresh_boot_without_state",
+      "native_resume_selected",
+      "same_roster_and_progression",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Use a fresh disposable copy of the partner profile, not the successful Talk source. At the post-Talk map record Oscar/Kieran and capture before. Do not use the loader Restart Chapter route.",
+      "Use the original Map menu > Suspend. Capture the confirmation or exact original-card refusal as a screenshot. Save only in the new disposable profile. If refused, stop and record INCONCLUSIVE inherited-card identity; do not spoof it or overwrite another card.",
+      "If accepted, close Dolphin completely. Launch Dolphin with --user pointing to the SAME disposable User folder and --exec the original image, WITHOUT --save_state. Select the native resume route from the title.",
+      "Capture after at the resumed map before any actions. Verify same chapter/turn/phase, original consumed Talk key, living Oscar/Kieran, forces/control, acted states, progression/items. Preserve the private GCI and profile config after closing Dolphin."
+    ],
+    "acceptance": "Separate original-card refusal from gameplay failure. Match equivalent checkpoints, not state-file hashes. No PASS for loading a savestate in place of a native save."
+  },
+  {
+    "id": "CH10-ESCAPE",
+    "title": "Kieran direct escape and carried-prisoner branches",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_REACHABLE_EXIT_FIXTURE",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_escape",
+      "recorded_door_and_talk_history",
+      "ike_last",
+      "native_save_reload",
+      "expected_prisoner_roster"
+    ],
+    "steps": [
+      "Do not attempt to traverse the weak inherited army or chain a new positioning patch onto the 3240-byte Talk fixture. A separately prepared, geometry-checked exit fixture or naturally progressed prison save is required.",
+      "Run separate branches from independent copies: (A) talked-to Kieran escapes through his original Escape menu; (B) an eligible actor carries Kieran through the original rescue/escape path. Capture before at the exit, after original escape dialogue, and cleanup after Ike exits LAST.",
+      "Record door-open history, conversation performed, rescued passenger identity, escape order and difficulty. Capture native dialogue and any missing Escape command. Preserve Oscar and every other surviving owned unit.",
+      "Save natively to a new disposable slot, fresh boot and capture reloaded at the next chapter roster. Test talked/not-talked and door-open/closed histories separately only when each can be reached through original events."
+    ],
+    "acceptance": "Verify escape flags and prisoner retention through original cleanup; Talk alone is insufficient. Synthetic local escape may pass without certifying natural progression."
+  },
+  {
+    "id": "CH6-CARRIED-ESCAPE",
+    "title": "Carried unit escape, Ike-last and Chapter7 roster",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_CARRIED_UNIT_EXIT_SETUP_OR_NATURAL_SAVE",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_rescue",
+      "original_escape",
+      "ike_last",
+      "all_expected_survivors_present",
+      "native_save_reload"
+    ],
+    "steps": [
+      "Start from a copied native Chapter6 save or a separately inspected exit fixture. Existing single-Oscar escape is already verified; do not repeat it as proof of the carried branch.",
+      "Use original Rescue to carry a living owned unit. Record carrier/passenger PIDs and factions. Capture before just before original Escape, then after the escape dialogue.",
+      "Escape remaining living units, Ike LAST. Capture cleanup, save in a new private slot and fresh boot into Chapter7 preparations; capture reloaded.",
+      "Repeat with Yellow carrier/Blue passenger and Blue carrier/Yellow passenger using independent copies. Record the original rescue eligibility if an intended pairing is disallowed; do not force it."
+    ],
+    "acceptance": "Carrier/passenger identities, survival, progression/items and expected original cleanup persist. A synthetic exit skips natural traversal."
+  },
+  {
+    "id": "CORE-DEATH",
+    "title": "Yellow permanent death and Ike Game Over",
+    "priority": 1,
+    "readiness": "NEEDS_DISPOSABLE_NEAR_FATAL_COMBAT_SAVE",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after"
+    ],
+    "observations": [
+      "original_fatal_combat",
+      "original_death_dialogue",
+      "expected_defeat_or_death",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Create two independent disposable card/profile branches. Never continue the primary campaign from a death test.",
+      "Branch A: capture before with a Yellow permanent unit about to take a genuine fatal hit; allow original combat and death dialogue, capture after. Record the fatal attack and unit identity. Do not use a direct-death cheat.",
+      "Branch B: from a separate copy, let Ike die through original combat. Record original defeat/Game Over, capture its stable screen, and verify no inappropriate victory/next-chapter continuation.",
+      "For branch A, separately finish and reload the next chapter if reachable, checking the death remains and no duplicate/revived record appears."
+    ],
+    "acceptance": "Separate Yellow death roster behavior from lord defeat. Normal death is expected; disappearing without a death record or progression continuing after lord defeat is a failure."
+  },
+  {
+    "id": "CORE-PROGRESSION",
+    "title": "Yellow combat, healing, promotion and inventory",
+    "priority": 2,
+    "readiness": "NEEDS_NATURAL_BATTLE_AND_PROMOTION_SAVE",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after"
+    ],
+    "observations": [
+      "original_action",
+      "display_matches_progression",
+      "expected_item_changes",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Separate branches: Yellow attack/kill; enemy-phase counterattack; legal Blue-to-Yellow healing; Yellow healing if an owned healer exists; original promotion. Record actor/target and exact action. Do not change the fixed ownership table to manufacture a healer case.",
+      "Capture before and after each isolated action. Record displayed HP/EXP/level/stats, item durability, promotion choice and resulting class; capture the stat-gain panel as a screenshot.",
+      "Save and fresh reload for a promotion case and one inventory transaction, including a legal Blue/Yellow trade. Compare class, progression, items and expected durability changes; no duplicated/lost items."
+    ],
+    "acceptance": "A different case folder/run per action prevents expected combat changes from hiding unrelated corruption. Missing healer/promotion fixture is NOT TESTED."
+  },
+  {
+    "id": "CH9-PARTNERS",
+    "title": "Lethe/Mordecai native partner combat and cleanup",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Native Chapter9 card",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "On independent copies, exercise original transform, attack/counter and Wait with native Lethe/Mordecai under Player2; test Player1 lockout and record their native partner flags.",
+      "Capture before/after one original action. Then clear normally, capture cleanup and fresh native reload; inspect permanent recruitment/roster according to original story. Native partners must not acquire fixed permanent ownership merely because they share force3.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH13-RECRUIT",
+    "title": "Astrid/Gatrie and neutral NPCs",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Chapter13 before original recruitment; preserve Astrid alive",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Capture before original Ike/Astrid recruitment Talk; perform it through the original UI and capture after. In a separate checkpoint, use the original Astrid/Gatrie conversation and capture before/after.",
+      "Record any inability to recruit a Yellow-owned Gatrie, native Green NPC turns and original defeat conditions. Record faction changes at the next Blue phase and cleanup without forcing the event key.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH17-STAGES",
+    "title": "Every Chapter17 part boundary",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Naturally progressed Chapter17, all four parts",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "At each of the three internal part boundaries, capture before original part completion and after the next part starts. Label each part in notes; shared C18 script identity alone cannot identify a part.",
+      "Record turn reset/continuation, fatigue/roster/HP/items, arriving reinforcements and original deployment choices. Capture all four parts separately and follow final clear with a fresh native reload.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH18-SHINON",
+    "title": "Shinon original recruitment and story faction changes",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Chapter18 with required natural recruitment prerequisites",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Record prerequisite units/dialogue history. From a copy, exercise the original Rolf conversation then the original Ike finishing action required by the native event; capture before/after EACH action in separate runs.",
+      "Observe Shinon enemy/away/player transitions and original recruitment dialogue. Record whether a missing prerequisite blocks recruitment normally; do not set recruitment flags. Verify retained identity and progression at cleanup/reload.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH18-REINFORCE",
+    "title": "Tanith original Reinforce skill",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Chapter18 or later with naturally recruited Tanith and Reinforce available",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Capture before invoking original Reinforce. Use it normally and capture after the summoned partners appear; record count, PIDs, faction, skill-use limit and which controller can act.",
+      "Exercise a summoned partner action and original turn/cleanup. Verify summoned units follow native temporary cleanup and do not replace permanent Player2 roster entries.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH19-RAVENS",
+    "title": "Naesala and raven event branches",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Chapter19 native prerequisite actors/dialogue present",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Record original story prerequisites and difficulty. Capture immediately before the original Naesala interaction; execute the original event and capture after the faction/AI change and again after the next native phase.",
+      "Record all affected raven PIDs and force changes, native AI/partner control, original objective and cleanup. Use a separate copy for a no-interaction control branch.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH20-JILL",
+    "title": "Jill enemy-transfer and retention branches",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Chapter20 with original Jill/Shiharam relationship conditions",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Use independent copies for original Talk/interactions that trigger or prevent Jill transfer. Record natural support/story prerequisites; do not assume the same branch for every history.",
+      "Capture before/after each original event and the next Blue phase. Story enemy transfer must take priority over ownership routing. Check recovery/cleanup against the original branch and fresh reload.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH22-REYSON",
+    "title": "Reyson scripted force changes and neutral units",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Chapter22 original event and neutral priests preserved",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Capture before and after the original Reyson script event and at the next player phase. Record his identity, flags, force, availability and original dialogue.",
+      "Observe native neutral NPC behavior and original objective/reward branches without attacking them merely to bypass the event. Capture cleanup and verify expected return/absence.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "CH23-24-ALLIES",
+    "title": "Crimean forces and Geoffrey",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Separate natural Chapter23 and Chapter24 saves",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Capture before/after original Crimean allied arrivals and Geoffrey events in separate cases. Record PIDs, original factions, AI behavior and controller eligibility.",
+      "Exercise one original allied turn and complete the original special objective/defeat checks. Compare expected recruitment/departure across cleanup and native reload, including permanent Player2 roster preservation.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "LATE-SPECIALS",
+    "title": "Chapter27 duel, unique units and Endgame ending",
+    "priority": 1,
+    "readiness": "BLOCKED_NEEDS_SAVE: Natural late-campaign saves including separate duel/Endgame starts",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "before",
+      "after",
+      "cleanup",
+      "reloaded"
+    ],
+    "observations": [
+      "original_event",
+      "documented_prerequisites",
+      "expected_faction_and_roster",
+      "no_unexpected_behavior"
+    ],
+    "steps": [
+      "Treat Chapter27 main map and duel as separate runs; record actor restrictions, allowed actions, defeat/retry branch and transition back to campaign. Do not inject extra characters into the duel.",
+      "At Endgame record forced deployment, special joining units and original boss damage/finishing restrictions. Capture before final original victory action and after ending/credits. Verify no unexpected partner turn, unit loss, hang or skipped story transition.",
+      "Save before each irreversible original action. Preserve screenshots/dialogue notes and all expected story transfers. If a needed state is unavailable, record NOT TESTED instead of redirecting a chapter byte or guessing flags."
+    ],
+    "acceptance": "Event-specific engineering review required. No force0 assumption is deemed safe from successful unrelated actions."
+  },
+  {
+    "id": "NETPLAY-CONTINUITY",
+    "title": "Two-PC original event, clear, native save and resume",
+    "priority": 2,
+    "readiness": "NEEDS_TWO_PCS_AND_IDENTICAL_STABLE_NATIVE_START",
+    "classification": "natural_save_preferred; synthetic_local_events_separate",
+    "captures": [
+      "host_checkpoint",
+      "client_checkpoint"
+    ],
+    "observations": [
+      "two_distinct_pcs",
+      "matching_configuration",
+      "original_event_and_clear",
+      "no_desync",
+      "native_new_session_resume"
+    ],
+    "steps": [
+      "Use stable COOP-P6 + EXP-16, matching Dolphin/game revision and fingerprint on both computers. Boot through Netplay original native save workflow. Do not use synthetic save-state launchers; Netplay prohibits loading states.",
+      "Record host/client machine labels, Dolphin versions, game identity, configuration, port mapping, save-data sync policy and initial native card hashes. Keep originals untouched.",
+      "Both players execute an original recruitment/faction event and clear a chapter. Record host/client screenshots and Dolphin logs at matching stable checkpoints, including turns/forces/EXP and any desync/disconnect messages.",
+      "Have the host save to its disposable native card using the configured persistence policy. Stop both instances; start a NEW Netplay session from that native save. Compare both screens/rosters before input.",
+      "Do not load or require savestates in Netplay. If recording states is disabled, preserve paired screenshots/logs and native card hashes for manual review; this generic snapshot collector is then unavailable. Repeat after each confirmed compatibility-code change."
+    ],
+    "acceptance": "Paired evidence and distinct machines are required. Local loopback alone does not verify two-PC behavior. No synthetic Talk/positioning configuration is accepted."
+  }
+]
