@@ -114,11 +114,39 @@ class CampaignTestPackTests(unittest.TestCase):
                 snap['evidence']['state_sha256'] = sha(dest / 'state.sav')
                 write_json(dest / 'snapshot.json', snap)
                 write_json(dest / 'manifest.json', {'state_sha256': sha(dest / 'state.sav'), 'ini_sha256': sha(dest / 'GFEE01.ini')})
-            self.assertEqual(review(root)['status'], 'INCONCLUSIVE')
+            legacy = review(root)
+            self.assertEqual(legacy['status'], 'INCONCLUSIVE')
+            self.assertEqual(legacy['unverified_snapshot_digests'], ['before', 'after'])
             (root / 'captures/after/state.sav').write_bytes(b'changed evidence')
             result = review(root)
             self.assertEqual(result['status'], 'FAIL')
             self.assertIn('after: artifact hash mismatch', result['failures'])
+
+    def test_edited_decoded_snapshot_cannot_pass_with_unchanged_raw_state_hash(self):
+        from tools.campaign_test_pack import sha, write_json
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_json(root / 'case.json', {'id': 'CH10-PARTNER-WAIT', 'captures': ['before', 'after'],
+                                          'observations': ['original_ui']})
+            write_json(root / 'observations.json', {'observed': {'original_ui': True}})
+            pair = wait_pair()
+            for label, snap in zip(('before', 'after'), pair):
+                dest = root / 'captures' / label
+                dest.mkdir(parents=True)
+                (dest / 'state.sav').write_bytes(label.encode())
+                (dest / 'GFEE01.ini').write_text('exact config')
+                snap['evidence']['state_sha256'] = sha(dest / 'state.sav')
+                write_json(dest / 'snapshot.json', snap)
+                write_json(dest / 'manifest.json', {'state_sha256': sha(dest / 'state.sav'),
+                    'ini_sha256': sha(dest / 'GFEE01.ini'), 'snapshot_sha256': sha(dest / 'snapshot.json')})
+            self.assertEqual(review(root)['status'], 'PASS')
+            # A manual JSON edit must be visible even when raw state/config hashes match.
+            snap = pair[1]
+            snap['game']['battle_stage'] = {'status': 'fabricated'}
+            (root / 'captures/after/snapshot.json').write_text(json.dumps(snap))
+            result = review(root)
+            self.assertEqual(result['status'], 'FAIL')
+            self.assertIn('after: decoded snapshot hash mismatch', result['failures'])
 
     @unittest.skipUnless(Path('work/fixtures/ch10_partner_actions_v1/fixture.json').exists(), 'private fixture absent')
     def test_prepared_partner_seed_is_byte_identical_and_preserves_sources(self):

@@ -189,6 +189,7 @@ def collect(case_dir, label, state, ini, image=DEFAULT_IMAGE):
     write_json(dest / 'snapshot.json', snapshot)
     write_json(dest / 'manifest.json', {'source_state': str(state.resolve()), 'state_sha256': original_state,
                                       'ini_sha256': original_ini, 'gecko_bytes': size,
+                                      'snapshot_sha256': sha(dest / 'snapshot.json'),
                                       'analysis_commit': commit, 'runtime_commit': 'declare separately in observations.json'})
     return {'written': str(dest), 'live_c2_verified': snapshot['evidence']['intended_c2_verified'],
             'gecko_bytes': size, 'status': 'INCONCLUSIVE', 'scope': 'evidence capture only; no gameplay acceptance'}
@@ -250,13 +251,17 @@ def verify_partner_wait(before, after, observed):
 def review(case_dir):
     case = json.loads((case_dir / 'case.json').read_text(encoding='utf-8'))
     observations = json.loads((case_dir / 'observations.json').read_text(encoding='utf-8'))
-    snapshots, missing, failures = {}, [], []
+    snapshots, missing, failures, unverified = {}, [], [], []
     for label in case['captures']:
         dest = case_dir / 'captures' / label
         if not (dest / 'snapshot.json').exists():
             missing.append(label)
             continue
         manifest = json.loads((dest / 'manifest.json').read_text(encoding='utf-8'))
+        if not manifest.get('snapshot_sha256'):
+            unverified.append(label)
+        elif sha(dest / 'snapshot.json') != manifest['snapshot_sha256']:
+            failures.append(label + ': decoded snapshot hash mismatch')
         if sha(dest / 'state.sav') != manifest['state_sha256'] or sha(dest / 'GFEE01.ini') != manifest['ini_sha256']:
             failures.append(label + ': artifact hash mismatch')
         snapshots[label] = json.loads((dest / 'snapshot.json').read_text(encoding='utf-8'))
@@ -269,6 +274,9 @@ def review(case_dir):
     if failures or missing:
         return {'status': 'FAIL' if failures else 'NOT TESTED' if not snapshots else 'INCONCLUSIVE',
                 'failures': failures, 'missing_captures': missing}
+    if unverified:
+        return {'status': 'INCONCLUSIVE', 'failures': [], 'unverified_snapshot_digests': unverified,
+                'scope': 'legacy evidence readable but decoded analysis integrity unverified; recollect into a NEW case directory, never edit the old bundle'}
     if case['id'] == 'CH10-PARTNER-WAIT':
         return verify_partner_wait(snapshots['before'], snapshots['after'], observed)
     labels = case['captures']

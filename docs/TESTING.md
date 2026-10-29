@@ -1,5 +1,17 @@
 # Testing
 
+## CAMP-R — Decoded evidence integrity correction
+
+Afterec74992, offline only. A failing regression demonstrated that manual edits
+to snapshot.json were not checked by the collector's raw-state/config hashes:
+review still returned PASS. Each NEW capture manifest now pins snapshot SHA256;
+review rejects mismatches. A matching digest preserves narrow valid-case PASS.
+Legacy bundles missing this field remain readable but INCONCLUSIVE, never
+silently upgraded or overwritten. A regression checks both behaviors. Existing
+accepted runtime states, artifacts, profiles and ledger claims remain unchanged.
+**138 tests PASS;316 signatures and16 accepted runtime artifacts verified.**
+This corrects evidence tooling, not gameplay or cryptographic authenticity.
+
 ## CAMP-Q — Offline event-state decoder, comparison and coverage scopes
 
 After763e739. Generic current-name-table decoding reuses CAMP-011 signatures;

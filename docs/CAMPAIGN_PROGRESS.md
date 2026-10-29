@@ -2,6 +2,10 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- Offline-only initiative: three milestones, no emulator/UI or request for user input.
+  Evidence collector now pins decoded snapshot hashes; edited analysis fails,
+  legacy analysis remains INCONCLUSIVE. Actual failing-then-passing regression
+  recorded in CAMP-R. This changes no accepted source or production code.
 - Generic current event flags now decode offline for every chapter; malformed/
   unavailable tables and battle-stage identity remain UNKNOWN. Escaped view uses
   pinned flag. Comparator now catches arbitrary future schema changes. Generated
@@ -38,7 +42,7 @@
 - Original Talk local effect **PASS**: Kieran Green->Yellow, original key set;
   Oscar stays Yellow and acts, identities/items/progression preserved. Selected
   actor occupancy checker corrected; original captures/report preserved.
-- 137 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-Q).
+- 138 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-R).
 - Production stable fingerprint8609ae9f49fd879f unchanged. Next: independent
   Ch10 prisoner escape/cleanup and permanent-recruitment analysis. No chapter
   completion, save/reload or Netplay acceptance follows from this synthetic test.
@@ -216,3 +220,14 @@ No new gameplay assembly correction is accepted yet. Existing single-unit Escape
 hand-back passed one synthetic original-event case; other assumptions still need
 reachability/reproduction. No campaign completion,
 next-chapter transition or new two-PC Netplay result is claimed.
+
+## Offline initiative next autonomous priorities
+
+- Trace original UnitEscape/AllUnitEscape native roster classification and
+  deployed-player flag handling for newly talked-to temporary partners; current
+  executable model stops at that boundary and proves no native retention.
+- Extend original-script helper execution to Chapter17 part transitions and
+  Shinon/Jill conditions with strict unknown-native rejection and mutation tests.
+- Prepare a separately budgeted Ch10 direct/carried prisoner exit candidate only
+  after inspecting geometry/occupancy and original cleanup prerequisites. No GUI
+  or user input is required for these engineering tasks.

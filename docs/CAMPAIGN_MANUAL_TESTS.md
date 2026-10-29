@@ -171,7 +171,12 @@ $ini = 'work/YOUR_PRIVATE_PROFILE/User/GameSettings/GFEE01.ini'
 ```
 
 Each capture preserves a copied raw state, exact intended INI, SHA256 manifest
-and decoded snapshot. It validates Gecko capacity before writing and compares
+and decoded snapshot. The manifest also hashes the decoded snapshot; editing
+that JSON after collection fails integrity review. Older bundles without the
+analysis digest remain readable but are INCONCLUSIVE for automatic acceptance;
+recollect original inputs into a NEW case directory instead of editing them.
+These hashes detect changes; they are not independent proof that gameplay ran.
+It validates Gecko capacity before writing and compares
 live C2 bodies to the intended set. It never edits a card, state, INI or ledger.
 Its output is printed on screen; missing captures are listed by name.
 
