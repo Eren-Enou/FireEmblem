@@ -39,6 +39,47 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 | Ch.28: Twisted Tower | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Endgame: Repatriation | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 
+## Evidence classification (scope, not campaign completion)
+
+STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script plus explicit modeled natives. SYNTHETIC RUNTIME VERIFIED includes copied fixtures whose full natural history is unproven. NATURAL GAMEPLAY VERIFIED requires declared naturally progressed evidence. MULTIPLAYER VERIFIED applies only to the named Netplay axis/topology. No aggregate percentage is meaningful while original events, clears and transitions remain open.
+
+| Chapter/stage | Script semantics | Local original event | Natural clear | Two-PC |
+|---|---|---|---|---|
+| Prologue: Mercenaries | UNTESTED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
+| Ch.1: The Battle Begins | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.2: Rescue | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.3: Pirates Aground | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.4: Roadside Battle | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.5: Flight! | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.6: A Brief Diversion | MODEL VERIFIED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
+| Ch.7: Shades of Evil | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.8: Despair and Hope | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.9: Gallia | UNTESTED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
+| Ch.10: Prisoner Release | MODEL VERIFIED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
+| Ch.11: Blood Runs Red | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.12: A Strange Land | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.13: A Guiding Wind | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.14: Training | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.15: The Feral Frontier | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.16: The Atonement | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 1 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 2 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 3 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 4 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.18: Crimea Marches | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.19: Entrusted | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.20: Defending Talrega | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.21: Without a King | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.22: Solo | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.23: The Great Bridge | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.24: Battle Reunion | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.25: Strange Lands | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.26: Clash! | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.27: Moment of Fate | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.27-2: Moment of Fate | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.28: Twisted Tower | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Endgame: Repatriation | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+
 ## Evidence runs
 
 - **cfg-02**: `static`; All 2075 scene CFGs across 43 containers decode; parser checks only; source GFEE01 rev0 DOL hash anchored.
@@ -61,3 +102,24 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 - Ch17 all four stage transitions, reinforcements, turn resets and ownership.
 - Ch18 Shinon and native Reinforce partners; Ch20 Jill branch conditions.
 - Ch27-2 and Endgame special transitions; accepted multiplayer save workflow.
+
+## Explicitly blocked test preparation
+
+These are fixture/prerequisite blockers, not confirmed production gameplay defects. See CAMPAIGN_MANUAL_TESTS.md and the generated manual pack for capture protocols.
+
+- **BLOCKED CH10-ESCAPE**: BLOCKED_NEEDS_REACHABLE_EXIT_FIXTURE; Kieran direct escape and carried-prisoner branches
+- **BLOCKED CH6-CARRIED-ESCAPE**: BLOCKED_NEEDS_CARRIED_UNIT_EXIT_SETUP_OR_NATURAL_SAVE; Carried unit escape, Ike-last and Chapter7 roster
+- **BLOCKED CORE-DEATH**: NEEDS_DISPOSABLE_NEAR_FATAL_COMBAT_SAVE; Yellow permanent death and Ike Game Over
+- **BLOCKED CORE-PROGRESSION**: NEEDS_NATURAL_BATTLE_AND_PROMOTION_SAVE; Yellow combat, healing, promotion and inventory
+- **BLOCKED CH9-PARTNERS**: BLOCKED_NEEDS_SAVE: Native Chapter9 card; Lethe/Mordecai native partner combat and cleanup
+- **BLOCKED CH13-RECRUIT**: BLOCKED_NEEDS_SAVE: Chapter13 before original recruitment; preserve Astrid alive; Astrid/Gatrie and neutral NPCs
+- **BLOCKED CH17-STAGES**: BLOCKED_NEEDS_SAVE: Naturally progressed Chapter17, all four parts; Every Chapter17 part boundary
+- **BLOCKED CH18-SHINON**: BLOCKED_NEEDS_SAVE: Chapter18 with required natural recruitment prerequisites; Shinon original recruitment and story faction changes
+- **BLOCKED CH18-REINFORCE**: BLOCKED_NEEDS_SAVE: Chapter18 or later with naturally recruited Tanith and Reinforce available; Tanith original Reinforce skill
+- **BLOCKED CH19-RAVENS**: BLOCKED_NEEDS_SAVE: Chapter19 native prerequisite actors/dialogue present; Naesala and raven event branches
+- **BLOCKED CH20-JILL**: BLOCKED_NEEDS_SAVE: Chapter20 with original Jill/Shiharam relationship conditions; Jill enemy-transfer and retention branches
+- **BLOCKED CH22-REYSON**: BLOCKED_NEEDS_SAVE: Chapter22 original event and neutral priests preserved; Reyson scripted force changes and neutral units
+- **BLOCKED CH23-24-ALLIES**: BLOCKED_NEEDS_SAVE: Separate natural Chapter23 and Chapter24 saves; Crimean forces and Geoffrey
+- **BLOCKED LATE-SPECIALS**: BLOCKED_NEEDS_SAVE: Natural late-campaign saves including separate duel/Endgame starts; Chapter27 duel, unique units and Endgame ending
+- **BLOCKED NETPLAY-CONTINUITY**: NEEDS_TWO_PCS_AND_IDENTICAL_STABLE_NATIVE_START; Two-PC original event, clear, native save and resume
+- **FAILED diagnostic ch10-restart-redirect-rejected-10**: rejected fixture/test; do not infer a campaign defect. REJECTED fixture route source7->target11 from copied native Chapter6 restart. RAM chapter11 but original Chapter6 title/map/Emil loaded; all three Chapter10 prisoners absent. Stable C2 bodies matched. state_expect prisoner presence FAIL. No Chapter10 event tested. Original/copied card SHA1 unchanged; private Dolphin stopped. Chapter byte is insufficient to identify a loaded scenario.

@@ -61,6 +61,32 @@ def check_artifacts(ledger, root):
     return len(checked)
 
 
+def evidence_level(axis, claim, run=None):
+    """Readable scope labels derived from accepted evidence, never a score."""
+    if claim['status'] != 'PASS':
+        return {'FAIL': 'FAILED', 'NOT TESTED': 'UNTESTED',
+                'INCONCLUSIVE': 'UNTESTED (inconclusive)'}.get(claim['status'], 'UNTESTED')
+    if axis == 'static_cfg': return 'STATICALLY VERIFIED'
+    if axis == 'script_model': return 'MODEL VERIFIED'
+    if axis in ('netplay_local', 'netplay_two_pc'): return 'MULTIPLAYER VERIFIED'
+    if run and run.get('fixture_class') == 'naturally_progressed': return 'NATURAL GAMEPLAY VERIFIED'
+    return 'SYNTHETIC RUNTIME VERIFIED'
+
+
+def coverage(ledger):
+    validate(ledger)
+    rows = []
+    for chapter in ledger['chapters']:
+        entries = {}
+        for axis, claim in chapter['checks'].items():
+            run = ledger['runs'].get(claim.get('evidence'))
+            entries[axis] = {'level': evidence_level(axis, claim, run),
+                             'status': claim['status'], 'evidence': claim.get('evidence'),
+                             'limitation': claim.get('note', run.get('description', '') if run else '')}
+        rows.append({'key': chapter['key'], 'title': chapter['title'], 'axes': entries})
+    return rows
+
+
 def render(ledger):
     validate(ledger)
     out=["# Campaign verification dashboard", "",
@@ -71,11 +97,35 @@ def render(ledger):
          "|---|---|---|---|---|---|---|---|---|---|"]
     for row in ledger["chapters"]:
         out.append("| "+row["title"]+" | "+" | ".join(row["checks"][a]["status"] for a in AXES)+" |")
+    out += ['', '## Evidence classification (scope, not campaign completion)', '',
+            'STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script plus explicit modeled natives. '
+            'SYNTHETIC RUNTIME VERIFIED includes copied fixtures whose full natural history is unproven. '
+            'NATURAL GAMEPLAY VERIFIED requires declared naturally progressed evidence. '
+            'MULTIPLAYER VERIFIED applies only to the named Netplay axis/topology. '
+            'No aggregate percentage is meaningful while original events, clears and transitions remain open.', '',
+            '| Chapter/stage | Script semantics | Local original event | Natural clear | Two-PC |',
+            '|---|---|---|---|---|']
+    for row in coverage(ledger):
+        axes = row['axes']
+        out.append('| ' + row['title'] + ' | ' + ' | '.join(axes[a]['level'] for a in
+                   ('script_model', 'event_runtime', 'chapter_clear', 'netplay_two_pc')) + ' |')
     out += ["", "## Evidence runs", ""]
     for key,run in ledger["runs"].items():
         out.append(f"- **{key}**: `{run['kind']}`; {run.get('description','')}")
     out += ["", "## Highest-priority open cases", ""]
     out += ["- "+case for case in ledger["next_cases"]]
+    out += ['', '## Explicitly blocked test preparation', '',
+            'These are fixture/prerequisite blockers, not confirmed production gameplay defects. '
+            'See CAMPAIGN_MANUAL_TESTS.md and the generated manual pack for capture protocols.', '']
+    catalog = Path(__file__).resolve().parents[1] / 'campaign/manual_cases.json'
+    if catalog.exists():
+        for case in json.loads(catalog.read_text(encoding='utf-8')):
+            readiness = case['readiness']
+            if readiness.startswith(('BLOCKED', 'NEEDS_')):
+                out.append(f"- **BLOCKED {case['id']}**: {readiness}; {case['title']}")
+    for key, run in ledger['runs'].items():
+        if run.get('status') == 'FAIL':
+            out.append(f"- **FAILED diagnostic {key}**: rejected fixture/test; do not infer a campaign defect. {run.get('description', '')}")
     return "\n".join(out)+"\n"
 
 
@@ -85,8 +135,12 @@ if __name__=="__main__":
     p.add_argument("--out",type=Path,default=Path("docs/VERIFICATION.md"))
     p.add_argument("--check-artifacts",action="store_true",help="verify local runtime PASS artifact bytes")
     p.add_argument("--artifact-root",type=Path,default=Path(__file__).resolve().parents[1])
+    p.add_argument('--coverage-json', type=Path, help='write machine-readable derived evidence classifications')
     a=p.parse_args();ledger=validate(json.loads(a.ledger.read_text()))
     if a.check_artifacts:
         print(f"verified {check_artifacts(ledger,a.artifact_root)} local runtime evidence artifacts")
     a.out.write_text(render(ledger),encoding="utf-8")
+    if a.coverage_json:
+        a.coverage_json.parent.mkdir(parents=True, exist_ok=True)
+        a.coverage_json.write_text(json.dumps(coverage(ledger), indent=2), encoding='utf-8')
     print(f"validated {len(ledger['chapters'])} chapter/stage records")

@@ -2,6 +2,7 @@ import copy
 import hashlib
 import tempfile
 import unittest
+from tools.campaign_verify import evidence_level
 from pathlib import Path
 from tools.campaign_verify import AXES,validate
 
@@ -87,6 +88,30 @@ class EvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"provenance"):validate(data)
         data["runs"]["run"].update(commit="abc",fingerprint="123",dolphin="2609a",fixture_class="synthetic",artifacts=["sha256"])
         with self.assertRaisesRegex(ValueError,"synthetic"):validate(data)
+
+
+class EvidenceClassificationTests(unittest.TestCase):
+    def test_scope_labels_do_not_promote_models_or_incomplete_history_to_natural(self):
+        passed = {'status': 'PASS'}
+        self.assertEqual(evidence_level('static_cfg', passed), 'STATICALLY VERIFIED')
+        self.assertEqual(evidence_level('script_model', passed), 'MODEL VERIFIED')
+        self.assertEqual(evidence_level('event_runtime', passed, {'fixture_class': 'copied_history_unknown'}),
+                         'SYNTHETIC RUNTIME VERIFIED')
+        self.assertEqual(evidence_level('event_runtime', passed, {'fixture_class': 'naturally_progressed'}),
+                         'NATURAL GAMEPLAY VERIFIED')
+        self.assertEqual(evidence_level('netplay_two_pc', passed), 'MULTIPLAYER VERIFIED')
+        self.assertEqual(evidence_level('event_runtime', {'status': 'FAIL'}), 'FAILED')
+
+    def test_machine_readable_coverage_retains_axis_evidence_and_limitation(self):
+        from tools.campaign_verify import coverage
+        data = ledger()
+        data['chapters'][0]['title'] = 'Test chapter'
+        data['chapters'][0]['checks']['static_cfg'] = {'status': 'PASS', 'evidence': 'static', 'note': 'parser only'}
+        row = coverage(data)[0]['axes']
+        self.assertEqual(row['static_cfg']['level'], 'STATICALLY VERIFIED')
+        self.assertEqual(row['static_cfg']['evidence'], 'static')
+        self.assertEqual(row['static_cfg']['limitation'], 'parser only')
+        self.assertEqual(row['chapter_clear']['level'], 'UNTESTED')
 
 
 if __name__=="__main__":unittest.main()

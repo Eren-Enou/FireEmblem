@@ -1,5 +1,18 @@
 # Testing
 
+## CAMP-Q — Offline event-state decoder, comparison and coverage scopes
+
+After763e739. Generic current-name-table decoding reuses CAMP-011 signatures;
+Ch6 capture has36 names and Ch10 has64. Accepted Talk captures retain identical
+local and generic values. Malformed pointers/strings/duplicates produce UNKNOWN,
+not false. Original escaped flag is exposed; battle stage remains UNKNOWN.
+Comparator regression catches arbitrary new/missing schema fields. Classification
+regressions prevent models or copied history from appearing natural. Dashboard
+reports blocked prerequisites and rejected diagnostics separately. **137 tests
+PASS;316 signatures and16 accepted runtime artifact hashes verified.** No emulator
+launch/input, source artifact change, new runtime claim or gameplay patch.
+
+
 ## CAMP-P — Pinned original prisoner event regression model
 
 Offline only, after81c91b3; no Dolphin launch/input or artifact edits. Nine new

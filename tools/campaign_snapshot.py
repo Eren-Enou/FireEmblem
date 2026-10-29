@@ -16,6 +16,7 @@ from tools.inspect_state import STATE, UNITS, load_mem1
 from tools.netplay_package import fingerprint, enabled_codes
 from tools.verify_game import DEFAULT_IMAGE
 from tools.loaded_scripts import inspect as loaded_scripts
+from tools.event_state import inspect as event_state
 
 
 def configuration_flags(names):
@@ -72,6 +73,7 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
                       "rescue_link": mem.u32(addr + 0x194),
                       "action_state_byte": mem.u8(addr + 0x1A5),  # CAMP-007 original Talk gate
                       "flags": flags, "owned": bool(flags & 0x20000000),
+                      "escaped": bool(flags & 0x4000),  # CAMP-001/F-43 original escape flag
                       "owner": 2 if flags & 0x60000000 == 0x60000000 else 1 if flags & 0x20000000 else None,
                       "death_record": bool(flags & 0x8000), "death_chapter": mem.u8(addr + 0x234)})
     text = ini.read_text()
@@ -92,6 +94,9 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
              "intended_c2_verified":bool(observations) and all(o["status"]=="intended C2 body matched" for o in observations),
              "warning": "INI is intended configuration; old savestates may restore different active patches"},
             "game": {"chapter": mem.u8(STATE + 0x10), "phase": mem.u8(STATE + 0x11),
+                     "event_flags": event_state(mem),
+                     "battle_stage": {"status": "UNKNOWN",
+                         "reason": "chapter/CMB identify container, not a decoded battle-stage discriminator"},
                      "event_scripts": loaded_scripts(mem,mem.u8(STATE + 0x10)),
                      **({"talk_fixture":local_talk} if local_talk is not None else {}),
                      "turn": mem.u16(STATE + 0x12), "control": list(mem.read(STATE + 0x14, 4)), "units": units}}
@@ -103,7 +108,7 @@ def differences(a: dict, b: dict) -> list[str]:
         if a["evidence"][key] != b["evidence"][key]:
             out.append(f"configuration mismatch: {key}")
     if a["game"] != b["game"]:
-        for key in ("chapter", "phase", "turn", "control", "event_scripts", "talk_fixture"):
+        for key in sorted((a['game'].keys() | b['game'].keys()) - {'units'}):
             if key not in a["game"] or key not in b["game"]:
                 if key in a["game"] or key in b["game"]:
                     out.append(f"{key}: missing from one snapshot")

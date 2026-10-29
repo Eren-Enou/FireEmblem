@@ -27,10 +27,11 @@ the failed frame-polled AR restart route. Captures identify C11.cmb and all live
 stable+loader hooks. Original P2 Oscar Wait passed; inherited weak army limits
 normal prison traversal. This does not validate another chapter/route/history.
 
-For the next manual original Talk test use **CH10_TALK_FIXTURE.md**. The separate
+Original Talk local effect is now accepted from human captures (CAMP-N).
+For preserved setup lineage use **CH10_TALK_FIXTURE.md**. The separate
 inside-cell positioning profile/seed is prepared under
 work/fixtures/ch10_oscar_kieran_v1,3240 bytes. Source start/profile/card preserved.
-Both synthetic setup execution and Oscar/Kieran Talk remain NOT TESTED. No tool
+Local Talk state effect passed; permanent recruitment/escape/cleanup remain unverified. No tool
 launches Dolphin or sends input; the user performs and captures the interaction.
 
 For Ch6, prefer the accepted native restart fixture from CAMP-F instead of the
@@ -197,3 +198,18 @@ This fixture and its earlier Ch9 GCI descend from a Prologue chapter redirect.
 They can test these local partner interactions; they cannot establish natural
 recruitment/story history or certify a chapter clear/transition. Full gauges over
 several phases, combat EXP and cleanup still require additional cases.
+
+## Offline-only event regression and state inspection
+
+No emulator is required: `python -B -m unittest tests.test_campaign_event_model`
+executes pinned original C11/startup/C07 script branches with explicit native
+models. `python -B -m tools.campaign_event_model --out work/NEW.json` emits the
+24-case summary; the regression suite covers120 cleanup-prefix combinations.
+The original native AllUnitEscape boundary is never called. No model result
+certifies permanent recruitment, native save/load or natural campaign completion.
+
+campaign_snapshot now exposes the current registered named flags for any chapter,
+known escaped bits, and explicit UNKNOWN battle-stage identity. A missing name
+is unknown, not false; other/global banks remain undecoded. Accepted source
+states are read-only. `tools.campaign_verify --coverage-json work/coverage.json`
+exports scope/evidence/limitations separately from the unchanged acceptance axes.

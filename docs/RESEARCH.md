@@ -15,6 +15,35 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-014 — generic offline event flags and explicit unknown stages
+
+**READ-ONLY captured-state analysis; no new native address/meaning inferred.**
+The CAMP-011 pinned current 96-name table/parallel bitset decoder is now reusable
+as tools.event_state. Snapshots include event_flags with completeness, known
+values and explicit unknown semantics for absent names/other global banks.
+Malformed pointer, unterminated name, invalid Shift-JIS or conflicting duplicate
+produces values=null and an error, never a fabricated all-clear table.
+
+Existing Ch6 native-start capture decodes36 registered names; accepted Ch10
+post-Talk capture decodes64. Its generic map exactly equals the existing local
+Talk map and preserves the original conversation clear->set comparison. Source
+files remain unchanged. Unit escaped is an explicit view of already-pinned
+flag0x4000 (CAMP-001/F-43); it adds no new offset. Battle-stage identity remains
+UNKNOWN because chapter byte and loaded CMB alone cannot distinguish Ch17 parts.
+
+Fixed comparator correctness: game-field iteration now covers the union of
+both schemas. Previously a newly added field could differ while differences()
+returned an empty list because only a hard-coded list was checked. Regression
+injects an otherwise unknown future field and requires a missing-field finding.
+Old snapshot inputs remain supported; missing fields are reported, not ignored.
+
+The generated verification dashboard now derives STATICALLY VERIFIED, MODEL
+VERIFIED, SYNTHETIC RUNTIME VERIFIED, NATURAL GAMEPLAY VERIFIED, MULTIPLAYER
+VERIFIED, UNTESTED and FAILED scope labels from validated axis evidence. Blocked
+manual cases and rejected fixture diagnostics are shown separately from gameplay
+defects. --coverage-json emits axis/evidence/limitation records without promoting
+any result. Natural history is not inferred from a native GCI or copied state.
+
 ### CAMP-013 — original prisoner cleanup predicates executed offline
 
 **MODEL VERIFIED original bytecode; no new runtime evidence.** New

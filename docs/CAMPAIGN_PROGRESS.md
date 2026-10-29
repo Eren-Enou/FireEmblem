@@ -2,6 +2,11 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- Generic current event flags now decode offline for every chapter; malformed/
+  unavailable tables and battle-stage identity remain UNKNOWN. Escaped view uses
+  pinned flag. Comparator now catches arbitrary future schema changes. Generated
+  verification distinguishes model/synthetic/natural/multiplayer evidence and
+  lists blocked cases/rejected diagnostics without promoting gameplay.
 - Offline original-event framework added (CAMP-P/CAMP-013): pinned C11/startup/
   C07 bytecode, real startup helpers, Talk identity/key/reversal, prisoner direct/
   carried escape and120 cleanup-prefix cases. Original existence accepts Yellow;
@@ -33,7 +38,7 @@
 - Original Talk local effect **PASS**: Kieran Green->Yellow, original key set;
   Oscar stays Yellow and acts, identities/items/progression preserved. Selected
   actor occupancy checker corrected; original captures/report preserved.
-- 131 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-P).
+- 137 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-Q).
 - Production stable fingerprint8609ae9f49fd879f unchanged. Next: independent
   Ch10 prisoner escape/cleanup and permanent-recruitment analysis. No chapter
   completion, save/reload or Netplay acceptance follows from this synthetic test.

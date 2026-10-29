@@ -1,8 +1,8 @@
 """Read-only local Talk fixture fields (CAMP-011); never invokes an event."""
 from tools.inspect_state import STATE,UNITS
+from tools.event_state import FLAG_TABLE, named_flags as flags
 
 MAP=0x802CA518
-FLAG_TABLE=STATE+0xB4
 DOOR_KEY="扉チャップケヴィン"
 CONVERSATION_KEY="オスカーケビン"
 MAP_OBJECT_ROOT=0x803672AC
@@ -27,24 +27,6 @@ def door(mem):
             return {"index":i,"bounds":bounds,"descriptor_mask":mask,"state_byte":state,
                     "open_worker_marked":bool(state&2)}
     return None
-
-
-def flags(mem):
-    """Original 96-name table + parallel bitset, from native get's implementation."""
-    result={}
-    for i in range(96):
-        pointer=mem.u32(FLAG_TABLE+4*i)
-        if not pointer:continue
-        if not 0x80000000 <= pointer < 0x81800000:
-            raise ValueError("event flag name pointer outside MEM1")
-        raw=mem.read(pointer,min(256,0x81800000-pointer))
-        if b"\0" not in raw:raise ValueError("unterminated event flag name")
-        name=raw.split(b"\0",1)[0].decode("shift_jis")
-        value=bool(mem.u8(FLAG_TABLE+0x300+i//8)&(1<<(i%8)))
-        if name in result and result[name]!=value:
-            raise ValueError("ambiguous duplicate event flag name")
-        result[name]=value
-    return result
 
 
 def cell(mem,x,y):
