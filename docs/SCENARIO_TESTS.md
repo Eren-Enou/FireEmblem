@@ -4,7 +4,9 @@ Run PowerShell in `C:\Users\Aaron\CoderViber2\FireEmblemCampaignAudit`.
 Codex has not launched Dolphin or performed these interactions. The owner has
 now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y) and
 **CH10-PRISONER-ESCAPE** (CAMP-Z): local original P2 Wait/P1 lockout and local
-original Escape only. Ch6 completion and native resume remain runtime unverified.
+original Escape only. Ch6's synthetic original Ike-last sequence and next-Chapter7
+preparation roster are now observed (CAMP-AA); fresh native reload remains
+INCONCLUSIVE and the separate Ch10 native-resume candidate remains unverified.
 The earlier Oscar Talk and Oscar Escape evidence remains separate and accepted.
 
 ```powershell

@@ -1,8 +1,47 @@
 # Testing
 
-Latest owner-operated result: **CAMP-Z**, original Kieran Escape local PASS;
-CAMP-Y records Kieran Wait/P1 lockout. Ch6 completion/native resume remain unverified. Single-command launch/capture
+Latest owner-operated result: **CAMP-AA**, synthetic Ch6 Ike-last completion and
+Ch7 preparation roster retention observed; native reload remains INCONCLUSIVE.
+CAMP-Z records original Kieran Escape, CAMP-Y Wait/P1 lockout. Single-command launch/capture
 instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
+
+## CAMP-AA — Synthetic Ch6 Ike-last and Ch7 preparations (2026-10-28)
+
+**Local original Escape sequence/completion/next-roster evidence accepted;
+native reload INCONCLUSIVE.** Human supplied before_queue.sav, before.sav,
+after.sav and next_prep.sav and declared the original Blue escapes, Ike-last,
+completion and Oscar present in the next chapter. Screenshot shows the five
+survivors in Pick Units, including Oscar lv6/EXP28/HP28. Codex collected the
+three previously uncollected files, preserved the existing after bundle, and
+independently redecoded all four bundles with exact stored-snapshot matches.
+No emulator launch or input by Codex.
+
+- All four captures match original loaded C07/C08 script chains and all intended
+  live C2 bodies, fingerprint e60e83a81d994e3b,3168/3248 Gecko bytes.
+- Before_queue: C07 turn2 Blue; Oscar already force5/escaped from the earlier
+  genuine Yellow Escape; Titania is at13,26. Before final Escape: Titania/Rhys/
+  Soren/Oscar are force5/escaped, Ike is living unacted Blue at13,26.
+- After: all five living survivors, including Ike, are force5/escaped. Next_prep:
+  internal chapter8 (original Chapter7), loaded C08, turn1, all five retained as
+  Blue in preparations. This does not yet demonstrate Oscar's P2 battle control.
+- Oscar stays slot2/PID_OSCAR/JID_SOCIALKNIGHT_L, HP28/lv6/EXP28, same complete
+  64-byte nonempty inventory across all captures. All five named survivors retain
+  unique PID/slot identity, HP/lv/EXP. Rhys has an additional item in next_prep;
+  that separate story/item change is not classified as an inventory corruption
+  or claimed as an audited grant here. No exact whole-roster item-equality claim.
+- Raw SHA256s: before_queue3220c7610b3913a819aafd31e58e260d7d66bfaaeb7a22436687e9b4e630bae9;
+  beforea9d91815ce30959763ac4eb7f23db7d4eaa8a286d05af05905a7bb5f8ff5ab64;
+  after8c6f855a5f80f2c595400a7ae57799ed3914dad8f189f1ad5ee8b4914616a1e0;
+  next_prepd01eb4effd9660e312f88828ea766ea646fac7b098988adddb5c7a5ea422e453.
+  Immutable bundles: work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/.
+
+Native load was declared true, but no reloaded.sav exists and the current private
+GCI remains byte-identical to the pre-test b415a97e... baseline. Clarification
+requested: direct story continuation versus fresh native Load without a state.
+No native save/reload acceptance, natural campaign-clear/transition certification,
+carried-unit escape or Netplay result. The general review correctly remains
+INCONCLUSIVE with missing_captures=[reloaded]; the four collected checkpoints
+nevertheless supply the bounded synthetic runtime evidence described above.
 
 ## CAMP-Z — Human original Yellow Kieran Escape (2026-10-28)
 

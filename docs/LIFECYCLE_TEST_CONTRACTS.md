@@ -1,6 +1,11 @@
 # Native lifecycle and stage verification contracts
 
-Offline checkpoint only. No new Dolphin execution is claimed. The existing
+Historical offline contracts; newer scoped runtime results are in TESTING.md
+CAMP-Y/Z/AA and SCENARIO_TESTS.md. In particular, local original Kieran Escape
+and synthetic Ch6 Ike-last/Ch7 roster retention have now been observed; native
+reload, natural campaign history and carried branches remain separate.
+
+Original checkpoint context: no new Dolphin execution was claimed. The existing
 Oscar/Kieran Talk captures remain accepted; escape, cleanup, recruitment and
 save/reload are separate questions. No new exit fixture was generated because
 rescue behavior, geometry and combined Gecko allocation have not been established.

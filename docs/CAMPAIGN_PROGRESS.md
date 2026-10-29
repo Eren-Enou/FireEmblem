@@ -2,6 +2,12 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-AA: human synthetic Ch6 escape queue/Ike-last reaches original Ch7 prep
+  with all five survivors. Oscar PID/slot/class/HP/lv/EXP/nonempty items preserved;
+  original C07->C08 and live setup/production hooks verified in raw captures.
+  Missing reloaded.sav; private GCI unchanged. Native reload declaration awaits
+  clarification and separate evidence. No natural-campaign or Netplay acceptance.
+
 - CAMP-Z human local PASS: Yellow Kieran uses original P2 Escape with expected
   dialogue/animations and reaches force5 escaped roster; PID/class/HP/lv/EXP and
   empty inventory retained, Oscar/Ike unchanged. Both raw states independently
