@@ -1,5 +1,54 @@
 # Testing
 
+## CAMP-M — Inside-cell Chapter10 Talk fixture prepared; runtime pending
+
+2026-10-28. NEW work/fixtures/ch10_oscar_kieran_v1, separate private User/card,
+copied source state and append-only Gecko seed. Source is CAMP-L's user-validated
+start, never the acted after-Wait state. All31 source-profile files hash unchanged.
+No Dolphin launch or input performed. Production definitions/generators unchanged.
+
+Original map, actual closed door object, grid edge/occupancy, original Talk
+matcher/menu/action gates and clear named flags inspected first (RESEARCH
+CAMP-011). Move only Oscar by original UnitSetPos from(2,19) to empty(19,19),
+inside the existing cell next to unchanged Green Kieran(20,19). Door(19,14),
+Kieran state/faction, conversation and completion keys are untouched. Hook
+guards turn1/humanYellow, source positions/factions, living/no-rescue, Oscar
+unacted, clear conversation key and vacant destination. Native calls are
+restricted to get flag, PID lookup, empty-position query and UnitSetPos.
+
+**3240/3248 Gecko bytes**, fingerprintc11089d39a0fe037. Seed SHA256
+19313403d28362cab55c1bdbb0e0a275570969063be31ceb215043539aee9005.
+Regression proves all non-Gecko-tail decompressed bytes match the source; live
+execution of the appended hook remains NOT TESTED. No flags/roster RAM edits.
+
+User instructions: CH10_TALK_FIXTURE.md and the prepared directory's README.md /
+Launch.ps1. check-setup verifies local fields after manual setup. compare reports
+Oscar/Kieran factions/positions/flags/identities plus preserved HP/EXP/items,
+unchanged door and original key clear->set. A local Talk PASS requires explicit
+human observation; matching state fields without it remain INCONCLUSIVE.
+
+**112 tests PASS; 313/313 signatures match; 13 accepted runtime artifacts
+hash-verified.** Synthetic verifier tests do not establish actual Talk availability.
+**NOT TESTED:** setup execution, original Talk, permanent recruitment, escape,
+cleanup, chapter transition/save/reload and Netplay in this new configuration.
+
+## CAMP-L — Human Chapter10 synthetic fixture and Yellow Wait
+
+2026-10-28 user physical testing report: validated Chapter10 start restored;
+original Blue->Yellow transition, P2 Oscar Wait and P1 command lockout PASS,
+without unusual behavior. Prison traversal blocked by weak inherited army;
+this is a fixture limitation, not a demonstrated co-op defect.
+
+Original script-selection hook (CAMP-010) configuration COOP-P6 + EXP-16 +
+FIXTURE-LOADER,2608 bytes, fingerprint5b5f1dfe00ac8959. Both captures match all
+intended live C2 bodies and C11.cmb. State fields corroborate chapter11/turn1,
+phase0->3/control3=1; Oscar slot2/force3 at(2,19), flags0x400->0x401, same
+HP28/lv6/EXP28 and all64 inventory-slot bytes. P1 lockout is human-reported,
+not proved by these RAM fields. Source start SHA256c6e2ae86782fc95df14fdba33109629033bbb7e390481b7ee5c25209cf930b8e;
+after-Wait f9940810bb053ba6f9b27a035d041cc86a32c63cd37970e3f6cbb80f147a4382.
+Evidence run ch10-loader-manual-wait-12 stores artifact hashes/config/card.
+Talk, prisoners' permanent recruitment and chapter progression remain NOT TESTED.
+
 ## CAMP-K — Loaded event-script identity cross-check
 
 2026-10-28 after72d11a9; read-only analysis of existing captured states, no new

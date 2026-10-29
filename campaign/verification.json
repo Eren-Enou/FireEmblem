@@ -365,12 +365,14 @@
           "status": "NOT TESTED"
         },
         "fixture": {
-          "status": "INCONCLUSIVE",
-          "evidence": "ch10-restart-redirect-rejected-10",
-          "note": "Restart source7->11 candidate rejected; no accepted Chapter10 fixture. Not a co-op gameplay failure."
+          "status": "PASS",
+          "evidence": "ch10-loader-manual-wait-12",
+          "note": "Human-validated synthetic loader start; inherited weak roster, not natural progression"
         },
         "event_runtime": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch10-loader-manual-wait-12",
+          "note": "Original P2 Oscar Wait only; Talk NOT TESTED"
         },
         "chapter_clear": {
           "status": "NOT TESTED"
@@ -1376,6 +1378,41 @@
         }
       ],
       "description": "REJECTED fixture route source7->target11 from copied native Chapter6 restart. RAM chapter11 but original Chapter6 title/map/Emil loaded; all three Chapter10 prisoners absent. Stable C2 bodies matched. state_expect prisoner presence FAIL. No Chapter10 event tested. Original/copied card SHA1 unchanged; private Dolphin stopped. Chapter byte is insufficient to identify a loaded scenario."
+    },
+    "ch10-loader-manual-wait-12": {
+      "kind": "dolphin",
+      "commit": "32e6e5c",
+      "worktree_dirty": true,
+      "fingerprint": "5b5f1dfe00ac8959",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_original_script_loader_from_copied_ch6_card",
+      "chapters": [
+        "11"
+      ],
+      "axes": [
+        "fixture",
+        "event_runtime"
+      ],
+      "reported_by": "human user",
+      "artifacts": [
+        {
+          "path": "work/bootstrap/ch10_loader_hook/start.s02.sav",
+          "sha256": "c6e2ae86782fc95df14fdba33109629033bbb7e390481b7ee5c25209cf930b8e"
+        },
+        {
+          "path": "work/bootstrap/ch10_loader_hook/after_oscar_wait.s02.sav",
+          "sha256": "f9940810bb053ba6f9b27a035d041cc86a32c63cd37970e3f6cbb80f147a4382"
+        },
+        {
+          "path": "work/bootstrap/ch10_loader_hook/User/GameSettings/GFEE01.ini",
+          "sha256": "7a8b3b023b3030c86520b10a35b965a327fb247682a502c4a2e93da372835a68"
+        },
+        {
+          "path": "work/bootstrap/ch10_loader_hook/User/GC/USA/Card A/native_ch6_card_start.gci",
+          "sha256": "b415a97e9645e83f60bdc7380a2e86dd4686077549c6ce1863e30de6ad51de12"
+        }
+      ],
+      "description": "Human restored and validated Chapter10 synthetic loader fixture; reported original Blue->Yellow, P2 Oscar Wait and P1 command lockout PASS without unusual behavior. Captures corroborate loaded C11.cmb, all live stable+loader C2 bodies, chapter11/turn1/phase0->3/control3=1, Oscar force3/slot2 at2,19, flags400->401 and unchanged HP28/lv6/EXP28/inventory. P1 lockout is human-reported, not established by these RAM fields. No prison traversal, original Talk, permanent recruitment, escape, clear/transition/save or Netplay claim. This configuration is separate from the new inside-cell Talk candidate."
     }
   },
   "next_cases": [

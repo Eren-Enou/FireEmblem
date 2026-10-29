@@ -21,6 +21,18 @@ start instead. No undocumented GCI checksum/flag rewriting is implemented.
 
 ## Later-chapter bootstrap
 
+The original script-selection `--redirect-kind loader-hook` route source7->11
+is now accepted as a **synthetic** Chapter10 start (CAMP-L, user testing), unlike
+the failed frame-polled AR restart route. Captures identify C11.cmb and all live
+stable+loader hooks. Original P2 Oscar Wait passed; inherited weak army limits
+normal prison traversal. This does not validate another chapter/route/history.
+
+For the next manual original Talk test use **CH10_TALK_FIXTURE.md**. The separate
+inside-cell positioning profile/seed is prepared under
+work/fixtures/ch10_oscar_kieran_v1,3240 bytes. Source start/profile/card preserved.
+Both synthetic setup execution and Oscar/Kieran Talk remain NOT TESTED. No tool
+launches Dolphin or sends input; the user performs and captures the interaction.
+
 For Ch6, prefer the accepted native restart fixture from CAMP-F instead of the
 synthetic redirect. Fresh boot the private NET02 card copy, select Restart Chapter
 > Ch.6, use the normal Start skips for opening dialogue, then Fight > Begin now Yes.

@@ -69,6 +69,8 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
                       "exp": mem.u8(addr + 0x19B), "gauge": mem.u8(addr + 0x19C),
                       "xy": [mem.u8(addr + 0x19E), mem.u8(addr + 0x19F)],
                       "inventory_slots_hex": mem.read(addr + 0x1CC, 64).hex(),  # CAMP-005, eight original 8-byte slots
+                      "rescue_link": mem.u32(addr + 0x194),
+                      "action_state_byte": mem.u8(addr + 0x1A5),  # CAMP-007 original Talk gate
                       "flags": flags, "owned": bool(flags & 0x20000000),
                       "owner": 2 if flags & 0x60000000 == 0x60000000 else 1 if flags & 0x20000000 else None,
                       "death_record": bool(flags & 0x8000), "death_chapter": mem.u8(addr + 0x234)})
@@ -78,6 +80,11 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
     from tools.fe9.ppc import Dol
     with DiscReader(image) as disc:
         observations=observe_hooks(mem,Dol(disc.read_dol()),text)
+    from tools.talk_evidence import capture as talk_fields
+    local_talk=None
+    if mem.u8(STATE+0x10)==11:
+        try:local_talk=talk_fields(mem)
+        except ValueError as exc:local_talk={"inconclusive":str(exc),"scope":"Talk fixture fields unavailable"}
     return {"schema": 1, "evidence": {"commit": commit, "state_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
              "dolphin": info.dolphin_version, "codes_fingerprint": fingerprint(text), "codes": names,
              **configuration_flags(names),
@@ -86,6 +93,7 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
              "warning": "INI is intended configuration; old savestates may restore different active patches"},
             "game": {"chapter": mem.u8(STATE + 0x10), "phase": mem.u8(STATE + 0x11),
                      "event_scripts": loaded_scripts(mem,mem.u8(STATE + 0x10)),
+                     **({"talk_fixture":local_talk} if local_talk is not None else {}),
                      "turn": mem.u16(STATE + 0x12), "control": list(mem.read(STATE + 0x14, 4)), "units": units}}
 
 
@@ -95,7 +103,7 @@ def differences(a: dict, b: dict) -> list[str]:
         if a["evidence"][key] != b["evidence"][key]:
             out.append(f"configuration mismatch: {key}")
     if a["game"] != b["game"]:
-        for key in ("chapter", "phase", "turn", "control", "event_scripts"):
+        for key in ("chapter", "phase", "turn", "control", "event_scripts", "talk_fixture"):
             if key not in a["game"] or key not in b["game"]:
                 if key in a["game"] or key in b["game"]:
                     out.append(f"{key}: missing from one snapshot")

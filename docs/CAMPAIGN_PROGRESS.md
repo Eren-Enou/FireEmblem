@@ -1,5 +1,24 @@
 # Autonomous campaign engineering progress
 
+## Current manual-testing boundary and latest checkpoint
+
+- User owns Dolphin input. Prepare/analyze isolated fixtures and continue static
+  campaign work; **do not launch or drive Dolphin** without a new user request.
+- User validated the original Chapter10 loader route, Blue->Yellow, P2 Oscar
+  Wait and P1 lockout (CAMP-L). Captures corroborate live hooks/C11 and Oscar's
+  acted bit; no Talk or natural-campaign acceptance follows from that test.
+- Separate inside-cell Talk fixture prepared at
+  work/fixtures/ch10_oscar_kieran_v1: original UnitSetPos moves only Oscar to
+  (19,19), beside unchanged Green Kieran(20,19). Original closed door, key and
+  factions untouched. Geometry/native eligibility reviewed before choosing tiles.
+- 3240 Gecko bytes (8 spare); source profile's31 files hash unchanged. NEW seed
+  changes only Gecko storage. README/Launch.ps1 supplied; setup/Talk **NOT TESTED**.
+- Tools compare manually captured before/after state, flags/roster identities,
+  factions/positions and inventory; no PASS without explicit human Talk observation.
+- 112 tests,313 signatures,13 accepted runtime artifact hashes pass. Production
+  stable fingerprint8609ae9f49fd879f unchanged. Next: manual original Talk, then
+  independent Ch10 prisoner escape/cleanup and permanent-recruitment analysis.
+
 Working clone: FireEmblemCampaignAudit. Branch: codex/campaign-compatibility.
 Reference branches main/draft-ownership and source-checkout saves/profiles untouched.
 

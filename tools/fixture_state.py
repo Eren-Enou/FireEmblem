@@ -52,7 +52,8 @@ def validate_prefix(actual,base,text):
     if offset!=len(actual):raise ValueError("unexpected active code list length")
 
 
-def create(source:Path,destination:Path):
+def create(source:Path,destination:Path,*,base_ini=None,fixture_ini=None,setup_hook=None,setup_words=None,
+           classification="synthetic_original_native_positioning"):
     destination=destination.resolve();manifest=Path(str(destination)+".json")
     if (ROOT/"work").resolve() not in destination.parents:
         raise ValueError("fixture state must be inside this clone's work/")
@@ -68,13 +69,21 @@ def create(source:Path,destination:Path):
     header=0x80001800+handler.stat().st_size-8
     if mem.read(header,8)!=HEADER:
         raise ValueError("expected Gecko header missing")
-    stable=build_ini(["COOP-P6","EXP-16"],verbose=False)
+    stable=base_ini if base_ini is not None else build_ini(["COOP-P6","EXP-16"],verbose=False)
     size=validate_ini(stable);start=header+8;end=start+size
     validate_prefix(mem.read(start,size),start,stable)
     if mem.read(end,8)!=TERMINATOR:
         raise ValueError("expected stable code-list terminator missing")
-    generated,combined=ini()
-    addition=bytes.fromhex("".join(c2_lines(HOOK,words())))
+    generated=fixture_ini if fixture_ini is not None else ini()[0]
+    combined=validate_ini(generated)
+    hook=HOOK if setup_hook is None else setup_hook
+    body=words() if setup_words is None else setup_words
+    from tools.fe9.disc import DiscReader
+    from tools.fe9.ppc import Dol
+    with DiscReader(DEFAULT_IMAGE) as disc:
+        if mem.u32(hook)!=Dol(disc.read_dol()).u32(hook):
+            raise ValueError("new fixture hook is already patched in source state")
+    addition=bytes.fromhex("".join(c2_lines(hook,body)))
     if combined!=size+len(addition) or end+len(addition)+8>0x80003000:
         raise ValueError("fixture code-list size/layout mismatch")
     if any(mem.read(end+8,len(addition))):
@@ -86,13 +95,13 @@ def create(source:Path,destination:Path):
     _,check=load_mem1(destination,DEFAULT_IMAGE)
     if check.read(end,len(addition)+8)!=addition+TERMINATOR:
         raise ValueError("fixture append verification failed")
-    record={"classification":"synthetic_original_native_positioning","status":"NOT TESTED",
+    record={"classification":classification,"status":"NOT TESTED",
             "source":str(source.resolve()),"source_sha256":hashlib.sha256(source.read_bytes()).hexdigest(),
             "state_sha256":hashlib.sha256(destination.read_bytes()).hexdigest(),"gecko_bytes":combined,
             "handler_sha256":HANDLER_SHA256,"edit_address":f"{end:08X}","edit_bytes":len(addition)+8,
             "limitations":["only new Gecko storage appended; new hook not yet executed",
-                            "original positioning is synthetic setup; Escape must run normally",
-                            "launch with the separately generated DBG-CAMP-POS private INI"]}
+                            "original positioning is synthetic setup; target event must run normally",
+                            "launch with the matching separately generated private INI"]}
     with manifest.open("x",encoding="utf-8") as stream:json.dump(record,stream,indent=2)
     return record
 

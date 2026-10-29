@@ -15,6 +15,86 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-011 — isolated Chapter10 Oscar/Kieran Talk positioning fixture
+
+**STATIC and captured-state evidence; runtime positioning and Talk NOT TESTED.**
+User separately reports original Blue->Yellow, P2 Oscar Wait and P1 lockout PASS
+in the validated loader fixture. Source start SHA256c6e2ae86782fc95df14fdba33109629033bbb7e390481b7ee5c25209cf930b8e;
+after-Wait f9940810bb053ba6f9b27a035d041cc86a32c63cd37970e3f6cbb80f147a4382.
+Both loaded C11.cmb and matched stable+FIXTURE-LOADER C2 bodies. Not natural history.
+
+Geometry inspected before choosing positions:
+- Original dispos_c.bin places Kieran at(20,19), force2; captured slot19, HP30,
+  flags0x80020, unrescued. Captured Oscar slot2, force3, HP28, flags0x400,
+  unacted/unrescued at(2,19). Original Talk gate actor+0x1A5 is0.
+- The grid base is **0x802CA518**, reconstructed at0x8002B0F0/0x8002B0F8
+  (signed low addend). Width/height in the capture are24/23. Original Talk reads
+  occupancy at base+0xD+x+64*y and edge masks at base+0x408E+2*(x+64*y),
+  corroborated by CAMP-007 instructions. Right bit2 at0x8002B180 selects x+1
+  at0x8002B188; left bit1 at0x8002B254. Both(19,19) and(20,19) have mask0x000F;
+  the chosen Oscar tile(19,19) is empty, while(20,19) occupancy19 matches Kieran.
+  This is an inside-cell floor interaction, not adjacency through a wall/door.
+- Original map.bin mapbuildinst includes the door at(19,14); C11 scene15 is
+  its kind5/action11 event: DoorOpen(EventGetX,EventGetY), then set F1914 and
+  `扉チャップケヴィン`. Both source flags are false.
+- Actual captured door object independently checked: getter0x80040844 uses
+  r13-0x7AF4 => **0x803672AC** root slot. Original query0x8004721C reads count+6,
+  table+0x14 at0x80047234, stride0xB4 at0x80047228; descriptor pointer+0x10
+  at0x8004723C and mask+0xBC at0x80047240. Bounds+4/+6/+5/+7 read at
+  0x80047260/0x80047270/0x80047280/0x80047290. InstantDoorOpen's query includes
+  mask0x1000/excludes0x10 (0x8019F7FC/0x8019F800). Matching object index1 has
+  bounds(19,14,19,14), descriptor mask0x1300, state byte0x80. Original open worker
+  (called at0x8019F86C) reads state+2 at0x80049B94, ORs0x02 at0x80049B9C and
+  stores at0x80049BA0. The captured open marker is unset; the door stays untouched.
+
+Eligibility inspected: CAMP-007 native menu context+0x12 / +0x16 gates and
+actor+0x1A5 action bits still apply. Native candidate selection needs the actual
+grid edge and occupied neighbor; CAMP-004 matches Oscar/Kieran character IDs,
+allows reversal and rejects consumed key. C11 scene29 has no additional door
+flag conditional: original MS_11_TK02 dialogue -> Kieran force3 -> set
+`オスカーケビン`. This is temporary partner membership, not permanent recruitment.
+The setup never calls any of those event operations.
+The context base **0x802EF4C8** is reconstructed at0x80078A2C/0x80078A34;
+source mode+0x12 and flags+0x16 are both0. The pre-Talk checker requires those
+original gates to remain clear; its PASS still does not prove the menu appeared.
+
+Named flags decoded read-only: native get0x800BB04C selects state+0xB4 at
+0x800BB064. Lookup reads names at0x800BDD54, bounds96 at0x800BDD74, computes
+slot/8 at0x800BDD90 and bit modulo8 at0x800BDD94, and reads bitset+0x300 at
+0x800BDDA0. Source conversation key, door keys, gf_complete and gf_gameover are
+all clear. The new setup calls original get only as a read guard.
+
+DBG-CAMP-TALK uses the previously pinned input hook/UnitSetPos (CAMP-005),
+guarded to chapter11/turn1/humanYellow, original Oscar/Kieran positions and
+factions, positive HP/no rescue, Oscar unacted, clear conversation key and empty
+destination. Only Oscar is moved by original UnitSetPos to(19,19). No direct
+unit-state stores or calls to faction, flag-set, DoorOpen, Talk or completion.
+The original native callbacks remain responsible for whether Talk appears.
+Total stable+loader+setup **3240 bytes**,8 below conservative capacity3248.
+Source profile/card/states are read-only; NEW seed changes Gecko tail only.
+Runtime setup/door/key/unit checks and before/after comparison are supplied;
+human observation is required before a local Talk PASS. No Dolphin input sent.
+
+### CAMP-010 — script-selection fixture hook candidate
+
+VERIFIED-STATIC; candidate runtime NOT TESTED at introduction. Original chapter
+script selection reconstructs state-block pointer at0x8002D568/0x8002D56C,
+reads chapter byte at**0x8002D570** (`88630010`), then calls loader0x80166258
+at0x8002D574. The loader calls descriptor lookup0x80019F04 at0x80166268.
+Lookup reads row count at0x80019F04, compares each row's byte+0x3C at0x80019F18
+and advances stride0x60 at0x80019F2C. Loader takes descriptor+8 script name
+at0x80166278, formats `Scripts/%s.cmb` (pool0x80277976; offset construction
+0x80166280) and submits it at0x80166290. All listed sites pinned.
+
+Hypothesis: frame-polled AR missed script-selection timing during CAMP-J's
+restart. A separate FIXTURE-LOADER C2 candidate intercepts0x8002D570, conditionally
+changes source chapter to target before the displaced read and original loader.
+It preserves r0, CR, stack and other inputs; no calls or roster/event edits.
+This is fixture setup only, never a gameplay correction. All earlier source-card
+initialization/history remains synthetic. Require loaded C11.cmb, actual prison
+map and living prisoners before accepting the proposed Chapter10 route; later
+recruitment/escape/progression must still execute originally. Production unchanged.
+
 ### CAMP-009 — independent loaded event-container chain
 
 VERIFIED-STATIC plus captured-RAM corroboration (CAMP-K), GFEE01 rev0.

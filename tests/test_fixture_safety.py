@@ -9,6 +9,20 @@ from tools.patch_state import apply_edits
 
 
 class FixtureSafetyTests(unittest.TestCase):
+    def test_loader_hook_profile_excludes_ar_and_fits_budget(self):
+        from tools.fixture_bootstrap import create
+        from tools.install_codes import parse_sections
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);card=root/"source.gci";card.write_bytes(b"GFEE01"+bytes(58))
+            with patch("tools.fixture_bootstrap.ROOT",root):
+                destination=root/"work/loader"
+                result=create(destination,11,source_chapter=7,card=card,redirect_kind="loader-hook")
+                sections=parse_sections((destination/"User/GameSettings/GFEE01.ini").read_text())
+                self.assertEqual(result["gecko_bytes"],2608)
+                self.assertFalse(sections.get("ActionReplay_Enabled"))
+                self.assertEqual(len(sections["Gecko_Enabled"]),3)
+                self.assertEqual(card.read_bytes(),b"GFEE01"+bytes(58))
+
     def test_native_card_source_is_copied_and_hashed_without_mutation(self):
         import hashlib
         from tools.fixture_bootstrap import create
