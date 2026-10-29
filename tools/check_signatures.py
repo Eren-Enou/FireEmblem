@@ -217,6 +217,15 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8012DBE4, 0x881F0062, "lbz r0,0x62(r31)           highlighted row ..."),
     (0x8012DBFC, 0x7C83002E, "lwzx r4,r3,r0              ... unit = list+0x3C row record +0"),
     (0x80269183, 0x5346585F, ".data \"SFX_\" SYS_SELECT1 (transfer request)"),
+    # F-62: Choose Units deployment toggle and battle-start benching
+    (0x80118188, 0x38647D80, "addi r3,r4,0x7d80           Choose Units list callback = 0x80117D80"),
+    (0x80117D90, 0x380300DC, "addi r0,r3,0xdc             bench group 0x010000DC ..."),
+    (0x80117DBC, 0x64800100, "oris r0,r4,0x100            ... bench: set 0x01000000 ..."),
+    (0x80117DC4, 0x600000DC, "ori r0,r0,0xdc              ... and 0xDC"),
+    (0x80117E80, 0x3803FF23, "addi r0,r3,-0xdd            deploy: AND 0xFEFFFF23"),
+    (0x8028F868, 0x8011A7FC, ".data sortie proc step: battle-start placement"),
+    (0x8011A84C, 0x38800005, "li r4,5                     benched units -> force 5"),
+    (0x801325FC, 0x54000001, "rlwinm. r0,r0,0,0,0         0x80000000 = animation ON/OFF label"),
     # F-61: who starts the human-control proc (and so the battle draft's hook)
     (0x80284B10, 0x800291D8, ".data: the human proc's step = map input (only reference)"),
     (0x8002E768, 0x38654AC8, "addi r3,r5,0x4ac8          turn loop starts the human proc 0x80284AC8"),

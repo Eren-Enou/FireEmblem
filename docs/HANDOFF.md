@@ -19,7 +19,7 @@ Ownership lives in each unit's saved flag word `unit+0x1A0`, in bits the game ne
 | `0x10000000` | parked green during the in-battle draft | EXP-23 only |
 | `0x08000000` | transfer requested by the non-owner | EXP-26 |
 
-The game's own bit `0x80000000` is toggled by Pick Units (`0x8012C9E8`). It probably means *benched* (F-58, unconfirmed).
+**Deployment (F-62, corrects F-58):** Choose Units' A calls `0x80117D80`, which sets/clears the bench group **`0x010000DC`**; battle start (`0x8011A7FC`) moves benched units to force 5. Bit `0x80000000` is only the per-unit battle-animation setting.
 
 | Code | What it does | Generator | Bytes | Runtime status |
 |---|---|---|---|---|
@@ -69,7 +69,7 @@ Dolphin 2609a has **3256 bytes** for *all* enabled Gecko codes: `0x80001800…0x
 | Test | Needs | What to verify |
 |---|---|---|
 | **PREP-04** persistence (Step 4) | Clear Ch6 with the PREP-03 bed (Escape objective; DBG-01 makes it quick), save over a test file, reach Ch7 prep | The Ch7 Choose Units colours match Ch6's ownership; after a fresh reload too. The storage is already proven by DRAFT-01; this confirms prep-made ownership |
-| **PREP-05** fair deployment (Step 5, not built) | **A save at a prep screen where roster > cap.** Ch3–Ch7 force nearly everyone (audit). From Ch8 only Ike is forced; the first likely bench is around **Ch10** (cap 11 on Normal). Needs a campaign played that far | Confirm `0x80000000` = benched by toggling a non-forced unit (A in Choose Units). Then build the split: forced units first, optional slots alternate, each player toggles only their own, the native cap stays authoritative |
+| **PREP-05** fair deployment (Step 5, not built) | **A save at a prep screen where roster > cap.** Ch3–Ch7 force nearly everyone (audit). From Ch8 only Ike is forced; the first likely bench is around **Ch10** (cap 11 on Normal). Needs a campaign played that far | Confirm F-62 by toggling a non-forced unit (A): `0x010000DC` set/cleared. Then build the split (wrap `0x80117D80`; Player 2's own-pad A calls it): forced units first, optional slots alternate, each player toggles only their own, the native cap stays authoritative. Budget: 56 bytes left with EXP-27, so Step 5 needs to reuse the EXP-27 core or a payload loader |
 | PREP-06 confirmation (Step 6, not built) | same fixture | Both players ready (Start on their own pad) before Fight |
 | PREP-07 Netplay (Step 7) | two instances (`netplay_setup`), then two PCs; a draft-branch package (the friend ZIP is still main's) | Identical ownership, transfers, deployment and controller routing on both machines; no desync |
 | Story cases | later-chapter saves | Ch10 temporary partners (never offered), Ch18 Shinon to the enemy and back (ownership bits survive story transfers), mid-battle recruitment (unassigned until the next prep), an owned unit dying, suspend at prep |
@@ -79,7 +79,7 @@ Fixtures: create only with `tools/patch_state.py` (slots 2+, refuses to overwrit
 
 ## 6. Known risks
 - **Gecko space (§4).** The main blocker for adding anything.
-- **`0x80000000` meaning:** likely "benched" (no picked unit has it); confirm before Step 5.
+- ~~`0x80000000` meaning~~ resolved (F-62): animation setting; benched = `0x010000DC` via `0x80117D80`.
 - **Story/event interactions** not yet seen at runtime: Ch10 partners, Ch18 Shinon, recruitment, Game Over.
 - **Generic script commands** `0x800BD37C`/`0x800BD3D0` set/clear a script-supplied flag mask. No script is known to pass bits 25–30, but this isn't excluded (F-52).
 - **EXP-26 only acts in the `E_SallyList` proc** (`list+0x14` = `0x80275B0E`). Other lists are unaffected.
