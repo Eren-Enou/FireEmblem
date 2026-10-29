@@ -747,6 +747,15 @@ class GameTests(unittest.TestCase):
         self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-27", "DBG-01"]), [])
         self.assertLessEqual(sum(s for _, s in gecko_sizes(["COOP-P6", "EXP-21", "EXP-25", "EXP-27", "DBG-01"])), 3256)
 
+    def test_full_play_set_hooks_are_unique(self):
+        """COOP-P6 + EXP-21 + EXP-25 + EXP-27 (+ DBG-01): every C2 hook address is patched by exactly one code."""
+        from tools.install_codes import ROOT as R, parse_sections
+        all_names = [l[1:] for l in parse_sections((R / "codes/GFEE01.ini").read_text())["Gecko"] if l.startswith("$")]
+        names = [n for n in all_names if n.split()[0] in ("COOP-P6", "EXP-21", "EXP-25", "EXP-27")]
+        self.assertEqual(len(names), 4)
+        hooks = [a for n in names for a, _ in self._gecko_blocks(n)]
+        self.assertEqual(len(hooks), len(set(hooks)), [hex(h) for h in hooks if hooks.count(h) > 1])
+
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}
         _date, groups = dispos.parse(files["dispos_n.bin"])
