@@ -44,6 +44,17 @@ addition passed locally afterward. Neither establishes current ownership Netplay
 No gameplay assembly or ownership generator changed. No campaign gameplay bug
 is claimed fixed by these tooling corrections.
 
+## Latest executable continuity checkpoint
+
+CAMP-019 builds the43-container/34-contract transition graph with explicit
+unresolved gates. CAMP-020 composes native roster-availability/map-flag/fixed
+ownership fragments but leaves complete initialization, cap/placement and native
+persistence unresolved. CAMP-021 audits exact save field pairs and private
+Netplay write policy read-only. SyncSaves and WriteSaveData are independent;
+current False does not request persistent Netplay write-back. It does not disable
+standalone card saving. An ambiguous-owned-PID individual Escape validation bug
+was reproduced and fixed in the MODEL; no production gameplay change.
+
 ## Prioritized engine and campaign research
 
 | Priority | Finding | Evidence | Status / next valid test |

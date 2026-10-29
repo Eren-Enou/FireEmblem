@@ -18,6 +18,25 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-020/021: bounded roster availability and read-only save field pairs.
+    (0x8011A6F4, 0x83A3003C, "availability loop starts at force5 head"),
+    (0x8011A708, 0x4BF22F05, "availability loop transfers roster unit to0"),
+    (0x8011A710, 0x64000100, "availability ORs raw0x01000000"),
+    (0x8011A714, 0x600000DC, "availability ORs raw low0xDC"),
+    (0x8002EA10, 0x3800BBFF, "map-start player-mask flags clear0x4400"),
+    (0x8002EA48, 0x60000400, "map-start Blue flags gain0x400"),
+    (0x8003CB70, 0x889E019A, "save writer reads unit level"),
+    (0x8003C950, 0x987E019A, "save loader stores unit level"),
+    (0x8003CB7C, 0x889E019B, "save writer reads unit EXP"),
+    (0x8003C95C, 0x987E019B, "save loader stores unit EXP"),
+    (0x8003CBD4, 0x889E01A8, "save writer reads unit HP"),
+    (0x8003C9B4, 0x987E01A8, "save loader stores unit HP"),
+    (0x8003CBBC, 0x38BE01A0, "save writer addresses full flag word"),
+    (0x8003CBC0, 0x38800004, "save writer flag width4"),
+    (0x8003CBC4, 0x4813D86D, "save writer calls raw buffer helper"),
+    (0x8003C994, 0x38BE01A0, "save loader addresses full flag word"),
+    (0x8003C998, 0x38800004, "save loader flag width4"),
+    (0x8003C99C, 0x4813DE75, "save loader calls raw buffer helper"),
     # CAMP-019: conditional native next-chapter arithmetic, not event activation.
     (0x8002E210, 0x889F0010, "normal transition reads current chapter"),
     (0x8002E224, 0x38040001, "normal transition computes chapter+1"),

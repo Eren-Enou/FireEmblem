@@ -102,6 +102,8 @@ class EvidenceClassificationTests(unittest.TestCase):
         self.assertEqual(result['escape']['level'], 'MODEL VERIFIED')
         self.assertEqual(result['permanent_recruitment']['level'], 'BLOCKED')
         self.assertEqual(result['netplay']['level'], 'UNTESTED')
+        for name in ('next_chapter_initialization','native_save','native_reload'):
+            self.assertEqual(result[name]['level'], 'UNTESTED')
         del data['chapters'][0]['lifecycle']['permanent_recruitment']['scope']
         with self.assertRaisesRegex(ValueError, 'scope/reason'): validate(data)
 

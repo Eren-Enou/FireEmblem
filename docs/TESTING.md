@@ -1,5 +1,20 @@
 # Testing
 
+## CAMP-W — Cross-boundary lifecycle fragments and save audit
+
+After82a5b9c, offline only. Four sequence regressions cover cleanup/availability/
+map flags/fixed ownership, original enemy/away priority, no implicit recruit owner,
+and ownership mask mutation. Individual owned Escape ambiguity first FAILED
+then passed after rejecting duplicate ownership before mutation. Three save-audit
+regressions check exact native field/width pins, missing fields, changed ownership
+flags and profile sync/write-back distinction without touching source files.
+Complete native saving, deployment, reconstruction and Netplay remain unknown.
+Original references: RESEARCH CAMP-020/021. No gameplay generator changed.
+**177 tests PASS;378/378 signatures and16 accepted runtime artifact hashes
+verified.** Native save/reload remains UNTESTED; matching field views alone
+remain INCONCLUSIVE.
+
+
 ## CAMP-V — Original campaign transition connection graph
 
 After68cf1a2, offline only. Five regressions cover43 script identities and34

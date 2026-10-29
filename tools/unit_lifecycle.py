@@ -38,15 +38,37 @@ class Lifecycle:
         unit['force'], unit['flags'] = destination, flags
 
     def return_owned(self, owners):
+        self._route_owned(owners, 3, 0)
+
+    def apply_owned(self, owners):
+        self._route_owned(owners, 0, 3)
+
+    def _route_owned(self, owners, source, destination):
         # EXP-16's fixed PID table only, not force3 membership or draft bits.
         targets = []
         for pid, unit in self.units.items():
             identity = unit.get('pid', pid)
-            if owners.get(identity) == 2 and unit['force'] == 3 and identity is not None:
+            if owners.get(identity) == 2 and unit['force'] == source and identity is not None:
                 matches = [u for k, u in self.units.items() if u.get('pid', k) == identity]
                 if len(matches) != 1: raise ValueError('ambiguous owned character identity')
                 targets.append(pid)
-        for pid in targets: self.transfer(pid, 0)
+        for pid in targets: self.transfer(pid, destination)
+
+    def restore_roster_availability(self):
+        """Only native 0x8011A6F4..724's force5 loop, not final deployment."""
+        self.validate()
+        for pid in [k for k, u in self.units.items() if u['force'] == 5]:
+            self.transfer(pid, 0)
+            self.units[pid]['flags'] |= 0x010000DC
+        self.unresolved.add('final preparation selection/caps/placement')
+
+    def map_start_flags(self):
+        """Pinned flag writes only; attribute/init callees are not simulated."""
+        self.validate()
+        for unit in self.units.values():
+            if unit['force'] in (0, 5, 6, 7): unit['flags'] &= 0xFFFFBBFF
+            if unit['force'] == 0: unit['flags'] |= 0x400
+        self.unresolved.add('map-start attribute and initialization callees')
 
     def _preflight(self, pids):
         for pid in pids:
@@ -74,6 +96,9 @@ class Lifecycle:
     def escape(self, pid, *, owners=None):
         self._preflight([pid])
         if owners and owners.get(self.units[pid].get('pid', pid)) == 2 and self.units[pid]['force'] == 3:
+            identity = self.units[pid].get('pid', pid)
+            if sum(u.get('pid', k)==identity for k, u in self.units.items()) != 1:
+                raise ValueError('ambiguous owned character identity')
             self.transfer(pid, 0)  # EXP-16 individual actor hand-back
         self._worker(pid)
         self.validate()

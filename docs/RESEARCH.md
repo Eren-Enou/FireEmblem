@@ -15,6 +15,53 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-020 — executable lifecycle fragments across roster boundaries
+
+Original availability loop at0x8011A6F4 reads force5 head, calls transfer0 at
+0x8011A708, then ORs raw0x01000000 at0x8011A710 and0xDC at0x8011A714.
+All pinned. It is roster availability, NOT proof of final deployment cap,
+selection or placement. Earlier forced-unit handling and later native callees
+remain outside this projection. Map-start raw mask at0x8002EA10 clears0x4400
+for original selected forces0/5/6/7;0x8002EA48 marks force0 with0x400 (F-43).
+These writes preserve ownership bits but do not establish status/attribute
+initialization in transitive calls.
+
+Lifecycle now composes active cleanup -> force5 availability -> map-start flag
+writes -> existing fixed-table ownership. Tests preserve identity/payload and
+ownership while excluding disposed partners, Green NPCs, dead6 and absent7.
+Explicit story transfers to enemy1/away7 take priority; only an original return
+to0 allows subsequent P2 routing. Final native proof still rejects unresolved
+cleanup/attribute/placement/save calls; no natural chapter boundary is claimed.
+
+A concrete model validation defect was reproduced: individual Escape accepted
+ambiguous owned PID records although bulk hand-back rejected them. A failing
+regression now rejects the individual case BEFORE any mutation, matching the
+existing fixed-table consistency contract. Legitimate duplicate generic NPC
+PIDs remain permitted when they are not ambiguously claimed permanent owners.
+
+### CAMP-021 — native save field pairs and read-only Netplay policy audit
+
+Writer/loader pairs are pinned: level reads0x8003CB70/stores0x8003C950;
+EXP0x8003CB7C/0x8003C95C; HP0x8003CBD4/0x8003C9B4. Full flags use writer
+address0x8003CBBC, width4 at0x8003CBC0, helper call0x8003CBC4; loader address
+0x8003C994, width4 at0x8003C998, helper0x8003C99C. This corroborates F-52's
+raw32-bit ownership-containing word. It does NOT establish the complete UNIP
+wire format, checksums, item codec, save-slot/card identity or save-mode selection.
+
+`tools.save_architecture` validates these exact instruction pairs, compares only
+known selected snapshot fields and audits a supplied Config/Dolphin.ini read-only.
+Missing fields/ambiguous selected PIDs and wrong native widths fail. Matching
+fields remain INCONCLUSIVE for native saving: no card I/O has been executed.
+Native roster selection and chapter/global flags remain separate unknowns.
+
+Current generated private profiles have SyncSaves=True, SyncCodes=True and
+WriteSaveData=False (netplay_setup default). The audit reports Netplay write-back
+DISABLED_BY_PROFILE; this setting does NOT disable standalone card saving.
+True is only REQUESTED_NOT_RUNTIME_VERIFIED; missing/invalid is UNKNOWN. No
+configuration or card is changed. Eventual campaign validation needs matched
+private cards, original native save, session close/restart and observed host
+write-back; do not enable writes on originals or infer persistence from syncing.
+
 ### CAMP-019 — campaign connection graph with unresolved transition gates
 
 Original normal transition reads current chapter at0x8002E210, computes +1 at

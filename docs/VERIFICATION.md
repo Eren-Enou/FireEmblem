@@ -88,11 +88,13 @@ Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes nativ
 |---|---|---|---|---|
 | Ch.6: A Brief Diversion | escape | SYNTHETIC RUNTIME VERIFIED | ch6-yellow-escape-07 | One original Yellow Oscar Escape from synthetic exit; no carried/Ike-last/cleanup/save acceptance. |
 | Ch.6: A Brief Diversion | roster_cleanup | MODEL VERIFIED | native-lifecycle-model-20 | Bounded no-rescue native classification and fixed ownership hand-back projection only. |
+| Ch.6: A Brief Diversion | next_chapter_initialization | MODEL VERIFIED | roster-boundary-model-24 | Bounded roster-availability/map-flag/ownership fragments only; complete native next-chapter initialization unresolved. |
 | Ch.10: Prisoner Release | conversation | SYNTHETIC RUNTIME VERIFIED | ch10-original-talk-14 | Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only. |
 | Ch.10: Prisoner Release | temporary_transfer | SYNTHETIC RUNTIME VERIFIED | ch10-original-talk-14 | Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only. |
 | Ch.10: Prisoner Release | permanent_recruitment | BLOCKED | - | Original later cleanup/ending and fresh native next-chapter roster evidence unavailable; force5 projection alone is insufficient. |
 | Ch.10: Prisoner Release | escape | MODEL VERIFIED | native-lifecycle-model-20 | Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof. |
 | Ch.10: Prisoner Release | roster_cleanup | MODEL VERIFIED | native-lifecycle-model-20 | Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof. |
+| Ch.10: Prisoner Release | next_chapter_initialization | MODEL VERIFIED | roster-boundary-model-24 | Bounded roster-availability/map-flag/ownership fragments only; complete native next-chapter initialization unresolved. |
 | Ch.10: Prisoner Release | ownership | MODEL VERIFIED | native-lifecycle-model-20 | Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof. |
 | Ch.17: Day Breaks stage 1 | stage_transition | MODEL VERIFIED | ch17-prefix-model-21 | Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff. |
 | Ch.17: Day Breaks stage 1 | ownership | BLOCKED | - | Original sequence/map initialization and later ownership hooks have not been jointly executed. |
@@ -119,15 +121,17 @@ Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes nativ
 - **jill-direction-model-19**: `script_model`; Original pinned C21 scenes26/27 and startup transfer helper executed with modeled natives over64 direction/faction/relationship inputs. Defection iff neither Mist nor Lethe query equals3. Directed scene records share consumed key; forward scene explicitly installs attack sequence, reverse scene does not. Force0/3 test inputs both respected; Yellow Jill is hypothetical ownership input, not a claim she is in stable fixed-owner table. No original activation/AI, natural support history, next-phase ownership routing, save or runtime acceptance. Reproduce unittest tests.test_campaign_event_model.
 - **native-lifecycle-model-20**: `script_model`; Pinned native force-status fragment executed offline over8 forces x36 flags; bounded no-rescue lifecycle projection integrated with original C11 through AllUnitEscape, stopping MapFree. Existing EXP-16 fixed hand-back distinguished from temporary Yellow. Snapshot import preserves duplicate NPC PIDs by physical slot. Transitive native refresh/map detach, rescue/death, permanent recruitment and save I/O unverified. Reproduce unittest tests.test_native_lifecycle tests.test_unit_lifecycle.
 - **ch17-prefix-model-21**: `script_model`; Pinned C18 original completion prefixes82/85 and partial88, next-part opening prefixes83/86/89 before MapLoad. BM turn accumulation/guard clearing, Red escape projection, original turn reset1, literal Complete18 args1/2/3 and native requests5/6/7 pinned. Stage3 remaining cutscene and stage4 final clear excluded. No map/phase initialization, natural stage activation, ownership handoff, complete native preservation, save or runtime acceptance. Reproduce unittest tests.test_ch17_stage_model; tools.ch17_stage_model --out work/NEW.json.
+- **roster-boundary-model-24**: `script_model`; Executable composition of pinned cleanup, native force5 availability fragment, map-start flag writes and existing fixed-table routing. Preserves declared identities/payload and excludes native temporary records, dead6, away7 and story enemy1; original return0 required before routing. Not final deployment/caps/placement, complete chapter initialization or native persistence. Individual owned Escape rejects ambiguous PID before mutation after failing regression. Reproduce unittest tests.test_cross_chapter tests.test_unit_lifecycle.
 
 ## Highest-priority open cases
 
-- Ch6 carried units and Ike-last completion, cleanup/transition and fresh native reload remain unverified; single Yellow Escape passed only in synthetic positioning fixture.
-- Ch9 native partners: combat EXP, partner cleanup/eventual recruitment and natural chapter history remain unverified.
-- Ch10 Oscar/Kieran original Talk local effect passed in synthetic setup; prisoner escape, permanent recruitment and cleanup conditions remain unverified.
-- Ch17 all four stage transitions, reinforcements, turn resets and ownership.
-- Ch18 Shinon and native Reinforce partners; Ch20 Jill branch conditions.
-- Ch27-2 and Endgame special transitions; accepted multiplayer save workflow.
+- P1 shared native cleanup/rebuild and carried-unit effects remain unresolved; no-rescue projection and original scripts do not prove a natural chapter boundary.
+- P1 multiplayer native persistence: generated Netplay profiles use WriteSaveData=False; SyncSaves is not write-back or fresh-session resume evidence.
+- P1 Ch10 prisoner permanent recruitment needs original ending and next native roster/reload. Accepted Talk and modeled force5 are separate evidence.
+- P1 Chapter17 part3 remaining cutscene, native sequence/MapLoad, phase/ownership handoff and part4 clear remain unresolved.
+- P1 newly recruited owned characters may lack deployed-player flag0x400 until initialization; death/classification requires original reachable-path evidence.
+- P2 Ch6 Ike-last and carried-unit cleanup, Ch9 partners, Shinon/Reinforce and late allied story branches remain independently unverified.
+- P2 Ch27-2 special transition and Endgame ending require original runtime contracts; the graph intentionally leaves unknown dispatch unresolved.
 
 ## Explicitly blocked test preparation
 

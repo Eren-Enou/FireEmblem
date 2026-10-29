@@ -2,6 +2,12 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-W: lifecycle fragments now compose cleanup -> roster availability ->
+  map flags -> fixed ownership. Original story absence/enemy status wins; dead
+  and temporary records are not silently restored. Individual Escape ambiguity
+  corrected after failing regression. Read-only native save-field/profile audit
+  distinguishes Netplay SyncSaves from WriteSaveData (currently False). No GCI
+  writer or saved-campaign claim; final placement/native I/O still unresolved.
 - CAMP-V: original campaign connection graph built from43 containers and34
   chapter/stage contracts. Queryable paths preserve1227 unresolved edges;
   conditional native next-chapter arithmetic pinned, no invented completed
@@ -61,7 +67,7 @@
 - Original Talk local effect **PASS**: Kieran Green->Yellow, original key set;
   Oscar stays Yellow and acts, identities/items/progression preserved. Selected
   actor occupancy checker corrected; original captures/report preserved.
-- 164 tests,355 signatures,16 accepted runtime artifact hashes pass (CAMP-U).
+- 177 tests,378 signatures,16 accepted runtime artifact hashes pass (CAMP-W).
 - Production stable fingerprint8609ae9f49fd879f unchanged. Next: independent
   Ch10 prisoner escape/cleanup and permanent-recruitment analysis. No chapter
   completion, save/reload or Netplay acceptance follows from this synthetic test.
@@ -250,3 +256,10 @@ next-chapter transition or new two-PC Netplay result is claimed.
 - Prepare a separately budgeted Ch10 direct/carried prisoner exit candidate only
   after inspecting geometry/occupancy and original cleanup prerequisites. No GUI
   or user input is required for these engineering tasks.
+
+## Current highest-value autonomous continuation
+
+Trace the native roster rebuild/loader-selection boundary (F-38) and original
+save-mode record selection, then carried-unit breakup and MapLoad activation.
+The graph exposes unresolved gates; current sequence tests only compose bounded
+fragments. No complete native chapter transition or persistent campaign is proven.

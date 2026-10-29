@@ -108,3 +108,42 @@ missing captures are not PASS. For a repeat/branch generate a NEW pack with
 `tools.campaign_test_pack prepare --root work/NEW_manual_campaign`.
 The existing VERIFICATION dashboard now reports lifecycle behavior and precise
 evidence levels separately from whole-chapter acceptance.
+
+## Campaign graph and native persistence audit
+
+```powershell
+& $py -B -m tools.campaign_graph --path chapter:11 Scripts/C12.cmb
+& $py -B -m tools.campaign_graph --path chapter:11 Scripts/C12.cmb --allow-unresolved
+& $py -B -m tools.campaign_graph --out work/NEW_campaign_graph.json
+& $py -B -m tools.save_architecture --profile work/YOUR_PRIVATE_PROFILE/User/Config/Dolphin.ini
+```
+
+Graph scene/call connections are static, not event activation. An unresolved
+path query cannot certify a chapter clear. Native field-pair presence does not
+certify roster enumeration, card identity, wire format or persistent saving.
+
+For the future native ownership-save test, start from a disposable naturally
+progressed native card/profile with a living P2-owned character. Record intended
+codes/fingerprint, unit PID, faction, flags, level/EXP, items and chapter/turn.
+Capture before original Suspend/save, then fresh boot the same matched private
+card WITHOUT savestate loading and capture after original reload before actions.
+Preserve all item/progression/owner evidence and record any original-card refusal.
+Do not infer failure of production saving from an inherited synthetic card mismatch.
+
+For Netplay additionally record host/client machines and the save-data mode.
+Current WriteSaveData=False means this setup does not request persistent Netplay
+write-back; it does not disable standalone local card saving. Any future True
+setting belongs only in a NEW disposable profile and remains unverified until
+native save, session end and a new synced session from the host card are observed.
+No policy changes, card writers or manual tests were performed in this initiative.
+
+A pair of separately collected campaign snapshot JSONs can be inspected with:
+
+```powershell
+& $py -B -m tools.save_architecture --compare work/BEFORE_snapshot.json work/AFTER_snapshot.json --pid PID_OSCAR
+```
+
+The result deliberately stays INCONCLUSIVE for native save/reload even when
+selected native-backed fields match. Inventory, save slots and global flags
+require their own evidence. Ledger facets native_save, native_reload and
+next_chapter_initialization remain independent of event/model passes.

@@ -16,6 +16,14 @@ def roster():
 
 
 class LifecycleTests(unittest.TestCase):
+    def test_individual_owned_escape_rejects_ambiguous_pid_before_any_mutation(self):
+        units = roster()
+        units['DUPLICATE'] = {**units['PID_OSCAR'], 'slot':99, 'pid':'PID_OSCAR'}
+        model = Lifecycle(units)
+        with self.assertRaisesRegex(ValueError, 'ambiguous'):
+            model.escape('PID_OSCAR', owners={'PID_OSCAR':2})
+        self.assertEqual(model.units, units)
+
     def test_declared_oracle_detects_loss_retention_inventory_owner_and_revival_mutations(self):
         before = roster(); good = Lifecycle(before); good.all_escape(owners={'PID_OSCAR': 2})
         kwargs = dict(retained=['PID_IKE','PID_OSCAR'], removed=['PID_KEVIN','NPC','ENEMY'], untouched=['AWAY','DEAD'])
