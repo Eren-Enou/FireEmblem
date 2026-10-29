@@ -22,6 +22,13 @@ SOURCES = {
 }
 ESCAPES = ('CH10-PRISONER-ESCAPE', 'CH6-IKE-COMPLETE')
 DIRECTORIES = {'CH10-PRISONER-ESCAPE': 'CH10-PRISONER-ESCAPE-v2'}
+from tools.next_scenarios import NAMES as TRANSITIONS
+from tools.action_scenarios import NAMES as ACTIONS
+NEXT=(*TRANSITIONS,*ACTIONS)
+
+
+def known():
+    return (*SOURCES,*ESCAPES,*NEXT)
 
 
 def scenario_dir(name, root=PACKAGE):
@@ -29,8 +36,10 @@ def scenario_dir(name, root=PACKAGE):
 
 
 BLOCKED = {
-    'CH10-PRISONER-CLEANUP': 'Local prisoner Escape passed (CAMP-Z); needs isolated original Ike-last setup with valid phase/action eligibility and known door history. Permanent recruitment remains unverified.',
+    'CH10-PRISONER-CLEANUP': 'Superseded by the separate CH10-CHAPTER-COMPLETE candidate. Original ending/permanent recruitment is still runtime unverified.',
     'CH17-STAGE-TRANSITIONS': 'Needs original stage-specific map and near-clear state, roster, difficulty and stage/story history for all four stages. Shared C18 script alone cannot establish the stage.',
+    'CH6-CARRIED-ESCAPE': 'Needs an original executed Rescue and captured reciprocal relationship. CH6-YELLOW-RESCUE prepares that action without faking links. A carried Escape fixture must be derived separately from accepted Rescue evidence.',
+    'CH9-PARTNER-CLEANUP': 'Accepted native transformation/Wait and new combat candidate do not supply original near-clear history. No chapter-completion/recruitment outcome is synthesized.',
 }
 
 
@@ -139,9 +148,9 @@ def prepare(root=PACKAGE):
 def check(name, fresh=False, root=PACKAGE):
     if name in BLOCKED:
         raise ValueError('BLOCKED: ' + BLOCKED[name])
-    if name not in (*SOURCES, *ESCAPES):
+    if name not in known():
         raise ValueError('unknown scenario; use -List')
-    if fresh and name not in ('CH10-NATIVE-RESUME', 'CH6-IKE-COMPLETE'):
+    if fresh and name not in ('CH10-NATIVE-RESUME', 'CH6-IKE-COMPLETE',*TRANSITIONS):
         raise ValueError('fresh boot only belongs to the native resume scenario')
     from tools.fe9.disc import DiscReader
     from tools.verify_game import EXPECTED_ID, EXPECTED_REVISION, EXPECTED_DOL_SHA1
@@ -153,6 +162,7 @@ def check(name, fresh=False, root=PACKAGE):
     manifest = json.loads(private(dest / 'scenario.json', dest).read_text(encoding='utf-8'))
     if manifest['id'] != name:
         raise ValueError('scenario identity mismatch')
+    fresh = fresh or manifest.get('launch_type')=='native'
     for relative, digest in manifest['pinned'].items():
         path = private(dest / relative, dest)
         if fresh and relative.replace('\\','/') == 'User/Config/GCPadNew.ini':
@@ -188,7 +198,20 @@ def check(name, fresh=False, root=PACKAGE):
     size = validate_ini(text)
     if size != manifest['gecko_bytes'] or fingerprint(text) != manifest['fingerprint']:
         raise ValueError('configuration fingerprint/budget mismatch')
-    snap = capture(dest / 'seed.s02.sav', DEFAULT_IMAGE, config, 'offline-check')
+    if name in NEXT:
+        from tools.fixture_state import HANDLER_SHA256
+        if sha(ROOT/'Dolphin-x64/Sys/codehandler.bin')!=HANDLER_SHA256:
+            raise ValueError('handler identity changed')
+        if sha(ROOT/'Dolphin-x64/Dolphin.exe')!=manifest['executable_sha256']:
+            raise ValueError('Dolphin executable identity changed')
+        for path,digest in manifest['source_hashes'].items():
+            if sha(Path(path))!=digest: raise ValueError('accepted source changed: '+path)
+        inspection=dest/('source.sav' if manifest['launch_type']=='native' else 'seed.s02.sav')
+        inspection_ini=dest/'source.ini' if manifest['launch_type']=='native' else config
+        snap=capture(inspection,DEFAULT_IMAGE,inspection_ini,'offline-check')
+        failures=[] if snap['game']==manifest['source_game'] and snap['evidence']['intended_c2_verified'] else ['source roster/scripts or installed codes differ']
+    else:
+        snap = capture(dest / 'seed.s02.sav', DEFAULT_IMAGE, config, 'offline-check')
     if name in ESCAPES:
         from tools.escape_scenarios import geometry, SPECS
         from tools.inspect_state import load_mem1
@@ -197,7 +220,7 @@ def check(name, fresh=False, root=PACKAGE):
         failures = []
         if snap['game'] != manifest['source_game'] or not snap['evidence']['intended_c2_verified']:
             failures.append('seed roster/scripts or installed replacement differ')
-    else:
+    elif name not in NEXT:
         verdict = verify_partner_wait(snap, snap, {})
         failures = [f for f in verdict['failures'] if f not in (
             'distinct state hashes required', 'Kieran must acquire only acted bit')]
@@ -210,7 +233,9 @@ def check(name, fresh=False, root=PACKAGE):
     if not fresh:
         args += ['--save_state', str(dest / 'seed.s02.sav')]
     row = json.loads((dest / 'case.json').read_text(encoding='utf-8'))
-    steps = (['Fresh boot: use original native Resume/Load; NEVER load a savestate. Capture after before acting.',
+    steps = (row['steps'] if name in NEXT and not (fresh and name=='CH10-CHAPTER-COMPLETE') else
+             ['Fresh boot: original Load from this SAME private card; NEVER load a savestate. Save reloaded.sav before acting.'] if fresh and name=='CH10-CHAPTER-COMPLETE' else
+             ['Fresh boot: use original native Resume/Load; NEVER load a savestate. Capture after before acting.',
               'If Suspend was refused, record exact refusal; this is INCONCLUSIVE inherited card identity.'] if fresh else [
                   'This launcher restores a separate synthetic scenario derived from accepted event evidence. Do not use Restart Chapter.',
                   *(row['steps'] if name in ESCAPES else row['steps'][1:-1]),
@@ -219,6 +244,55 @@ def check(name, fresh=False, root=PACKAGE):
             'fingerprint': manifest['fingerprint'], 'steps': steps,
             'evidence_directory': str(dest), 'executable': str(exe), 'arguments': args,
             'card_identity': manifest['card_identity'], 'changed_card_files': sorted(changed)}
+
+
+def listing(root=PACKAGE):
+    """Keep accepted runtime evidence separate from current launch safety."""
+    result=[]
+    for name in known():
+        try:dest=scenario_dir(name,root)
+        except ValueError as exc:
+            result.append(dict(scenario=name,readiness='INVALID',runtime='INCONCLUSIVE',reason=str(exc)));continue
+        if not (dest/'scenario.json').is_file():
+            result.append(dict(scenario=name,readiness='MISSING_PREREQUISITES',runtime='NOT TESTED'))
+            continue
+        try:verdict=review(dest)
+        except (ValueError,OSError,KeyError,configparser.Error) as exc:
+            result.append(dict(scenario=name,readiness='INVALID',runtime='INCONCLUSIVE',reason='Evidence unreadable: '+str(exc)));continue
+        row=dict(scenario=name,runtime=verdict['status'])
+        try:
+            plan=check(name,root=root)
+            row.update(readiness='HUMAN_VERIFIED' if verdict['status']=='PASS' else 'OFFLINE_VALIDATED_CANDIDATE',
+                       offline_validation='PASS',gecko_bytes=plan['gecko_bytes'])
+        except (ValueError,OSError,KeyError,configparser.Error) as exc:
+            row.update(readiness='HUMAN_VERIFIED' if verdict['status']=='PASS' else 'INVALID',
+                       offline_validation='REFUSED',reason=str(exc))
+        if verdict['status']=='FAIL': row['readiness']='FAILED_VALIDATION'
+        result.append(row)
+    return result+[dict(scenario=name,readiness='BLOCKED',runtime='NOT TESTED',reason=reason) for name,reason in BLOCKED.items()]
+
+
+def collect_all(dest):
+    """One owner command, no overwrites. Existing bundles must match raw input."""
+    case=json.loads((dest/'case.json').read_text(encoding='utf-8'))
+    configuration(dest/'User')
+    for path in (dest/'User').rglob('*'):private(path,dest)
+    collected=[];retained=[];missing=[]
+    # Check all collisions before writing any new evidence.
+    for label in case['captures']:
+        raw=private(dest/(label+'.sav'),dest)
+        saved=dest/'captures'/label
+        if saved.exists():
+            manifest=json.loads((saved/'manifest.json').read_text(encoding='utf-8'))
+            if raw.exists() and sha(raw)!=manifest['state_sha256']:
+                raise ValueError('raw state differs from immutable capture: '+label+'; prepare a NEW trial')
+    for label in case['captures']:
+        raw=dest/(label+'.sav')
+        if (dest/'captures'/label).exists(): retained.append(label)
+        elif raw.is_file():
+            collect(dest,label,raw,dest/'User/GameSettings/GFEE01.ini',profile=dest/'User');collected.append(label)
+        else:missing.append(label)
+    return dict(collected=collected,retained=retained,missing_raw_states=missing,review=review(dest))
 
 
 def observe(dest, passed, failed, notes):
@@ -251,6 +325,8 @@ def main():
     p = sub.add_parser('check'); p.add_argument('name'); p.add_argument('--fresh-boot', action='store_true')
     p = sub.add_parser('capture'); p.add_argument('name'); p.add_argument('label'); p.add_argument('state', type=Path)
     p = sub.add_parser('review'); p.add_argument('name')
+    p = sub.add_parser('collect'); p.add_argument('name')
+    p.add_argument('--passed',action='append',default=[]);p.add_argument('--failed',action='append',default=[]);p.add_argument('--notes',default='')
     p = sub.add_parser('observe'); p.add_argument('name'); p.add_argument('--passed', action='append', default=[])
     p.add_argument('--failed', action='append', default=[]); p.add_argument('--notes', default='')
     args = parser.parse_args()
@@ -259,15 +335,7 @@ def main():
             raise ValueError('trial must be a plain directory name')
         package = ROOT / 'work/scenarios' / args.trial
         if args.mode == 'list':
-            result = []
-            for name in (*SOURCES, *ESCAPES):
-                try:
-                    plan = check(name, root=package)
-                    row = {'scenario':name,'readiness':plan['readiness'],'offline_validation':'PASS','gecko_bytes':plan['gecko_bytes']}
-                except (ValueError,OSError,KeyError,configparser.Error) as exc:
-                    row = {'scenario':name,'readiness':'REFUSED','reason':str(exc)}
-                result.append(row)
-            result += [{'scenario': name, 'readiness': 'BLOCKED', 'reason': reason} for name, reason in BLOCKED.items()]
+            result = listing(package)
         elif args.mode == 'prepare':
             destination = args.root or package
             result = prepare(destination)
@@ -277,7 +345,7 @@ def main():
             result['prepared'] += list(ESCAPES)
         elif args.mode == 'check': result = check(args.name, args.fresh_boot, root=package)
         else:
-            if args.name not in (*SOURCES, *ESCAPES):
+            if args.name not in known():
                 raise ValueError('unknown or blocked scenario')
             dest = scenario_dir(args.name,root=package)
             if args.mode == 'capture':
@@ -285,12 +353,15 @@ def main():
                 for path in (dest / 'User').rglob('*'): private(path, dest)
                 result = collect(dest, args.label, args.state, dest / 'User/GameSettings/GFEE01.ini', profile=dest / 'User')
             elif args.mode == 'observe': result = observe(dest, args.passed, args.failed, args.notes)
+            elif args.mode == 'collect':
+                if args.passed or args.failed or args.notes: observe(dest,args.passed,args.failed,args.notes)
+                result=collect_all(dest)
             else: result = review(dest)
     except (ValueError, OSError, KeyError, configparser.Error) as exc:
         print(json.dumps({'status': 'REFUSED', 'reason': str(exc)}))
         return 1
     print(json.dumps(result, indent=2, ensure_ascii=True))
-    return int(isinstance(result, dict) and result.get('status') == 'FAIL')
+    return int(isinstance(result, dict) and (result.get('status') == 'FAIL' or result.get('review',{}).get('status')=='FAIL'))
 
 
 if __name__ == '__main__':

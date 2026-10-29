@@ -6,6 +6,44 @@ CAMP-AB records standalone Ch10 Suspend/fresh Resume.
 CAMP-Z records original Kieran Escape, CAMP-Y Wait/P1 lockout. Single-command launch/capture
 instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
 
+## CAMP-AD — next human-operated batch, OFFLINE preparation only
+
+2026-10-29. **No new runtime PASS.** Six separate candidates pass offline preflight:
+CH10-CHAPTER-COMPLETE3216bytes; CH7-PLAYER2-CONTROL2536; CH6-YELLOW-RESCUE2928;
+CH6-YELLOW-COMBAT2912; CH6-YELLOW-FATAL2912; CH9-PARTNER-COMBAT2912.
+Owner guide: [NEXT_SCENARIO_TESTS.md](NEXT_SCENARIO_TESTS.md).
+
+207 automated tests PASS, including14 new fixture/validator/launcher regressions;
+required tests.test_tools51 PASS;428/428 original signatures match. All31 accepted
+runtime artifacts still hash-match. Stable gameplay fingerprint8609ae9f49fd879f,
+2536bytes, unchanged. No emulator launch/input, original game/save write, accepted
+profile/capture modification, production patch change or branch merge occurred.
+
+- Actual accepted sources redecoded, exact source hashes checked. New seeded
+  state game fields equal source snapshots; only private C2 layout/hooks and
+  documented clean cache valid bits differ. New Chapter7 case boots from its
+  copied accepted GCI; source.sav is inspection-only, never a launch argument.
+- Original Rescue filter/capacity/pair construction and weapon-use decrement
+  paths pinned (RESEARCH CAMP-023). Oscar/Rhys bounded predicates admit the
+  candidate,33 versus8; actual original command remains NOT TESTED.
+- Compact position/queue execution tests mock native calls and verify guards,
+  one-at-a-time Blue queue, blocked destinations, GPR/special-register restoration,
+  and refusal to alter stable code. They do not establish runtime setup/AI safety.
+- Verdict mutations reject wrong faction/script, lost Kieran, incorrect prisoner
+  history, invalid Escape order, inventory/progression loss, absent card-write
+  proof, one-sided Rescue links, missing combat EXP/uses and unmarked fatal HP0.
+  Human observations remain required; no generated run promotes the ledger.
+- Root launcher adds idempotent immutable `-Collect` plus explicit observations;
+  listing preserves scoped human PASS even when a changed card blocks seed restore.
+  Later original call-site prerequisite report covers six requested areas; all
+  remain BLOCKED without matching map/history sources. No unusable profiles made.
+
+Next runtime evidence needed: original C11 ending/permanent Kieran/native load;
+Ch7 P2 battle initialization; genuine Rescue before carried Escape; ordinary
+Yellow combat and separate death; native Lethe combat. Full campaign, level-up,
+healing/status effects, temporary partner cleanup and internet Netplay remain
+unverified. The fatal candidate does not force a death; survival is INCONCLUSIVE.
+
 ## CAMP-AC — Ch6 completion through native Chapter7 save/fresh Load
 
 **PASS, scoped synthetic sequence and native persistence.** Human clarified that

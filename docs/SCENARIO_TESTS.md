@@ -1,5 +1,10 @@
 # Short owner-operated campaign tests
 
+**Next batch:** [NEXT_SCENARIO_TESTS.md](NEXT_SCENARIO_TESTS.md) has six new
+offline-validated candidates and the simpler `-Collect` workflow. The four
+scenarios documented below now have scoped human passes and need no repeat.
+`-List` separates accepted runtime results from current launch/card safety.
+
 Run PowerShell in `C:\Users\Aaron\CoderViber2\FireEmblemCampaignAudit`.
 Codex has not launched Dolphin or performed these interactions. The owner has
 now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y) and

@@ -310,6 +310,46 @@ def review(case_dir):
     if case['id'] == 'CH10-PRISONER-ESCAPE':
         from tools.scenario_verdicts import prisoner_escape
         return prisoner_escape(snapshots['before'], snapshots['after'], observed)
+    from tools.action_scenarios import NAMES as ACTIONS
+    if case['id'] in ACTIONS:
+        from tools.action_scenarios import source
+        from tools.action_verdicts import verify
+        _,_,original=source(case['id'])
+        setup=json.loads((case_dir/'scenario.json').read_text(encoding='utf-8'))
+        for relative,digest in setup['pinned'].items():
+            if relative.replace('\\','/')=='User/Config/GCPadNew.ini':continue
+            path=(case_dir/relative).resolve()
+            if case_dir.resolve() not in path.parents or sha(path)!=digest:
+                return dict(status='FAIL',failures=['immutable scenario prerequisite changed: '+relative])
+        return verify(case['id'],snapshots,observed,original['game'],setup['setup'],setup['fingerprint'])
+    if case['id'] in ('CH10-CHAPTER-COMPLETE','CH7-PLAYER2-CONTROL'):
+        from tools.next_scenarios import source,positioning
+        from tools.next_verdicts import ch7_wait,ch10_completion
+        _,state,_,original=source(case['id'])
+        setup=json.loads((case_dir/'scenario.json').read_text(encoding='utf-8'))
+        for relative,digest in setup['pinned'].items():
+            if relative.replace('\\','/')=='User/Config/GCPadNew.ini':continue
+            path=(case_dir/relative).resolve()
+            if case_dir.resolve() not in path.parents or sha(path)!=digest:
+                return dict(status='FAIL',failures=['immutable scenario prerequisite changed: '+relative])
+        if case['id']=='CH7-PLAYER2-CONTROL':return ch7_wait(snapshots,observed,original['game'])
+        from tools.inspect_state import load_mem1
+        _,mem=load_mem1(state,DEFAULT_IMAGE)
+        records,_=positioning(original['game'],mem)
+        if json.dumps(records,sort_keys=True)!=json.dumps(setup['setup']['records'],sort_keys=True):
+            return dict(status='FAIL',failures=['declared setup records differ from independently reconstructed source'])
+        baseline=setup['initial_cards']
+        original_ok=bool(baseline) and all(sha(case_dir/'card-before'/name)==digest for name,digest in baseline.items())
+        final=case_dir/'captures/reloaded'
+        final_manifest=json.loads((final/'manifest.json').read_text(encoding='utf-8'))
+        paths=[final/path for path in final_manifest.get('profile_files',{})
+               if path.replace('\\','/').startswith('profile/GC/USA/Card A/') and path.lower().endswith('.gci')]
+        def card_identity(path):
+            data=path.read_bytes()
+            return data[:6],data[8:40]
+        identities=sorted(card_identity(case_dir/'card-before'/name) for name in baseline)
+        card_write=original_ok and sorted(card_identity(p) for p in paths)==identities and sorted(sha(p) for p in paths)!=sorted(baseline.values())
+        return ch10_completion(snapshots,observed,original['game'],setup['setup'],card_write)
     if case['id'] in ('CH10-NATIVE-RESUME','CH6-IKE-COMPLETE'):
         from tools.scenario_verdicts import native_resume, ch6_completion
         verified_write=False

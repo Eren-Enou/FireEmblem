@@ -4,6 +4,12 @@ All commands run in the isolated campaign clone. Use its Python interpreter and
 its copied Dolphin/image. Never point a generated profile at a personal card.
 Generated profiles, states, movies and extracted evidence remain ignored in work/.
 
+Current offline owner-only batch: [NEXT_SCENARIO_TESTS.md](NEXT_SCENARIO_TESTS.md).
+Six isolated candidates, runtime NOT TESTED. `next_scenarios` and `action_scenarios`
+build NEW profiles only; `fixture_relayout` retains stable code and checks suspended
+CPU/cache safety before replacing private setup. No tool launches or drives Dolphin.
+The existing root launcher provides explicit owner launch and offline -Collect.
+
 ## Fixture classes
 
 | Class | What it establishes | What remains missing |

@@ -11,12 +11,13 @@ def run(code, spec, actors, occupied=False, chapter=None):
         for i,b in enumerate(value.to_bytes(width,'big')):memory[addr+i]=b
     def read(addr,width=4):return int.from_bytes(bytes(memory.get(addr+i,0) for i in range(width)),'big')
     for off,value in ((0x718,spec['chapter'] if chapter is None else chapter),(0x719,spec['phase']),
-                      (0x71A,spec['turn']>>8),(0x71B,spec['turn']&255),(0x71C+spec['phase'],1)):
+                      (0x71A,spec['turn']>>8),(0x71B,spec['turn']&255),(0x71C,1),(0x71C+spec['phase'],1)):
         write(0x80330000+off,value,1)
     units={}
     for index,(pid,unit) in enumerate(actors.items()):
         addr=0x81200000+index*0x280;force=0x81300000+index*16
         units[pid]=(addr,index+1)
+        write(addr+0x188,unit.get('character',0x81400000+index*4))
         write(addr+0x190,force);write(force+8,unit.get('force',spec['force']),1)
         write(addr+0x194,unit.get('rescue',0));write(addr+0x198,index+1,1)
         write(addr+0x19E,unit['xy'][0],1);write(addr+0x19F,unit['xy'][1],1)
@@ -35,6 +36,16 @@ def run(code, spec, actors, occupied=False, chapter=None):
             addr=(regs[ra]+signed)&0xFFFFFFFF;write(addr,regs[rd])
             if op==37:regs[ra]=addr
         elif op==24:regs[ra]=regs[rd]|imm
+        elif op==21:
+            shift=(w>>11)&31;mb=(w>>6)&31;me=(w>>1)&31
+            rotated=((regs[rd]<<shift)|(regs[rd]>>(32-shift if shift else 32)))&0xFFFFFFFF
+            mask=sum(1<<(31-bit) for bit in range(32) if (mb<=bit<=me if mb<=me else bit>=mb or bit<=me))
+            regs[ra]=rotated&mask
+        elif op in (46,47):
+            addr=(regs[ra]+signed)&0xFFFFFFFF
+            for r in range(rd,32):
+                if op==46:regs[r]=read(addr+4*(r-rd))
+                else:write(addr+4*(r-rd),regs[r])
         elif op==28:regs[ra]=regs[rd]&imm;eq=regs[ra]==0;spr['cr']=int(eq)
         elif op==11:eq=regs[ra]==(signed&0xFFFFFFFF);spr['cr']=int(eq)
         elif op==18:

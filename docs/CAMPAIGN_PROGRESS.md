@@ -2,6 +2,17 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-AD offline next batch (2026-10-29): six separate owner-operated candidates
+  prepared and preflighted; runtime NOT TESTED. C11 original ending/Kieran retention
+  uses3216bytes; Ch7 native-load P2 control2536; original Rescue2928; Oscar ordinary
+  combat/fatal and native Lethe combat2912 each. Guide: NEXT_SCENARIO_TESTS.md.
+  Root launcher now supports one-command immutable -Collect and separates human
+  acceptance from launch safety.207 tests/428 signatures;31 accepted artifacts
+  unchanged; stable2536/fingerprint8609ae9f49fd879f preserved. No Dolphin/input.
+  Original Rescue faction/capacity/link and item-use paths pinned; genuine carried
+  relationship and original ending results still require later owner evidence.
+  Six later-chapter prerequisite reports remain BLOCKED; no fabricated histories.
+
 - CAMP-AC PASS: human newly saved Chapter7 and fresh native Load after synthetic
   Ch6 original Escape queue/Ike-last. Collected reloaded.sav; all five survivor
   records plus two away records match preparations exactly. Oscar nonempty items,

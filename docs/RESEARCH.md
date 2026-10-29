@@ -15,6 +15,72 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-023 — compact private next-action fixtures and original Rescue predicates
+
+STATIC/OFFLINE ONLY, 2026-10-29. `scenario_position_code` uses a bounded source-
+state table of unit/character pointers, original force, source/destination xy.
+It calls only previously pinned UnitGetByPos/UnitSetPos. It saves/restores GPRs
+3..31 with stmw/lmw, plus r0, LR, CR, CTR and XER; preserves the displaced input
+hook instruction. Mocked native-call execution checks guards and ABI, not gameplay.
+Chapter/phase/turn/PID-descriptor/force/HP/rescue/occupancy guards limit positioning.
+The C11 Blue-turn2 queue skips only genuinely escaped force5 Blue actors and
+stops after one move. It never executes Escape or writes flags/factions/items.
+
+`fixture_relayout` retains all stable C2 storage bytes and hooks exactly, removes
+only recognized private setup/obsolete loader codes, restores removed hooks from
+the checksum-verified DOL and installs the new branch/return. The C11 container is
+already loaded, so the source7->11 loader is unnecessary and is removed rather
+than retained across future native progression. It checks all old active C2
+returns and installed branches. The CAMP-022 serialized CPU/stack/clean-cache
+checks cover every edited code-list/hook span; no CPU register or game field is
+edited. Re-decoding each new seed produces exactly the source game snapshot.
+Budgets: C11 ending3216; Ch7 stable-only2536; C6 Rescue2928; C6 combat/fatal and
+Ch9 partner combat2912 each. All are separate profiles, runtime NOT TESTED.
+
+C11 source is accepted Kieran Escape. Scene5's Ike branch sets gf_complete;
+scene57 performs conditional door/unescaped fallback before AllUnitEscape, then
+MapFree and prisoner-live ending checks. With the actual closed doors, Kieran's
+true Escape key and Brom/Nephenee's false keys, only Kieran has established local
+recruitment prerequisites. The native permanent roster result remains unverified.
+Nine active player actors stage near exit6,2, six living Reds stage far away;
+minimum Manhattan separation23. Grid masks/occupancy were read from the actual
+24x23 map. This distance is a conservative geometric observation, not a full AI,
+terrain-cost, alert/reinforcement or event-activation proof. One original enemy
+phase and the original ending still require the owner. No closed door is opened.
+
+Original Rescue label callback0x80077D88 is in table0x802886BC;0x80077D90 resolves
+MID_Rescue. Availability0x80077E60 tests actor role bits6 at0x80077E90, invokes
+adjacent collector0x8002B89C at0x80077EA0. Collector excludes terrain code22 at
+0x8002B908/90C and builds callback table0x80284D00 (0x8002B8D0), predicate pointer
+0x80284D08 ->0x8002CB50. North bit8/y-1 are0x8002B940/948; East bit2 is0x8002B9A4.
+The candidate's East edge is open on the original grid. Faction relation call
+0x8002CB78 ->0x80015610 returns0 for equal forces,1 for Red involvement,2 for
+different non-Red forces (0x80015620/638/640); candidate rejects ONLY relation1
+at0x8002CB80. Thus 0/3 is admitted by this bounded faction gate, in either direction.
+
+Capacity predicate0x8003DD7C, called at0x8002CB90, rejects target ability3 and
+compares the two0x8003A1E0 results with carrier minus2 (0x8003DD90/DDB8/DDC4/DDD0/
+DDD8). That stat reads signed character+1C, unsigned class+3D, signed unit+1A9,
+first equipped item/accessory bonus+28, upper clamp99 (pinned reads0x8003A1F4/F8,
+0x8003A2AC,0x8003A364/370/384). Ability bit query reads first word/low mask at
+0x80105C20/24. In the actual C6 source, Oscar returns33 and Rhys8; target ability3
+is absent, both role bits clear, carrier terrain1 and East adjacency open. Reverse
+Rhys->Oscar fails capacity. These bounded predicates are not full menu/runtime
+eligibility, and no rescue bits/pointers are synthesized.
+
+Original pair worker0x8003EA84 is called by action at0x800270B4. It places passenger
+at carrier coordinates (0x8003EAAC), ORs carrier flag2/passenger flag4 (0x8003EAB4/
+EAC0), writes carrier->passenger at0x8003EAC8 and reciprocal pointer at0x8003EACC.
+The future original Rescue capture must demonstrate this complete relationship.
+Carried Escape is blocked pending that evidence; no flag-only mock is accepted.
+
+Original inventory uses: wrapper0x80094A1C calls pinned inventory accessor
+0x80037BD0;0x80094A20 calls0x8001D684. For a consumable item this reads/decrements/
+writes item+4 at0x8001D700/704/708. C6 Oscar retains Iron Lance uses39 and a
+Vulnerary; target Archer retains Steel Bow. Fatal probe retains Emil's original
+IID_AXEBASTER. No damage/EXP/HP/durability/death is assigned by fixture code.
+The original combat result, level-up, death cleanup and Netplay remain untested.
+
 ### CAMP-022 — same-budget private Escape scenarios and suspended CPU safety
 
 STATIC/OFFLINE ONLY. The new Ch10 candidate starts with the accepted original

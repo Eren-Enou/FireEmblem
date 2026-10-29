@@ -1,5 +1,9 @@
 # Campaign integrity: manual tests and evidence collection
 
+Current next tests: [NEXT_SCENARIO_TESTS.md](NEXT_SCENARIO_TESTS.md). Six new
+candidates are offline validated, runtime NOT TESTED. The earlier four short
+scenarios have accepted scoped human results and need no repetition.
+
 For the four prepared short owner-operated scenarios, start with
 [SCENARIO_TESTS.md](SCENARIO_TESTS.md) and root `Test-Scenario.ps1 -List`.
 They are offline-validated candidates, not new runtime passes. The older broad
