@@ -14,6 +14,7 @@ from tools.fe9.disc import DiscReader
 from tools.fe9.events import functions
 from tools.fe9.event_vm import execute
 from tools.verify_game import DEFAULT_IMAGE
+from tools.native_lifecycle import force_flags
 
 SCRIPT_SHA256 = {
     'Scripts/C11.cmb': '153812f03aa5540589777cd8dbffc8bfd7c5494025e0ba3e905454834b94730d',
@@ -43,8 +44,8 @@ class World:
 
     UnitGet selector4 = rescued passenger (CAMP-001). Lookup supplies stable
     identity tokens. GetStatus/GetForce supply caller-provided fields. Transfer
-    changes force only in this model; preservation is an assumption, not proof
-    that the native worker preserves every bit. Escape is recorded, not executed.
+    changes force and the pinned low status bits (CAMP-016). Other native
+    effects remain unresolved. Escape is recorded, not executed.
     """
     def __init__(self, scripts, units=None, *, actor='PID_OSCAR', passenger=0,
                  flags=(), maniac=False):
@@ -70,7 +71,8 @@ class World:
             finally:
                 self.helper_depth -= 1
         if name == 'MindGetMe': return self.actor
-        if name == 'UnitGetByPID': return args[0] if args[0] in self.units else 0
+        if name == 'UnitGetByPID':
+            return args[0] if args[0] in self.units and self.units[args[0]].get('pid', args[0]) is not None else 0
         if name == 'UnitGetStatus': return self.units[args[0]]['flags']
         if name == 'UnitGetForce': return self.units[args[0]]['force']
         if name == 'UnitGet':
@@ -83,6 +85,7 @@ class World:
         if name == 'Maniac': return int(self.maniac)
         if name == 'UnitTransferToForce':
             self.units[args[0]]['force'] = args[1]
+            self.units[args[0]]['flags'] = force_flags(self.units[args[0]]['flags'], args[1])
             return 0
         if name == 'UnitEscape': self.escaped.append(args); return 0
         if name == 'EventGetX': return 19
@@ -129,6 +132,27 @@ class JillWorld(World):
             return 0
         if name in self.PRESENTATION:
             self.calls.append({'command': name, 'args': args.copy()})
+            return 0
+        return super().native(name, args)
+
+
+class LifecycleWorld(World):
+    """Original C11 scripts + bounded native projection; no rescue/native I/O."""
+    def __init__(self, scripts, units=None, *, owners=None, **kwargs):
+        from tools.unit_lifecycle import Lifecycle
+        super().__init__(scripts, units, **kwargs)
+        self.lifecycle = Lifecycle(self.units, shared=True)
+        self.fixed_owners = owners or {}
+
+    def native(self, name, args):
+        if name in ('UnitTransferToForce', 'UnitEscape', 'AllUnitEscape'):
+            self.calls.append({'command': name, 'args': args.copy()})
+            if name == 'UnitTransferToForce': self.lifecycle.transfer(args[0], args[1])
+            elif name == 'AllUnitEscape': self.lifecycle.all_escape(owners=self.fixed_owners)
+            else:
+                if args[1] != 0: raise ValueError('unmodeled UnitEscape mode')
+                self.lifecycle.escape(args[0], owners=self.fixed_owners)
+                self.escaped.append(args.copy())
             return 0
         return super().native(name, args)
 

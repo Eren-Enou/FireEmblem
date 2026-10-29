@@ -1,5 +1,18 @@
 # Testing
 
+## CAMP-T — Native force fragment and bounded unit lifecycle
+
+Offline only, afterece1e2e. Native transfer-status regression first FAILED, then
+passed with the pinned original masks. Bounded original-PPC flag executor checks
+8x36 inputs and detects an OR mutation. Stateful lifecycle tests distinguish
+fixed-owned Yellow from native partners, projected escape/disposal, original
+C11 direct recruitment/escape/cleanup branches, dead/away exclusion, duplicate
+slots/PIDs and rejection of rescue/unknown native proof. Accepted Talk capture
+imports read-only and is preserved. Full native cleanup/save/recruitment remains
+unverified. **154 tests PASS** before milestone documentation; original game
+addresses and limitations: RESEARCH CAMP-016/017. No emulator or gameplay patch.
+
+
 ## CAMP-S — Jill original directed event regressions
 
 Offline only, after0bae363. Three regressions add64 original C21 scene26/27

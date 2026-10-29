@@ -2,6 +2,12 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-T: native force flag fragment executes offline; force-only model corrected
+  after failing regression. Bounded lifecycle integrates original C11 through
+  projected AllUnitEscape. No-rescue disposal clears identity/ownership; fixed
+  hand-back preserves owned Yellow, native partners remain temporary. Rescue,
+  transitive native effects and permanent recruitment still unresolved.
+
 - Offline-only initiative: four milestones, no emulator/UI or request for user input.
   Evidence collector now pins decoded snapshot hashes; edited analysis fails,
   legacy analysis remains INCONCLUSIVE. Actual failing-then-passing regression

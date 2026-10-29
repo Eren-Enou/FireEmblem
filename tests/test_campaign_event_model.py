@@ -102,6 +102,14 @@ class OriginalCampaignModelTests(unittest.TestCase):
         self.assertEqual(world.flags, {'F1914', DOOR_KEYS['PID_KEVIN']})
         self.assertEqual(world.units, original)
 
+    def test_force_transfer_updates_native_low_status_bits(self):
+        world = World(self.scripts)
+        world.units['PID_KEVIN']['flags'] = 0x60000018
+        world.native('UnitTransferToForce', ['PID_KEVIN', 0])
+        self.assertEqual(world.units['PID_KEVIN']['flags'], 0x60000000)
+        world.native('UnitTransferToForce', ['PID_KEVIN', 5])
+        self.assertEqual(world.units['PID_KEVIN']['flags'], 0x60000010)
+
     def test_wrong_transfer_opcode_argument_is_detected_by_talk_oracle(self):
         scripts = self.scripts.copy()
         raw = bytearray(scripts['Scripts/C11.cmb'])

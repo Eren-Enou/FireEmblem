@@ -18,6 +18,31 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-016: force-list status mutation and no-rescue Escape classification.
+    (0x80015740, 0x881E0008, "append reads destination force byte"),
+    (0x8001576C, 0x54000774, "active/free forces clear low mask0x18"),
+    (0x8001577C, 0x60000018, "roster ORs status0x18"),
+    (0x80015788, 0x54000776, "roster then clears bit0x8"),
+    (0x80015798, 0x60000008, "died list ORs bit0x8"),
+    (0x80015830, 0x54000774, "prepend active/free status mask"),
+    (0x80015840, 0x60000018, "prepend roster status OR"),
+    (0x8001584C, 0x54000776, "prepend roster status clear"),
+    (0x8003B6D0, 0x90830190, "force setter writes force pointer"),
+    (0x8003B724, 0x901C0188, "uninitialize clears character identity pointer"),
+    (0x8003B734, 0x981C019A, "uninitialize clears level"),
+    (0x8003B738, 0x981C019B, "uninitialize clears experience"),
+    (0x8003B74C, 0x901C01A0, "uninitialize clears full flags including ownership"),
+    (0x8003DFCC, 0x83E30194, "escape reads rescue link"),
+    (0x8003DFD4, 0x41820884, "no rescue link jumps to actor classification"),
+    (0x8003E864, 0x807E0190, "escape actor force pointer"),
+    (0x8003E868, 0x88030008, "escape actor force index"),
+    (0x8003E870, 0x40820030, "non-Blue actor takes disposal branch"),
+    (0x8003E88C, 0x4BFD6F51, "Blue escape prepends to roster"),
+    (0x8003E894, 0x60004000, "Blue escape marks escaped bit"),
+    (0x8003E8B0, 0x4BFFCE41, "non-Blue escape uninitializes unit"),
+    (0x800BA840, 0x80630004, "AllUnitEscape begins with Blue tail"),
+    (0x800BA84C, 0x4BF8376D, "AllUnitEscape Blue pass calls worker"),
+    (0x800BA8B4, 0x4BF83705, "AllUnitEscape remaining-force pass calls worker"),
     # CAMP-012: original Talk enumeration uses actor coordinates and neighbors;
     # the selected actor need not occupy its own grid cell in the action menu.
     (0x80078A60, 0x80630000, "Talk availability gets actor from context+0"),

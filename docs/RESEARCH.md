@@ -15,6 +15,60 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-016 — native force flags and no-rescue escape classification
+
+**VERIFIED-STATIC + bounded instruction execution + lifecycle projection.**
+Original append0x80015718 and prepend0x800157DC both mutate the unit flag word:
+force0..4 clear0x18; force5 computes(flags|0x18)&~0x8; force6 ORs0x8; force7
+leaves it unchanged. Pinned append sites0x80015740/6C/7C/88/98 and prepend
+0x80015830/40/4C corroborate this. Setter0x8003B6D0 writes the force pointer.
+The original model's force-only transfer was incorrect: a regression with
+flags0x60000018 failed, then passed after applying the native masks.
+
+An isolated executor runs original instructions0x80015740..0x800157A0 in Python
+memory containing only force byte and flag word. Fragment SHA256
+ a229f2f4909abd5ffcfb7686ad80ac4c6a215cc992fbe6b33d1e81739136e033
+is pinned; unsupported instructions, branches/accesses and identity changes fail.
+All8 forces x36 flag inputs match an independent formula. A controlled wrong-OR
+mutation is rejected by identity and differs from the expected native effect.
+Ownership bits0x60000000 survive this fragment. It is NOT full-function execution;
+refresh0x800946F0, secondary-byte copying and other calls remain unresolved.
+
+Escape worker0x8003DFB8 reads rescue link at0x8003DFCC; no link branches from
+0x8003DFD4 to0x8003E858. Actor force loaded0x8003E864/68; branch0x8003E870
+selects disposal for non-Blue. Blue calls roster prepend at0x8003E88C then ORs
+escaped0x4000 at0x8003E894. Non-Blue calls uninitialize0x8003B6F0 at0x8003E8B0.
+That routine directly clears character pointer0x8003B724, level0x8003B734,
+EXP0x8003B738 and the whole flag word0x8003B74C. Ownership bits therefore do NOT
+survive disposal. AllUnitEscape's Blue-tail load0x800BA840, worker call
+0x800BA84C and remaining-force call0x800BA8B4 corroborate the ordered passes.
+Existing F-39/F-40 explain why EXP-16's existing hand-back is essential.
+
+### CAMP-017 — bounded roster lifecycle integrated with original C11
+
+`tools.unit_lifecycle` models only pinned force/status classification, no-rescue
+Blue-to-roster escape versus non-Blue clearing, original active-force cleanup and
+the existing fixed-PID ownership hand-back. It tracks record identity, observed
+payload, disposal and unresolved native effects. Rescue paths reject BEFORE
+mutation; native death/save/I/O are not simulated. Retained items/progression are
+carried input data, not proof about unresolved transitive engine calls. Generic
+NPCs may legitimately share PIDs: snapshot import keeps their physical slots,
+never collapses them. Ambiguous permanently owned PID matches are rejected.
+
+LifecycleWorld executes original C11 Talk -> direct prisoner Escape -> scene57
+through modeled AllUnitEscape, stopping before MapFree. Directly escaped prisoners
+reach force5 and remain there. Non-Maniac original open-door fallback transfers
+Kieran/Brom to Blue even without Talk; Maniac does not. The synthetic closed-door
+Talk-only path projects Kieran disposal, while Oscar is preserved by the existing
+fixed ownership hook. The accepted post-Talk capture supplies the same local
+preconditions, without modifying it. This is NOT a demonstrated runtime loss,
+complete recruitment, MapFree/late-ending or native persistence result.
+
+Mutation cases omit Yellow hand-back or wrongly assign permanent ownership to
+native partners; their outcomes differ from the expected retained/disposed roster.
+Dead/away lists are untouched by active cleanup. Invalid duplicate slots,
+ambiguous ownership and cleared identities fail. No production code was changed.
+
 ### CAMP-015 — Jill defection directions modeled as distinct original events
 
 **MODEL VERIFIED**, not new gameplay. C21.cmb SHA256
