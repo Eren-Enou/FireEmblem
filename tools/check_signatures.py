@@ -18,6 +18,12 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-019: conditional native next-chapter arithmetic, not event activation.
+    (0x8002E210, 0x889F0010, "normal transition reads current chapter"),
+    (0x8002E224, 0x38040001, "normal transition computes chapter+1"),
+    (0x8002E228, 0xB0C30012, "normal transition resets turn to1"),
+    (0x8002E230, 0x98A30011, "normal transition resets phase to0"),
+    (0x8002E234, 0x4811F07D, "normal transition calls original SetChapter"),
     # CAMP-018: Complete18 requests and original next-part turn setter.
     (0x800B6E00, 0x9421FFF0, "Complete18 native entry"),
     (0x800B6E34, 0x38000005, "Complete18 part1 selects request5"),

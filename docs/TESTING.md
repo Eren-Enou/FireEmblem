@@ -1,5 +1,17 @@
 # Testing
 
+## CAMP-V — Original campaign transition connection graph
+
+After68cf1a2, offline only. Five regressions cover43 script identities and34
+chapter/stage contracts, original aligned call sites, unresolved cross-chapter
+gates, special paths/Endgame, and no transitive promotion of runtime evidence.
+Graph output in ignored work/campaign_transition_graph_v1.json. Reproduce:
+`tools.campaign_graph --path chapter:11 Scripts/C12.cmb [--allow-unresolved]`.
+169 tests PASS at the graph checkpoint;360 signatures match.
+No accepted runtime artifact changed. Native arithmetic pins and exact scope:
+RESEARCH CAMP-019. No gameplay patch or emulator input.
+
+
 ## CAMP-U — Chapter17 prefix contracts and lifecycle acceptance facets
 
 Offline only, aftere2244a1. Original C18 identity pinned. Five stage regressions

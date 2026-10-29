@@ -2,6 +2,11 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-V: original campaign connection graph built from43 containers and34
+  chapter/stage contracts. Queryable paths preserve1227 unresolved edges;
+  conditional native next-chapter arithmetic pinned, no invented completed
+  sequence, stage handoff or save/reload. Accepted evidence stays scoped.
+
 - CAMP-U: C18 completion/opening prefixes execute offline; turn accounting/
   reset, guard clearing, Red cleanup and native request5/6/7 pinned. MapLoad,
   part3 cutscene remainder, phase and full stage4 clear stay unresolved. Existing

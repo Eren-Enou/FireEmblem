@@ -15,6 +15,31 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-019 — campaign connection graph with unresolved transition gates
+
+Original normal transition reads current chapter at0x8002E210, computes +1 at
+0x8002E224, writes turn1 at0x8002E228 and phase0 at0x8002E230, and calls
+SetChapter at0x8002E234. All pinned. This is conditional branch arithmetic,
+not proof of objective completion, dispatch, native cleanup or initialization.
+The special chapter28 path, internal Chapter17 parts and Endgame are NOT given
+fabricated sequential links. F-38's earlier gates and rebuild remain unresolved.
+
+`tools.campaign_graph` derives43 original CMB containers, scene declarations,
+aligned relevant call sites and operation boundaries from the image. It embeds
+34 chapter/stage contracts and their existing ledger evidence without promoting
+those claims onto unrelated edges. Each script has its own SHA256. Local-CFG
+reachability is explicitly distinct from original event activation and order.
+The first graph has3409 nodes,4557 edges,1227 unresolved edges. Counts describe
+static connections, not covered gameplay. Save operations without recovered
+calls remain opaque boundaries rather than invented complete-looking paths.
+
+`--path chapter:11 Scripts/C12.cmb` returns NO ESTABLISHED PATH. Adding
+--allow-unresolved shows the conditional native gate and returns INCONCLUSIVE,
+never PASS. Internal parts18.1..18.4, internal29 Ch27-2, Endgame31 and ending.cmb
+remain separate. No C32 target or automatic endgame continuation is created.
+Tests check every graph call against original aligned instruction boundaries,
+special cases, unknown endpoints and non-transitive runtime classifications.
+
 ### CAMP-018 — Chapter17 bounded stage contracts and native sequence request
 
 Original C18 SHA256 e942b11ab26ef9c6aec26fcb25d6a7110a6560629d3f531cd728a0d86f2c40f9
