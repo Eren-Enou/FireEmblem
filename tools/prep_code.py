@@ -188,6 +188,11 @@ def blocks26() -> list[tuple[int, list[int]]]:
 
 # ---- EXP-27: one draft code for battle (EXP-22 rules) and preparations (EXP-26 rules), shared core ----
 NAME27 = "EXP-27 Draft in battle (L+R, turn 1) and in Choose Units (Z), shared core; replaces EXP-22 and EXP-26"
+SORTIE_TOGGLE = 0x80117D80                 # Choose Units' A callback (list, unit) -> 1 toggled / 0 refused (F-62)
+SORTIE_HOOK = (0x80117D80, 0x9421FFE0)     # its entry: stwu r1,-0x20(r1)
+SE_LIST_OK, SE_LIST_MISS = 0x80275C36, 0x80275C46   # SFX_SYS_SELECT1 / SFX_SYS_MISS1 (as 0x8012DC18/0x8012DC30)
+MFLR11, MFLR12, MTLR11 = 0x7D6802A6, 0x7D8802A6, 0x7D6803A6
+def lhz(d, off, a): return _d(40, d, a, off)
 MAP_STEP = (0x800291D8, 0x9421FFD0)        # human-phase input step (EXP-22's hook): stwu r1,-0x30(r1)
 CURSOR_UNIT = 0x800AA794
 TRANSFER = 0x800BCA38
@@ -225,6 +230,13 @@ def core_routine(a):
     a.label("core")
     a(stwu(1, -0x10, 1), MFLR0, stw(0, 0x14, 1))
     a(cmpwi(28, 0)); a.br("beq", "reject")             # both entries pass a unit pointer or 0 (0x800AA794 / row)
+    a(cmpwi(27, 2)); a.br("bne", "draft")
+    # mode 2 (prep, Player 2's own A): toggle deployment of a Player 2 character via the native 0x80117D80
+    a(lwz(0, 0x1A0, 28), andis_(0, 0, P2 >> 16)); a.br("beq", "reject")                # Player 2's own only
+    a(li(0, 1), stb(0, 3, 30), mr(3, 31), mr(4, 28)); a.call(SORTIE_TOGGLE)             # flag: wrapper lets it pass
+    a(li(0, 0), stb(0, 3, 30), cmpwi(3, 0)); a.br("beq", "reject")
+    a(lis(3, SE_LIST_OK >> 16), ori(3, 3, SE_LIST_OK & 0xFFFF)); a.br("b", "sound")
+    a.label("draft")
     a(addi(3, 28, 0x1BC), li(4, 0)); a.call(HAS_ATTR)
     a(cmpwi(3, 0)); a.br("bne", "reject")                                                # Ike stays Player 1
     a(lwz(11, 0x1A0, 28), lwz(12, 0x190, 28), lbz(0, 8, 12), cmpwi(0, 0)); a.br("beq", "elig")
@@ -295,11 +307,42 @@ def prep_block27() -> tuple[list[int], int]:
         a.br("bl", "core")
 
     _edge_loop(a, lambda a: a(rlwinm(0, 0, 28, 31, 31)), act)                            # Z held -> r0 = 1
+    # Player 2's own A (port 2) on a Player 2 character -> the native deploy/bench toggle 0x80117D80 (F-62).
+    # Data word bytes: [0..1] previous Z per port, [2] previous A on port 2, [3] "Player 2 call" flag.
+    a(lis(12, PADSTATUS >> 16), ori(12, 12, PADSTATUS & 0xFFFF), lhz(0, 12, 12), rlwinm(0, 0, 24, 31, 31))
+    a(lbz(28, 2, 30), stb(0, 2, 30), cmpwi(0, 1)); a.br("bne", "done")
+    a(cmpwi(28, 0)); a.br("bne", "done")                                                # press edge only
+    a(lbz(0, 0x62, 31), extsb(0, 0), lwz(3, 0x3C, 31), mulli(0, 0, 0x24), lwzx(28, 3, 0))
+    a(li(27, 2)); a.br("bl", "core")                                                     # core mode 2 = deploy
     a.br("b", "done")
     core_routine(a)
     _frame_out(a, LIST_STEP[1])
     w = a.words()
     return w + ([NOP, 0] if len(w) % 2 == 0 else [0]), 4 * a.labels["core"]
+
+
+def _data_word_offset() -> int:
+    """Byte offset of the prep block's data word (the edge loop's `bl past; .word`)."""
+    a = Asm()
+    _frame_in(a)
+    a(mr(31, 3), lwz(0, 0x14, 31), lis(12, SALLY_LIST_NAME >> 16), ori(12, 12, SALLY_LIST_NAME & 0xFFFF),
+      cmpw(0, 12)); a.br("bne", "done")
+    a(li(27, 1))
+    return 4 * (len(a.w) + 1)                                                            # after `bl past`
+
+
+def wrapper_block27(flag_from_here: int) -> list[int]:
+    """Hook the native toggle 0x80117D80(list, unit): Player 1's A (the native call) on a Player 2 character is
+    refused (return 0 -> the list plays its refusal sound); Player 2's own call (flag set) passes."""
+    a = Asm()
+    a(MFLR11); a.br("bl", "here"); a.label("here")
+    a(MFLR12, MTLR11, lbz(0, flag_from_here, 12), cmpwi(0, 0)); a.br("bne", "go")      # Player 2's own call
+    a(lwz(0, 0x1A0, 4), andis_(0, 0, P2 >> 16)); a.br("beq", "go")
+    a(li(3, 0), BLR)                                                                      # refused
+    a.label("go")
+    a(SORTIE_HOOK[1])
+    w = a.words()
+    return w + ([NOP, 0] if len(w) % 2 == 0 else [0])
 
 
 def _lr_held(a):
@@ -332,11 +375,16 @@ def map_block27(core_from_map: int) -> list[int]:
 
 
 def blocks27() -> list[tuple[int, list[int]]]:
-    """Battle block first, then the prep block holding the core: the core's address relative to the battle
-    cave is the battle cave's length + the prep block's 8-byte C2 header + the core's offset."""
+    """Battle block, prep block (holding the core and the data word), deploy wrapper. Cross-block offsets
+    follow Dolphin's layout: each cave starts 8 bytes (its C2 header) after the previous cave ends (F-60)."""
     prep, core_off = prep_block27()
     length = len(map_block27(0))
-    return [(MAP_STEP[0], map_block27(4 * length + 8 + core_off)), (LIST_STEP[0], prep)]
+    battle = map_block27(4 * length + 8 + core_off)
+    prep_cave = 4 * len(battle) + 8                                    # relative to the battle cave start
+    wrap_cave = prep_cave + 4 * len(prep) + 8
+    flag = prep_cave + _data_word_offset() + 3
+    here = wrap_cave + 4 * 2                                           # address of the `here` label
+    return [(MAP_STEP[0], battle), (LIST_STEP[0], prep), (SORTIE_HOOK[0], wrapper_block27(flag - here))]
 
 
 def blocks() -> list[tuple[int, list[int]]]:

@@ -725,9 +725,17 @@ class GameTests(unittest.TestCase):
         dol = Dol(self.disc.read_dol())
         found = self._gecko_blocks(pc.NAME27)
         self.assertEqual(found, pc.blocks27())
-        (a0, battle), (a1, prep) = found
-        self.assertEqual((a0, a1), (0x800291D8, 0x8012D6A4))
-        self.assertEqual((dol.u32(a0), dol.u32(a1)), (0x9421FFD0, 0x9421FFD0))
+        (a0, battle), (a1, prep), (a2, wrap) = found
+        self.assertEqual((a0, a1, a2), (0x800291D8, 0x8012D6A4, 0x80117D80))
+        self.assertEqual((dol.u32(a0), dol.u32(a1), dol.u32(a2)), (0x9421FFD0, 0x9421FFD0, 0x9421FFE0))
+        self.assertEqual(dol.u32(0x80118188), 0x38647D80)                     # 0x80117D80 = Choose Units' A
+        # the wrapper's flag load reaches byte 3 of the prep block's data word
+        prep_cave = 4 * len(battle) + 8
+        wrap_cave = prep_cave + 4 * len(prep) + 8
+        lbz = [w for w in wrap if (w >> 26) == 34][0]
+        disp = (lbz & 0xFFFF) - (0x10000 if lbz & 0x8000 else 0)
+        self.assertEqual(wrap_cave + 8 + disp, prep_cave + pc._data_word_offset() + 3)
+        self.assertEqual(prep[pc._data_word_offset() // 4], 0)                # the data word itself
         _, core = pc.prep_block27()
         bl = [i for i, w in enumerate(battle) if (w >> 26) == 18 and (w & 3) == 1
               and 4 * i + (w & 0x3FFFFFC) >= 4 * len(battle)]                    # calls leaving the block
@@ -737,7 +745,7 @@ class GameTests(unittest.TestCase):
         self.assertEqual(prep[core // 4], 0x9421FFF0)                      # core: stwu r1,-0x10(r1)
         self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-27"]), [])
         self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-27", "DBG-01"]), [])
-        self.assertLessEqual(sum(s for _, s in gecko_sizes(["COOP-P6", "EXP-21", "EXP-25", "EXP-27"])), 3200)
+        self.assertLessEqual(sum(s for _, s in gecko_sizes(["COOP-P6", "EXP-21", "EXP-25", "EXP-27", "DBG-01"])), 3256)
 
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}

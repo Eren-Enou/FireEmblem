@@ -301,6 +301,68 @@ class SharedDraftBehaviour(unittest.TestCase):
         self.assertEqual((b.r[3], b.r[1]), (0x7777, sp - 0x30))
 
 
+class DeploymentByOwner(unittest.TestCase):
+    """EXP-27 deployment rules on the native Choose Units toggle 0x80117D80 (F-62)."""
+    A = 0x0100
+
+    def _world(self):
+        w = prep_world()
+        w.load_code(pc.blocks27())
+        self.flag_addr = w._blocks[1][0] + pc._data_word_offset() + 3
+        self.toggles = []
+
+        def toggle(m):                                    # the native toggle, as F-62 describes it
+            self.toggles.append((m.r[3], m.r[4], m.rb(self.flag_addr)))
+            unit = m.r[4]
+            f = m.rw(unit + 0x1A0)
+            if f & 0x010000DC:
+                m.ww(unit + 0x1A0, f & 0xFEFFFF23); m.r[3] = 1
+            elif f & 0x10000:
+                m.r[3] = 0                                # forced
+            else:
+                m.ww(unit + 0x1A0, f | 0x010000DC); m.r[3] = 1
+        w.stubs[pc.SORTIE_TOGGLE] = toggle
+        return w
+
+    def _p2_a(self, w, uid):
+        w.wb(LIST + 0x62, w.rows.index(uid))
+        w.r[3] = LIST; w.press(1, self.A); w.run_block(1)
+        w.release_all(); w.r[3] = LIST; w.run_block(1)
+
+    def test_player2_toggles_own_characters_only(self):
+        w = self._world()
+        w.ww(unit_addr(SOREN) + 0x1A0, OWNED | P2)
+        w.ww(unit_addr(TITANIA) + 0x1A0, OWNED)
+        self._p2_a(w, SOREN)                                      # bench Player 2's Soren
+        self.assertEqual(self.toggles, [(LIST, unit_addr(SOREN), 1)])  # flag set during the call
+        self.assertEqual(w.flags(SOREN) & 0x010000DC, 0x010000DC)
+        self.assertEqual(w.sounds[-1], pc.SE_LIST_OK)
+        self.assertEqual(w.rb(self.flag_addr), 0)                 # flag cleared after
+        self._p2_a(w, SOREN)                                      # deploy again
+        self.assertEqual(w.flags(SOREN) & 0x010000DC, 0)
+        for uid in (TITANIA, RHYS, IKE):                          # Player 1's, unassigned, Ike: refused
+            self._p2_a(w, uid)
+            self.assertEqual(w.sounds[-1], pc.SE26["miss"])
+        self.assertEqual(len(self.toggles), 2)
+
+    def test_forced_refusal_plays_miss(self):
+        w = self._world()
+        w.ww(unit_addr(SOREN) + 0x1A0, OWNED | P2 | 0x10000)
+        self._p2_a(w, SOREN)
+        self.assertEqual((w.flags(SOREN) & 0x010000DC, w.sounds[-1]), (0, pc.SE26["miss"]))
+
+    def test_wrapper_guards_player1_native_a(self):
+        w = self._world()
+        for flags, flag, passes in ((OWNED | P2, 0, False), (OWNED, 0, True), (0, 0, True), (OWNED | P2, 1, True)):
+            w.ww(unit_addr(SOREN) + 0x1A0, flags)
+            w.wb(self.flag_addr, flag)
+            w.r[3], w.r[4] = LIST, unit_addr(SOREN)
+            through = w.run_block(2)
+            self.assertEqual(through, passes, (hex(flags), flag))
+            if not passes:
+                self.assertEqual(w.r[3], 0)                       # refused: returns 0 to the list
+
+
 class CompactOwnershipFrames(unittest.TestCase):
     def test_exp21_caves_preserve_registers(self):
         for i, (addr, words) in enumerate(dc.blocks21()):

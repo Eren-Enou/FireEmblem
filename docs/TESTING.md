@@ -613,6 +613,28 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 |---|---|---|---|
 | 2026-10-28 | user | **Done (research)** | Normal difficulty. Screenshots of Choose Units ("You can select 1 more. 5/6"), the prep menu, Reposition, Items, Conditions and Options. A on a row did nothing (all forced). States backed up to `work/saves/GFEE01.prepR1_s02..s04`. They gave the list object layout, the row table, the highlighted-row field and the palette (F-58). |
 
+## DEPLOY-01 — Each player deploys their own characters (EXP-27 deployment block; PREP-01 Step 5 v0)
+
+**What it is:** in Choose Units:
+- **Player 1** uses the native **A** for Ike, Player 1's and unassigned characters. A on a **Player 2** character is **refused** (buzz).
+- **Player 2** presses **A on their own controller** (key **M**) to deploy or bench **their own** characters. Anything else buzzes.
+
+The game's own toggle (`0x80117D80`, F-62) does the work, so the cap ("You can select N more") and forced units behave as in vanilla. The split is by agreement (no hard quota yet).
+
+**Static/simulated:** `DeploymentByOwner` (3 tests), `test_exp27_shared_core`. **Test bed:** the COMBO-01 set (3224 of 3256 bytes with DBG-01).
+
+**Fixture needed:** a prep screen in **Ch8 or later**, where only Ike is forced (audit). Reach it by playing on from the COMBO-01 Ch7 save.
+
+### Procedure (tester)
+1. At Ch8+ Choose Units, own a few characters each (Z = D / E).
+2. Player 1: **A** (X key) on one of **Player 1's** characters: it benches (native sound). A again: deploys.
+3. Player 1: **A** on a **Player 2** character: **buzz**, nothing changes.
+4. Player 2: **M** (port 2 A) on a **Player 2** character: benches; M again: deploys. M on a Player 1 character: buzz.
+5. Fight. Expected: benched characters absent; deployed Player 2 characters yellow, Player 1's blue. Press **Shift+F2** at turn 1.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+
 ## COMBO-01 — Both drafts in one code set (EXP-27 + EXP-21 v2), plus Ch6 → Ch7 persistence (PREP-04)
 
 **What changed:**
@@ -621,7 +643,7 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 
 Both are behaviourally identical to the verified versions in the simulator (`SharedDraftBehaviour`, `OwnershipForcesBehaviour`, `CompactOwnershipFrames`). The only intended difference: the battle draft now plays EXP-26's sounds, so refusals buzz.
 
-This is the first set where **both drafts and the colours fit together**: COOP-P6 + EXP-21 (**v3**, one shared mover) + EXP-25 + EXP-27 + DBG-01 = **3120 of 3256** bytes.
+This is the first set where **both drafts and the colours fit together**: COOP-P6 + EXP-21 (**v3**, one shared mover with frameless stubs) + EXP-25 + EXP-27 (now also the deployment block, DEPLOY-01) + DBG-01 = **3224 of 3256** bytes.
 
 **Test bed:** `work/ch1/host`, the card unchanged since `ch1_card_before_draft01.gci`.
 
@@ -651,7 +673,8 @@ This is the first set where **both drafts and the colours fit together**: COOP-P
 **Report:** which expectations held, screenshots of 1, 2 and 5, and slots 2–4.
 
 **Failure modes:**
-- Z or L+R does nothing: `install_codes` reports the total (3120 fits), so a skipped code would be a new problem; send the state.
+- Z or L+R does nothing: `install_codes` reports the total (3224 fits), so a skipped code would be a new problem; send the state.
+- In Ch6/Ch7 every candidate is forced, so the native A refuses everyone; that is vanilla (DEPLOY-01 needs Ch8+).
 - Battle and prep behave differently from PREP-03/DRAFT-01.
 
 | Date | Tester | Result | Notes |

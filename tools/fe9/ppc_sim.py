@@ -67,23 +67,31 @@ class Machine:
         self._region = (CAVE_BASE, addr)
         return [s for s, _e in self._blocks]
 
-    def run_block(self, i: int, max_steps: int = 200000) -> None:
+    EXIT_LR = 0x81FFFFF0          # sentinel return address: a blr to it means "returned to the caller"
+
+    def run_block(self, i: int, max_steps: int = 200000) -> bool:
+        """Run block i. Returns True if it left through the normal branch-back slot, False if it returned
+        straight to its caller with blr (e.g. a hook that refuses and returns a value itself)."""
         start, end = self._blocks[i]
-        self._exec(start, end, self._region, max_steps)
+        self.lr = self.EXIT_LR
+        return self._exec(start, end, self._region, max_steps)
 
     def run(self, words: list[int] | None = None, max_steps: int = 200000) -> None:
         if words is not None:
             self.load(words)
         self._exec(CAVE_BASE, self._end, (CAVE_BASE, self._end), max_steps)
 
-    def _exec(self, pc: int, end: int, region: tuple[int, int], max_steps: int) -> None:
+    def _exec(self, pc: int, end: int, region: tuple[int, int], max_steps: int) -> bool:
         while pc != end:
+            if pc == self.EXIT_LR:
+                return False
             self.steps += 1
             if self.steps > max_steps:
                 raise SimError("step limit (infinite loop?)")
             if not region[0] <= pc < region[1]:
                 raise SimError(f"pc left the code: {pc:08X}")
             pc = self._step(pc, self.rw(pc))
+        return True
 
     # --- helpers ---
     def _set_cr0(self, a: int, b: int, signed: bool = True) -> None:

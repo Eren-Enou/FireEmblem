@@ -387,12 +387,14 @@ FORCE_HEAD_ADDR = {0: 0x802CA264, 3: 0x802CA288}
 
 
 def _stub_in(a: Asm) -> None:
-    a(stwu(1, -0x10, 1), MFLR0, stw(0, 0x14, 1), stw(3, 8, 1), stw(4, 0xC, 1))
+    """At a function's entry, 4(r1) is the LR-save word the function itself is about to use (EABI), so the
+    stub parks LR there; the mover preserves r3/r4."""
+    a(MFLR0, stw(0, 4, 1))
 
 
 def _stub_out(a: Asm, original: int) -> list[int]:
     a.label("done")
-    a(lwz(0, 0x14, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), addi(1, 1, 0x10), original)
+    a(lwz(0, 4, 1), MTLR0, original)
     w = a.words()
     return w + ([NOP, 0] if len(w) % 2 == 0 else [0])
 
@@ -402,7 +404,8 @@ def _mover(a: Asm) -> None:
     r7 = unit id filter (0 = all). Every unit in the source list with the P2 bit -> UnitTransferToForce(id, r6).
     Keeps r28-r31."""
     a.label("mover")
-    a(stwu(1, -0x20, 1), MFLR0, stw(0, 0x24, 1), stmw(28, 0x10, 1), mr(28, 7), mr(29, 6), lwz(31, 0, 5))
+    a(stwu(1, -0x20, 1), MFLR0, stw(0, 0x24, 1), stw(3, 8, 1), stw(4, 0xC, 1), stmw(28, 0x10, 1), mr(28, 7),
+      mr(29, 6), lwz(31, 0, 5))
     a.label("mloop")
     a(cmpwi(31, 0)); a.br("beq", "mend")
     a(lwz(30, 0x184, 31), lwz(0, 0x1A0, 31), andis_(0, 0, P2 >> 16)); a.br("beq", "mnext")   # next read first
@@ -413,7 +416,7 @@ def _mover(a: Asm) -> None:
     a.label("mnext")
     a(mr(31, 30)); a.br("b", "mloop")
     a.label("mend")
-    a(lwz(0, 0x24, 1), MTLR0, lmw(28, 0x10, 1), addi(1, 1, 0x20), BLR)
+    a(lwz(0, 0x24, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), lmw(28, 0x10, 1), addi(1, 1, 0x20), BLR)
 
 
 def _args(a: Asm, src: int, dst: int, id_from_r3: bool) -> None:
