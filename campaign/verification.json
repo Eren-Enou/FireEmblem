@@ -245,6 +245,18 @@
         "netplay_two_pc": {
           "status": "NOT TESTED"
         }
+      },
+      "lifecycle": {
+        "escape": {
+          "status": "PASS",
+          "evidence": "ch6-yellow-escape-07",
+          "scope": "One original Yellow Oscar Escape from synthetic exit; no carried/Ike-last/cleanup/save acceptance."
+        },
+        "roster_cleanup": {
+          "status": "PASS",
+          "evidence": "native-lifecycle-model-20",
+          "scope": "Bounded no-rescue native classification and fixed ownership hand-back projection only."
+        }
       }
     },
     {
@@ -389,6 +401,40 @@
           "status": "NOT TESTED"
         },
         "netplay_two_pc": {
+          "status": "NOT TESTED"
+        }
+      },
+      "lifecycle": {
+        "conversation": {
+          "status": "PASS",
+          "evidence": "ch10-original-talk-14",
+          "scope": "Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only."
+        },
+        "temporary_transfer": {
+          "status": "PASS",
+          "evidence": "ch10-original-talk-14",
+          "scope": "Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only."
+        },
+        "escape": {
+          "status": "PASS",
+          "evidence": "native-lifecycle-model-20",
+          "scope": "Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof."
+        },
+        "roster_cleanup": {
+          "status": "PASS",
+          "evidence": "native-lifecycle-model-20",
+          "scope": "Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof."
+        },
+        "ownership": {
+          "status": "PASS",
+          "evidence": "native-lifecycle-model-20",
+          "scope": "Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof."
+        },
+        "permanent_recruitment": {
+          "status": "BLOCKED",
+          "scope": "Original later cleanup/ending and fresh native next-chapter roster evidence unavailable; force5 projection alone is insufficient."
+        },
+        "death_absence": {
           "status": "NOT TESTED"
         }
       }
@@ -606,7 +652,9 @@
           "evidence": "cfg-02"
         },
         "script_model": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "note": "Prefix only: part1/2 completion, partial part3 completion, openings2..4 before MapLoad; part4 final clear excluded."
         },
         "fixture": {
           "status": "NOT TESTED"
@@ -628,6 +676,17 @@
         },
         "netplay_two_pc": {
           "status": "NOT TESTED"
+        }
+      },
+      "lifecycle": {
+        "stage_transition": {
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "scope": "Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff."
+        },
+        "ownership": {
+          "status": "BLOCKED",
+          "scope": "Original sequence/map initialization and later ownership hooks have not been jointly executed."
         }
       }
     },
@@ -640,7 +699,9 @@
           "evidence": "cfg-02"
         },
         "script_model": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "note": "Prefix only: part1/2 completion, partial part3 completion, openings2..4 before MapLoad; part4 final clear excluded."
         },
         "fixture": {
           "status": "NOT TESTED"
@@ -662,6 +723,17 @@
         },
         "netplay_two_pc": {
           "status": "NOT TESTED"
+        }
+      },
+      "lifecycle": {
+        "stage_transition": {
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "scope": "Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff."
+        },
+        "ownership": {
+          "status": "BLOCKED",
+          "scope": "Original sequence/map initialization and later ownership hooks have not been jointly executed."
         }
       }
     },
@@ -674,7 +746,9 @@
           "evidence": "cfg-02"
         },
         "script_model": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "note": "Prefix only: part1/2 completion, partial part3 completion, openings2..4 before MapLoad; part4 final clear excluded."
         },
         "fixture": {
           "status": "NOT TESTED"
@@ -697,6 +771,17 @@
         "netplay_two_pc": {
           "status": "NOT TESTED"
         }
+      },
+      "lifecycle": {
+        "stage_transition": {
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "scope": "Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff."
+        },
+        "ownership": {
+          "status": "BLOCKED",
+          "scope": "Original sequence/map initialization and later ownership hooks have not been jointly executed."
+        }
       }
     },
     {
@@ -708,7 +793,9 @@
           "evidence": "cfg-02"
         },
         "script_model": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "note": "Prefix only: part1/2 completion, partial part3 completion, openings2..4 before MapLoad; part4 final clear excluded."
         },
         "fixture": {
           "status": "NOT TESTED"
@@ -730,6 +817,17 @@
         },
         "netplay_two_pc": {
           "status": "NOT TESTED"
+        }
+      },
+      "lifecycle": {
+        "stage_transition": {
+          "status": "PASS",
+          "evidence": "ch17-prefix-model-21",
+          "scope": "Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff."
+        },
+        "ownership": {
+          "status": "BLOCKED",
+          "scope": "Original sequence/map initialization and later ownership hooks have not been jointly executed."
         }
       }
     },
@@ -1471,6 +1569,34 @@
         "script_model"
       ],
       "description": "Original pinned C21 scenes26/27 and startup transfer helper executed with modeled natives over64 direction/faction/relationship inputs. Defection iff neither Mist nor Lethe query equals3. Directed scene records share consumed key; forward scene explicitly installs attack sequence, reverse scene does not. Force0/3 test inputs both respected; Yellow Jill is hypothetical ownership input, not a claim she is in stable fixed-owner table. No original activation/AI, natural support history, next-phase ownership routing, save or runtime acceptance. Reproduce unittest tests.test_campaign_event_model."
+    },
+    "native-lifecycle-model-20": {
+      "kind": "script_model",
+      "commit": "e2244a1",
+      "worktree_dirty": false,
+      "chapters": [
+        "7",
+        "11"
+      ],
+      "axes": [
+        "script_model"
+      ],
+      "description": "Pinned native force-status fragment executed offline over8 forces x36 flags; bounded no-rescue lifecycle projection integrated with original C11 through AllUnitEscape, stopping MapFree. Existing EXP-16 fixed hand-back distinguished from temporary Yellow. Snapshot import preserves duplicate NPC PIDs by physical slot. Transitive native refresh/map detach, rescue/death, permanent recruitment and save I/O unverified. Reproduce unittest tests.test_native_lifecycle tests.test_unit_lifecycle."
+    },
+    "ch17-prefix-model-21": {
+      "kind": "script_model",
+      "commit": "e2244a1",
+      "worktree_dirty": true,
+      "chapters": [
+        "18.1",
+        "18.2",
+        "18.3",
+        "18.4"
+      ],
+      "axes": [
+        "script_model"
+      ],
+      "description": "Pinned C18 original completion prefixes82/85 and partial88, next-part opening prefixes83/86/89 before MapLoad. BM turn accumulation/guard clearing, Red escape projection, original turn reset1, literal Complete18 args1/2/3 and native requests5/6/7 pinned. Stage3 remaining cutscene and stage4 final clear excluded. No map/phase initialization, natural stage activation, ownership handoff, complete native preservation, save or runtime acceptance. Reproduce unittest tests.test_ch17_stage_model; tools.ch17_stage_model --out work/NEW.json."
     }
   },
   "next_cases": [

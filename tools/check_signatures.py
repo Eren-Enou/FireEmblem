@@ -18,7 +18,23 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-018: Complete18 requests and original next-part turn setter.
+    (0x800B6E00, 0x9421FFF0, "Complete18 native entry"),
+    (0x800B6E34, 0x38000005, "Complete18 part1 selects request5"),
+    (0x800B6E3C, 0x38000006, "Complete18 part2 selects request6"),
+    (0x800B6E44, 0x38000007, "Complete18 part3 selects request7"),
+    (0x800B6E50, 0x38840708, "Complete18 reconstructs state base low"),
+    (0x800B6E54, 0x98040054, "Complete18 stores sequence request at state+54"),
+    (0x800B6E58, 0x4BF76929, "Complete18 invokes unresolved native sequence path"),
+    (0x800B6E74, 0x4BF5508D, "Complete18 schedules original proc"),
+    (0x800BCC34, 0x3C808033, "BMSetTurn state base high"),
+    (0x800BCC38, 0x38840708, "BMSetTurn state base low"),
+    (0x800BCC3C, 0xB0640012, "BMSetTurn writes 16-bit turn at state+12"),
     # CAMP-016: force-list status mutation and no-rescue Escape classification.
+    (0x8003B730, 0x901C0194, "uninitialize clears rescue link"),
+    (0x8003B75C, 0x981C01A8, "uninitialize clears HP"),
+    (0x8003E8C0, 0x38630030, "disposed actor selects free force4"),
+    (0x8003E8C4, 0x4BFD6E55, "disposed actor appends to free force4"),
     (0x80015740, 0x881E0008, "append reads destination force byte"),
     (0x8001576C, 0x54000774, "active/free forces clear low mask0x18"),
     (0x8001577C, 0x60000018, "roster ORs status0x18"),

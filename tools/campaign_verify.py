@@ -8,6 +8,8 @@ from pathlib import Path
 STATUSES={"PASS","FAIL","INCONCLUSIVE","NOT TESTED"}
 AXES=("static_cfg","script_model","fixture","event_runtime","chapter_clear","transition","save_reload","netplay_local","netplay_two_pc")
 RUNTIME={"fixture","event_runtime","chapter_clear","transition","save_reload","netplay_local","netplay_two_pc"}
+LIFECYCLE=('conversation','temporary_transfer','permanent_recruitment','escape','roster_cleanup',
+           'death_absence','stage_transition','chapter_completion','save_reload','ownership','netplay')
 
 
 def validate(ledger):
@@ -38,6 +40,20 @@ def validate(ledger):
                         raise ValueError("two-PC evidence requires two distinct machine declarations")
                 if row["key"] not in run.get("chapters", []) or axis not in run.get("axes", []):
                     raise ValueError("evidence scope does not cover this chapter/stage and axis")
+        for behavior, claim in row.get('lifecycle', {}).items():
+            if behavior not in LIFECYCLE or claim['status'] not in STATUSES | {'BLOCKED'}:
+                raise ValueError('unknown lifecycle behavior/status')
+            if claim['status'] == 'BLOCKED' and not claim.get('scope'):
+                raise ValueError('blocked lifecycle requires precise scope/reason')
+            if claim['status'] == 'PASS':
+                run = ledger['runs'].get(claim.get('evidence'))
+                if not run or row['key'] not in run.get('chapters', []) or not claim.get('scope'):
+                    raise ValueError('lifecycle PASS requires scoped chapter evidence')
+                if run['kind'] not in ('static','script_model','dolphin','netplay_local','netplay_two_pc'):
+                    raise ValueError('unknown lifecycle evidence kind')
+                if run['kind'] in ('dolphin','netplay_local','netplay_two_pc') and not any(
+                        c['status']=='PASS' and c.get('evidence')==claim['evidence'] for c in row['checks'].values()):
+                    raise ValueError('runtime lifecycle must reuse accepted/hash-validated axis evidence')
     return ledger
 
 
@@ -83,7 +99,17 @@ def coverage(ledger):
             entries[axis] = {'level': evidence_level(axis, claim, run),
                              'status': claim['status'], 'evidence': claim.get('evidence'),
                              'limitation': claim.get('note', run.get('description', '') if run else '')}
-        rows.append({'key': chapter['key'], 'title': chapter['title'], 'axes': entries})
+        behaviors = {}
+        for name in LIFECYCLE:
+            claim = chapter.get('lifecycle', {}).get(name, {'status': 'NOT TESTED'})
+            run = ledger['runs'].get(claim.get('evidence'))
+            if claim['status'] == 'BLOCKED': level = 'BLOCKED'
+            elif claim['status'] != 'PASS': level = evidence_level('event_runtime', claim)
+            elif run['kind'] == 'static': level = 'STATICALLY VERIFIED'
+            elif run['kind'] == 'script_model': level = 'MODEL VERIFIED'
+            else: level = evidence_level('netplay_two_pc' if run['kind'].startswith('netplay') else 'event_runtime', claim, run)
+            behaviors[name] = {'level': level, 'evidence': claim.get('evidence'), 'scope': claim.get('scope', '')}
+        rows.append({'key': chapter['key'], 'title': chapter['title'], 'axes': entries, 'lifecycle': behaviors})
     return rows
 
 
@@ -109,6 +135,14 @@ def render(ledger):
         axes = row['axes']
         out.append('| ' + row['title'] + ' | ' + ' | '.join(axes[a]['level'] for a in
                    ('script_model', 'event_runtime', 'chapter_clear', 'netplay_two_pc')) + ' |')
+    out += ['', '## Lifecycle evidence (independent of whole-chapter acceptance)', '',
+            'Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes native persistence. '
+            'BLOCKED identifies unavailable evidence/setup, not a reproduced gameplay defect.', '',
+            '| Chapter/stage | Behavior | Level | Evidence | Exact scope or blocker |', '|---|---|---|---|---|']
+    for row in coverage(ledger):
+        for name, claim in row['lifecycle'].items():
+            if claim['level'] != 'UNTESTED':
+                out.append(f"| {row['title']} | {name} | {claim['level']} | {claim['evidence'] or '-'} | {claim['scope']} |")
     out += ["", "## Evidence runs", ""]
     for key,run in ledger["runs"].items():
         out.append(f"- **{key}**: `{run['kind']}`; {run.get('description','')}")

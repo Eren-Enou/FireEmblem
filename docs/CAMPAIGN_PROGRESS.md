@@ -2,13 +2,18 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-U: C18 completion/opening prefixes execute offline; turn accounting/
+  reset, guard clearing, Red cleanup and native request5/6/7 pinned. MapLoad,
+  part3 cutscene remainder, phase and full stage4 clear stay unresolved. Existing
+  verification ledger now includes scoped lifecycle facets and blocked reasons.
+  Future tests: docs/LIFECYCLE_TEST_CONTRACTS.md; no new exit fixture or GUI.
 - CAMP-T: native force flag fragment executes offline; force-only model corrected
   after failing regression. Bounded lifecycle integrates original C11 through
   projected AllUnitEscape. No-rescue disposal clears identity/ownership; fixed
   hand-back preserves owned Yellow, native partners remain temporary. Rescue,
   transitive native effects and permanent recruitment still unresolved.
 
-- Offline-only initiative: four milestones, no emulator/UI or request for user input.
+- Offline initiatives require no emulator/UI or request for user input.
   Evidence collector now pins decoded snapshot hashes; edited analysis fails,
   legacy analysis remains INCONCLUSIVE. Actual failing-then-passing regression
   recorded in CAMP-R. This changes no accepted source or production code.
@@ -51,7 +56,7 @@
 - Original Talk local effect **PASS**: Kieran Green->Yellow, original key set;
   Oscar stays Yellow and acts, identities/items/progression preserved. Selected
   actor occupancy checker corrected; original captures/report preserved.
-- 141 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-S).
+- 164 tests,355 signatures,16 accepted runtime artifact hashes pass (CAMP-U).
 - Production stable fingerprint8609ae9f49fd879f unchanged. Next: independent
   Ch10 prisoner escape/cleanup and permanent-recruitment analysis. No chapter
   completion, save/reload or Netplay acceptance follows from this synthetic test.

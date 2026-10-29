@@ -15,6 +15,38 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-018 — Chapter17 bounded stage contracts and native sequence request
+
+Original C18 SHA256 e942b11ab26ef9c6aec26fcb25d6a7110a6560629d3f531cd728a0d86f2c40f9
+is pinned. Complete18 is a registered native at **0x800B6E00**, not a guessed
+script helper. It selects codes5/6/7 at0x800B6E34/3C/44 for args1/2/3, reconstructs
+state base at0x800B6E50 and stores byte state+0x54 at0x800B6E54. Calls at
+0x800B6E58 and0x800B6E74 are unresolved native sequence/proc boundaries.
+All sites pinned. This is a request encoding, NOT a current-stage discriminator.
+Snapshots expose raw/matching request only for chapter18 and keep current part
+UNKNOWN. Other writers, consumption and phase initialization are not inferred.
+
+Original C18 completion scenes82/85 execute with explicit GetBattleType0 and
+modeled native effects to their Complete18(1)/(2) boundary. Scene88 executes only
+through turn accumulation/guard clear, stopping before SetGrid and its cutscene.
+BM variable3 becomes current turn for part1 and prior accumulated+turn for2/3.
+Each clears its own original clear-condition key. Red escape loops do not touch
+Blue/Yellow/dead/away records in the bounded model. Full native semantics remain
+limited by CAMP-016/017, not established merely by these script executions.
+
+Original opening scenes83/86/89 each set turn1 before MapLoad(bmap18). Native
+BMSetTurn0x800BCC34/38 reconstructs state base and0x800BCC3C stores the halfword
+at state+0x12; all pinned. Prefix tests stop BEFORE MapLoad and do not simulate
+reinforcements, original part activation, roster load, phase/controller setup or
+ownership redistribution. Part4 ending is separate and unmodeled. A controlled
+BMSetTurn1->2 bytecode mutation is detected by the reset expectation.
+
+New lifecycle facets in the EXISTING verification ledger distinguish conversation,
+temporary transfer, permanent recruitment, escape, cleanup, death/absence, stage,
+completion, save, ownership and Netplay. Runtime facets must reuse already accepted
+axis evidence (and its checked hashes); models remain MODEL VERIFIED. Missing
+facets remain UNTESTED; BLOCKED requires a reason. No duplicate acceptance ledger.
+
 ### CAMP-016 — native force flags and no-rescue escape classification
 
 **VERIFIED-STATIC + bounded instruction execution + lifecycle projection.**
@@ -39,7 +71,9 @@ Escape worker0x8003DFB8 reads rescue link at0x8003DFCC; no link branches from
 selects disposal for non-Blue. Blue calls roster prepend at0x8003E88C then ORs
 escaped0x4000 at0x8003E894. Non-Blue calls uninitialize0x8003B6F0 at0x8003E8B0.
 That routine directly clears character pointer0x8003B724, level0x8003B734,
-EXP0x8003B738 and the whole flag word0x8003B74C. Ownership bits therefore do NOT
+EXP0x8003B738, rescue link0x8003B730, HP0x8003B75C and the whole flag word
+0x8003B74C. The free-force offset0x30 and append are pinned at0x8003E8C0/C4.
+Ownership bits therefore do NOT
 survive disposal. AllUnitEscape's Blue-tail load0x800BA840, worker call
 0x800BA84C and remaining-force call0x800BA8B4 corroborate the ordered passes.
 Existing F-39/F-40 explain why EXP-16's existing hand-back is essential.

@@ -21,10 +21,10 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 | Ch.14: Training | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.15: The Feral Frontier | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.16: The Atonement | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.17: Day Breaks stage 1 | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.17: Day Breaks stage 2 | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.17: Day Breaks stage 3 | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.17: Day Breaks stage 4 | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.17: Day Breaks stage 1 | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.17: Day Breaks stage 2 | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.17: Day Breaks stage 3 | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.17: Day Breaks stage 4 | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.18: Crimea Marches | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.19: Entrusted | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.20: Defending Talrega | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
@@ -62,10 +62,10 @@ STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script pl
 | Ch.14: Training | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.15: The Feral Frontier | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.16: The Atonement | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
-| Ch.17: Day Breaks stage 1 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
-| Ch.17: Day Breaks stage 2 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
-| Ch.17: Day Breaks stage 3 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
-| Ch.17: Day Breaks stage 4 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 1 | MODEL VERIFIED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 2 | MODEL VERIFIED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 3 | MODEL VERIFIED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.17: Day Breaks stage 4 | MODEL VERIFIED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.18: Crimea Marches | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.19: Entrusted | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.20: Defending Talrega | MODEL VERIFIED | UNTESTED | UNTESTED | UNTESTED |
@@ -79,6 +79,29 @@ STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script pl
 | Ch.27-2: Moment of Fate | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.28: Twisted Tower | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Endgame: Repatriation | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+
+## Lifecycle evidence (independent of whole-chapter acceptance)
+
+Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes native persistence. BLOCKED identifies unavailable evidence/setup, not a reproduced gameplay defect.
+
+| Chapter/stage | Behavior | Level | Evidence | Exact scope or blocker |
+|---|---|---|---|---|
+| Ch.6: A Brief Diversion | escape | SYNTHETIC RUNTIME VERIFIED | ch6-yellow-escape-07 | One original Yellow Oscar Escape from synthetic exit; no carried/Ike-last/cleanup/save acceptance. |
+| Ch.6: A Brief Diversion | roster_cleanup | MODEL VERIFIED | native-lifecycle-model-20 | Bounded no-rescue native classification and fixed ownership hand-back projection only. |
+| Ch.10: Prisoner Release | conversation | SYNTHETIC RUNTIME VERIFIED | ch10-original-talk-14 | Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only. |
+| Ch.10: Prisoner Release | temporary_transfer | SYNTHETIC RUNTIME VERIFIED | ch10-original-talk-14 | Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only. |
+| Ch.10: Prisoner Release | permanent_recruitment | BLOCKED | - | Original later cleanup/ending and fresh native next-chapter roster evidence unavailable; force5 projection alone is insufficient. |
+| Ch.10: Prisoner Release | escape | MODEL VERIFIED | native-lifecycle-model-20 | Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof. |
+| Ch.10: Prisoner Release | roster_cleanup | MODEL VERIFIED | native-lifecycle-model-20 | Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof. |
+| Ch.10: Prisoner Release | ownership | MODEL VERIFIED | native-lifecycle-model-20 | Original C11 + bounded no-rescue native projection; fixed-table retention; no complete native or permanent-recruitment proof. |
+| Ch.17: Day Breaks stage 1 | stage_transition | MODEL VERIFIED | ch17-prefix-model-21 | Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff. |
+| Ch.17: Day Breaks stage 1 | ownership | BLOCKED | - | Original sequence/map initialization and later ownership hooks have not been jointly executed. |
+| Ch.17: Day Breaks stage 2 | stage_transition | MODEL VERIFIED | ch17-prefix-model-21 | Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff. |
+| Ch.17: Day Breaks stage 2 | ownership | BLOCKED | - | Original sequence/map initialization and later ownership hooks have not been jointly executed. |
+| Ch.17: Day Breaks stage 3 | stage_transition | MODEL VERIFIED | ch17-prefix-model-21 | Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff. |
+| Ch.17: Day Breaks stage 3 | ownership | BLOCKED | - | Original sequence/map initialization and later ownership hooks have not been jointly executed. |
+| Ch.17: Day Breaks stage 4 | stage_transition | MODEL VERIFIED | ch17-prefix-model-21 | Bounded original prefixes and Complete18 request encoding only; not an executed stage handoff. |
+| Ch.17: Day Breaks stage 4 | ownership | BLOCKED | - | Original sequence/map initialization and later ownership hooks have not been jointly executed. |
 
 ## Evidence runs
 
@@ -94,6 +117,8 @@ STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script pl
 - **ch10-original-talk-14**: `dolphin`; Human manually executed the supplied original Oscar/Kieran Talk test and supplied before/after captures with the original-Talk observation declaration. Both captures match C11.cmb, all stable+loader+setup C2 bodies, chapter11/turn1/Yellow/human control. Oscar slot2 remains force3 at19,19, flags400->401; Kieran slot19 at20,19 changes force2->3 with flags80000 unchanged. Original conversation key clear->set; all roster slot/PID identities and both units HP/class/level/EXP/items/rescue preserved. Door object and door/completion keys unchanged. Selected Oscar has empty own occupancy before Talk but context actor points to slot2; original collector checks the neighboring target, so verifier corrected without relaxing target checks. 3240 bytes. Synthetic setup; no permanent recruitment, escape, cleanup, clear/transition, save/reload or Netplay acceptance.
 - **ch10-prisoner-model-16**: `script_model`; Pinned C11 and startup bytecode executed offline with strict modeled natives. Original Oscar/Kieran and Ike/Brom/Nephenee identity/key matching, direct/carried prisoner escape hand-back before UnitEscape, and 120 cleanup-prefix combinations. Original startup Exists helper accepts forces0..3, excludes5..7. Non-Maniac open-door/non-escaped prisoners are transferred to Blue before AllUnitEscape; Maniac skips this fallback. Explicitly stop before native AllUnitEscape. Native effects, scene activation, permanent recruitment, save/load and Netplay NOT VERIFIED. Reproduce: python -B -m unittest tests.test_campaign_event_model; python -B -m tools.campaign_event_model --out work/NEW_report.json.
 - **jill-direction-model-19**: `script_model`; Original pinned C21 scenes26/27 and startup transfer helper executed with modeled natives over64 direction/faction/relationship inputs. Defection iff neither Mist nor Lethe query equals3. Directed scene records share consumed key; forward scene explicitly installs attack sequence, reverse scene does not. Force0/3 test inputs both respected; Yellow Jill is hypothetical ownership input, not a claim she is in stable fixed-owner table. No original activation/AI, natural support history, next-phase ownership routing, save or runtime acceptance. Reproduce unittest tests.test_campaign_event_model.
+- **native-lifecycle-model-20**: `script_model`; Pinned native force-status fragment executed offline over8 forces x36 flags; bounded no-rescue lifecycle projection integrated with original C11 through AllUnitEscape, stopping MapFree. Existing EXP-16 fixed hand-back distinguished from temporary Yellow. Snapshot import preserves duplicate NPC PIDs by physical slot. Transitive native refresh/map detach, rescue/death, permanent recruitment and save I/O unverified. Reproduce unittest tests.test_native_lifecycle tests.test_unit_lifecycle.
+- **ch17-prefix-model-21**: `script_model`; Pinned C18 original completion prefixes82/85 and partial88, next-part opening prefixes83/86/89 before MapLoad. BM turn accumulation/guard clearing, Red escape projection, original turn reset1, literal Complete18 args1/2/3 and native requests5/6/7 pinned. Stage3 remaining cutscene and stage4 final clear excluded. No map/phase initialization, natural stage activation, ownership handoff, complete native preservation, save or runtime acceptance. Reproduce unittest tests.test_ch17_stage_model; tools.ch17_stage_model --out work/NEW.json.
 
 ## Highest-priority open cases
 

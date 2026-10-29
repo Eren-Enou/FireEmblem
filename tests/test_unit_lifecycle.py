@@ -1,7 +1,7 @@
 import copy
 import unittest
 from pathlib import Path
-from tools.unit_lifecycle import Lifecycle, UnresolvedLifecycle, from_snapshot
+from tools.unit_lifecycle import Lifecycle, UnresolvedLifecycle, from_snapshot, check_projection
 from tools.campaign_event_model import LifecycleWorld, load_scripts, PRISONERS
 from tools.verify_game import DEFAULT_IMAGE
 
@@ -16,6 +16,26 @@ def roster():
 
 
 class LifecycleTests(unittest.TestCase):
+    def test_declared_oracle_detects_loss_retention_inventory_owner_and_revival_mutations(self):
+        before = roster(); good = Lifecycle(before); good.all_escape(owners={'PID_OSCAR': 2})
+        kwargs = dict(retained=['PID_IKE','PID_OSCAR'], removed=['PID_KEVIN','NPC','ENEMY'], untouched=['AWAY','DEAD'])
+        self.assertEqual(check_projection(before, good.units, **kwargs), [])
+        for mutation in ('yellow_loss','guest_retained','items_lost','owner_assigned','dead_revived','duplicate_slot'):
+            after = copy.deepcopy(good.units)
+            if mutation == 'yellow_loss': after['PID_OSCAR']['pid'] = None; after['PID_OSCAR']['force'] = 4
+            elif mutation == 'guest_retained': after['PID_KEVIN'] = copy.deepcopy(before['PID_KEVIN']); after['PID_KEVIN']['force'] = 5
+            elif mutation == 'items_lost': after['PID_OSCAR']['inventory_slots_hex'] = '00'*64
+            elif mutation == 'owner_assigned': after['PID_OSCAR']['flags'] |= 0x60000000
+            elif mutation == 'dead_revived': after['DEAD']['force'] = 0
+            elif mutation == 'duplicate_slot': after['PID_OSCAR']['slot'] = after['PID_IKE']['slot']
+            with self.subTest(mutation=mutation): self.assertTrue(check_projection(before, after, **kwargs))
+
+    def test_projection_oracle_requires_unambiguous_explicit_expectations(self):
+        with self.assertRaisesRegex(ValueError, 'overlapping'):
+            check_projection(roster(), roster(), retained=['NPC'], removed=['NPC'])
+        with self.assertRaisesRegex(ValueError, 'unknown'):
+            check_projection(roster(), roster(), retained=['missing'], removed=[])
+
     def test_owned_yellow_return_is_distinct_from_native_temporary_partner(self):
         original = roster(); model = Lifecycle(original)
         model.all_escape(owners={'PID_OSCAR': 2})

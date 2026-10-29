@@ -103,3 +103,34 @@ def from_snapshot(snapshot):
         if key in records: raise ValueError('duplicate snapshot record identity')
         records[key] = copy.deepcopy(unit)
     return Lifecycle(records)
+
+
+def check_projection(before, after, *, retained, removed, untouched=()):
+    """Check a declared MODEL cleanup contract; never infer native expectations.
+
+    Callers must choose the expected groups from the original script path. This
+    cannot certify runtime recruitment, transitive native effects or saving.
+    """
+    groups = [set(retained), set(removed), set(untouched)]
+    if any(groups[i] & groups[j] for i in range(3) for j in range(i)):
+        raise ValueError('overlapping lifecycle expectation groups')
+    if not set.union(*groups) <= before.keys(): raise ValueError('unknown expected source record')
+    failures = []
+    try: Lifecycle(after)
+    except ValueError as exc: failures.append(str(exc))
+    for key in groups[0]:
+        a, b = before[key], after.get(key, {})
+        if b.get('pid', key) != a.get('pid', key) or b.get('force') != 5 or not b.get('flags', 0) & 0x4000:
+            failures.append(key + ': retained identity/roster/escape differs')
+        for field in ('slot', 'level', 'exp', 'hp', 'inventory_slots_hex'):
+            if a.get(field) != b.get(field): failures.append(key + ': payload changed ' + field)
+        if a['flags'] & 0x60000000 != b.get('flags', 0) & 0x60000000:
+            failures.append(key + ': ownership bits changed')
+    for key in groups[1]:
+        b = after.get(key, {})
+        if b.get('pid', key) is not None or b.get('force') != 4 or b.get('flags') != 0:
+            failures.append(key + ': temporary record improperly retained')
+    for key in groups[2]:
+        if after.get(key) != before[key]: failures.append(key + ': inactive/dead/away state changed')
+    if set(after) != set(before): failures.append('physical record set changed')
+    return failures

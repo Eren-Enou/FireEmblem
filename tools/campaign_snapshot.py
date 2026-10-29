@@ -16,7 +16,7 @@ from tools.inspect_state import STATE, UNITS, load_mem1
 from tools.netplay_package import fingerprint, enabled_codes
 from tools.verify_game import DEFAULT_IMAGE
 from tools.loaded_scripts import inspect as loaded_scripts
-from tools.event_state import inspect as event_state
+from tools.event_state import inspect as event_state, chapter17_request
 
 
 def configuration_flags(names):
@@ -95,6 +95,7 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
              "warning": "INI is intended configuration; old savestates may restore different active patches"},
             "game": {"chapter": mem.u8(STATE + 0x10), "phase": mem.u8(STATE + 0x11),
                      "event_flags": event_state(mem),
+                     **({'chapter17_request': chapter17_request(mem)} if mem.u8(STATE+0x10)==18 else {}),
                      "battle_stage": {"status": "UNKNOWN",
                          "reason": "chapter/CMB identify container, not a decoded battle-stage discriminator"},
                      "event_scripts": loaded_scripts(mem,mem.u8(STATE + 0x10)),

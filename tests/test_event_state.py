@@ -18,6 +18,17 @@ class Memory:
 
 
 class EventStateTests(unittest.TestCase):
+    def test_complete18_request_is_not_claimed_as_current_part(self):
+        from tools.event_state import chapter17_request
+        class RequestMemory:
+            def __init__(self, value): self.value = value
+            def u8(self, address): return self.value
+        for value in (0, 5, 6, 7, 255):
+            result = chapter17_request(RequestMemory(value))
+            self.assertEqual(result['raw'], value)
+            self.assertIsNone(result['current_part'])
+            self.assertEqual(result['matches_complete18_argument'], value-4 if value in (5, 6, 7) else None)
+
     def test_named_set_clear_and_absent_are_distinct(self):
         result = inspect(Memory())
         self.assertTrue(result['complete_table_read'])

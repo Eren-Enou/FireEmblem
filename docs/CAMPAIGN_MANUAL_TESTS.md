@@ -1,5 +1,8 @@
 # Campaign integrity: manual tests and evidence collection
 
+Updated native lifecycle/Chapter17 expectations and future capture contracts:
+[LIFECYCLE_TEST_CONTRACTS.md](LIFECYCLE_TEST_CONTRACTS.md).
+
 Start with **CH10-PARTNER-WAIT** below. The successful Oscar/Kieran Talk does
 not need repeating. This pack tests survival, control, original events and save
 integrity; it cannot guarantee an entire campaign from a handful of local tests.

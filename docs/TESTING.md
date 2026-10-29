@@ -1,5 +1,21 @@
 # Testing
 
+## CAMP-U — Chapter17 prefix contracts and lifecycle acceptance facets
+
+Offline only, aftere2244a1. Original C18 identity pinned. Five stage regressions
+execute turn accumulation, guard clear, Red cleanup and next-part openings
+before explicit native boundaries; a wrong-reset mutation is detected. Part3
+remaining cutscene and full stage4 clear remain unmodeled. Complete18 native
+request and BMSetTurn stores pinned (RESEARCH CAMP-018). Snapshot request bytes
+never imply current part. Lifecycle facets reuse the existing ledger/evidence;
+runtime facets must reference an accepted axis run. Model/blocked classification
+regressions prevent promotion. Future capture contracts in
+LIFECYCLE_TEST_CONTRACTS.md; no new fixture, GUI or physical action.
+A declared cleanup oracle catches six controlled mutations: Yellow loss, guest
+retention, item loss, new owner assignment, dead revival and duplicate slot.
+**164 tests PASS;355/355 signatures and16 accepted runtime hashes verified.**
+
+
 ## CAMP-T — Native force fragment and bounded unit lifecycle
 
 Offline only, afterece1e2e. Native transfer-status regression first FAILED, then

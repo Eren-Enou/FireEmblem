@@ -34,3 +34,10 @@ def inspect(mem):
     except ValueError as exc:
         return {'complete_table_read': False, 'values': None, 'error': str(exc),
                 'scope': 'UNKNOWN; malformed or unavailable named table, never assumed all-clear'}
+
+
+def chapter17_request(mem):
+    raw = mem.u8(STATE + 0x54)
+    return {'raw': raw, 'matches_complete18_argument': raw-4 if raw in (5, 6, 7) else None,
+            'current_part': None,
+            'scope': 'CAMP-018 Complete18 writes request5/6/7; field may be reused/consumed. Not a current-part discriminator.'}

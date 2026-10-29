@@ -91,6 +91,28 @@ class EvidenceTests(unittest.TestCase):
 
 
 class EvidenceClassificationTests(unittest.TestCase):
+    def test_lifecycle_model_stays_model_and_blocked_requires_reason(self):
+        from tools.campaign_verify import coverage
+        data = ledger(); data['chapters'][0]['title'] = 'Test'
+        data['runs']['model'] = {'kind':'script_model', 'chapters':['7']}
+        data['chapters'][0]['lifecycle'] = {
+            'escape': {'status':'PASS','evidence':'model','scope':'native projection only'},
+            'permanent_recruitment': {'status':'BLOCKED','scope':'MapFree/save not executed'}}
+        result = coverage(data)[0]['lifecycle']
+        self.assertEqual(result['escape']['level'], 'MODEL VERIFIED')
+        self.assertEqual(result['permanent_recruitment']['level'], 'BLOCKED')
+        self.assertEqual(result['netplay']['level'], 'UNTESTED')
+        del data['chapters'][0]['lifecycle']['permanent_recruitment']['scope']
+        with self.assertRaisesRegex(ValueError, 'scope/reason'): validate(data)
+
+    def test_lifecycle_rejects_unaccepted_runtime_or_wrong_behavior(self):
+        data = ledger()
+        data['runs']['unaccepted'] = {'kind':'dolphin','chapters':['7']}
+        data['chapters'][0]['lifecycle'] = {'escape': {'status':'PASS','evidence':'unaccepted','scope':'claimed'}}
+        with self.assertRaisesRegex(ValueError, 'reuse accepted'): validate(data)
+        data['chapters'][0]['lifecycle'] = {'invented': {'status':'NOT TESTED'}}
+        with self.assertRaisesRegex(ValueError, 'unknown lifecycle'): validate(data)
+
     def test_scope_labels_do_not_promote_models_or_incomplete_history_to_natural(self):
         passed = {'status': 'PASS'}
         self.assertEqual(evidence_level('static_cfg', passed), 'STATICALLY VERIFIED')
