@@ -1,5 +1,18 @@
 # Testing
 
+## CAMP-P — Pinned original prisoner event regression model
+
+Offline only, after81c91b3; no Dolphin launch/input or artifact edits. Nine new
+regressions execute original C11/startup/C07 bytecode (RESEARCH CAMP-013).
+Coverage includes 120 cleanup-prefix cases, original helper faction comparisons,
+identity/key/reversal matching, three prisoner direct/carried escape branches,
+Ike completion, door keys, wrong-force mutation, missing prerequisites, unknown
+natives and instruction bounds. Prefix boundary is required and never invoked.
+131 automated tests PASS;316/316 original signatures and16 runtime artifact
+hashes verified. Native effects are explicit models; no new gameplay or permanent-recruitment
+acceptance. Report command emits24 summary cases, while regression tests cover120.
+
+
 ## CAMP-O — Manual campaign test pack and private post-Talk copies
 
 2026-10-28. Prepared `work/manual_campaign_v1`: 17 targeted cases plus all34

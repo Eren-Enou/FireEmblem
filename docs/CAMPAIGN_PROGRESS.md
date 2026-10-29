@@ -2,6 +2,11 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- Offline original-event framework added (CAMP-P/CAMP-013): pinned C11/startup/
+  C07 bytecode, real startup helpers, Talk identity/key/reversal, prisoner direct/
+  carried escape and120 cleanup-prefix cases. Original existence accepts Yellow;
+  non-Maniac open-door/non-escaped fallback decoded. Native AllUnitEscape and
+  permanent recruitment remain unverified. No speculative gameplay patch.
 - User owns Dolphin input. Prepare/analyze isolated fixtures and continue static
   campaign work; **do not launch or drive Dolphin** without a new user request.
 - Manual test pack prepared: work/manual_campaign_v1, 17 targeted cases and34
@@ -28,7 +33,7 @@
 - Original Talk local effect **PASS**: Kieran Green->Yellow, original key set;
   Oscar stays Yellow and acts, identities/items/progression preserved. Selected
   actor occupancy checker corrected; original captures/report preserved.
-- 122 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-O).
+- 131 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-P).
 - Production stable fingerprint8609ae9f49fd879f unchanged. Next: independent
   Ch10 prisoner escape/cleanup and permanent-recruitment analysis. No chapter
   completion, save/reload or Netplay acceptance follows from this synthetic test.

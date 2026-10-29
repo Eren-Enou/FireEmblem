@@ -15,6 +15,52 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-013 — original prisoner cleanup predicates executed offline
+
+**MODEL VERIFIED original bytecode; no new runtime evidence.** New
+`tools.campaign_event_model` pins SHA256 of C11.cmb
+153812f03aa5540589777cd8dbffc8bfd7c5494025e0ba3e905454834b94730d,
+startup.cmb 2ff9182ab485b50792deb78947ab557dcb3f4be66e24b3912da0cb230e033d01,
+and C07.cmb c4bb776bfc12cbcacb7bad6cebd906d1e9d88b609cd535a9d51410b20a8feacc.
+No extracted script is committed. Reproduction: unittest
+`tests.test_campaign_event_model`; `tools.campaign_event_model --out work/NEW.json`.
+
+C11 scene57's prefix before AllUnitEscape has a concrete fallback: for each
+Kieran/Brom/Nephenee, non-Maniac AND its original cell-door key set AND its
+escape key unset AND UnitCheckExistsByPID2 returning a unit leads to transfer0.
+Maniac skips this fallback. 120 combinations cover three prisoners, five forces,
+difficulty, door and escape bits. A Talk key is not read by this prefix. It must
+not be inferred that Talk alone, or this fallback alone, proves permanent joining.
+
+UnitCheckExistsByPID2 is startup scene12 (lookup at script offset0x14A7), not
+an opaque registered native. It calls local scene10 UnitCheckExists, whose
+original comparisons accept force0/1/2/3 and reject force4/5/6/7. Thus this
+specific original existence predicate accepts Yellow; no speculative patch is
+justified. Startup scene24 UnitTransferToForceByPID also executes original lookup
+and scene6 validity checks before its modeled native transfer. The VM now runs
+local calls with isolated argument frames, shared instruction budget, depth limit
+and opcode41 stack discard; unsupported reference passing fails closed.
+
+C11 scene5 sets the matching prisoner escape key and calls its original
+transfer-to-Blue helper BEFORE UnitEscape when the actor OR rescued passenger
+is that prisoner. A Yellow Oscar escaping alone does not complete the map;
+Ike as actor or passenger does. C07 scene1 has the same identity completion
+pattern. This is bytecode order/branch evidence; UnitEscape itself is recorded,
+not simulated. Carry eligibility and actual preserved roster remain runtime gaps.
+
+C11 scenes29/30/31 match Oscar/Kieran reversible, Ike/Nephenee directed and
+Ike/Brom directed. Repeated consumed-key and missing-identity tests reject calls.
+Scene15 opens the original door and sets its two access keys without recruiting.
+A deliberate in-memory mutation of Talk's force3 argument to force0 is caught
+by the independent expected-effect assertion. Source game/state bytes stay read-only.
+
+Strict native whitelist supplies GetStatus/GetForce from explicit model inputs,
+UnitGet selector4 passenger, named flags, BM counter and presentation no-ops.
+Modeled transfer preserves other fields by assumption, NOT proof about PowerPC.
+Models stop before AllUnitEscape; no cleanup, native save, chapter-clear or
+Netplay PASS follows. Original native evidence is CAMP-001/003/004/011/012;
+this milestone introduces no new executable addresses or production patches.
+
 ### CAMP-012 — selected actor occupancy and manual Chapter10 original Talk
 
 **VERIFIED-STATIC and captured-runtime local event effect (TESTING CAMP-N).**

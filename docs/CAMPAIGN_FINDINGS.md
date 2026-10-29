@@ -48,7 +48,7 @@ is claimed fixed by these tooling corrections.
 
 | Priority | Finding | Evidence | Status / next valid test |
 |---|---|---|---|
-| P1 | Individual Escape roster preservation remains untested | CAMP-001/003 below | Escape an owned Yellow at (13,26) in Ch6, then Ike last; clear, save and reload Ch7. Mask helpers exclude Yellow but have no direct script calls in all 43 containers |
+| P1 | Individual Escape: synthetic local PASS, carried/cleanup runtime untested | CAMP-001/003 below | Escape an owned Yellow at (13,26) in Ch6, then Ike last; clear, save and reload Ch7. Mask helpers exclude Yellow but have no direct script calls in all 43 containers |
 | P1 | Full-campaign event semantics remain unresolved | CAMPAIGN_MATRIX and JSON checklist | Decode condition records/branches and test actual interactions; command presence is not proof |
 | P1 | Native Yellow becomes human whenever force 3 is nonempty | EXP-08/07/14; F-18/F-29 | Ch9 partners, Ch10 prisoners, Tanith reinforcements and late partners need separate behavior decisions and acceptance |
 | P1 | Player classification uses deployed-player flag 0x400 | F-43/F-45, EXP-18/19 | Newly recruited P2 units may lack this bit until next map; test recruit, ownership, death and roster preservation |
@@ -90,9 +90,11 @@ ownership UnitEscape hand-back remains the roster-preservation mechanism to test
   laguz transformation, remaining-unit behavior, cleanup and eventual recruitment.
 - **Ch10 / C11:** Kieran's force-3 transfer is in function 29 at 0x2C5B, after
   TalkEvent MS_11_TK02. Function 57 contains computed-unit transfers back to Blue.
-  Brom/Nephenee have their own paths. This is an interaction/escape/recruitment
-  lifecycle, not a permanent P2 ownership assignment. Full conversation predicates
-  and escape survival conditions are still unresolved.
+  Brom/Nephenee have their own paths. CAMP-013 now executes original Talk and
+  direct/carried escape branches plus120 cleanup-prefix cases offline. The original
+  startup existence helper accepts forces0..3. Non-Maniac open-door/non-escaped
+  fallback returns qualifying prisoners to Blue before AllUnitEscape. Native
+  cleanup/permanent recruitment/save behavior remains unverified.
 - **Ch13 / C14:** Naesala/Nealuchi go to force 3 at 0x319D/0x31A7 in function 54.
   Later in the SAME function are force-2 escape iteration, force-1 crow checks,
   ending conversations, AllUnitEscape, UnitsPush_Uninitialize and UnitsPop.
