@@ -327,3 +327,9 @@ Controller routing / Netplay (per user priority).
 - **Written:** `docs/HANDOFF.md` (implementation, configurations with byte sizes, the Gecko budget, remaining acceptance tests and fixtures, risks, test instructions, next steps) and `AGENTS.md` (a pointer for Codex).
 - No feature changes. Tests 51/51, signatures 176/176. `main` unchanged (`6a81522`, stable).
 
+## 2026-10-29 — Session 1x: branch review, exact Gecko budget, behavioural cave tests
+
+- **Branch review:** new `origin/codex/campaign-compatibility` (Codex, 30 commits from `10d2496`; Priority 2 campaign-compatibility tooling, fixtures and human-verified Ch6/Ch9/Ch10 scenarios). It isn't merged here (another priority). Its Gecko audit gives the source-derived budget, and its native-patching notes recommend staying on Gecko until a reserved payload region exists.
+- **F-59 corrected from Dolphin's source (`GeckoCode.cpp` 2609a):** the budget is **3256** bytes, not ≈ 3248, and a code that doesn't fit is *skipped while later codes still load*. `check_budget` now mirrors that (PREP-03 run 1 lost only EXP-26; DBG-01 still fit).
+- **`tools/fe9/ppc_sim.py` + `tests/test_cave_behaviour.py`:** a small PowerPC interpreter runs the generated caves against a synthetic unit/force/state/pad world. Eleven tests replay DRAFT-01 and PREP-03 (claims, alternation, refusals, request/cancel/accept, release, no force change in prep), EXP-21 apply/return/escape and EXP-25 colours, plus register/stack preservation. A first run caught a bug in the interpreter itself (`mulli` with rA = r0), not in the caves.
+

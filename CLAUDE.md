@@ -28,7 +28,7 @@ History: **Phase 1.** **EXP-04 PASSED**: the red army was human-controlled in it
 
 Work on one priority at a time. `main` = the stable Netplay release (COOP-P6 + EXP-16), changed only by merging verified work. Experiments stay isolated.
 
-**Gecko space (F-59):** Dolphin has ≈ 3248 bytes for all enabled Gecko codes. Codes past that are skipped silently. `install_codes` reports the total and refuses an over-budget set. Keep caves compact (shared tails, table-driven loops), and check the total before handing out a test bed or package.
+**Gecko space (F-59):** Dolphin has 3256 bytes for all enabled Gecko codes. A code that doesn't fit is skipped silently (later smaller ones still load). `install_codes` reports the total and refuses an over-budget set. Keep caves compact (shared tails, table-driven loops), and check the total before handing out a test bed or package.
 
 ## Saves and states
 - User originals (never write): `Dolphin-x64/User/StateSaves/GFEE01.s01`, `Dolphin-x64/User/GC/USA/Card A/*.gci`. Backups with SHA-1 are in `work/saves/` (git-ignored).
@@ -57,7 +57,7 @@ Work on one priority at a time. `main` = the stable Netplay release (COOP-P6 + E
 ## Conventions
 - Addresses are written as full 32-bit virtual addresses (`0x8033071F`) and refer to GFEE01 rev 0 unless labelled PAL/JP.
 - Experiment ids `EXP-NN` are shared across codes/GFEE01.ini, TESTING.md and PROGRESS.md.
-- Run before committing: `.venv/Scripts/python -m unittest tests.test_tools` and `python -m tools.check_signatures`.
+- Run before committing: `.venv/Scripts/python -m unittest tests.test_tools tests.test_cave_behaviour` and `python -m tools.check_signatures`. `test_cave_behaviour` executes the generated caves in `tools/fe9/ppc_sim.py` (no Dolphin needed).
 
 ## Key docs
 - `docs/RESEARCH.md`: findings, sources, confidence.

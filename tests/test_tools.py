@@ -697,13 +697,14 @@ class GameTests(unittest.TestCase):
     def test_gecko_budget(self):
         """F-59: the enabled code sets in use fit Dolphin's Gecko area; the failed PREP-03 set did not."""
         from tools.install_codes import check_budget, gecko_budget, gecko_sizes
-        self.assertEqual(gecko_budget(), 0x1800 - 2880 - 16)
+        self.assertEqual(gecko_budget(), 0x1800 - 2880 - 8)                            # 3256, GeckoCode.cpp 2609a
         self.assertEqual(check_budget(["COOP-P6", "EXP-16"]), [])                        # stable Netplay release
         self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-22", "EXP-25", "DBG-01"]), [])   # PREP-02 (passed)
         self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-26", "DBG-01"]), [])   # PREP-03 retest
         lost = check_budget(["COOP-P6", "EXP-21", "EXP-22", "EXP-25", "EXP-26", "DBG-01"])         # PREP-03 run 1
-        self.assertTrue(lost and lost[0].startswith("EXP-26"))
-        self.assertTrue(check_budget(["COOP-P6", "EXP-21", "EXP-23", "DBG-01"]))       # the DRAFT-02 bed never fit
+        self.assertEqual([n.split()[0] for n in lost], ["EXP-26"])     # skipped; DBG-01 after it still fits
+        lost = check_budget(["COOP-P6", "EXP-21", "EXP-23", "DBG-01"])                 # the DRAFT-02 bed
+        self.assertEqual([n.split()[0] for n in lost], ["EXP-23"])
         self.assertEqual([n.split()[0] for n, _ in gecko_sizes(["EXP-21", "COOP-P6"])], ["COOP-P6", "EXP-21"])
 
     def test_chapter9_partner_units(self):

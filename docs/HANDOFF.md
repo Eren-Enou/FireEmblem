@@ -47,7 +47,7 @@ Regenerate after editing a generator: `python -m tools.draft_code --write`, `pyt
 Unverified: DRAFT-02 (EXP-23), ALT-01 (experiment branch), and PREP-01 Steps 4–7 (§5).
 
 ## 4. Exact configurations and the Gecko budget (F-59)
-Dolphin 2609a has **≈ 3248 bytes** for *all* enabled Gecko codes: `0x80001800…0x80003000`, minus the 2880-byte `Sys/codehandler.bin`, minus 16. **Codes past the limit are skipped silently**; that's what broke PREP-03 run 1. `install_codes` and `netplay_setup` now print the total and refuse an over-budget set (`--allow-over-budget` overrides; don't).
+Dolphin 2609a has **3256 bytes** for *all* enabled Gecko codes: `0x80001800…0x80003000`, minus the 2880-byte `Sys/codehandler.bin`, minus the 8-byte terminator (`GeckoCode.cpp` 2609a). **A code that doesn't fit is skipped silently, and later smaller codes still load**; that's what broke PREP-03 run 1. `install_codes` and `netplay_setup` now print the total and refuse an over-budget set (`--allow-over-budget` overrides; don't).
 
 | Use | Install command (`.venv/Scripts/python -m tools.install_codes --user <dir> …`) | Bytes |
 |---|---|---|
@@ -55,8 +55,8 @@ Dolphin 2609a has **≈ 3248 bytes** for *all* enabled Gecko codes: `0x80001800�
 | In-battle draft test bed (DRAFT-01) | `--enable COOP-P6 --enable EXP-21 --enable EXP-22 --enable DBG-01` | 2872 |
 | **Prep draft test bed (PREP-03; installed now in `work/ch1/host`)** | `--enable COOP-P6 --enable EXP-21 --enable EXP-25 --enable EXP-26 --enable DBG-01` | 2984 |
 | Prep play set, no debug | `--enable COOP-P6 --enable EXP-21 --enable EXP-25 --enable EXP-26` | 2928 |
-| ✗ Prep + in-battle draft | `… EXP-21 EXP-22 EXP-25 EXP-26` | 3632: drops EXP-26 |
-| ✗ DRAFT-02 | `… EXP-21 EXP-23 DBG-01` | 3664: drops EXP-23 |
+| ✗ Prep + in-battle draft | `… EXP-21 EXP-22 EXP-25 EXP-26` | 3632: skips EXP-26 |
+| ✗ DRAFT-02 | `… EXP-21 EXP-23 DBG-01` | 3664: skips EXP-23 (DBG-01 still loads) |
 
 **Consequence:** the full feature set (base + ownership + the in-battle *and* prep drafts + a future deployment code) does not fit. Before more features, one of these is needed:
 - slim the big caves: COOP-P6's parts, EXP-21's five near-identical caves, EXP-22/23
@@ -90,7 +90,8 @@ Fixtures: create only with `tools/patch_state.py` (slots 2+, refuses to overwrit
    - port 1: arrows, A = X, Z = D, L+R = Q+W
    - port 2: numpad, A = M, Z = E, L+R = O+P
 4. Ask for screenshots and Shift+F*n* states at the key moments, then decode them.
-5. Before committing: `.venv/Scripts/python -m unittest tests.test_tools` (51 pass) and `python -m tools.check_signatures` (176 match).
+5. Before committing: `.venv/Scripts/python -m unittest tests.test_tools tests.test_cave_behaviour` and `python -m tools.check_signatures` (176 match).
+6. **Behavioural tests without Dolphin:** `tests/test_cave_behaviour.py` runs the generated caves in `tools/fe9/ppc_sim.py` (a small PowerPC interpreter: an integer subset plus stubs for `UnitTransferToForce`, the lord check, sound and cursor unit) against a synthetic world (`tests/sim_world.py`). It replays DRAFT-01's and PREP-03's steps. Use it before every cave change; it doesn't replace a runtime test.
 
 ## 8. Next steps when resuming
 1. Get a later-chapter prep fixture with roster > cap (§5).

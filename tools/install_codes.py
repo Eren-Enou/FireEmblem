@@ -32,17 +32,20 @@ def parse_sections(text: str) -> dict[str, list[str]]:
     return sections
 
 
-# Dolphin copies Sys/codehandler.bin to 0x80001800 and the Gecko code list right after it, up to 0x80003000.
-# Codes that don't fit are silently skipped ("Too many GeckoCodes! Ran out of storage space in Game RAM", F-59).
+# Dolphin copies Sys/codehandler.bin to 0x80001800 and the Gecko code list right after it, up to 0x80003000
+# (Source/Core/Core/GeckoCode.cpp, tag 2609a: the list starts at base + handler size, and the last 8 bytes are
+# reserved for the F0000000 terminator). A code that doesn't fit is skipped with only a log line ("Too many
+# GeckoCodes! Ran out of storage space in Game RAM") and the loop *continues*, so a later, smaller code can
+# still be written (F-59).
 GECKO_AREA = 0x80003000 - 0x80001800
 DEFAULT_HANDLER_SIZE = 2880                 # Dolphin 2609a Sys/codehandler.bin
 
 
 def gecko_budget(dolphin: Path | None = None) -> int:
-    """Bytes available for the code list (minus the 8-byte header and 8-byte terminator)."""
+    """Bytes available for the code list: area - handler - 8 (terminator)."""
     handler = (dolphin / "Sys/codehandler.bin") if dolphin else None
     size = handler.stat().st_size if handler and handler.exists() else DEFAULT_HANDLER_SIZE
-    return GECKO_AREA - size - 16
+    return GECKO_AREA - size - 8
 
 
 def gecko_sizes(enable: list[str]) -> list[tuple[str, int]]:
@@ -60,12 +63,14 @@ def gecko_sizes(enable: list[str]) -> list[tuple[str, int]]:
 
 
 def check_budget(enable: list[str], dolphin: Path | None = None) -> list[str]:
-    """Names of enabled codes that would not fit (empty = all fit)."""
+    """Names of enabled codes Dolphin would skip (empty = all fit). Mirrors GeckoCode.cpp: a code that
+    doesn't fit is skipped and the next one is still tried."""
     budget, used, lost = gecko_budget(dolphin), 0, []
     for name, size in gecko_sizes(enable):
-        used += size
-        if used > budget:
+        if used + size > budget:
             lost.append(name)
+        else:
+            used += size
     return lost
 
 
