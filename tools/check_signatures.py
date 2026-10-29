@@ -217,6 +217,11 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8012DBE4, 0x881F0062, "lbz r0,0x62(r31)           highlighted row ..."),
     (0x8012DBFC, 0x7C83002E, "lwzx r4,r3,r0              ... unit = list+0x3C row record +0"),
     (0x80269183, 0x5346585F, ".data \"SFX_\" SYS_SELECT1 (transfer request)"),
+    # F-61: who starts the human-control proc (and so the battle draft's hook)
+    (0x80284B10, 0x800291D8, ".data: the human proc's step = map input (only reference)"),
+    (0x8002E768, 0x38654AC8, "addi r3,r5,0x4ac8          turn loop starts the human proc 0x80284AC8"),
+    (0x800C0700, 0x38634AC8, "addi r3,r3,0x4ac8          ResumeEvent starts it"),
+    (0x800C07C8, 0x38634AC8, "addi r3,r3,0x4ac8          SuspendEvent starts it"),
     (0x802960A0, 0xFFFF64FF, ".data palette 0x06 yellow (Player 2)"),
 ]
 

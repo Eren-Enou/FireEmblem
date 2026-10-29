@@ -646,7 +646,7 @@ This is the first set where **both drafts and the colours fit together**: COOP-P
    - At the Save prompt, save over **"Ch. 9: Gallia"** (file 2, a test copy).
    - At **Ch. 7**'s Choose Units, expected: **Titania, Soren, Oscar yellow; Rhys light blue** before anyone presses anything. Screenshot and **Shift+F3**.
 6. **Fresh reload:** close Dolphin → fresh boot → Restart Chapter → the file from step 5 → Choose Units. Same colours. **Shift+F4**.
-7. **Prep map check:** on Ch. 7's **Reposition** map (preparations), press **Q+W** and **O+P** with the cursor on a character. Expected: **nothing** (no sound, no ring change). The battle draft must only act once the battle has started.
+7. **Prep map check:** on Ch. 7's **Reposition** map (preparations), press **Q+W** and **O+P** with the cursor on a character. Expected: **nothing** (no sound, no ring change). Statically the battle draft's hook only runs inside the human-control proc, which preparations never start (F-61); this confirms it.
 
 **Report:** which expectations held, screenshots of 1, 2 and 5, and slots 2–4.
 
