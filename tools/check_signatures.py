@@ -226,6 +226,17 @@ SIGNATURES: list[tuple[int, int, str]] = [
     (0x8028F868, 0x8011A7FC, ".data sortie proc step: battle-start placement"),
     (0x8011A84C, 0x38800005, "li r4,5                     benched units -> force 5"),
     (0x801325FC, 0x54000001, "rlwinm. r0,r0,0,0,0         0x80000000 = animation ON/OFF label"),
+    # EXP-27 deploy block: native call convention and result sounds (0x8012DC04..0x8012DC40)
+    (0x8012DC04, 0x7FE3FB78, "mr r3,r31                   A callback (list, unit) ..."),
+    (0x8012DC10, 0x5460063F, "clrlwi. r0,r3,24            ... result 1 toggled / 0 refused"),
+    (0x80275C36, 0x5346585F, ".data \"SFX_\" SYS_SELECT1 (native toggle OK)"),
+    (0x80275C46, 0x5346585F, ".data \"SFX_\" SYS_MISS1 (native refusal)"),
+    # EXP-21 v3 frameless stubs: each hooked function saves LR at entry r1+4 itself (stwu -N / stw r0,N+4)
+    (0x8002E744, 0x90010014, "stw r0,0x14(r1) after stwu -0x10 (apply hook fn)"),
+    (0x800BA790, 0x90010034, "stw r0,0x34(r1) after stwu -0x30 (AllUnitEscape)"),
+    (0x8002E0DC, 0x90010034, "stw r0,0x34(r1) after stwu -0x30 (chapter transition)"),
+    (0x80005F10, 0x90010024, "stw r0,0x24(r1) after stwu -0x20 (chapter sequence)"),
+    (0x800BA904, 0x90010014, "stw r0,0x14(r1) after stwu -0x10 (UnitEscape)"),
     # F-61: who starts the human-control proc (and so the battle draft's hook)
     (0x80284B10, 0x800291D8, ".data: the human proc's step = map input (only reference)"),
     (0x8002E768, 0x38654AC8, "addi r3,r5,0x4ac8          turn loop starts the human proc 0x80284AC8"),
