@@ -29,7 +29,7 @@ def scenario_dir(name, root=PACKAGE):
 
 
 BLOCKED = {
-    'CH10-PRISONER-CLEANUP': 'Needs original prisoner Escape and valid Ike-last setup; door-open and Talk histories must remain distinct.',
+    'CH10-PRISONER-CLEANUP': 'Local prisoner Escape passed (CAMP-Z); needs isolated original Ike-last setup with valid phase/action eligibility and known door history. Permanent recruitment remains unverified.',
     'CH17-STAGE-TRANSITIONS': 'Needs original stage-specific map and near-clear state, roster, difficulty and stage/story history for all four stages. Shared C18 script alone cannot establish the stage.',
 }
 

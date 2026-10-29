@@ -1,8 +1,37 @@
 # Testing
 
-Latest owner-operated result: **CAMP-Y**, Kieran Wait/P1 lockout local PASS.
-Other CAMP-X candidates remain runtime unverified. Single-command launch/capture
+Latest owner-operated result: **CAMP-Z**, original Kieran Escape local PASS;
+CAMP-Y records Kieran Wait/P1 lockout. Ch6 completion/native resume remain unverified. Single-command launch/capture
 instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
+
+## CAMP-Z — Human original Yellow Kieran Escape (2026-10-28)
+
+**PASS, synthetic local original Escape only.** Human reports the correct original
+dialogue/animations, and explicitly declares original_escape, p2_command and
+no_unexpected_behavior. Review returned PASS with no failures. Codex independently
+redecoded both raw capture bundles and matched the stored snapshots exactly;
+no Dolphin launch or input by Codex.
+
+- Original loaded C11 complete chain, turn1 Yellow/human control, all intended
+  C2 bodies match fingerprintefc52ab6c1471602;3240/3248 Gecko bytes.
+- Kieran slot19/PID_KEVIN changes force3 -> force5, flags80000 ->84011, escaped
+  false ->true, position6,2 ->6,0. HP30/lv12/EXP0, class, identity and unrescued/
+  living status preserved. His64-byte inventory is empty before and after;
+  nonempty prisoner inventory persistence remains untested.
+- Oscar and Ike records unchanged. Original consumed Oscar/Kieran Talk key stays
+  set. No chapter-completion or permanent-recruitment conclusion follows.
+- Before raw SHA256:3134870229a43b173745708c78e1d6dfb7bc79028da7edad69fd24959040ca41.
+  After raw SHA256:b9a50895bf2136aace6911b3d5295545a7d2ee1826b762ee4dd504cfef2fdeca.
+  Immutable evidence: work/scenarios/human_v1/CH10-PRISONER-ESCAPE-v2/captures/.
+  Capture analysis commit2563f325dc6d9f6029b018de36fcf61514bfb721; original
+  setup package4648a2b. The source saves were found in the similarly named directory
+  without-v2 and copied, never moved/overwritten, into the matching case bundle.
+
+No Escape failure demonstrated. The observed endpoints support the bounded native
+retention model; the intermediate Blue transfer is inferred from original scripts,
+not separately observed. Permanent recruitment still requires original cleanup,
+next-chapter roster and native reload evidence. Natural campaign and Netplay
+remain untested. Next practical independent test: CH6-IKE-COMPLETE.
 
 ## CAMP-Y — Human original Kieran Wait and P1 lockout (2026-10-28)
 
@@ -29,7 +58,7 @@ P1 cannot command him. No permanent recruitment, Escape, chapter cleanup/clear,
 transition, native save/reload or Netplay acceptance. Existing campaign dashboard
 axes retain their earlier original-Talk evidence; this additional local action is
 recorded here and in the immutable case evidence, not substituted for those runs.
-Next: separate CH10-PRISONER-ESCAPE candidate, original Escape at6,2, still UNTESTED.
+Subsequent original Escape result: see CAMP-Z; its scope remains local only.
 
 ## CAMP-W — Cross-boundary lifecycle fragments and save audit
 

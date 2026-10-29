@@ -2,10 +2,17 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-Z human local PASS: Yellow Kieran uses original P2 Escape with expected
+  dialogue/animations and reaches force5 escaped roster; PID/class/HP/lv/EXP and
+  empty inventory retained, Oscar/Ike unchanged. Both raw states independently
+  redecoded and matched. Ch10 cleanup/permanent recruitment remain untested;
+  valid original Ike-last setup/phase progression still required. Next practical
+  independent owner test: CH6-IKE-COMPLETE, already offline checked.
+
 - CAMP-Y human local PASS: post-Talk Kieran stays Yellow and executes P2 Wait;
   P1 lockout observed. Fresh raw decoding matches both captured snapshots; only
-  Kieran acted bit changes. See TESTING.md CAMP-Y. Next short test is separate
-  CH10-PRISONER-ESCAPE; no Escape/cleanup/persistence acceptance yet.
+  Kieran acted bit changes. See TESTING.md CAMP-Y. Local Escape is now CAMP-Z;
+  chapter cleanup and persistence still lack runtime acceptance.
 
 - Latest: four short owner-operated candidates prepared; root Test-Scenario.ps1
   validates/list/launches private profiles.189 offline tests,378 signatures,

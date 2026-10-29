@@ -2,8 +2,9 @@
 
 Run PowerShell in `C:\Users\Aaron\CoderViber2\FireEmblemCampaignAudit`.
 Codex has not launched Dolphin or performed these interactions. The owner has
-now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y): original P2 Kieran Wait and
-P1 lockout only. The other three scenarios remain **runtime unverified candidates**.
+now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y) and
+**CH10-PRISONER-ESCAPE** (CAMP-Z): local original P2 Wait/P1 lockout and local
+original Escape only. Ch6 completion and native resume remain runtime unverified.
 The earlier Oscar Talk and Oscar Escape evidence remains separate and accepted.
 
 ```powershell
@@ -163,8 +164,9 @@ execute generated guards and native-call arguments with mocked natives; those
 tests prove neither actual UnitSetPos behavior nor original Escape activation.
 The immutable seed remains **before** synthetic setup executes.
 
-CH10 prisoner cleanup remains blocked on original Escape results and a valid
-Ike-last source with known door history. CH17 requires actual stage-specific
+CH10 local original prisoner Escape has passed; cleanup still needs a valid
+Ike-last source with original phase/action eligibility and known door history.
+CH17 requires actual stage-specific
 near-clear states, original stage map, roster, difficulty, story/prior-stage
 history and legitimate native save provenance; shared C18 scripts are insufficient.
 Other later recruitment/defection cases still lack suitable original event states.
