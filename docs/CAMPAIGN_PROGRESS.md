@@ -2,10 +2,13 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
-- Offline-only initiative: three milestones, no emulator/UI or request for user input.
+- Offline-only initiative: four milestones, no emulator/UI or request for user input.
   Evidence collector now pins decoded snapshot hashes; edited analysis fails,
   legacy analysis remains INCONCLUSIVE. Actual failing-then-passing regression
   recorded in CAMP-R. This changes no accepted source or production code.
+- Jill original directed-event model adds64 cases: shared consumed key,
+  relationship-query gates and distinct attack-sequence call behavior. Force3
+  input is hypothetical ownership; no stable table or gameplay code changed.
 - Generic current event flags now decode offline for every chapter; malformed/
   unavailable tables and battle-stage identity remain UNKNOWN. Escaped view uses
   pinned flag. Comparator now catches arbitrary future schema changes. Generated
@@ -42,7 +45,7 @@
 - Original Talk local effect **PASS**: Kieran Green->Yellow, original key set;
   Oscar stays Yellow and acts, identities/items/progression preserved. Selected
   actor occupancy checker corrected; original captures/report preserved.
-- 138 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-R).
+- 141 tests,316 signatures,16 accepted runtime artifact hashes pass (CAMP-S).
 - Production stable fingerprint8609ae9f49fd879f unchanged. Next: independent
   Ch10 prisoner escape/cleanup and permanent-recruitment analysis. No chapter
   completion, save/reload or Netplay acceptance follows from this synthetic test.

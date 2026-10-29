@@ -810,7 +810,9 @@
           "evidence": "cfg-02"
         },
         "script_model": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "jill-direction-model-19",
+          "note": "Only C21 Jill/Shiharam Talk branches with explicit relationship inputs and modeled native effects; no runtime claim."
         },
         "fixture": {
           "status": "NOT TESTED"
@@ -1457,6 +1459,18 @@
         "script_model"
       ],
       "description": "Pinned C11 and startup bytecode executed offline with strict modeled natives. Original Oscar/Kieran and Ike/Brom/Nephenee identity/key matching, direct/carried prisoner escape hand-back before UnitEscape, and 120 cleanup-prefix combinations. Original startup Exists helper accepts forces0..3, excludes5..7. Non-Maniac open-door/non-escaped prisoners are transferred to Blue before AllUnitEscape; Maniac skips this fallback. Explicitly stop before native AllUnitEscape. Native effects, scene activation, permanent recruitment, save/load and Netplay NOT VERIFIED. Reproduce: python -B -m unittest tests.test_campaign_event_model; python -B -m tools.campaign_event_model --out work/NEW_report.json."
+    },
+    "jill-direction-model-19": {
+      "kind": "script_model",
+      "commit": "0bae363",
+      "worktree_dirty": true,
+      "chapters": [
+        "21"
+      ],
+      "axes": [
+        "script_model"
+      ],
+      "description": "Original pinned C21 scenes26/27 and startup transfer helper executed with modeled natives over64 direction/faction/relationship inputs. Defection iff neither Mist nor Lethe query equals3. Directed scene records share consumed key; forward scene explicitly installs attack sequence, reverse scene does not. Force0/3 test inputs both respected; Yellow Jill is hypothetical ownership input, not a claim she is in stable fixed-owner table. No original activation/AI, natural support history, next-phase ownership routing, save or runtime acceptance. Reproduce unittest tests.test_campaign_event_model."
     }
   },
   "next_cases": [

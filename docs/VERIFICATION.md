@@ -27,7 +27,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 | Ch.17: Day Breaks stage 4 | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.18: Crimea Marches | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.19: Entrusted | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
-| Ch.20: Defending Talrega | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
+| Ch.20: Defending Talrega | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.21: Without a King | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.22: Solo | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.23: The Great Bridge | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
@@ -68,7 +68,7 @@ STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script pl
 | Ch.17: Day Breaks stage 4 | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.18: Crimea Marches | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.19: Entrusted | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
-| Ch.20: Defending Talrega | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.20: Defending Talrega | MODEL VERIFIED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.21: Without a King | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.22: Solo | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.23: The Great Bridge | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
@@ -93,6 +93,7 @@ STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script pl
 - **ch10-loader-manual-wait-12**: `dolphin`; Human restored and validated Chapter10 synthetic loader fixture; reported original Blue->Yellow, P2 Oscar Wait and P1 command lockout PASS without unusual behavior. Captures corroborate loaded C11.cmb, all live stable+loader C2 bodies, chapter11/turn1/phase0->3/control3=1, Oscar force3/slot2 at2,19, flags400->401 and unchanged HP28/lv6/EXP28/inventory. P1 lockout is human-reported, not established by these RAM fields. No prison traversal, original Talk, permanent recruitment, escape, clear/transition/save or Netplay claim. This configuration is separate from the new inside-cell Talk candidate.
 - **ch10-original-talk-14**: `dolphin`; Human manually executed the supplied original Oscar/Kieran Talk test and supplied before/after captures with the original-Talk observation declaration. Both captures match C11.cmb, all stable+loader+setup C2 bodies, chapter11/turn1/Yellow/human control. Oscar slot2 remains force3 at19,19, flags400->401; Kieran slot19 at20,19 changes force2->3 with flags80000 unchanged. Original conversation key clear->set; all roster slot/PID identities and both units HP/class/level/EXP/items/rescue preserved. Door object and door/completion keys unchanged. Selected Oscar has empty own occupancy before Talk but context actor points to slot2; original collector checks the neighboring target, so verifier corrected without relaxing target checks. 3240 bytes. Synthetic setup; no permanent recruitment, escape, cleanup, clear/transition, save/reload or Netplay acceptance.
 - **ch10-prisoner-model-16**: `script_model`; Pinned C11 and startup bytecode executed offline with strict modeled natives. Original Oscar/Kieran and Ike/Brom/Nephenee identity/key matching, direct/carried prisoner escape hand-back before UnitEscape, and 120 cleanup-prefix combinations. Original startup Exists helper accepts forces0..3, excludes5..7. Non-Maniac open-door/non-escaped prisoners are transferred to Blue before AllUnitEscape; Maniac skips this fallback. Explicitly stop before native AllUnitEscape. Native effects, scene activation, permanent recruitment, save/load and Netplay NOT VERIFIED. Reproduce: python -B -m unittest tests.test_campaign_event_model; python -B -m tools.campaign_event_model --out work/NEW_report.json.
+- **jill-direction-model-19**: `script_model`; Original pinned C21 scenes26/27 and startup transfer helper executed with modeled natives over64 direction/faction/relationship inputs. Defection iff neither Mist nor Lethe query equals3. Directed scene records share consumed key; forward scene explicitly installs attack sequence, reverse scene does not. Force0/3 test inputs both respected; Yellow Jill is hypothetical ownership input, not a claim she is in stable fixed-owner table. No original activation/AI, natural support history, next-phase ownership routing, save or runtime acceptance. Reproduce unittest tests.test_campaign_event_model.
 
 ## Highest-priority open cases
 

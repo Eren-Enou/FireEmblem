@@ -1,5 +1,18 @@
 # Testing
 
+## CAMP-S — Jill original directed event regressions
+
+Offline only, after0bae363. Three regressions add64 original C21 scene26/27
+cases across directions, force0/3 and explicit relationship inputs0..3. Both
+transfer iff neither relevant query equals3; distinct directed records share
+a key. Only scene26 explicitly installs its attack sequence. Missing/wrong
+actor and repeated key fail selection. Original startup helper executes, native
+effects remain modeled. Yellow Jill is hypothetical ownership input; no stable
+owner table change or runtime/AI/cleanup/save claim (RESEARCH CAMP-015).
+**141 automated tests PASS;316 signatures and16 accepted runtime artifact hashes
+verified.** Stable remains2536 bytes; prep2928; private Talk/action fixtures3240.
+
+
 ## CAMP-R — Decoded evidence integrity correction
 
 Afterec74992, offline only. A failing regression demonstrated that manual edits

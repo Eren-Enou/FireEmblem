@@ -1,7 +1,7 @@
 import copy
 import unittest
 
-from tools.campaign_event_model import (World, load_scripts, conversation_scene,
+from tools.campaign_event_model import (World, JillWorld, load_scripts, conversation_scene,
                                        PRISONERS, ESCAPE_KEYS, DOOR_KEYS)
 from tools.fe9.events import functions, calls
 from tools.fe9.event_vm import execute
@@ -130,3 +130,42 @@ class OriginalCampaignModelTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'step bound'):
             execute(self.scripts['Scripts/startup.cmb'], world.helpers['UnitCheckExistsByPID2'], world.native,
                     max_steps=3, arguments=['PID_KEVIN'])
+
+    def test_jill_original_relationship_truth_table_in_blue_and_yellow(self):
+        for force in (0, 3):
+            for mist in range(4):
+                for lethe in range(4):
+                    world = JillWorld(self.scripts, force=force, mist=mist, lethe=lethe)
+                    original_flags = world.units['PID_JILL']['flags']
+                    self.assertTrue(world.talk('PID_JILL', 'PID_SIHARAMU', 'Scripts/C21.cmb'))
+                    defects = mist != 3 and lethe != 3
+                    self.assertEqual(world.units['PID_JILL']['force'], 1 if defects else force,
+                                     (force, mist, lethe))
+                    self.assertEqual(world.units['PID_JILL']['flags'], original_flags)
+                    self.assertEqual(len(world.attack_sequences), int(defects))
+                    if defects:
+                        self.assertEqual(world.attack_sequences, [['PID_JILL', 'SEQ_ALLUNITATTACK100']])
+                    count = len(world.calls)
+                    self.assertFalse(world.talk('PID_JILL', 'PID_SIHARAMU', 'Scripts/C21.cmb'))
+                    self.assertEqual(len(world.calls), count)
+
+    def test_jill_reverse_is_separate_original_event_with_shared_consumed_key(self):
+        raw = self.scripts['Scripts/C21.cmb']
+        self.assertEqual(conversation_scene(raw, 'PID_JILL', 'PID_SIHARAMU'), [26])
+        self.assertEqual(conversation_scene(raw, 'PID_SIHARAMU', 'PID_JILL'), [27])
+        for force in (0, 3):
+            for mist in range(4):
+                for lethe in range(4):
+                    world = JillWorld(self.scripts, force=force, mist=mist, lethe=lethe)
+                    self.assertTrue(world.talk('PID_SIHARAMU', 'PID_JILL', 'Scripts/C21.cmb'))
+                    defects = mist != 3 and lethe != 3
+                    self.assertEqual(world.units['PID_JILL']['force'], 1 if defects else force)
+                    self.assertFalse(world.attack_sequences)
+                    self.assertFalse(world.talk('PID_JILL', 'PID_SIHARAMU', 'Scripts/C21.cmb'))
+
+    def test_jill_wrong_identity_or_missing_actor_rejects_selection(self):
+        world = JillWorld(self.scripts)
+        self.assertFalse(world.talk('PID_OSCAR', 'PID_SIHARAMU', 'Scripts/C21.cmb'))
+        del world.units['PID_JILL']
+        self.assertFalse(world.talk('PID_JILL', 'PID_SIHARAMU', 'Scripts/C21.cmb'))
+        self.assertFalse(world.calls)

@@ -15,6 +15,30 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-015 — Jill defection directions modeled as distinct original events
+
+**MODEL VERIFIED**, not new gameplay. C21.cmb SHA256
+ d27bd04ba9fd98dbab8a355cb7ec9adab303364f34c67224b4983ca2abb7a5eb
+is pinned alongside C11/startup/C07. Original scene26 is Jill->Shiharam;
+scene27 is Shiharam->Jill. Both records are directed and share a consumed key.
+It would be incorrect to reject reverse selection globally just because
+scene26's individual reversible field is false: a separate original record exists.
+
+64 executable cases cover both directions, starting force0/3 and explicit
+Mist/Lethe PersonGetYellLevel inputs0..3. Both original event bodies transfer
+Jill to force1 iff neither query equals3. With either3, force remains unchanged.
+Only scene26 explicitly calls UnitSetCpAttackSeq with SEQ_ALLUNITATTACK100;
+scene27 has no such explicit call. Both consume the shared conversation key.
+No statement is made about the resulting native AI beyond that call distinction.
+
+The model executes the original startup transfer helper, supplies relationship
+query results and records presentation/native effects explicitly. Wrong identity,
+missing actor and repeat/shared-key selection are rejected. Source game bytes
+remain read-only. A Yellow Jill input is a hypothetical ownership case, not a
+claim the stable fixed table assigns Jill to P2. Original event activation,
+natural relationship history, native transfer/AI, next-phase ownership routing,
+cleanup and save/Netplay remain unverified. No gameplay patch is justified.
+
 ### CAMP-014 — generic offline event flags and explicit unknown stages
 
 **READ-ONLY captured-state analysis; no new native address/meaning inferred.**

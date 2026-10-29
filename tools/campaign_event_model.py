@@ -19,6 +19,7 @@ SCRIPT_SHA256 = {
     'Scripts/C11.cmb': '153812f03aa5540589777cd8dbffc8bfd7c5494025e0ba3e905454834b94730d',
     'Scripts/startup.cmb': '2ff9182ab485b50792deb78947ab557dcb3f4be66e24b3912da0cb230e033d01',
     'Scripts/C07.cmb': 'c4bb776bfc12cbcacb7bad6cebd906d1e9d88b609cd535a9d51410b20a8feacc',
+    'Scripts/C21.cmb': 'd27bd04ba9fd98dbab8a355cb7ec9adab303364f34c67224b4983ca2abb7a5eb',
 }
 PRISONERS = ('PID_KEVIN', 'PID_CHAP', 'PID_NEPENEE')
 ESCAPE_KEYS = dict(zip(PRISONERS, ('ケヴィン離脱', 'チャップ離脱', 'ネフェニー離脱')))
@@ -93,14 +94,43 @@ class World:
     def run(self, script, scene, *, stop_before=()):
         return execute(self.scripts[script], scene, self.native, stop_before=stop_before)
 
-    def talk(self, actor, target):
+    def talk(self, actor, target, script='Scripts/C11.cmb'):
         if actor not in self.units or target not in self.units:
             return False
-        matches = conversation_scene(self.scripts['Scripts/C11.cmb'], actor, target, self.flags)
+        matches = conversation_scene(self.scripts[script], actor, target, self.flags)
         if len(matches) != 1:
             return False
-        self.run('Scripts/C11.cmb', matches[0])
+        self.run(script, matches[0])
         return True
+
+
+class JillWorld(World):
+    """C21 scene26 relationship inputs; no support/story history is synthesized."""
+    PRESENTATION = {'BgmChangeEvt_MapToEvt2', 'CopyMapCamera', 'WaitF', 'InstantFocus',
+                    'InstantSetMapCamera', 'SetMapCamera', 'FadeWait', 'FocusHardWait',
+                    'UnitFocusByPID', 'PastMapCamera', 'ENVSilentOff', 'BgmContEvt_EvtToMap1'}
+
+    def __init__(self, scripts, *, force=3, mist=0, lethe=0):
+        super().__init__(scripts)
+        self.units.update({'PID_JILL': {'force': force, 'flags': 0x60000400},
+                           'PID_SIHARAMU': {'force': 1, 'flags': 0}})
+        self.relationships = {'PID_MIST': mist, 'PID_LETHE': lethe}
+        self.attack_sequences = []
+
+    def native(self, name, args):
+        if name == 'PersonGetYellLevel':
+            if args[0] != 'PID_JILL' or args[1] not in self.relationships:
+                raise ValueError('unmodeled relationship query')
+            self.calls.append({'command': name, 'args': args.copy()})
+            return self.relationships[args[1]]
+        if name == 'UnitSetCpAttackSeq':
+            self.calls.append({'command': name, 'args': args.copy()})
+            self.attack_sequences.append(args.copy())
+            return 0
+        if name in self.PRESENTATION:
+            self.calls.append({'command': name, 'args': args.copy()})
+            return 0
+        return super().native(name, args)
 
 
 def conversation_scene(raw, actor, target, consumed=()):
@@ -130,8 +160,21 @@ def report(scripts):
                     rows.append({'pid': pid, 'maniac': maniac, 'door': door, 'escaped': escaped,
                                  'transferred_blue': world.units[pid]['force'] == 0,
                                  'transfer_calls': [c for c in world.calls if c['command'] == 'UnitTransferToForce']})
+    jill = []
+    for force in (0, 3):
+        for reverse in (False, True):
+            for mist in range(4):
+                for lethe in range(4):
+                    world = JillWorld(scripts, force=force, mist=mist, lethe=lethe)
+                    actor, target = ('PID_SIHARAMU', 'PID_JILL') if reverse else ('PID_JILL', 'PID_SIHARAMU')
+                    if not world.talk(actor, target, 'Scripts/C21.cmb'):
+                        raise ValueError('original Jill scene selection failed')
+                    jill.append({'force_before': force, 'reverse': reverse, 'mist_query': mist,
+                                 'lethe_query': lethe, 'force_after': world.units['PID_JILL']['force'],
+                                 'attack_sequence_calls': world.attack_sequences})
     return {'classification': 'MODEL VERIFIED only', 'script_sha256': SCRIPT_SHA256, 'cleanup_cases': rows,
-            'scope': 'original C11 scene57 predicates and startup helpers before AllUnitEscape; modeled natives',
+            'jill_cases': jill,
+            'scope': 'original C11 cleanup prefix/startup helpers before AllUnitEscape and C21 Jill event branches; modeled native/relationship inputs',
             'excludes': ['scene activation', 'native transfer implementation', 'AllUnitEscape', 'permanent recruitment',
                          'chapter completion', 'save/load', 'Netplay']}
 
@@ -144,4 +187,4 @@ if __name__ == '__main__':
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open('x', encoding='utf-8') as stream:
         json.dump(result, stream, indent=2, ensure_ascii=True)
-    print(f"{len(result['cleanup_cases'])} original cleanup-prefix cases; MODEL ONLY; wrote {args.out}")
+    print(f"{len(result['cleanup_cases'])} cleanup-prefix / {len(result['jill_cases'])} Jill cases; MODEL ONLY; wrote {args.out}")
