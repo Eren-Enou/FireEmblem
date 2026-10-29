@@ -2,9 +2,14 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-Y human local PASS: post-Talk Kieran stays Yellow and executes P2 Wait;
+  P1 lockout observed. Fresh raw decoding matches both captured snapshots; only
+  Kieran acted bit changes. See TESTING.md CAMP-Y. Next short test is separate
+  CH10-PRISONER-ESCAPE; no Escape/cleanup/persistence acceptance yet.
+
 - Latest: four short owner-operated candidates prepared; root Test-Scenario.ps1
   validates/list/launches private profiles.189 offline tests,378 signatures,
- 16 accepted artifact hashes; **no new runtime acceptance**. Instructions:
+  16 earlier accepted artifact hashes; setup checkpoint was offline only. Instructions:
   [SCENARIO_TESTS.md](SCENARIO_TESTS.md); checkpoint details at the end of this file.
 
 - CAMP-W: lifecycle fragments now compose cleanup -> roster availability ->

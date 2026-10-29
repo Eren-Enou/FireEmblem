@@ -1,8 +1,35 @@
 # Testing
 
-Latest owner-operated candidates: **CAMP-X**, with single-command launch/capture
-instructions in [SCENARIO_TESTS.md](SCENARIO_TESTS.md). Offline checks only;
-the owner has not yet executed these new gameplay scenarios.
+Latest owner-operated result: **CAMP-Y**, Kieran Wait/P1 lockout local PASS.
+Other CAMP-X candidates remain runtime unverified. Single-command launch/capture
+instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
+
+## CAMP-Y — Human original Kieran Wait and P1 lockout (2026-10-28)
+
+**PASS, synthetic local original action only.** Human ran CH10-PARTNER-WAIT,
+captured before/after, and explicitly declared p1_cannot_command_kieran,
+p2_original_wait and no_unexpected_behavior. Review returned PASS. Codex reran
+review and independently decoded both preserved raw captures; fresh snapshots
+exactly matched the immutable captured analysis. No emulator launch/input by Codex.
+
+- Source package/analysis commit4648a2bb42fa3839323fe84215abb434431bebc4;
+  exact live C2 bodies match fingerprintc11089d39a0fe037,3240/3248bytes,
+  Dolphin2609a, original loaded C11 complete chain, turn1 Yellow/human control.
+- Kieran slot19/PID_KEVIN stays force3 at20,19, HP30/lv12/EXP0; flags80000->80001
+  (only acted bit). Class, inventory, rescue state and complete other-unit roster
+  unchanged. Oscar slot2 stays force3 at19,19, HP28/lv6/EXP28, flags401.
+- Original consumed Talk key remains set; cell door and registered chapter/event
+  flags unchanged. Private GCI/profile copies agree in both capture bundles.
+- Before raw SHA256:74fb969af738a4f7522bd75cf9c59aad2129b1ecba0f98b14e81ae40f07b75d4.
+  After raw SHA256:c3392ae56bc2d0d36fdf96e044b405c1ad60bed137d02c7071d4d9c6ab7e363d.
+  Bundles: work/scenarios/human_v1/CH10-PARTNER-WAIT/captures/before|after/.
+
+Scope: P2 can perform original Wait with the talked-to temporary Yellow Kieran;
+P1 cannot command him. No permanent recruitment, Escape, chapter cleanup/clear,
+transition, native save/reload or Netplay acceptance. Existing campaign dashboard
+axes retain their earlier original-Talk evidence; this additional local action is
+recorded here and in the immutable case evidence, not substituted for those runs.
+Next: separate CH10-PRISONER-ESCAPE candidate, original Escape at6,2, still UNTESTED.
 
 ## CAMP-W — Cross-boundary lifecycle fragments and save audit
 

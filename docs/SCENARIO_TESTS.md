@@ -1,8 +1,9 @@
 # Short owner-operated campaign tests
 
 Run PowerShell in `C:\Users\Aaron\CoderViber2\FireEmblemCampaignAudit`.
-Codex has not launched Dolphin or performed these new interactions. All four
-scenarios below are **prepared, offline checked, runtime unverified candidates**.
+Codex has not launched Dolphin or performed these interactions. The owner has
+now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y): original P2 Kieran Wait and
+P1 lockout only. The other three scenarios remain **runtime unverified candidates**.
 The earlier Oscar Talk and Oscar Escape evidence remains separate and accepted.
 
 ```powershell
