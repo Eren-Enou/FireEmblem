@@ -95,8 +95,16 @@ Fixtures: create only with `tools/patch_state.py` (slots 2+, refuses to overwrit
 5. Before committing: `.venv/Scripts/python -m unittest tests.test_tools tests.test_cave_behaviour` and `python -m tools.check_signatures` (176 match).
 6. **Behavioural tests without Dolphin:** `tests/test_cave_behaviour.py` runs the generated caves in `tools/fe9/ppc_sim.py` (a small PowerPC interpreter: an integer subset plus stubs for `UnitTransferToForce`, the lord check, sound and cursor unit) against a synthetic world (`tests/sim_world.py`). It replays DRAFT-01's and PREP-03's steps. Use it before every cave change; it doesn't replace a runtime test.
 
+## 7b. Update 2026-10-29
+- **Exact budget:** 3256 bytes, and Dolphin skips a code that doesn't fit while later codes still load (F-59, from `GeckoCode.cpp`).
+- **Behavioural tests:** `tools/fe9/ppc_sim.py` + `tests/test_cave_behaviour.py` (20 tests) execute the generated caves. They cover DRAFT-01/PREP-03 sequences, EXP-21 force moves, story-move safety, colours, register preservation, and the EXP-27 vs EXP-22/26 equivalence.
+- **Budget blocker resolved statically:** EXP-27 (one shared core for both drafts, F-60) + EXP-21 v2 → both drafts + colours = 3200/3256.
+- **Simulator-found bug fixed:** a stale prep transfer request could flip ownership mid-battle.
+- **Next runtime test:** **COMBO-01** (both drafts in one session, PREP-04 Ch6 → Ch7 persistence, fresh reload, and that the battle draft does nothing on the Reposition map).
+- `codex/campaign-compatibility` (Codex, Priority 2) branched from `10d2496`; not merged here.
+
 ## 8. Next steps when resuming
 1. Get a later-chapter prep fixture with roster > cap (§5).
-2. Resolve the Gecko budget: slim EXP-21/22 first, or design a payload loader. Keep `test_gecko_budget` current.
+2. ~~Resolve the Gecko budget~~ done statically (EXP-27 + EXP-21 v2, 3200/3256); confirm with COMBO-01. Any new code (Step 5 deployment) must fit the remaining 56 bytes or reuse the EXP-27 core; a payload loader is the next option (Codex's NATIVE_PATCHING notes).
 3. PREP-04 → confirm the benched bit → build Step 5 (fair split), with its own budget check → Step 6 → Netplay.
 4. Only merge into `main` after a two-PC Netplay pass with a rebuilt friend package (new fingerprint).

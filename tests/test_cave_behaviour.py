@@ -313,6 +313,41 @@ class CompactOwnershipFrames(unittest.TestCase):
             self.assertLess(w.r[1], sp)                                # the replayed original stwu
 
 
+class StoryCompatibility(unittest.TestCase):
+    """Story moves win over ownership (HANDOFF section 6): EXP-21 only moves Player 2 units between 0 and 3."""
+
+    def _world(self):
+        w = World(phase=0)
+        w.add_unit(IKE, 0, lord=True)
+        w.add_unit(TITANIA, 0, flags=OWNED | P2)          # deployed Player 2 unit
+        w.add_unit(SHINON, 1, flags=OWNED | P2)           # story sent him to the enemy (Ch18)
+        w.add_unit(SOREN, 7, flags=OWNED | P2)            # story benched him (away)
+        w.add_unit(RHYS, 6, flags=OWNED | P2 | 0x8000)    # died
+        w.add_unit(OSCAR, 5, flags=OWNED | P2)            # roster, not deployed
+        return w
+
+    def test_apply_and_return_leave_story_forces_alone(self):
+        blocks = dc.blocks21()
+        w = self._world(); w.run(blocks[0][1])
+        self.assertEqual(w.transfers, [(TITANIA, 3)])
+        for hook_index in (1, 2, 3):                       # every chapter-end path
+            w2 = self._world(); w2.run(blocks[0][1]); w2.transfers.clear()
+            w2.run(blocks[hook_index][1])
+            self.assertEqual(w2.transfers, [(TITANIA, 0)])
+            self.assertEqual((w2.force_of(SHINON), w2.force_of(SOREN), w2.force_of(RHYS), w2.force_of(OSCAR)),
+                             (1, 7, 6, 5))
+        self.assertEqual(w.flags(SHINON) & (OWNED | P2), OWNED | P2)   # ownership survives the story move
+
+    def test_draft_counts_skip_the_dead_and_the_enemy(self):
+        """Picks alternate on living, recruited characters (forces 0/3/5/7), not enemies or the dead."""
+        w = prep_world(order=(IKE, TITANIA, SOREN), away=())
+        w.load_code(pc.blocks27())
+        w.add_unit(RHYS, 6, flags=OWNED | P2 | 0x8000)    # a dead Player 2 unit
+        w.add_unit(SHINON, 1, flags=OWNED | P2)           # an enemy-side Player 2 unit
+        w.wb(LIST + 0x62, 1); w.r[3] = LIST; w.press(0, Z); w.run_block(1)
+        self.assertEqual(w.flags(TITANIA), OWNED)          # counted 0 vs 0: Player 1's pick
+
+
 class SimulatorGuards(unittest.TestCase):
     def test_unstubbed_call_is_an_error(self):
         w = World()
