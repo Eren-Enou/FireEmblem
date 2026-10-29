@@ -57,8 +57,12 @@ def cell(mem,x,y):
 
 
 def capture(mem):
+    actor=mem.u32(MENU_CONTEXT)
+    delta=actor-UNITS
+    actor_slot=delta//0x280+1 if 0<=delta<159*0x280 and delta%0x280==0 else None
     return {"map_dimensions":[mem.u32(MAP),mem.u32(MAP+4)],
-            "menu_context":{"mode12":mem.u8(MENU_CONTEXT+0x12),"flags16":mem.u8(MENU_CONTEXT+0x16)},
+            "menu_context":{"mode12":mem.u8(MENU_CONTEXT+0x12),"flags16":mem.u8(MENU_CONTEXT+0x16),
+                            "actor_slot":actor_slot},
             "cell_door":door(mem),
             "cells":[cell(mem,x,y) for x,y in ((19,14),(19,19),(20,19))],
             "flags":flags(mem),

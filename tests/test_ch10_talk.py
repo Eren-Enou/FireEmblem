@@ -33,6 +33,34 @@ def sample():
 
 
 class Ch10TalkTests(unittest.TestCase):
+    @unittest.skipUnless(Path('work/fixtures/ch10_oscar_kieran_v1/after.s02.sav').exists(),'private Talk captures not present')
+    def test_captured_original_talk_preserves_identity_and_requires_observation(self):
+        from tools.campaign_snapshot import capture
+        from tools.verify_game import DEFAULT_IMAGE
+        root=Path('work/fixtures/ch10_oscar_kieran_v1')
+        ini=root/'User/GameSettings/GFEE01.ini'
+        before=capture(root/'before.s02.sav',DEFAULT_IMAGE,ini,'regression')
+        after=capture(root/'after.s02.sav',DEFAULT_IMAGE,ini,'regression')
+        result=verify(before,after,observed=True)
+        self.assertEqual(result['failures'],[])
+        self.assertEqual(result['status'],'PASS')
+        self.assertEqual(verify(before,after)['status'],'INCONCLUSIVE')
+        self.assertEqual(before['game']['talk_fixture']['menu_context']['actor_slot'],2)
+        self.assertEqual(result['flag_changes'],{KEY:[False,True]})
+
+    def test_selected_actor_can_be_absent_from_occupancy_without_relaxing_target_checks(self):
+        before,after=sample()
+        before['game']['talk_fixture']['cells'][0]['occupant_id']=0
+        context=before['game']['talk_fixture']['menu_context']
+        context['actor_slot']=2
+        self.assertEqual(verify(before,after,observed=True)['status'],'PASS')
+        for actor in (None,19):
+            context['actor_slot']=actor
+            self.assertEqual(verify(before,after,observed=True)['status'],'FAIL')
+        context['actor_slot']=2
+        before['game']['talk_fixture']['cells'][1]['occupant_id']=0
+        self.assertEqual(verify(before,after,observed=True)['status'],'FAIL')
+
     def test_original_ui_observation_is_required_for_event_pass(self):
         before,after=sample()
         self.assertEqual(preconditions(before,positioned=True),[])

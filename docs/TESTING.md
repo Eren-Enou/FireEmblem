@@ -1,5 +1,37 @@
 # Testing
 
+## CAMP-N — Human Chapter10 original Oscar/Kieran Talk: local PASS
+
+2026-10-28. User executed the supplied manual test, created before/after captures
+and declared `--observed-original-talk`. Codex analyzed files only; no Dolphin
+launch/input. Synthetic inside-cell fixture from CAMP-M, original Talk event;
+COOP-P6 + EXP-16 + FIXTURE-LOADER + DBG-CAMP-TALK, **3240/3248 bytes**,
+fingerprintc11089d39a0fe037. Both captures match live C2 bodies and loaded C11.cmb.
+
+- Before SHA256: e920c5b05c5206aa3d8535469a94b9734e7d13d24077ffd7cff34fc43238b85b.
+- After SHA256: 558cfc791b073e8f1cd39f8d7cf3bc85aee95b14e95059c909ce334693ca9a74.
+- Oscar slot2/PID_OSCAR remains Yellow at(19,19), HP28/lv6/EXP28;
+  flags0x400->0x401. Kieran slot19/PID_KEVIN at(20,19) changes Green2->Yellow3,
+  HP30/lv12/EXP0, flags0x80000 unchanged. Both classes/items/rescue unchanged.
+- Original `オスカーケビン` key false->true. All roster slot/PID identities
+  preserved; no unrelated unit-field changes. Chapter11/turn1/Yellow and human
+  control unchanged; actual door object, door keys and completion flags unchanged.
+- Initial redirected report falsely rejected Oscar's empty own occupancy while
+  selected. Context actor identifies Oscar slot2; original Talk collector checks
+  neighboring occupancy, not actor occupancy (RESEARCH CAMP-012). Narrow checker
+  correction has negative regressions for wrong/missing actor and missing target.
+  Existing captures reanalyzed: **PASS** in `talk-result-verified.json`.
+  Original captures and user's first report preserved; no interaction repeat needed.
+
+**114 tests PASS; 316/316 signatures match; 16 accepted runtime artifacts
+hash-verified.**
+
+Evidence run ch10-original-talk-14 records state/config hashes. Explicit human
+observation remains required; automated state evidence alone is INCONCLUSIVE.
+**NOT TESTED:** permanent recruitment, prisoner escape, cleanup, chapter clear,
+transition, native save/reload, natural campaign history and Netplay.
+
+
 ## CAMP-M — Inside-cell Chapter10 Talk fixture prepared; runtime pending
 
 2026-10-28. NEW work/fixtures/ch10_oscar_kieran_v1, separate private User/card,

@@ -67,7 +67,13 @@ def preconditions(snapshot,*,positioned=False):
             failures.append("chosen inside-cell Talk edge is blocked/unverified")
     try:
         oscar,kieran=only_unit(snapshot,"PID_OSCAR"),only_unit(snapshot,"PID_KEVIN")
-        if cells.get((19,19),{}).get("occupant_id")!=(oscar["slot"] if positioned else 0):
+        occupant=cells.get((19,19),{}).get("occupant_id")
+        valid_occupancy=occupant==0 if not positioned else (
+            occupant==oscar["slot"] or (occupant==0 and context.get("actor_slot")==oscar["slot"]))
+        # The original Talk enumerator reads neighboring occupants, not an
+        # actor entry at its own tile. In the action-menu capture Oscar is
+        # selected in context while his grid entry is temporarily empty.
+        if not valid_occupancy:
             failures.append("Oscar destination occupancy differs")
         if cells.get((20,19),{}).get("occupant_id")!=kieran["slot"]:
             failures.append("Kieran occupancy does not match roster identity")

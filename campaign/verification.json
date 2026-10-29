@@ -371,8 +371,8 @@
         },
         "event_runtime": {
           "status": "PASS",
-          "evidence": "ch10-loader-manual-wait-12",
-          "note": "Original P2 Oscar Wait only; Talk NOT TESTED"
+          "evidence": "ch10-original-talk-14",
+          "note": "Original Oscar/Kieran Talk local effect only in synthetic inside-cell fixture; earlier Wait/P1 lockout retained in ch10-loader-manual-wait-12. Permanent recruitment/escape/cleanup untested."
         },
         "chapter_clear": {
           "status": "NOT TESTED"
@@ -1413,12 +1413,42 @@
         }
       ],
       "description": "Human restored and validated Chapter10 synthetic loader fixture; reported original Blue->Yellow, P2 Oscar Wait and P1 command lockout PASS without unusual behavior. Captures corroborate loaded C11.cmb, all live stable+loader C2 bodies, chapter11/turn1/phase0->3/control3=1, Oscar force3/slot2 at2,19, flags400->401 and unchanged HP28/lv6/EXP28/inventory. P1 lockout is human-reported, not established by these RAM fields. No prison traversal, original Talk, permanent recruitment, escape, clear/transition/save or Netplay claim. This configuration is separate from the new inside-cell Talk candidate."
+    },
+    "ch10-original-talk-14": {
+      "kind": "dolphin",
+      "commit": "f846ae7",
+      "worktree_dirty": false,
+      "fingerprint": "c11089d39a0fe037",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_ch10_inside_cell_talk",
+      "chapters": [
+        "11"
+      ],
+      "axes": [
+        "event_runtime"
+      ],
+      "reported_by": "human user; original Talk observation declared with --observed-original-talk",
+      "artifacts": [
+        {
+          "path": "work/fixtures/ch10_oscar_kieran_v1/before.s02.sav",
+          "sha256": "e920c5b05c5206aa3d8535469a94b9734e7d13d24077ffd7cff34fc43238b85b"
+        },
+        {
+          "path": "work/fixtures/ch10_oscar_kieran_v1/after.s02.sav",
+          "sha256": "558cfc791b073e8f1cd39f8d7cf3bc85aee95b14e95059c909ce334693ca9a74"
+        },
+        {
+          "path": "work/fixtures/ch10_oscar_kieran_v1/User/GameSettings/GFEE01.ini",
+          "sha256": "c86e5a9ad2c4260162b3cff34debe0fd67ffaac28b5823c14aa7f7507f7961b8"
+        }
+      ],
+      "description": "Human manually executed the supplied original Oscar/Kieran Talk test and supplied before/after captures with the original-Talk observation declaration. Both captures match C11.cmb, all stable+loader+setup C2 bodies, chapter11/turn1/Yellow/human control. Oscar slot2 remains force3 at19,19, flags400->401; Kieran slot19 at20,19 changes force2->3 with flags80000 unchanged. Original conversation key clear->set; all roster slot/PID identities and both units HP/class/level/EXP/items/rescue preserved. Door object and door/completion keys unchanged. Selected Oscar has empty own occupancy before Talk but context actor points to slot2; original collector checks the neighboring target, so verifier corrected without relaxing target checks. 3240 bytes. Synthetic setup; no permanent recruitment, escape, cleanup, clear/transition, save/reload or Netplay acceptance."
     }
   },
   "next_cases": [
     "Ch6 carried units and Ike-last completion, cleanup/transition and fresh native reload remain unverified; single Yellow Escape passed only in synthetic positioning fixture.",
     "Ch9 native partners: combat EXP, partner cleanup/eventual recruitment and natural chapter history remain unverified.",
-    "Ch10 prisoner conversations, temporary Yellow and exit conditions.",
+    "Ch10 Oscar/Kieran original Talk local effect passed in synthetic setup; prisoner escape, permanent recruitment and cleanup conditions remain unverified.",
     "Ch17 all four stage transitions, reinforcements, turn resets and ownership.",
     "Ch18 Shinon and native Reinforce partners; Ch20 Jill branch conditions.",
     "Ch27-2 and Endgame special transitions; accepted multiplayer save workflow."

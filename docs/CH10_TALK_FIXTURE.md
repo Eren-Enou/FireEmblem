@@ -113,6 +113,9 @@ restoring the old source state would discard it; use this fixture's seed.
    Get-Content "$fixture/talk-result.json" -TotalCount 18
    ```
 
+   Redirection with `>` writes the report silently. Run `Get-Content` above to
+   display it; a successful comparison does not launch another step in Dolphin.
+
    Use `--observed-original-talk` only if you actually chose the original command
    and watched its conversation. Without that declaration the result remains
    INCONCLUSIVE even if captured state fields match expectations.
@@ -140,3 +143,22 @@ To reproduce preparation in a NEW directory:
 Preparation refuses an existing destination. It checks source geometry/units,
 keys, actual door, hooks and budget before creating the separate profile. Keep
 generated states, cards and native game assets under ignored work/.
+
+## Recorded manual result (CAMP-N)
+
+The user supplied the before/after states and original-Talk observation.
+Reanalysis with the corrected selected-actor occupancy check gives **PASS**:
+Kieran Green->Yellow, original conversation key set, Oscar stays Yellow and
+acts; identities/items/progression and door/chapter flags preserved. Original
+Talk may be selected while Oscar's own occupancy entry is empty; the checker
+requires the context actor to identify Oscar and the adjacent Kieran entry to
+remain valid. See TESTING CAMP-N and RESEARCH CAMP-012. No gameplay code changed.
+
+The first report and captures are preserved. Display the corrected report with:
+
+```powershell
+Get-Content 'work/fixtures/ch10_oscar_kieran_v1/talk-result-verified.json' -TotalCount 12
+```
+
+No repeat of this interaction is needed. Permanent recruitment, escape and
+cleanup remain separate tests; do not infer them from this local Talk result.

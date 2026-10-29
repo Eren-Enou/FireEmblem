@@ -15,6 +15,32 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-012 — selected actor occupancy and manual Chapter10 original Talk
+
+**VERIFIED-STATIC and captured-runtime local event effect (TESTING CAMP-N).**
+The original availability routine loads the actor from menu context+0 at
+**0x80078A60** (`80630000`). The adjacent collector's right-target branch reads
+its neighboring occupancy ID at **0x8002B1A0** (`8863000D`) and rejects zero at
+**0x8002B1A4** (`28030000`). All three instructions are pinned. This path does
+not require the actor's own tile to contain its ID. The pre-Talk human capture
+has Oscar at(19,19), empty own occupancy, and context actor pointer0x802B1764
+(slot2); Kieran's adjacent tile still contains slot19. This does not establish
+which routine cleared Oscar's occupancy or a universal rule for every menu.
+
+Correct the fixture checker to accept an empty actor tile only when the current
+context explicitly identifies the same Oscar slot. A wrong/missing actor,
+occupied actor tile belonging to another unit, missing Kieran occupancy, blocked
+edge, consumed key and other original gates still fail. The first redirected
+report's occupancy failure was a verifier error; no gameplay/fixture code changed.
+
+User supplied original-Talk observation and two captures: Oscar stays Yellow,
+flags0x400->0x401; Kieran Green->Yellow, original conversation key clear->set.
+Roster identities, positions, items and progression fields are preserved; door
+and chapter flags unchanged. Both captures match all intended C2 bodies
+in the3240-byte configuration and loaded C11.cmb. See CAMP-N for hashes and limits. This establishes
+only the local original Talk effect from synthetic positioning, not permanent
+recruitment or chapter completion. No Dolphin input sent by Codex.
+
 ### CAMP-011 — isolated Chapter10 Oscar/Kieran Talk positioning fixture
 
 **STATIC and captured-state evidence; runtime positioning and Talk NOT TESTED.**

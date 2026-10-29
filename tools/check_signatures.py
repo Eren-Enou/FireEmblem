@@ -18,6 +18,11 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-012: original Talk enumeration uses actor coordinates and neighbors;
+    # the selected actor need not occupy its own grid cell in the action menu.
+    (0x80078A60, 0x80630000, "Talk availability gets actor from context+0"),
+    (0x8002B1A0, 0x8863000D, "Talk right target reads neighboring occupancy ID"),
+    (0x8002B1A4, 0x28030000, "Talk right target rejects empty neighbor"),
     # CAMP-011: Ch10 inside-cell Talk fixture: named flags, grid and actual door.
     (0x80078A2C, 0x3C60802F, "Talk context high address"),
     (0x80078A34, 0x3863F4C8, "Talk context low address gives 802EF4C8"),
