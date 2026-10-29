@@ -1,9 +1,44 @@
 # Testing
 
-Latest owner-operated result: **CAMP-AA**, synthetic Ch6 Ike-last completion and
-Ch7 preparation roster retention observed; native reload remains INCONCLUSIVE.
+Latest owner-operated result: **CAMP-AB**, Ch10 original Suspend accepted and
+private-card write confirmed; fresh native reload capture timing needs clarification.
+CAMP-AA records synthetic Ch6 Ike-last completion/Ch7 prep retention; its reload remains INCONCLUSIVE.
 CAMP-Z records original Kieran Escape, CAMP-Y Wait/P1 lockout. Single-command launch/capture
 instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
+
+## CAMP-AB — Original Ch10 Suspend/card write; reload checkpoint pending
+
+**Native Suspend acceptance/private-card write PASS; native reload INCONCLUSIVE.**
+The human supplied the original "Saved suspended data. Select Resume Chapter to
+continue your game" screenshot, before.sav and after.sav, and declared all five
+case observations true. Codex collected the previously missing before file,
+preserved the existing after bundle, and independently redecoded both raw states
+with exact captured-snapshot matches. Codex did not launch or control Dolphin.
+
+- Before SHA256:d1a4ad28c57cabb68d77ac34de9af99c38bb24a91c26449d963a350d51fecd8a;
+  after130c7353b0eecc98c6e2c258b9b5b5d2511520339852a72a0ad96410fbfcbb97.
+  Both are C11 turn1 Yellow/human, original complete loaded C11 chain, matching
+  live C2 bodies/fingerprintc11089d39a0fe037,3240/3248bytes.
+- Oscar slot2 force3 at19,19 HP28/lv6/EXP28 flags401; Kieran slot19 force3
+  at20,19 HP30/lv12/EXP0 flags80000. Both full records/inventories preserved;
+  Talk key and door/event fields retained. Remaining roster identities retained.
+  Two enemy records gain flag0x20 and menu context resets; that bit's native
+  serialization meaning is not established by this comparison.
+- The immutable pre-test GCI b415a97e9645e83f60bdc7380a2e86dd4686077549c6ce1863e30de6ad51de12
+  is unchanged. Active private GCI is now
+  b6ad7112c1a9eb5a9c0da48f8c236af706754730d1fcd2113679ed8ec55ec74e,
+  also preserved in capture profile copies. This demonstrates standalone card
+  writes despite the profile's Netplay WriteSaveData=False setting (CAMP-021).
+- Evidence: work/scenarios/human_v1/CH10-NATIVE-RESUME/captures/ and exclusive
+  native-save-evidence-v1/ (copied screenshot, hashes and scoped analysis).
+
+The screenshot establishes successful Save, but does not show the subsequent
+fresh native Resume. All fresh-boot/resume observations were declared true;
+clarification requested only about whether after.sav belongs to the fresh-resumed
+map or the Save confirmation checkpoint. Do not replace accepted after evidence.
+If it is the Save checkpoint, collect a separately named resumed state after
+original Resume in a fresh process. No native reload PASS or campaign/Netplay
+persistence claim until the checkpoint is resolved.
 
 ## CAMP-AA — Synthetic Ch6 Ike-last and Ch7 preparations (2026-10-28)
 

@@ -2,6 +2,12 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-AB: original Ch10 Suspend confirmation and private GCI write established;
+  Oscar/Kieran selected-field retention and live code/script identity match both
+  states. Collected missing before capture. Fresh native Resume was declared,
+  but after-capture timing clarification is pending (save popup vs resumed map).
+  Preserve both accepted bundles; do not conflate card write with reload proof.
+
 - CAMP-AA: human synthetic Ch6 escape queue/Ike-last reaches original Ch7 prep
   with all five survivors. Oscar PID/slot/class/HP/lv/EXP/nonempty items preserved;
   original C07->C08 and live setup/production hooks verified in raw captures.
