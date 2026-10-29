@@ -331,5 +331,11 @@ Controller routing / Netplay (per user priority).
 
 - **Branch review:** new `origin/codex/campaign-compatibility` (Codex, 30 commits from `10d2496`; Priority 2 campaign-compatibility tooling, fixtures and human-verified Ch6/Ch9/Ch10 scenarios). It isn't merged here (another priority). Its Gecko audit gives the source-derived budget, and its native-patching notes recommend staying on Gecko until a reserved payload region exists.
 - **F-59 corrected from Dolphin's source (`GeckoCode.cpp` 2609a):** the budget is **3256** bytes, not ≈ 3248, and a code that doesn't fit is *skipped while later codes still load*. `check_budget` now mirrors that (PREP-03 run 1 lost only EXP-26; DBG-01 still fit).
-- **`tools/fe9/ppc_sim.py` + `tests/test_cave_behaviour.py`:** a small PowerPC interpreter runs the generated caves against a synthetic unit/force/state/pad world. Eleven tests replay DRAFT-01 and PREP-03 (claims, alternation, refusals, request/cancel/accept, release, no force change in prep), EXP-21 apply/return/escape and EXP-25 colours, plus register/stack preservation. A first run caught a bug in the interpreter itself (`mulli` with rA = r0), not in the caves.
+- **`tools/fe9/ppc_sim.py` + `tests/test_cave_behaviour.py`:** a small PowerPC interpreter runs the generated caves against a synthetic unit/force/state/pad world. Eleven tests replay DRAFT-01 and PREP-03 (claims, alternation, refusals, request/cancel/accept, release, no force change in prep), EXP-21 apply/return/escape and EXP-25 colours, plus register/stack preservation. A first run caught a bug in the interpreter itself (`mulli` with rA = r0), not in the caves.- **Gecko budget resolved statically (F-60).**
+  - **EXP-27** merges EXP-22 and EXP-26 into one code: two entry blocks (battle L+R / Choose Units Z) and one shared core, reached across blocks with a fixed relative `bl`.
+  - `stmw`/`lmw` frames: EXP-27 is 1024 bytes (was 1376), and **EXP-21 v2** is 704 (was 784).
+  - COOP-P6 + EXP-21 + EXP-25 + EXP-27 = **3200/3256** (+ DBG-01 = 3256).
+  - The simulator shows EXP-27 gives the same ownership/forces/transfers as EXP-22 and EXP-26 on DRAFT-01's and PREP-03's sequences (battle refusals now buzz); registers are preserved in all caves.
+  - Tests 68/68, signatures 176/176. Installed in `work/ch1/host`.
+  - **COMBO-01** written: both drafts in one session plus PREP-04's Ch6 → Ch7 persistence and a fresh reload.
 

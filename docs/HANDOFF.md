@@ -24,11 +24,12 @@ The game's own bit `0x80000000` is toggled by Pick Units (`0x8012C9E8`). It prob
 | Code | What it does | Generator | Bytes | Runtime status |
 |---|---|---|---|---|
 | COOP-P6 | the stable co-op base (from main) | ini | 1328 | verified (NET-02 etc.) |
-| **EXP-21** | ownership → forces: Player 2 units go 0 → 3 at each blue-phase start, back to 0 at chapter end and on escape. Replaces EXP-16 (same hooks; **never both**) | `tools/draft_code.py` | 784 | **verified** (DRAFT-01, PREP-03) |
+| **EXP-21** | ownership → forces: Player 2 units go 0 → 3 at each blue-phase start, back to 0 at chapter end and on escape. Replaces EXP-16 (same hooks; **never both**) | `tools/draft_code.py` | 704 (v2, compact frame) | v1 (784) **verified** (DRAFT-01, PREP-03); v2 simulated equal, runtime COMBO-01 |
 | **EXP-22** | in-battle draft: L+R on turn 1, alternating picks, release = undo | `tools/draft_code.py` | 704 | **verified** (DRAFT-01) |
 | EXP-23 | draft v2: green unassigned, distinct sounds, the draft ends at the first action. Replaces EXP-22 | `tools/draft_code.py` | 1496 | **unverified, and does not fit** the Gecko space with COOP-P6 + EXP-21 (§4) |
 | **EXP-25** | native unit lists colour the data columns by owner: light blue = Player 1/Ike, yellow = Player 2, orange = transfer requested | `tools/prep_code.py` | 144 | **verified** (PREP-02; orange in PREP-03) |
 | **EXP-26** | Choose Units: Z on your own controller claims (alternating), releases, requests a transfer; the owner accepts | `tools/prep_code.py` | 672 | **verified** (PREP-03) |
+| **EXP-27** | EXP-22 + EXP-26 as **one** code with a shared core (F-60); replaces both | `tools/prep_code.py` | 1024 | simulated equal to EXP-22/26; runtime COMBO-01 pending |
 | DBG-01 / DBG-02 | test aids: enemies / Player 2 units at 1 HP. Never in packages | ini | 56 / 72 | n/a |
 
 Regenerate after editing a generator: `python -m tools.draft_code --write`, `python -m tools.prep_code --write`. Tests check that the ini matches the generators.
@@ -55,7 +56,8 @@ Dolphin 2609a has **3256 bytes** for *all* enabled Gecko codes: `0x80001800…0x
 | In-battle draft test bed (DRAFT-01) | `--enable COOP-P6 --enable EXP-21 --enable EXP-22 --enable DBG-01` | 2872 |
 | **Prep draft test bed (PREP-03; installed now in `work/ch1/host`)** | `--enable COOP-P6 --enable EXP-21 --enable EXP-25 --enable EXP-26 --enable DBG-01` | 2984 |
 | Prep play set, no debug | `--enable COOP-P6 --enable EXP-21 --enable EXP-25 --enable EXP-26` | 2928 |
-| ✗ Prep + in-battle draft | `… EXP-21 EXP-22 EXP-25 EXP-26` | 3632: skips EXP-26 |
+| **Both drafts + colours (EXP-27, COMBO-01 pending; installed now in `work/ch1/host`)** | `--enable COOP-P6 --enable EXP-21 --enable EXP-25 --enable EXP-27 --enable DBG-01` | **3256** (3200 without DBG-01) |
+| ✗ Prep + in-battle draft (separate codes) | `… EXP-21 EXP-22 EXP-25 EXP-26` | 3632: skips EXP-26 |
 | ✗ DRAFT-02 | `… EXP-21 EXP-23 DBG-01` | 3664: skips EXP-23 (DBG-01 still loads) |
 
 **Consequence:** the full feature set (base + ownership + the in-battle *and* prep drafts + a future deployment code) does not fit. Before more features, one of these is needed:

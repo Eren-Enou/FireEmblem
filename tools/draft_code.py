@@ -50,7 +50,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from tools.owner_code import (_Asm, _d, addi, c2_lines, cmpw, cmpwi, li, lbz, lis, lwz, mr, ori, stb, stw, stwu,
+from tools.owner_code import (_Asm, _d, addi, c2_lines, cmpw, cmpwi, li, lbz, lis, lmw, lwz, mr, ori, stb, stmw,
+                              stw, stwu,
                               BCTRL, MFLR0, MFLR31, MTCTR12, MTLR0, NOP, TRANSFER)
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -130,9 +131,10 @@ def _epilogue(a: Asm, original: int) -> list[int]:
 
 def move_cave(src: int, dst: int, original: int, phase: int | None = None, only_r3_id: bool = False,
               set_control: bool = False) -> list[int]:
-    """Walk force `src`; every unit with the P2 bit -> UnitTransferToForce(id, dst)."""
+    """Walk force `src`; every unit with the P2 bit -> UnitTransferToForce(id, dst).
+    Compact frame (v2): r3, r4 saved one by one, r30-r31 with stmw/lmw (r29 is not used here)."""
     a = Asm()
-    _prologue(a)
+    a(stwu(1, -0x20, 1), MFLR0, stw(0, 0x24, 1), stw(3, 8, 1), stw(4, 0xC, 1), stmw(30, 0x10, 1))
     if phase is not None:
         a(lis(12, 0x8033), lbz(0, 0x719, 12), cmpwi(0, phase)); a.br("bne", "done")
     _head(a, 31, src)
@@ -151,7 +153,11 @@ def move_cave(src: int, dst: int, original: int, phase: int | None = None, only_
         _head(a, 12, 3)
         a(cmpwi(12, 0)); a.br("beq", "done")
         a(li(0, 1), lis(12, 0x8033), stb(0, 0x71F, 12))     # control[3] = 1 (EXP-08's rule, from turn 1)
-    return _epilogue(a, original)
+    a.label("done")
+    a(lwz(0, 0x24, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), lmw(30, 0x10, 1), addi(1, 1, 0x20))
+    a(original)
+    w = a.words()
+    return w + ([NOP, 0] if len(w) % 2 == 0 else [0])
 
 
 def draft_cave() -> list[int]:

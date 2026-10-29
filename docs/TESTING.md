@@ -613,6 +613,49 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 |---|---|---|---|
 | 2026-10-28 | user | **Done (research)** | Normal difficulty. Screenshots of Choose Units ("You can select 1 more. 5/6"), the prep menu, Reposition, Items, Conditions and Options. A on a row did nothing (all forced). States backed up to `work/saves/GFEE01.prepR1_s02..s04`. They gave the list object layout, the row table, the highlighted-row field and the palette (F-58). |
 
+## COMBO-01 — Both drafts in one code set (EXP-27 + EXP-21 v2), plus Ch6 → Ch7 persistence (PREP-04)
+
+**What changed:**
+- **EXP-27** replaces EXP-22 *and* EXP-26 with one code: a battle entry (L+R, turn 1) and a Choose Units entry (Z) calling one shared core (F-60).
+- **EXP-21 v2** is the same behaviour with a compact frame.
+
+Both are behaviourally identical to the verified versions in the simulator (`SharedDraftBehaviour`, `OwnershipForcesBehaviour`, `CompactOwnershipFrames`). The only intended difference: the battle draft now plays EXP-26's sounds, so refusals buzz.
+
+This is the first set where **both drafts and the colours fit together**: COOP-P6 + EXP-21 + EXP-25 + EXP-27 + DBG-01 = **3256 of 3256** bytes.
+
+**Test bed:** `work/ch1/host`, the card unchanged since `ch1_card_before_draft01.gci`.
+
+**Keys:**
+- Player 1: Z = **D**, L+R = **Q+W**
+- Player 2: Z = **E**, L+R = **O+P**
+- port 2 stick = numpad, A = M
+
+### Procedure (tester, one PC, ~15 minutes; step 5 longer)
+1. Fresh boot: `Dolphin-x64/Dolphin.exe --user work/ch1/host` → Restart Chapter → **Ch. 6** → Choose Units.
+   - **Claims:** Titania **D**, Soren **E**, Rhys **D**, Oscar **E**. Expected: light blue / yellow as in PREP-03.
+   - **Transfer:** on Titania, **E** (orange), then **D**. She turns yellow.
+2. **Fight.** Turn 1, blue phase. Expected: **Titania, Soren and Oscar yellow rings**; Ike and Rhys blue.
+3. **In-battle draft (same code set):**
+   - Cursor on **Soren**, **O+P**: release sound, Soren **blue**.
+   - Cursor on **Ike**, **Q+W**: **buzz**.
+   - Cursor on **Soren** again, **O+P**: change sound, **yellow** again.
+   - Press **Shift+F2**.
+4. Yellow phase: port 2 moves Titania, Soren and Oscar. End the turn normally once.
+5. **PREP-04, persistence:**
+   - Clear Ch. 6 (Escape; DBG-01 keeps enemies at 1 HP).
+   - At the Save prompt, save over **"Ch. 9: Gallia"** (file 2, a test copy).
+   - At **Ch. 7**'s Choose Units, expected: **Titania, Soren, Oscar yellow; Rhys light blue** before anyone presses anything. Screenshot and **Shift+F3**.
+6. **Fresh reload:** close Dolphin → fresh boot → Restart Chapter → the file from step 5 → Choose Units. Same colours. **Shift+F4**.
+
+**Report:** which expectations held, screenshots of 1, 2 and 5, and slots 2–4.
+
+**Failure modes:**
+- Z or L+R does nothing: check the boot message for a skipped code. The total is exactly at the limit, so leave DBG-01 off if in doubt; the set without it is 3200.
+- Battle and prep behave differently from PREP-03/DRAFT-01.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+
 ## PREP-03 — Draft and transfers in Choose Units (EXP-26; PREP-01 Step 3)
 
 **What it is:** in preparations, each player presses **Z on their own controller** with a character highlighted in **Choose Units**:

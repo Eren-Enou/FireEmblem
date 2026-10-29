@@ -707,6 +707,28 @@ class GameTests(unittest.TestCase):
         self.assertEqual([n.split()[0] for n in lost], ["EXP-23"])
         self.assertEqual([n.split()[0] for n, _ in gecko_sizes(["EXP-21", "COOP-P6"])], ["COOP-P6", "EXP-21"])
 
+    def test_exp27_shared_core(self):
+        """EXP-27: two blocks of one code; the battle block's bl lands on the core inside the prep block."""
+        from tools.fe9.ppc import Dol
+        from tools import prep_code as pc
+        from tools.install_codes import check_budget, gecko_sizes
+        dol = Dol(self.disc.read_dol())
+        found = self._gecko_blocks(pc.NAME27)
+        self.assertEqual(found, pc.blocks27())
+        (a0, battle), (a1, prep) = found
+        self.assertEqual((a0, a1), (0x800291D8, 0x8012D6A4))
+        self.assertEqual((dol.u32(a0), dol.u32(a1)), (0x9421FFD0, 0x9421FFD0))
+        _, core = pc.prep_block27()
+        bl = [i for i, w in enumerate(battle) if (w >> 26) == 18 and (w & 3) == 1
+              and 4 * i + (w & 0x3FFFFFC) >= 4 * len(battle)]                    # calls leaving the block
+        self.assertEqual(len(bl), 1)
+        off = battle[bl[0]] & 0x3FFFFFC
+        self.assertEqual(4 * bl[0] + off, 4 * len(battle) + 8 + core)
+        self.assertEqual(prep[core // 4], 0x9421FFF0)                      # core: stwu r1,-0x10(r1)
+        self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-27"]), [])
+        self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-27", "DBG-01"]), [])
+        self.assertEqual(sum(s for _, s in gecko_sizes(["COOP-P6", "EXP-21", "EXP-25", "EXP-27"])), 3200)
+
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}
         _date, groups = dispos.parse(files["dispos_n.bin"])

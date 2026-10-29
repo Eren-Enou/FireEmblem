@@ -33,9 +33,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from tools.draft_code import (HAS_ATTR, OWNED, P2, PADSTATUS, PLAY_SE, Asm, andi_, andis_, lbzx, lhzx, mulli,
+from tools.draft_code import (HAS_ATTR, OWNED, P2, PADSTATUS, PLAY_SE, Asm, andi_, andis_, lbzx, lha, lhzx, mulli,
                               oris, rlwinm, stbx)
-from tools.owner_code import (_d, addi, c2_lines, cmpw, cmpwi, li, lbz, lis, lwz, mr, ori, stw, stwu,
+from tools.owner_code import (_d, addi, c2_lines, cmpw, cmpwi, li, lbz, lis, lmw, lwz, mr, ori, stb, stmw,
+                              stw, stwu,
                               MFLR0, MTLR0, NOP)
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -185,20 +186,172 @@ def blocks26() -> list[tuple[int, list[int]]]:
     return [(LIST_STEP[0], prep_draft_cave())]
 
 
+# ---- EXP-27: one draft code for battle (EXP-22 rules) and preparations (EXP-26 rules), shared core ----
+NAME27 = "EXP-27 Draft in battle (L+R, turn 1) and in Choose Units (Z), shared core; replaces EXP-22 and EXP-26"
+MAP_STEP = (0x800291D8, 0x9421FFD0)        # human-phase input step (EXP-22's hook): stwu r1,-0x30(r1)
+CURSOR_UNIT = 0x800AA794
+TRANSFER = 0x800BCA38
+LR_BITS = 0x0060
+BLR = 0x4E800020
+
+
+def _frame_in(a):
+    a(stwu(1, -0x30, 1), MFLR0, stw(0, 0x34, 1), stw(3, 8, 1), stw(4, 0xC, 1), stmw(27, 0x14, 1))
+
+
+def _frame_out(a, original):
+    a.label("done")
+    a(lwz(0, 0x34, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), lmw(27, 0x14, 1), addi(1, 1, 0x30))
+    a(original)
+
+
+def _edge_loop(a, bits_rlwinm, act):
+    """Per port 0/1: rising edge of a button test (one rlwinm giving 0/1 in r0) -> act(a)."""
+    a.br("bl", "past"); a.w.append(0); a.label("past")
+    a(MFLR30, li(29, 0))
+    a.label("port")
+    a(lis(12, PADSTATUS >> 16), ori(12, 12, PADSTATUS & 0xFFFF), mulli(0, 29, 12), lhzx(0, 12, 0))
+    bits_rlwinm(a)
+    a(lbzx(28, 30, 29), stbx(0, 30, 29), cmpwi(0, 1)); a.br("bne", "nextport")
+    a(cmpwi(28, 0)); a.br("bne", "nextport")
+    act(a)
+    a.label("nextport")
+    a(addi(29, 29, 1), cmpwi(29, 2)); a.br("blt", "port")
+
+
+def core_routine(a):
+    """Shared core, called with bl: r28 = unit, r29 = port (0/1), r27 = mode (0 battle, 1 prep).
+    Keeps r27-r31; uses r0, r3-r4, r9-r12."""
+    a.label("core")
+    a(stwu(1, -0x10, 1), MFLR0, stw(0, 0x14, 1))
+    a(lis(11, 0x802B), ori(11, 11, 0x14E4), subf(11, 11, 28), lis(0, 2), cmplw(11, 0)); a.br("bge", "reject")
+    a(addi(3, 28, 0x1BC), li(4, 0)); a.call(HAS_ATTR)
+    a(cmpwi(3, 0)); a.br("bne", "reject")                                                # Ike stays Player 1
+    a(lwz(11, 0x1A0, 28), lwz(12, 0x190, 28), lbz(0, 8, 12), cmpwi(0, 0)); a.br("beq", "elig")
+    a(cmpwi(27, 0)); a.br("beq", "batforce")
+    a(cmpwi(0, 5)); a.br("beq", "elig"); a.br("b", "reject")                             # prep: force 0/5
+    a.label("batforce")
+    a(cmpwi(0, 3)); a.br("bne", "reject")                                                # battle: force 0, or
+    a(andis_(12, 11, OWNED >> 16)); a.br("beq", "reject")                               # owned force 3 only
+    a.label("elig")
+    a.br("bl", "tbl"); a.w.append(0x00243C54); a.label("tbl")
+    a(_mflr(10))                                                                         # r10 = force offsets
+    a(andis_(12, 11, OWNED >> 16)); a.br("bne", "owned")
+    a(li(3, 0)); _walk(a, "c", _count)                                                  # r3 = #P1 - #P2
+    a(lwz(11, 0x1A0, 28), rlwinm(11, 11, 0, 5, 3))                                       # clear OFFER
+    a(cmpwi(29, 0)); a.br("bne", "p2pick")
+    a(cmpwi(3, 0)); a.br("bgt", "reject")                                                # P1 if #P1 <= #P2
+    a(oris(11, 11, OWNED >> 16), stw(11, 0x1A0, 28)); _se(a, "p1")
+    a.label("p2pick")
+    a(cmpwi(3, 0)); a.br("ble", "reject")                                                # P2 if #P1 > #P2
+    a(oris(11, 11, (OWNED | P2) >> 16), stw(11, 0x1A0, 28))
+    a(cmpwi(27, 0)); a.br("bne", "p2snd")
+    a(lbz(3, 0x198, 28), li(4, 3)); a.call(TRANSFER)                                    # battle: to yellow now
+    a(li(0, 1), lis(12, 0x8033), stb(0, 0x71F, 12))                                       # control[3] = 1
+    a.label("p2snd")
+    _se(a, "p2")
+    a.label("owned")
+    a(lwz(11, 0x1A0, 28), andis_(12, 11, P2 >> 16), li(0, 0)); a.br("beq", "ownerok"); a(li(0, 1))
+    a.label("ownerok")
+    a(andis_(12, 11, OFFER >> 16)); a.br("beq", "nooffer")
+    a(rlwinm(11, 11, 0, 5, 3), cmpw(0, 29)); a.br("bne", "cancel")
+    a(xoris(11, 11, P2 >> 16), stw(11, 0x1A0, 28)); _se(a, "transfer")                 # owner accepts
+    a.label("cancel")
+    a(stw(11, 0x1A0, 28)); _se(a, "release")                                            # requester cancels
+    a.label("nooffer")
+    a(cmpw(0, 29)); a.br("bne", "other")
+    a(rlwinm(11, 11, 0, 3, 0), stw(11, 0x1A0, 28))                                       # owner releases
+    a(cmpwi(27, 0)); a.br("bne", "relsnd")
+    a(cmpwi(29, 0)); a.br("beq", "relsnd")
+    a(lbz(3, 0x198, 28), li(4, 0)); a.call(TRANSFER)                                    # battle: P2's unit back
+    a.label("relsnd")
+    _se(a, "release")
+    a.label("other")
+    a(cmpwi(27, 0)); a.br("beq", "reject")                                               # battle: no requests
+    _walk(a, "o", _clear_offer)                                                         # one request at a time
+    a(lwz(11, 0x1A0, 28), oris(11, 11, OFFER >> 16), stw(11, 0x1A0, 28)); _se(a, "request")
+    a.label("reject")
+    _se(a, "miss")
+    a.label("sound")
+    a(li(4, 0x64)); a.call(PLAY_SE)
+    a(lwz(0, 0x14, 1), MTLR0, addi(1, 1, 0x10), BLR)
+
+
+def _mflr(r):
+    return 0x7C0802A6 | (r << 21)
+
+
+def prep_block27() -> tuple[list[int], int]:
+    """Choose Units entry; the shared core lives in this block. Returns (words, core offset in bytes)."""
+    a = Asm()
+    _frame_in(a)
+    a(mr(31, 3), lwz(0, 0x14, 31), lis(12, SALLY_LIST_NAME >> 16), ori(12, 12, SALLY_LIST_NAME & 0xFFFF),
+      cmpw(0, 12)); a.br("bne", "done")
+    a(li(27, 1))
+
+    def act(a):
+        a(lbz(0, 0x62, 31), extsb(0, 0), lwz(3, 0x3C, 31), mulli(0, 0, 0x24), lwzx(28, 3, 0))
+        a.br("bl", "core")
+
+    _edge_loop(a, lambda a: a(rlwinm(0, 0, 28, 31, 31)), act)                            # Z held -> r0 = 1
+    a.br("b", "done")
+    core_routine(a)
+    _frame_out(a, LIST_STEP[1])
+    w = a.words()
+    return w + ([NOP, 0] if len(w) % 2 == 0 else [0]), 4 * a.labels["core"]
+
+
+def _lr_held(a):
+    """r0 = 1 if L and R are both held (r0 = PADStatus buttons)."""
+    a(andi_(0, 0, LR_BITS), cmpwi(0, LR_BITS), li(0, 1)); a.br("beq", "held"); a(li(0, 0))
+    a.label("held")
+
+
+def map_block27(core_from_map: int) -> list[int]:
+    """Battle entry (turn 1, blue phase, L+R); calls the core in the prep block by a fixed relative bl."""
+    a = Asm()
+    _frame_in(a)
+    a(lis(12, 0x8033), lbz(0, 0x719, 12), cmpwi(0, 0)); a.br("bne", "done")           # blue phase
+    a(lha(0, 0x71A, 12), cmpwi(0, 1)); a.br("bne", "done")                             # turn 1
+    a(li(27, 0))
+    calls = []
+
+    def act(a):
+        a.call(CURSOR_UNIT)
+        a(mr(28, 3))
+        calls.append(len(a.w)); a.w.append(0)                                           # bl core (patched below)
+
+    _edge_loop(a, _lr_held, act)
+    _frame_out(a, MAP_STEP[1])
+    w = a.words()
+    w = w + ([NOP, 0] if len(w) % 2 == 0 else [0])
+    for i in calls:
+        w[i] = (18 << 26) | ((core_from_map - 4 * i) & 0x3FFFFFC) | 1
+    return w
+
+
+def blocks27() -> list[tuple[int, list[int]]]:
+    """Battle block first, then the prep block holding the core: the core's address relative to the battle
+    cave is the battle cave's length + the prep block's 8-byte C2 header + the core's offset."""
+    prep, core_off = prep_block27()
+    length = len(map_block27(0))
+    return [(MAP_STEP[0], map_block27(4 * length + 8 + core_off)), (LIST_STEP[0], prep)]
+
+
 def blocks() -> list[tuple[int, list[int]]]:
     return [(DRAW_HOOK[0], colour_cave())]
 
 
 def code_lines(n: int = 25) -> list[str]:
-    lines = [f"${NAME if n == 25 else NAME26}"]
-    for addr, words in (blocks() if n == 25 else blocks26()):
+    lines = [f"${ {25: NAME, 26: NAME26, 27: NAME27}[n] }"]
+    for addr, words in {25: blocks, 26: blocks26, 27: blocks27}[n]():
         lines += c2_lines(addr, words)
     return lines
 
 
 def write_ini(path: Path) -> None:
     lines = path.read_text().split("\n")
-    for n in (25, 26):
+    for n in (25, 26, 27):
         head = next((i for i, l in enumerate(lines) if l.startswith(f"$EXP-{n} ")), None)
         if head is None:
             anchor = next(i for i, l in enumerate(lines) if l.startswith("# DBG-01"))
@@ -218,7 +371,7 @@ def main() -> int:
     args = ap.parse_args()
     if args.write:
         write_ini(ROOT / "codes/GFEE01.ini")
-        print("updated $EXP-25 and $EXP-26 in codes/GFEE01.ini")
+        print("updated $EXP-25, $EXP-26 and $EXP-27 in codes/GFEE01.ini")
     else:
         print("\n".join(code_lines(25) + [""] + code_lines(26)))
     return 0

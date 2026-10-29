@@ -52,19 +52,37 @@ class Machine:
             self.ww(CAVE_BASE + 4 * i, w)
         self._end = CAVE_BASE + 4 * (len(words) - 1)
 
+    def load_code(self, blocks: list[tuple[int, list[int]]]) -> list[int]:
+        """Lay out a whole Gecko code (several C2 blocks) as Dolphin writes it: each block is an 8-byte C2
+        header followed by its cave. Returns each cave's start; run_block(i) then runs block i."""
+        self._blocks, addr = [], CAVE_BASE
+        for _hook, words in blocks:
+            if words[-1] != 0:
+                raise SimError("cave must end with the 0x00000000 branch-back slot")
+            addr += 8                                             # the C2 header line
+            for i, w in enumerate(words):
+                self.ww(addr + 4 * i, w)
+            self._blocks.append((addr, addr + 4 * (len(words) - 1)))
+            addr += 4 * len(words)
+        self._region = (CAVE_BASE, addr)
+        return [s for s, _e in self._blocks]
+
+    def run_block(self, i: int, max_steps: int = 200000) -> None:
+        start, end = self._blocks[i]
+        self._exec(start, end, self._region, max_steps)
+
     def run(self, words: list[int] | None = None, max_steps: int = 200000) -> None:
         if words is not None:
             self.load(words)
-        end = self._end
-        if self.r[1] == 0:
-            self.r[1] = STACK_TOP
-        pc = CAVE_BASE
+        self._exec(CAVE_BASE, self._end, (CAVE_BASE, self._end), max_steps)
+
+    def _exec(self, pc: int, end: int, region: tuple[int, int], max_steps: int) -> None:
         while pc != end:
             self.steps += 1
             if self.steps > max_steps:
                 raise SimError("step limit (infinite loop?)")
-            if not CAVE_BASE <= pc < end:
-                raise SimError(f"pc left the cave: {pc:08X}")
+            if not region[0] <= pc < region[1]:
+                raise SimError(f"pc left the code: {pc:08X}")
             pc = self._step(pc, self.rw(pc))
 
     # --- helpers ---
@@ -126,6 +144,10 @@ class Machine:
         elif op == 37: self.ww(ea, r[d]); r[a] = ea                        # stwu
         elif op == 38: self.wb(ea, r[d])                                   # stb
         elif op == 44: self.wh(ea, r[d])                                   # sth
+        elif op == 47:                                                      # stmw
+            for k in range(d, 32): self.ww(ea + 4 * (k - d), r[k])
+        elif op == 46:                                                      # lmw
+            for k in range(d, 32): r[k] = self.rw(ea + 4 * (k - d))
         elif op == 21:                                                      # rlwinm[.]
             sh, mb, me = b, (w >> 6) & 31, (w >> 1) & 31
             v = ((r[d] << sh) | (r[d] >> (32 - sh))) & M if sh else r[d]
@@ -149,8 +171,8 @@ class Machine:
                     self._call(self.ctr)
                     return pc + 4
                 raise SimError(f"bctr to {self.ctr:08X} (tail jump out of the cave)")
-            if xo == 16 and d == 20 and not (w & 1):                        # blr
-                raise SimError("blr inside a cave")
+            if xo == 16 and d == 20 and not (w & 1):                        # blr (return from a local routine)
+                return self.lr
             raise SimError(f"op19 xo {xo}")
         elif op == 31:
             xo = (w >> 1) & 0x3FF

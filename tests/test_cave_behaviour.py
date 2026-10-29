@@ -202,6 +202,101 @@ class ListColourBehaviour(unittest.TestCase):
         self.assertEqual(self._colour(OWNED | P2, data_column=False), 1)   # name column untouched
 
 
+class SharedDraftBehaviour(unittest.TestCase):
+    """EXP-27 = one code for both drafts: same results as EXP-22 (battle) and EXP-26 (prep)."""
+
+    def _prep(self):
+        w = prep_world()
+        w.load_code(pc.blocks27())
+        return w
+
+    def _prep_press(self, w, port, uid):
+        w.wb(LIST + 0x62, w.rows.index(uid))
+        w.r[3] = LIST; w.press(port, Z); w.run_block(1)
+        w.release_all(); w.r[3] = LIST; w.run_block(1)
+
+    def _battle(self):
+        w = battle_world()
+        w.load_code(pc.blocks27())
+        return w
+
+    def _battle_press(self, w, port, uid):
+        w.cursor_unit = unit_addr(uid)
+        w.press(port, LR); w.run_block(0)
+        w.release_all(); w.run_block(0)
+
+    def _prep_script(self, w, press):
+        steps = [(0, TITANIA), (0, SOREN), (1, SOREN), (1, IKE), (0, SHINON), (0, RHYS), (1, OSCAR),
+                 (1, TITANIA), (0, TITANIA), (1, RHYS), (1, RHYS), (1, SOREN)]   # PREP-03's sequence
+        out = []
+        for port, uid in steps:
+            press(w, port, uid)
+            out.append(tuple(w.flags(u) & (OWNED | P2 | OFFER) for u in (TITANIA, SOREN, RHYS, OSCAR, IKE)))
+        return out, w.sounds, w.transfers
+
+    def test_prep_matches_exp26(self):
+        ref = self._prep_script(prep_world(), prep_press)
+        new = self._prep_script(self._prep(), self._prep_press)
+        self.assertEqual(new, ref)
+        self.assertEqual(new[0][-1], (OWNED | P2, 0, OWNED, OWNED | P2, 0))   # Titania moved to Player 2, Soren released
+
+    def _battle_script(self, w, press):
+        steps = [(0, TITANIA), (0, SOREN), (1, SOREN), (1, IKE), (1, LETHE), (1, SOREN), (1, SOREN), (0, RHYS)]
+        out = []
+        for port, uid in steps:
+            press(w, port, uid)
+            out.append((tuple(w.flags(u) & (OWNED | P2) for u in (TITANIA, SOREN, RHYS, IKE, LETHE)),
+                        tuple(w.force_of(u) for u in (TITANIA, SOREN, RHYS, LETHE)), w.control(3)))
+        return out, w.transfers
+
+    def test_battle_matches_exp22(self):
+        ref = self._battle_script(battle_world(), battle_press)
+        new_world = self._battle()
+        new = self._battle_script(new_world, self._battle_press)
+        self.assertEqual(new, ref)                                 # same ownership, forces, transfers
+        self.assertIn(pc.SE26["miss"], new_world.sounds)          # ... plus EXP-26's sounds (refusals buzz)
+
+    def test_battle_rules_differ_from_prep(self):
+        w = self._battle()
+        self._battle_press(w, 0, TITANIA)                          # Player 1's
+        self._battle_press(w, 1, TITANIA)                          # Player 2 can't request in battle
+        self.assertEqual(w.flags(TITANIA) & (OWNED | P2 | OFFER), OWNED)
+        self.assertEqual(w.sounds[-1], pc.SE26["miss"])
+        for phase, turn in ((3, 1), (0, 2)):                       # battle draft only on turn 1, blue phase
+            w2 = battle_world(phase, turn); w2.load_code(pc.blocks27())
+            self._battle_press(w2, 0, TITANIA)
+            self.assertEqual((w2.flags(TITANIA) & OWNED, w2.sounds), (0, []))
+
+    def test_registers_preserved_both_blocks(self):
+        w = self._prep()
+        w.wb(LIST + 0x62, 1); w.press(0, Z)
+        regs = {k: 0x1000 + k for k in (4, 27, 28, 29, 30, 31)}
+        for k, val in regs.items(): w.r[k] = val
+        w.r[3] = LIST; sp = w.r[1]; w.run_block(1)
+        self.assertEqual({k: w.r[k] for k in regs}, regs)
+        self.assertEqual((w.r[3], w.r[1]), (LIST, sp - 0x30))
+        b = self._battle(); b.cursor_unit = unit_addr(TITANIA); b.press(0, LR)
+        for k, val in regs.items(): b.r[k] = val
+        b.r[3] = 0x7777; sp = b.r[1]; b.run_block(0)
+        self.assertEqual({k: b.r[k] for k in regs}, regs)
+        self.assertEqual((b.r[3], b.r[1]), (0x7777, sp - 0x30))
+
+
+class CompactOwnershipFrames(unittest.TestCase):
+    def test_exp21_caves_preserve_registers(self):
+        for i, (addr, words) in enumerate(dc.blocks21()):
+            w = World(phase=0)
+            w.add_unit(TITANIA, 0, flags=OWNED | P2)
+            regs = {k: 0x2000 + k for k in (4, 29, 30, 31)}
+            for k, val in regs.items(): w.r[k] = val
+            w.r[3] = TITANIA if addr == 0x800BA8F8 else 0x5555
+            r3, sp = w.r[3], w.r[1]
+            w.run(words)
+            self.assertEqual({k: w.r[k] for k in regs}, regs, hex(addr))
+            self.assertEqual(w.r[3], r3, hex(addr))
+            self.assertLess(w.r[1], sp)                                # the replayed original stwu
+
+
 class SimulatorGuards(unittest.TestCase):
     def test_unstubbed_call_is_an_error(self):
         w = World()
