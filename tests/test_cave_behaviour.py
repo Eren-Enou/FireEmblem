@@ -158,23 +158,26 @@ class OwnershipForcesBehaviour(unittest.TestCase):
         w.add_unit(LETHE, 3)
         return w
 
+    def _code(self, w):
+        w.load_code(dc.blocks21())
+        return w
+
     def test_apply_moves_player2_units_only(self):
-        apply_, *rest = dc.blocks21()
-        w = self._world(); w.run(apply_[1])
+        w = self._code(self._world()); w.run_block(0)
         self.assertEqual(w.members(0), [IKE, RHYS])
         self.assertEqual(sorted(w.members(3)), sorted([LETHE, TITANIA, SOREN]))
         self.assertEqual(w.control(3), 1)
-        w2 = self._world(phase=3); w2.run(apply_[1])
+        w2 = self._code(self._world(phase=3)); w2.run_block(0)
         self.assertEqual(w2.transfers, [])
 
     def test_return_and_escape(self):
-        blocks = dc.blocks21()
-        w = self._world(); w.run(blocks[0][1])
-        w.run(blocks[1][1])                                       # AllUnitEscape entry
-        self.assertEqual(sorted(w.members(0)), sorted([IKE, RHYS, TITANIA, SOREN]))
-        self.assertEqual(w.members(3), [LETHE])                   # the native partner stays
-        w = self._world(); w.run(blocks[0][1])
-        w.r[3] = SOREN; w.run(blocks[4][1])                       # UnitEscape(Soren)
+        for hook in (1, 2, 3):                                    # every chapter-end path
+            w = self._code(self._world()); w.run_block(0)
+            w.run_block(hook)
+            self.assertEqual(sorted(w.members(0)), sorted([IKE, RHYS, TITANIA, SOREN]))
+            self.assertEqual(w.members(3), [LETHE])               # the native partner stays
+        w = self._code(self._world()); w.run_block(0)
+        w.r[3] = SOREN; w.run_block(4)                            # UnitEscape(Soren)
         self.assertEqual((w.force_of(SOREN), w.force_of(TITANIA)), (0, 3))
 
 
@@ -303,11 +306,12 @@ class CompactOwnershipFrames(unittest.TestCase):
         for i, (addr, words) in enumerate(dc.blocks21()):
             w = World(phase=0)
             w.add_unit(TITANIA, 0, flags=OWNED | P2)
-            regs = {k: 0x2000 + k for k in (4, 29, 30, 31)}
+            w.load_code(dc.blocks21())
+            regs = {k: 0x2000 + k for k in (4, 28, 29, 30, 31)}
             for k, val in regs.items(): w.r[k] = val
             w.r[3] = TITANIA if addr == 0x800BA8F8 else 0x5555
             r3, sp = w.r[3], w.r[1]
-            w.run(words)
+            w.run_block(i)
             self.assertEqual({k: w.r[k] for k in regs}, regs, hex(addr))
             self.assertEqual(w.r[3], r3, hex(addr))
             self.assertLess(w.r[1], sp)                                # the replayed original stwu
@@ -327,12 +331,11 @@ class StoryCompatibility(unittest.TestCase):
         return w
 
     def test_apply_and_return_leave_story_forces_alone(self):
-        blocks = dc.blocks21()
-        w = self._world(); w.run(blocks[0][1])
+        w = self._world(); w.load_code(dc.blocks21()); w.run_block(0)
         self.assertEqual(w.transfers, [(TITANIA, 3)])
         for hook_index in (1, 2, 3):                       # every chapter-end path
-            w2 = self._world(); w2.run(blocks[0][1]); w2.transfers.clear()
-            w2.run(blocks[hook_index][1])
+            w2 = self._world(); w2.load_code(dc.blocks21()); w2.run_block(0); w2.transfers.clear()
+            w2.run_block(hook_index)
             self.assertEqual(w2.transfers, [(TITANIA, 0)])
             self.assertEqual((w2.force_of(SHINON), w2.force_of(SOREN), w2.force_of(RHYS), w2.force_of(OSCAR)),
                              (1, 7, 6, 5))

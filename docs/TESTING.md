@@ -621,7 +621,7 @@ Before Start, the host sets **Buffer** to about 18 (higher with a higher ping). 
 
 Both are behaviourally identical to the verified versions in the simulator (`SharedDraftBehaviour`, `OwnershipForcesBehaviour`, `CompactOwnershipFrames`). The only intended difference: the battle draft now plays EXP-26's sounds, so refusals buzz.
 
-This is the first set where **both drafts and the colours fit together**: COOP-P6 + EXP-21 + EXP-25 + EXP-27 + DBG-01 = **3256 of 3256** bytes.
+This is the first set where **both drafts and the colours fit together**: COOP-P6 + EXP-21 (**v3**, one shared mover) + EXP-25 + EXP-27 + DBG-01 = **3120 of 3256** bytes.
 
 **Test bed:** `work/ch1/host`, the card unchanged since `ch1_card_before_draft01.gci`.
 
@@ -651,7 +651,7 @@ This is the first set where **both drafts and the colours fit together**: COOP-P
 **Report:** which expectations held, screenshots of 1, 2 and 5, and slots 2–4.
 
 **Failure modes:**
-- Z or L+R does nothing: check the boot message for a skipped code. The total is exactly at the limit, so leave DBG-01 off if in doubt; the set without it is 3200.
+- Z or L+R does nothing: `install_codes` reports the total (3120 fits), so a skipped code would be a new problem; send the state.
 - Battle and prep behave differently from PREP-03/DRAFT-01.
 
 | Date | Tester | Result | Notes |

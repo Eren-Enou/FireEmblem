@@ -382,10 +382,83 @@ def blocks23() -> list[tuple[int, list[int]]]:
             (ACTED_HOOK[0], unpark_cave(ACTED_HOOK[1])), (ADVANCE_CALL[0], unpark_cave(None))]
 
 
+BLR = 0x4E800020
+FORCE_HEAD_ADDR = {0: 0x802CA264, 3: 0x802CA288}
+
+
+def _stub_in(a: Asm) -> None:
+    a(stwu(1, -0x10, 1), MFLR0, stw(0, 0x14, 1), stw(3, 8, 1), stw(4, 0xC, 1))
+
+
+def _stub_out(a: Asm, original: int) -> list[int]:
+    a.label("done")
+    a(lwz(0, 0x14, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), addi(1, 1, 0x10), original)
+    w = a.words()
+    return w + ([NOP, 0] if len(w) % 2 == 0 else [0])
+
+
+def _mover(a: Asm) -> None:
+    """Shared routine (called with bl): r5 = address of the source force's head, r6 = destination force,
+    r7 = unit id filter (0 = all). Every unit in the source list with the P2 bit -> UnitTransferToForce(id, r6).
+    Keeps r28-r31."""
+    a.label("mover")
+    a(stwu(1, -0x20, 1), MFLR0, stw(0, 0x24, 1), stmw(28, 0x10, 1), mr(28, 7), mr(29, 6), lwz(31, 0, 5))
+    a.label("mloop")
+    a(cmpwi(31, 0)); a.br("beq", "mend")
+    a(lwz(30, 0x184, 31), lwz(0, 0x1A0, 31), andis_(0, 0, P2 >> 16)); a.br("beq", "mnext")   # next read first
+    a(lbz(3, 0x198, 31), cmpwi(28, 0)); a.br("beq", "mgo")
+    a(cmpw(3, 28)); a.br("bne", "mnext")                                                    # escape: that unit only
+    a.label("mgo")
+    a(mr(4, 29)); a.call(TRANSFER)
+    a.label("mnext")
+    a(mr(31, 30)); a.br("b", "mloop")
+    a.label("mend")
+    a(lwz(0, 0x24, 1), MTLR0, lmw(28, 0x10, 1), addi(1, 1, 0x20), BLR)
+
+
+def _args(a: Asm, src: int, dst: int, id_from_r3: bool) -> None:
+    head = FORCE_HEAD_ADDR[src]
+    a(lis(5, (head >> 16) + (1 if head & 0x8000 else 0)), addi(5, 5, (head & 0xFFFF) - (0x10000 if head & 0x8000 else 0)),
+      li(6, dst))
+    a(rlwinm(7, 3, 0, 24, 31) if id_from_r3 else li(7, 0))                                 # UnitEscape(id): r3 low byte
+
+
+def _apply_block21() -> tuple[list[int], int]:
+    """Phase-0 start: Player 2 units 0 -> 3, then control[3] = 1 if force 3 has units. Holds the mover."""
+    a = Asm()
+    _stub_in(a)
+    a(lis(12, 0x8033), lbz(0, 0x719, 12), cmpwi(0, 0)); a.br("bne", "done")
+    _args(a, 0, 3, False); a.br("bl", "mover")
+    _head(a, 12, 3)
+    a(cmpwi(12, 0)); a.br("beq", "done")
+    a(li(0, 1), lis(12, 0x8033), stb(0, 0x71F, 12))                                       # control[3] = 1 (F-44)
+    a.br("b", "done")
+    _mover(a)
+    return _stub_out(a, APPLY_HOOK[1]), 4 * a.labels["mover"]
+
+
+def _return_block21(original: int, escape: bool, mover_from_here: int) -> list[int]:
+    a = Asm()
+    _stub_in(a)
+    _args(a, 3, 0, escape)
+    call = len(a.w); a.w.append(0)                                                          # bl mover (patched)
+    w = _stub_out(a, original)
+    w[call] = (18 << 26) | ((mover_from_here - 4 * call) & 0x3FFFFFC) | 1
+    return w
+
+
 def blocks21() -> list[tuple[int, list[int]]]:
-    out = [(APPLY_HOOK[0], move_cave(0, 3, APPLY_HOOK[1], phase=0, set_control=True))]
-    out += [(addr, move_cave(3, 0, orig)) for addr, orig in RETURN_HOOKS]
-    out.append((ESCAPE_HOOK[0], move_cave(3, 0, ESCAPE_HOOK[1], only_r3_id=True)))
+    """EXP-21 v3: one shared mover inside the apply block (F-60); the four other hooks are small stubs that
+    call it across blocks. Same behaviour as v1/v2 (tests/test_cave_behaviour.py)."""
+    apply_words, mover_off = _apply_block21()
+    hooks = [(addr, orig, False) for addr, orig in RETURN_HOOKS] + [(ESCAPE_HOOK[0], ESCAPE_HOOK[1], True)]
+    out, start = [(APPLY_HOOK[0], apply_words)], 4 * len(apply_words)       # byte offset of the next header
+    mover_abs = mover_off                                                    # relative to the apply cave start
+    for addr, orig, esc in hooks:
+        cave = start + 8                                                     # this block's cave start
+        probe = _return_block21(orig, esc, 0)
+        out.append((addr, _return_block21(orig, esc, mover_abs - cave)))
+        start = cave + 4 * len(probe)
     return out
 
 

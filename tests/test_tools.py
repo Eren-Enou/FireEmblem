@@ -350,25 +350,35 @@ class GameTests(unittest.TestCase):
         self.assertEqual(dol.u32(0x8003CBBC), 0x38BE01A0)                                          # save them
 
     def test_exp21_flag_ownership_code(self):
-        """EXP-21 in the ini is what tools/draft_code.py generates; same hooks as EXP-16, keyed on the P2 bit."""
+        """EXP-21 v3: same hooks as EXP-16; one shared mover in the apply block, called by the other four."""
         from tools.fe9.ppc import Dol
         from tools import draft_code as dc, owner_code as oc
         dol = Dol(self.disc.read_dol())
         found = self._gecko_blocks(dc.NAMES[21])
         self.assertEqual(found, dc.blocks21())   # regenerate with `python -m tools.draft_code --write`
         self.assertEqual([a for a, _ in found], [a for a, _ in oc.blocks()])   # never enable with EXP-16
-        for (addr, words), (src, dst) in zip(found, [(0, 3), (3, 0), (3, 0), (3, 0), (3, 0)]):
+        starts, pos = [], 0
+        for _addr, words in found:                                             # cave start of each block
+            starts.append(pos + 8); pos += 8 + 4 * len(words)
+        _, mover = dc._apply_block21()
+        mover_abs = starts[0] + mover
+        apply_asm = self._asm(found[0][1][:-1])
+        for need in ["lbz r0, 0x719(r12)", "li r6, 3", "stb r0, 0x71f(r12)", "andis. r0, r0, 0x4000",
+                     "lwz r30, 0x184(r31)", "cmpw r3, r28", "blr"]:
+            self.assertIn(need, apply_asm)
+        for i, (addr, words) in enumerate(found):
             body = words[:-2] if words[-2] == oc.NOP else words[:-1]
-            self.assertEqual(body[-1], dol.u32(addr))         # original instruction replayed
+            self.assertEqual(body[-1], dol.u32(addr))                           # original instruction replayed
+            if i == 0:
+                continue
             asm = self._asm(body)
-            head = {0: "lwz r31, -0x5d9c(r12)", 3: "lwz r31, -0x5d78(r12)"}[src]
-            self.assertIn(head, asm)
-            self.assertIn("andis. r0, r0, 0x4000", asm)       # only Player 2 units move
-            self.assertIn(f"li r4, {dst}", asm)
-            self.assertIn("lwz r30, 0x184(r31)", asm)         # next read before the transfer unlinks
-            self.assertEqual(addr == 0x8002E738, "lbz r0, 0x719(r12)" in asm)
-            self.assertEqual(addr == 0x800BA8F8, "cmpw r3, r0" in asm)
-            self.assertEqual(addr == 0x8002E738, "stb r0, 0x71f(r12)" in asm)
+            self.assertIn("li r6, 0", asm)
+            self.assertIn("clrlwi r7, r3, 0x18" if addr == 0x800BA8F8 else "li r7, 0", asm)
+            bl = [k for k, w in enumerate(words) if (w >> 26) == 18 and (w & 3) == 1]
+            self.assertEqual(len(bl), 1)
+            off = words[bl[0]] & 0x3FFFFFC
+            off = off - 0x4000000 if off & 0x2000000 else off
+            self.assertEqual(starts[i] + 4 * bl[0] + off, mover_abs, hex(addr))  # lands on the mover
 
     def test_exp23_draft_v2_code(self):
         """EXP-23: green parking at turn 1, unpark on first action and phase advance, four named sounds."""
@@ -727,7 +737,7 @@ class GameTests(unittest.TestCase):
         self.assertEqual(prep[core // 4], 0x9421FFF0)                      # core: stwu r1,-0x10(r1)
         self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-27"]), [])
         self.assertEqual(check_budget(["COOP-P6", "EXP-21", "EXP-25", "EXP-27", "DBG-01"]), [])
-        self.assertEqual(sum(s for _, s in gecko_sizes(["COOP-P6", "EXP-21", "EXP-25", "EXP-27"])), 3200)
+        self.assertLessEqual(sum(s for _, s in gecko_sizes(["COOP-P6", "EXP-21", "EXP-25", "EXP-27"])), 3200)
 
     def test_chapter9_partner_units(self):
         files = {e.name: e.data for e in pack.read_pack(self.disc.read_file("zmap/bmap10/dispos.cmp"))}
