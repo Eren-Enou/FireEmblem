@@ -162,7 +162,7 @@ def prepare_partner(root, source):
     return record
 
 
-def collect(case_dir, label, state, ini, image=DEFAULT_IMAGE):
+def collect(case_dir, label, state, ini, image=DEFAULT_IMAGE, *, profile=None):
     case_dir = case_dir.resolve()
     if (ROOT / 'work').resolve() not in case_dir.parents:
         raise ValueError('case directory must be inside this clone work/')
@@ -187,9 +187,28 @@ def collect(case_dir, label, state, ini, image=DEFAULT_IMAGE):
     if sha(dest / 'state.sav') != original_state or sha(dest / 'GFEE01.ini') != original_ini or sha(ini) != original_ini:
         raise ValueError('source changed during capture; evidence rejected')
     write_json(dest / 'snapshot.json', snapshot)
+    profile_files = {}
+    if profile is not None:
+        profile = profile.resolve()
+        if case_dir not in profile.parents:
+            raise ValueError('capture profile must belong to the private case')
+        sources = [profile / 'Config/Dolphin.ini', profile / 'Config/GCPadNew.ini',
+                   *sorted(p for p in (profile / 'GC').rglob('*') if p.is_file())]
+        for path in sources:
+            if profile not in path.resolve().parents:
+                raise ValueError('profile evidence points outside private storage')
+            relative = Path('profile') / path.relative_to(profile)
+            target = dest / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            digest = sha(path)
+            with target.open('xb') as stream: stream.write(path.read_bytes())
+            if sha(target) != digest or sha(path) != digest:
+                raise ValueError('profile/card changed during evidence capture')
+            profile_files[str(relative)] = digest
     write_json(dest / 'manifest.json', {'source_state': str(state.resolve()), 'state_sha256': original_state,
                                       'ini_sha256': original_ini, 'gecko_bytes': size,
                                       'snapshot_sha256': sha(dest / 'snapshot.json'),
+                                      'profile_files': profile_files,
                                       'analysis_commit': commit, 'runtime_commit': 'declare separately in observations.json'})
     return {'written': str(dest), 'live_c2_verified': snapshot['evidence']['intended_c2_verified'],
             'gecko_bytes': size, 'status': 'INCONCLUSIVE', 'scope': 'evidence capture only; no gameplay acceptance'}
@@ -241,6 +260,8 @@ def verify_partner_wait(before, after, observed):
     for key in ('flags', 'cell_door'):
         if before['game'].get('talk_fixture', {}).get(key) != after['game'].get('talk_fixture', {}).get(key):
             failures.append('door/chapter/conversation state changed')
+    if before['game'].get('event_flags') != after['game'].get('event_flags'):
+        failures.append('registered event flags changed during Wait')
     declined = [key for key, value in observed.items() if value is False]
     failures += ['human reported failed check: ' + key for key in declined]
     return {'status': 'FAIL' if failures else 'PASS' if observed and all(v is True for v in observed.values()) else 'INCONCLUSIVE',
@@ -258,6 +279,10 @@ def review(case_dir):
             missing.append(label)
             continue
         manifest = json.loads((dest / 'manifest.json').read_text(encoding='utf-8'))
+        for relative, digest in manifest.get('profile_files', {}).items():
+            path = (dest / relative).resolve()
+            if dest.resolve() not in path.parents or sha(path) != digest:
+                failures.append(label + ': profile/card artifact mismatch')
         if not manifest.get('snapshot_sha256'):
             unverified.append(label)
         elif sha(dest / 'snapshot.json') != manifest['snapshot_sha256']:
@@ -270,7 +295,10 @@ def review(case_dir):
         if not snapshots[label]['evidence'].get('intended_c2_verified'):
             failures.append(label + ': live C2 bodies unverified')
     observed = {k: observations.get('observed', {}).get(k) for k in case['observations']}
-    failures += ['human reported failed check: ' + k for k, value in observed.items() if value is False]
+    refused_card = case['id'] == 'CH10-NATIVE-RESUME' and observed.get('native_suspend_accepted') is False
+    failures += ['human reported failed check: ' + k for k, value in observed.items() if value is False and not (refused_card and k == 'native_suspend_accepted')]
+    if refused_card and not failures:
+        return {'status': 'INCONCLUSIVE', 'reason': 'Original Suspend refused; inherited card identity is unverified. Preserve exact refusal screenshot; do not spoof identity.', 'missing_captures': missing}
     if failures or missing:
         return {'status': 'FAIL' if failures else 'NOT TESTED' if not snapshots else 'INCONCLUSIVE',
                 'failures': failures, 'missing_captures': missing}
@@ -279,6 +307,9 @@ def review(case_dir):
                 'scope': 'legacy evidence readable but decoded analysis integrity unverified; recollect into a NEW case directory, never edit the old bundle'}
     if case['id'] == 'CH10-PARTNER-WAIT':
         return verify_partner_wait(snapshots['before'], snapshots['after'], observed)
+    if case['id'] == 'CH10-PRISONER-ESCAPE':
+        from tools.scenario_verdicts import prisoner_escape
+        return prisoner_escape(snapshots['before'], snapshots['after'], observed)
     labels = case['captures']
     return {'status': 'INCONCLUSIVE', 'failures': [],
             'scope': 'complete evidence bundle awaiting event-specific human/engineering review; no campaign acceptance',

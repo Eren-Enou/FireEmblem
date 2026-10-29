@@ -1,5 +1,10 @@
 # Campaign integrity: manual tests and evidence collection
 
+For the four prepared short owner-operated scenarios, start with
+[SCENARIO_TESTS.md](SCENARIO_TESTS.md) and root `Test-Scenario.ps1 -List`.
+They are offline-validated candidates, not new runtime passes. The older broad
+case pack below remains available for future campaign evidence.
+
 Updated native lifecycle/Chapter17 expectations and future capture contracts:
 [LIFECYCLE_TEST_CONTRACTS.md](LIFECYCLE_TEST_CONTRACTS.md).
 

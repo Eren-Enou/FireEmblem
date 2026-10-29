@@ -2,6 +2,11 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- Latest: four short owner-operated candidates prepared; root Test-Scenario.ps1
+  validates/list/launches private profiles.189 offline tests,378 signatures,
+ 16 accepted artifact hashes; **no new runtime acceptance**. Instructions:
+  [SCENARIO_TESTS.md](SCENARIO_TESTS.md); checkpoint details at the end of this file.
+
 - CAMP-W: lifecycle fragments now compose cleanup -> roster availability ->
   map flags -> fixed ownership. Original story absence/enemy status wins; dead
   and temporary records are not silently restored. Individual Escape ambiguity
@@ -263,3 +268,35 @@ Trace the native roster rebuild/loader-selection boundary (F-38) and original
 save-mode record selection, then carried-unit breakup and MapLoad activation.
 The graph exposes unresolved gates; current sequence tests only compose bounded
 fragments. No complete native chapter transition or persistent campaign is proven.
+## Owner-operated scenario checkpoint (2026-10-28)
+
+Four independent profiles prepared under ignored `work/scenarios/human_v1/`:
+CH10-PARTNER-WAIT, CH10-PRISONER-ESCAPE (directory suffix-v2), CH6-IKE-COMPLETE,
+and CH10-NATIVE-RESUME. All are OFFLINE CHECKED / RUNTIME UNVERIFIED.
+Use root `Test-Scenario.ps1 -List`; instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
+No Dolphin launch, GUI/input, source profile/card/state edits or production patch.
+
+New632-byte positioning replacements reuse the last private C2 slot; CPU/stack
+return checks and clean-cache invalidation avoid stale or active cave code.
+Ch10 retains accepted Talk, moves Kieran to genuine unkeyed original exit6,2;
+Ch6 retains accepted Oscar Escape and queues three remaining Blue Escapes before
+Ike, rather than fabricating an Ike-last state. Actual native calls and original
+Escape/completion remain human tests. Totals3240 and3168/3248 bytes.
+
+Capture/review extends campaign_test_pack, including immutable raw state, snapshot,
+INI, profile/card copies/hashes and owner observation revision history. Kieran
+Escape gets a narrow local verdict; native refusal remains INCONCLUSIVE. Chapter
+transition/native reload comparisons remain engineering review, not automatic
+campaign acceptance. Existing16 accepted runtime artifact hashes still match.
+
+189 offline tests and378 signatures pass at this checkpoint. Generated-code tests
+execute guards, queue order, blocked exits and ABI restoration with mocked natives;
+payload-delta tests restrict edits to setup code and recorded cache valid bits.
+Actual fixture limitations fixed during preparation: active old hook/capacity,
+cached setup instruction in Ch6, Windows UTF-8 JSON reading, and native-card refusal
+classification. No new campaign defect or compatibility fix is claimed.
+
+Next: owner runs Wait, then prisoner Escape and Ch6 queue. Analyze original outcome
+captures before preparing Ch10 cleanup. Ch17 and later events still need valid
+stage/map/near-event sources with roster/story/difficulty provenance; no fabricated
+stage-ID/completion fixtures were generated. Native card identity remains unknown.

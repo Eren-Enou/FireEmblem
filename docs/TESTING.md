@@ -1,5 +1,9 @@
 # Testing
 
+Latest owner-operated candidates: **CAMP-X**, with single-command launch/capture
+instructions in [SCENARIO_TESTS.md](SCENARIO_TESTS.md). Offline checks only;
+the owner has not yet executed these new gameplay scenarios.
+
 ## CAMP-W — Cross-boundary lifecycle fragments and save audit
 
 After82a5b9c, offline only. Four sequence regressions cover cleanup/availability/
@@ -1525,3 +1529,17 @@ Note: this game's map menu has **Suspend**, not a Battle Save, so "save/load mid
 | Date | Tester | Result | Notes |
 |---|---|---|---|
 | 2026-10-27 | Claude (computer use; COOP-P4 + EXP-16 + EXP-18 + EXP-19 + DBG-01/02; Ch6 from the card) | **PASS** | **EXP display:** at turn 1 in the blue phase, Base Data showed Oscar with **EXP 28** (not "--"); `control[3]` fix confirmed. **Death record (EXP-19):** Oscar (yellow, held at 1 HP by DBG-02, DBG-01 off) attacked a soldier and died to the counter ("The enemy was better…"). Slot 2 (before): force 3, flags `0x00010400`. Slot 3 (after): **force 6, flags `0x01018409` (died `0x8000`), +0x234 = 7**, the same record a dead blue unit gets (F-45). Also seen: the yellow phase **auto-ended** after Oscar's Wait; **Next Unit** jumped to Oscar; port 1 was ignored in the yellow phase. Ch6's prep forces all 5 candidates (F-46). The vanilla blue-death comparison was replaced by the disassembly of the death routine (F-45). The card was not written. |
+## CAMP-X: owner-operated scenario package (2026-10-28)
+
+Status: **OFFLINE CHECKS PASS; NEW GAMEPLAY NOT TESTED**. Root Test-Scenario.ps1
+was exercised only with -List/-Check/-Review (no Dolphin launch/input).
+Procedures/captures/failure boundaries: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
+
+Prepared candidates: Kieran post-Talk Wait (3240bytes), original prisoner Escape
+(3240bytes), Ch6 remaining Blue Escape queue/Ike-last (3168bytes), and isolated
+native Suspend/fresh boot (3240bytes). All fit3248; stable2536-byte code and
+production fingerprint8609ae9f49fd879f remain unchanged. No merge or new runtime
+acceptance. 189 offline tests,378 signatures,16 prior accepted artifact hashes
+verified. Setup interpreter uses mocked natives; original positioning/event
+execution must be demonstrated by owner captures. Native reload and next-chapter
+roster retention still need original gameplay evidence.

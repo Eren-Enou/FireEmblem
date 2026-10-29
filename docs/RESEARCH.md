@@ -15,6 +15,62 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-022 — same-budget private Escape scenarios and suspended CPU safety
+
+STATIC/OFFLINE ONLY. The new Ch10 candidate starts with the accepted original
+Talk outcome, Yellow Kieran `(20,19)`, and empty original exit `(6,2)`. Original
+C11 scene11 is kind5/action14 with an empty key; exit grid edge mask is `0x86`.
+The closed cell is deliberately bypassed by synthetic original UnitSetPos, not
+opened and not used as evidence of natural traversal. The menu context veto and
+original event still require runtime testing (CAMP-003).
+
+The Ch6 candidate starts after accepted Oscar Escape: Oscar force5/escaped,
+Titania `(12,9)`, Rhys `(14,8)`, Soren `(13,8)`, Ike `(13,9)`, all four living
+unacted Blue. Exit `(13,26)` is empty, edge mask `0x4B`, original C07 scene2
+kind5/action14/empty key. Emil remains alive `(13,25)`. A table-driven hook moves
+one Blue ally at a time in that order. It skips only force5 units whose original
+escaped bit is present; it never calls Escape or writes flags/factions. This
+requires four original human-operated Escapes, avoiding fabricated Ike-last state.
+The native calls/offsets reuse pinned CAMP-011/CAMP-003/F-43 signatures. Production
+generators/codes remain unchanged. Both replace the last private632-byte C2 block,
+preserving all earlier blocks, installed hook and checked dynamic return branch.
+Totals remain3240 (Ch10) and3168 (Ch6), against3248 usable bytes.
+
+Serialized CPU layout was checked against official Dolphin tag2609a sources:
+[State.cpp](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/State.cpp),
+[HW.cpp](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/HW/HW.cpp),
+[ChunkFile.h](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Common/ChunkFile.h).
+HSP/WIIHW/HW end markers are three successive host-u32 `0x42` values. Decoder
+requires a unique candidate, state192, exact Dolphin version and Gekko PVR83214.
+This is a constrained private-format decoder, not a general savestate parser.
+
+[PowerPC.cpp](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/PowerPC/PowerPC.cpp)
+serializes32 GPRs, PC/NPC,8 u64 CR fields,4 u32 status/count fields,4 XER bytes,
+32 paired-single128-bit values,16 segment registers, then1024 u32 SPRs. Thus SPR
+starts at CPU+0x31C. The128 36-byte TLB entries and14 remaining bytes put instruction
+cache at CPU+0x252A. Types are in
+[PowerPC.h](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/PowerPC/PowerPC.h)
+and [ConditionRegister.h](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/PowerPC/ConditionRegister.h).
+
+[PPCCache.cpp](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/PowerPC/PPCCache.cpp)
+and [PPCCache.h](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/PowerPC/PPCCache.h)
+define128 sets,8 ways,32-byte lines; serialized data/plru/valid/addrs/modified occupy
+0x9180 bytes per cache. Replacements reject Gecko-range GPR/PC/NPC/LR/CTR values,
+Gecko stack return addresses, malformed/nonascending/unbounded stack chains,
+invalid cache tags and dirty overlapping cache lines. Zero andFFFFFFFF are accepted
+stack-bottom sentinels (the latter occurs in the accepted Ch10 main-thread state).
+Only overlapping clean cache valid bits are cleared. Actual Ch6 source had one
+such instruction-cache line; Ch10 had none. CPU registers and all game-state data
+remain byte-identical. Normal state loading also clears host JIT code through
+[JitInterface::DoState](https://github.com/dolphin-emu/dolphin/blob/2609a/Source/Core/Core/PowerPC/JitInterface.cpp).
+
+No new original-game address assumption is introduced. Payload offsets are emulator
+serialization fields, not game addresses. Byte-delta tests restrict every edit to
+the last private C2 storage and recorded cache valid bits; source/card hashes stay
+unchanged. The PPC subset executor checks guards, queue order, native arguments,
+register restoration and stack-only direct stores with mocked native calls.
+These are offline engineering checks, not demonstration of original gameplay.
+
 ### CAMP-020 — executable lifecycle fragments across roster boundaries
 
 Original availability loop at0x8011A6F4 reads force5 head, calls transfer0 at
