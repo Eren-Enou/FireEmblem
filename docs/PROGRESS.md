@@ -337,5 +337,5 @@ Controller routing / Netplay (per user priority).
   - COOP-P6 + EXP-21 + EXP-25 + EXP-27 = **3200/3256** (+ DBG-01 = 3256).
   - The simulator shows EXP-27 gives the same ownership/forces/transfers as EXP-22 and EXP-26 on DRAFT-01's and PREP-03's sequences (battle refusals now buzz); registers are preserved in all caves.
   - Tests 68/68, signatures 176/176. Installed in `work/ch1/host`.
-  - **COMBO-01** written: both drafts in one session plus PREP-04's Ch6 → Ch7 persistence and a fresh reload.
+  - **COMBO-01** written: both drafts in one session plus PREP-04's Ch6 → Ch7 persistence and a fresh reload.- **Bug found by the simulator and fixed in EXP-27:** a transfer request left unanswered in prep (`OFFER`) is saved with the unit. In battle, the owner's L+R would have "accepted" it, flipping the owner to Player 2 while the unit stayed in the blue army. Battle mode now ignores `OFFER`, and a release clears it (`test_stale_prep_request_is_ignored_in_battle`). The budget was kept at 3200/3256: the core's pointer range check became a null check, since both entries pass a unit pointer or 0. Tests 70/70.
 

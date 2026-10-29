@@ -267,6 +267,22 @@ class SharedDraftBehaviour(unittest.TestCase):
             self._battle_press(w2, 0, TITANIA)
             self.assertEqual((w2.flags(TITANIA) & OWNED, w2.sounds), (0, []))
 
+    def test_stale_prep_request_is_ignored_in_battle(self):
+        """A transfer request left from preparations must not flip ownership mid-battle (regression)."""
+        w = self._battle()
+        w.ww(unit_addr(RHYS) + 0x1A0, 0x400 | OWNED | OFFER)       # Player 1's Rhys, unanswered request
+        self._battle_press(w, 0, RHYS)                            # owner: plain release, request dropped
+        self.assertEqual((w.flags(RHYS) & (OWNED | P2 | OFFER), w.force_of(RHYS)), (0, 0))
+        w.ww(unit_addr(RHYS) + 0x1A0, 0x400 | OWNED | OFFER)
+        self._battle_press(w, 1, RHYS)                            # other player: refused, nothing changes
+        self.assertEqual((w.flags(RHYS) & (OWNED | P2 | OFFER), w.force_of(RHYS)), (OWNED | OFFER, 0))
+        self.assertEqual(w.sounds[-1], pc.SE26["miss"])
+
+    def test_no_unit_under_cursor_buzzes(self):
+        w = self._battle()
+        w.cursor_unit = 0; w.press(0, LR); w.run_block(0)
+        self.assertEqual((w.sounds, w.transfers), ([pc.SE26["miss"]], []))
+
     def test_registers_preserved_both_blocks(self):
         w = self._prep()
         w.wb(LIST + 0x62, 1); w.press(0, Z)

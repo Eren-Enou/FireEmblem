@@ -224,7 +224,7 @@ def core_routine(a):
     Keeps r27-r31; uses r0, r3-r4, r9-r12."""
     a.label("core")
     a(stwu(1, -0x10, 1), MFLR0, stw(0, 0x14, 1))
-    a(lis(11, 0x802B), ori(11, 11, 0x14E4), subf(11, 11, 28), lis(0, 2), cmplw(11, 0)); a.br("bge", "reject")
+    a(cmpwi(28, 0)); a.br("beq", "reject")             # both entries pass a unit pointer or 0 (0x800AA794 / row)
     a(addi(3, 28, 0x1BC), li(4, 0)); a.call(HAS_ATTR)
     a(cmpwi(3, 0)); a.br("bne", "reject")                                                # Ike stays Player 1
     a(lwz(11, 0x1A0, 28), lwz(12, 0x190, 28), lbz(0, 8, 12), cmpwi(0, 0)); a.br("beq", "elig")
@@ -253,6 +253,7 @@ def core_routine(a):
     a.label("owned")
     a(lwz(11, 0x1A0, 28), andis_(12, 11, P2 >> 16), li(0, 0)); a.br("beq", "ownerok"); a(li(0, 1))
     a.label("ownerok")
+    a(cmpwi(27, 0)); a.br("beq", "nooffer")                                              # battle: requests ignored
     a(andis_(12, 11, OFFER >> 16)); a.br("beq", "nooffer")
     a(rlwinm(11, 11, 0, 5, 3), cmpw(0, 29)); a.br("bne", "cancel")
     a(xoris(11, 11, P2 >> 16), stw(11, 0x1A0, 28)); _se(a, "transfer")                 # owner accepts
@@ -260,7 +261,7 @@ def core_routine(a):
     a(stw(11, 0x1A0, 28)); _se(a, "release")                                            # requester cancels
     a.label("nooffer")
     a(cmpw(0, 29)); a.br("bne", "other")
-    a(rlwinm(11, 11, 0, 3, 0), stw(11, 0x1A0, 28))                                       # owner releases
+    a(rlwinm(11, 11, 0, 5, 3), rlwinm(11, 11, 0, 3, 0), stw(11, 0x1A0, 28))             # release (and any OFFER)
     a(cmpwi(27, 0)); a.br("bne", "relsnd")
     a(cmpwi(29, 0)); a.br("beq", "relsnd")
     a(lbz(3, 0x198, 28), li(4, 0)); a.call(TRANSFER)                                    # battle: P2's unit back
