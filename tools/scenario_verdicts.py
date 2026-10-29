@@ -2,6 +2,65 @@
 from tools.talk_evidence import CONVERSATION_KEY
 
 
+def ch6_completion(snapshots, observed, card_write_verified=False):
+    """Synthetic original Escape queue -> Ch7 prep -> human fresh native Load."""
+    labels=('before_queue','before','after','next_prep','reloaded')
+    missing=[label for label in labels if label not in snapshots]
+    if missing:return {'status':'INCONCLUSIVE','failures':[],'missing_captures':missing}
+    failures=[]
+    survivors=('PID_IKE','PID_OSCAR','PID_TIAMAT','PID_KILROY','PID_SENERIO')
+    records={}
+    for label in labels:
+        snap=snapshots[label];game,evidence=snap['game'],snap['evidence']
+        chapter,turn=(7,2) if label in labels[:3] else (8,1)
+        if not evidence.get('intended_c2_verified') or evidence.get('codes_fingerprint')!='e60e83a81d994e3b':
+            failures.append(label+': original isolated Escape-queue codes required')
+        if (game['chapter'],game['phase'],game['turn'])!=(chapter,0,turn) or game['control'][0]!=1:
+            failures.append(label+': unexpected original chapter/turn/control')
+        scripts=game.get('event_scripts',{})
+        if not scripts.get('complete_chain') or scripts.get('campaign_ids')!=[chapter] or not scripts.get('chapter_matches'):
+            failures.append(label+': original loaded chapter script required')
+        if not game.get('event_flags',{}).get('complete_table_read'):
+            failures.append(label+': registered flag table unverified')
+        records[label]={}
+        for pid in survivors:
+            matches=[u for u in game['units'] if u['pid']==pid]
+            if len(matches)!=1:failures.append(label+': exactly one '+pid+' required')
+            else:
+                unit=matches[0];records[label][pid]=unit
+                if unit['hp']<=0 or unit['death_record'] or unit['rescue_link']:
+                    failures.append(label+': survivor not living/unrescued: '+pid)
+                expected=5 if label=='after' or (label=='before' and pid!='PID_IKE') or (label=='before_queue' and pid=='PID_OSCAR') else 0
+                if unit['force']!=expected or (expected==5 and not unit['escaped']):
+                    failures.append(label+': incorrect escape/preparation state: '+pid)
+    if all(len(row)==len(survivors) for row in records.values()):
+        ike=records['before']['PID_IKE']
+        if ike['xy']!=[13,26] or ike['flags']&1:failures.append('Ike must be unacted at original exit before final Escape')
+        for pid in survivors:
+            initial=records['before_queue'][pid]
+            for label in labels[1:]:
+                unit=records[label][pid]
+                for field in ('slot','pid','class','hp','level','exp'):
+                    if unit[field]!=initial[field]:failures.append(label+': survivor progression/identity changed: '+pid+'/'+field)
+            if records['next_prep'][pid]!=records['reloaded'][pid]:
+                failures.append('native reload changed complete survivor record: '+pid)
+        inventory=records['before_queue']['PID_OSCAR']['inventory_slots_hex']
+        if any(records[label]['PID_OSCAR']['inventory_slots_hex']!=inventory for label in labels):
+            failures.append('Oscar inventory changed across escape/transition/save/load')
+    for pid in ('PID_CHINON','PID_GATRIE'):
+        a=[u for u in snapshots['next_prep']['game']['units'] if u['pid']==pid]
+        b=[u for u in snapshots['reloaded']['game']['units'] if u['pid']==pid]
+        if len(a)!=1 or a!=b or a[0]['force']!=7:failures.append('native reload changed away record: '+pid)
+    hashes=[snapshots[label]['evidence'].get('state_sha256') for label in labels]
+    if not all(hashes) or len(set(hashes))!=len(labels):failures.append('five distinct captured states required')
+    failures+=['human reported failed check: '+key for key,value in observed.items() if value is False]
+    required=('remaining_blue_original_escapes','ike_last','original_completion','oscar_present_next_chapter','fresh_native_load')
+    return {'status':'FAIL' if failures else 'PASS' if card_write_verified and all(observed.get(key) is True for key in required) else 'INCONCLUSIVE',
+            'failures':failures,'private_card_write_verified':card_write_verified,
+            'scope':'synthetic Ch6 original Escape queue/Ike-last, Ch7 survivor retention and standalone native save/fresh Load',
+            'excludes':['naturally progressed campaign','Ch7 Player2 battle control','enemy slot reconstruction/whole-engine equivalence','carried escape','Netplay persistence']}
+
+
 def native_resume(before, after, observed, card_write_verified=False):
     """Selected living-unit persistence plus explicit human fresh native load.
 

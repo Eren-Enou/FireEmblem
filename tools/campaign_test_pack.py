@@ -310,8 +310,8 @@ def review(case_dir):
     if case['id'] == 'CH10-PRISONER-ESCAPE':
         from tools.scenario_verdicts import prisoner_escape
         return prisoner_escape(snapshots['before'], snapshots['after'], observed)
-    if case['id'] == 'CH10-NATIVE-RESUME':
-        from tools.scenario_verdicts import native_resume
+    if case['id'] in ('CH10-NATIVE-RESUME','CH6-IKE-COMPLETE'):
+        from tools.scenario_verdicts import native_resume, ch6_completion
         verified_write=False
         # The pre-test baseline is immutable, unlike a card copied after play.
         # Existing capture/profile hashes were checked above. Never infer native
@@ -323,11 +323,12 @@ def review(case_dir):
                 sha(case_dir/'card-before'/name)==digest and
                 setup.get('pinned',{}).get(str(Path('card-before')/name))==digest
                 for name,digest in baseline.items())
-            manifest=json.loads((case_dir/'captures/after/manifest.json').read_text(encoding='utf-8'))
+            final_label='reloaded' if case['id']=='CH6-IKE-COMPLETE' else 'after'
+            manifest=json.loads((case_dir/'captures'/final_label/'manifest.json').read_text(encoding='utf-8'))
             cards={Path(path.replace('\\','/')).name:digest for path,digest in manifest.get('profile_files',{}).items()
                    if path.replace('\\','/').startswith('profile/GC/USA/Card A/') and path.lower().endswith('.gci')}
             verified_write=original_ok and set(cards)==set(baseline) and any(cards[name]!=baseline[name] for name in baseline)
-        return native_resume(snapshots['before'],snapshots['after'],observed,verified_write)
+        return ch6_completion(snapshots,observed,verified_write) if case['id']=='CH6-IKE-COMPLETE' else native_resume(snapshots['before'],snapshots['after'],observed,verified_write)
     labels = case['captures']
     return {'status': 'INCONCLUSIVE', 'failures': [],
             'scope': 'complete evidence bundle awaiting event-specific human/engineering review; no campaign acceptance',

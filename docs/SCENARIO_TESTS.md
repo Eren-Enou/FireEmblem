@@ -5,7 +5,8 @@ Codex has not launched Dolphin or performed these interactions. The owner has
 now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y) and
 **CH10-PRISONER-ESCAPE** (CAMP-Z): local original P2 Wait/P1 lockout and local
 original Escape only. Ch6's synthetic original Ike-last sequence and next-Chapter7
-preparation roster are now observed (CAMP-AA), with Ch6 native reload unresolved.
+preparation roster are now observed (CAMP-AA), followed by newly saved Chapter7
+and fresh native Load with retained survivor/away records (CAMP-AC).
 Ch10 standalone native Suspend/fresh Resume passed for living Oscar/Kieran state
 and roster identities (CAMP-AB); natural campaign and Netplay remain separate.
 The earlier Oscar Talk and Oscar Escape evidence remains separate and accepted.
@@ -122,8 +123,10 @@ Dolphin, then run the following and select original Load/Resume:
 Save `reloaded.sav` at the equivalent Chapter7 screen. If no legitimate save is
 available or card identity is refused, leave that observation/capture absent and
 record the exact message. A missing ally or original completion failure requires
-investigation. Review collects the transition comparison as INCONCLUSIVE pending
-engineering analysis; it does not guess story-specific roster equivalence.
+investigation. Review gives a scoped PASS when all five checkpoint captures,
+original-action/fresh-load observations and a verified private card write support
+the Escape sequence, survivor progression/Oscar items and prep/native-load roster
+retention. It excludes enemy slot rebuilding and later P2 battle control.
 This synthetic clear cannot certify a naturally progressed Chapter6 campaign.
 
 ## CH10-NATIVE-RESUME

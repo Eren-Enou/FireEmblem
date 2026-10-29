@@ -30,6 +30,49 @@ class Mem:
 
 
 class HumanScenarioTests(unittest.TestCase):
+    def test_ch6_completion_rejects_loss_wrong_exit_and_native_payload_damage(self):
+        from tools.scenario_verdicts import ch6_completion
+        snapshots={}
+        pids=('PID_IKE','PID_OSCAR','PID_TIAMAT','PID_KILROY','PID_SENERIO','PID_CHINON','PID_GATRIE')
+        labels=('before_queue','before','after','next_prep','reloaded')
+        for label in labels:
+            units=[];chapter=7 if label in labels[:3] else 8
+            for index,pid in enumerate(pids):
+                force=7 if index>=5 else 5 if label=='after' or (label=='before' and pid!='PID_IKE') or (label=='before_queue' and pid=='PID_OSCAR') else 0
+                units.append({'slot':index+1,'pid':pid,'class':'test','force':force,'hp':28,
+                    'level':6,'exp':28,'rescue_link':0,'death_record':False,'escaped':force==5,
+                    'flags':0x4000 if force==5 else 0,'xy':[13,26],'inventory_slots_hex':'ab'*64})
+            snapshots[label]={'evidence':{'state_sha256':label,'intended_c2_verified':True,
+                'codes_fingerprint':'e60e83a81d994e3b'},'game':{'chapter':chapter,'phase':0,'turn':2 if chapter==7 else 1,
+                'control':[1,2,2,1],'event_scripts':{'complete_chain':True,'campaign_ids':[chapter],'chapter_matches':True},
+                'event_flags':{'complete_table_read':True},'units':units}}
+        observed=dict.fromkeys(('remaining_blue_original_escapes','ike_last','original_completion','oscar_present_next_chapter','fresh_native_load'),True)
+        self.assertEqual(ch6_completion(snapshots,observed,True)['status'],'PASS')
+        self.assertEqual(ch6_completion(snapshots,observed,False)['status'],'INCONCLUSIVE')
+        incomplete=copy.deepcopy(snapshots);incomplete.pop('reloaded')
+        self.assertEqual(ch6_completion(incomplete,observed,True)['status'],'INCONCLUSIVE')
+        for change in ('lost','duplicate','oscar_items','oscar_exp','ike_exit','ike_order','away','script','hooks','human'):
+            bad=copy.deepcopy(snapshots);obs=dict(observed)
+            if change=='lost':bad['reloaded']['game']['units'].pop(1)
+            elif change=='duplicate':bad['reloaded']['game']['units'].append(copy.deepcopy(bad['reloaded']['game']['units'][1]))
+            elif change=='oscar_items':bad['reloaded']['game']['units'][1]['inventory_slots_hex']='changed'
+            elif change=='oscar_exp':bad['next_prep']['game']['units'][1]['exp']=0
+            elif change=='ike_exit':bad['before']['game']['units'][0]['xy']=[1,1]
+            elif change=='ike_order':bad['before']['game']['units'][0]['force']=5
+            elif change=='away':bad['reloaded']['game']['units'][5]['force']=0
+            elif change=='script':bad['reloaded']['game']['event_scripts']['campaign_ids']=[7]
+            elif change=='hooks':bad['after']['evidence']['intended_c2_verified']=False
+            else:obs['fresh_native_load']=False
+            with self.subTest(change=change):self.assertEqual(ch6_completion(bad,obs,True)['status'],'FAIL')
+
+    @unittest.skipUnless((PACKAGE/'CH6-IKE-COMPLETE/captures/reloaded/snapshot.json').exists(),'private native-load evidence unavailable')
+    def test_human_ch6_native_load_bundle_verifies_without_requiring_enemy_slots(self):
+        from tools.campaign_test_pack import review
+        result=review(PACKAGE/'CH6-IKE-COMPLETE')
+        self.assertEqual(result['status'],'PASS')
+        self.assertTrue(result['private_card_write_verified'])
+        self.assertIn('enemy slot reconstruction/whole-engine equivalence',result['excludes'])
+
     def test_native_resume_requires_human_fresh_load_card_write_and_retained_records(self):
         from tests.test_campaign_test_pack import wait_pair
         from tools.scenario_verdicts import native_resume
@@ -228,7 +271,12 @@ class HumanScenarioTests(unittest.TestCase):
             for left,right in sorted(ranges):
                 self.assertEqual(a[cursor:left],b[cursor:left]);cursor=right
             self.assertEqual(a[cursor:],b[cursor:]);self.assertEqual(len(a),len(b))
-            self.assertEqual(check(name)['readiness'],'PREPARED_RUNTIME_UNVERIFIED')
+            changed_card=any(sha(dest/'User/GC/USA/Card A'/filename)!=digest
+                             for filename,digest in record['initial_cards'].items())
+            if changed_card:
+                with self.assertRaisesRegex(ValueError,'card changed'):check(name)
+            else:
+                self.assertEqual(check(name)['readiness'],'PREPARED_RUNTIME_UNVERIFIED')
             if name=='CH6-IKE-COMPLETE':self.assertNotIn('--save_state',check(name,True)['arguments'])
 
     def test_blocked_and_unknown_scenarios_refuse_launch(self):

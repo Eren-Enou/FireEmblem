@@ -2,6 +2,15 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-AC PASS: human newly saved Chapter7 and fresh native Load after synthetic
+  Ch6 original Escape queue/Ike-last. Collected reloaded.sav; all five survivor
+  records plus two away records match preparations exactly. Oscar nonempty items,
+  HP/lv/EXP/PID preserved across all checkpoints. Native card write hash-verified;
+  enemy slot rebuilding excluded. Added scoped full-sequence verdict/regressions.
+  193 tests/378 signatures;31 accepted runtime artifacts. Four prepared batch
+  scenarios now have scoped human runtime results; natural campaign/Netplay,
+  carried branches and Ch10 prisoner ending remain unresolved.
+
 - CAMP-AB native local PASS: human confirms after.sav follows fresh boot and
   original Resume Chapter. Original Suspend/private GCI write and living Oscar/
   Kieran full-record persistence, roster identities and live code/script identity

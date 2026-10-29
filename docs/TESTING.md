@@ -1,10 +1,50 @@
 # Testing
 
-Latest owner-operated result: **CAMP-AB**, Ch10 original Suspend accepted and
-fresh native Resume confirmed; living Oscar/Kieran state and roster identities retained.
-CAMP-AA records synthetic Ch6 Ike-last completion/Ch7 prep retention; its reload remains INCONCLUSIVE.
+Latest owner-operated result: **CAMP-AC**, synthetic Ch6 Ike-last -> Ch7 preparations
+and fresh native Chapter7 Load PASS for survivor/away roster retention.
+CAMP-AB records standalone Ch10 Suspend/fresh Resume.
 CAMP-Z records original Kieran Escape, CAMP-Y Wait/P1 lockout. Single-command launch/capture
 instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
+
+## CAMP-AC — Ch6 completion through native Chapter7 save/fresh Load
+
+**PASS, scoped synthetic sequence and native persistence.** Human clarified that
+the earlier next_prep was direct continuation, then saved Chapter7 through the
+original game, closed Dolphin and used -FreshBoot with original Load/Resume,
+capturing reloaded.sav. Codex collected only the new reloaded capture, preserved
+all four earlier bundles, independently decoded the new raw file and matched its
+stored snapshot. No emulator launch/input by Codex.
+
+- Reload SHA256:2d44d83b55f51a7d376fc6e6e28a6f7eed46cd236b4a4166fc32b9dbb9c5bd66;
+  next_prep:d01eb4effd9660e312f88828ea766ea646fac7b098988adddb5c7a5ea422e453.
+  Original loaded C08/internal chapter8 (Chapter7), turn1, Blue/preparations;
+  exact live hooks match e60e83a81d994e3b,3168/3248bytes.
+- Ike, Oscar, Titania, Rhys and Soren complete decoded records match exactly
+  between next_prep and reloaded. Shinon and Gatrie away force7 records also match.
+  Oscar remains slot2/PID_OSCAR, HP28/lv6/EXP28 with unchanged nonempty inventory
+  across all five captures, including native Load. Blue at prep is expected;
+  Chapter7 P2 battle control has not yet been exercised.
+- Private GCI changed from immutable b415a97e... baseline to
+  99446e1b65ed44ec60e10da9232d5ab894b48a6cc018a8e7eb6fc24445e429ca,
+  preserved inside the reloaded capture. Enemy physical unit slots rebuild on
+  native Load; no whole-engine/enemy-slot equivalence is claimed or required.
+- Evidence: work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/ and exclusive
+  native-ch7-load-confirmed-v1.json, containing explicit human checkpoint confirmation.
+  Ledger run ch6-ch7-native-load-29 records synthetic local completion, selected
+  next-roster initialization and native save/load. Natural chapter_clear/transition
+  axes remain untested. Rhys's prior story item addition remains outside the
+  Oscar inventory proof; native prep->reload Rhys inventory matches exactly.
+
+The scenario verifier now checks five distinct checkpoints, original scripts/live
+codes, four prior escaped allies with unacted Ike at the original exit, five
+escaped survivors afterward, retained progression and Oscar items across the
+transition, seven exact prep/native-load records, explicit original gameplay/
+fresh-load observations and a hash-verified private card write. Mutation tests
+reject losses/duplicates, wrong exit/order, altered progression/items, away-unit
+revival, stale scripts/hooks and absent native-load evidence. Starting-seed
+restoration remains refused after legitimate card changes; fresh native boot is
+the supported continuation. 193 offline tests/378 signatures;31 accepted runtime
+artifact hashes verified. Netplay, carried Escape and natural campaign remain open.
 
 ## CAMP-AB — Original Ch10 Suspend and fresh native Resume
 

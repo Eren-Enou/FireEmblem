@@ -237,7 +237,9 @@
           "status": "NOT TESTED"
         },
         "save_reload": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "note": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
         },
         "netplay_local": {
           "status": "NOT TESTED"
@@ -259,14 +261,28 @@
         },
         "next_chapter_initialization": {
           "status": "PASS",
-          "evidence": "roster-boundary-model-24",
-          "scope": "Bounded roster-availability/map-flag/ownership fragments only; complete native next-chapter initialization unresolved."
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
         },
         "native_save": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
         },
         "native_reload": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
+        },
+        "save_reload": {
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
+        },
+        "chapter_completion": {
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
         }
       }
     },
@@ -294,13 +310,32 @@
           "status": "NOT TESTED"
         },
         "save_reload": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "note": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
         },
         "netplay_local": {
           "status": "NOT TESTED"
         },
         "netplay_two_pc": {
           "status": "NOT TESTED"
+        }
+      },
+      "lifecycle": {
+        "native_save": {
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
+        },
+        "native_reload": {
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
+        },
+        "save_reload": {
+          "status": "PASS",
+          "evidence": "ch6-ch7-native-load-29",
+          "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
         }
       }
     },
@@ -1684,6 +1719,61 @@
         }
       ],
       "description": "Original standalone Suspend accepted and private GCI changed from immutable pre-test baseline; human closed Dolphin, fresh booted without a savestate and selected original Resume Chapter. Before/after match original loaded C11, live intended codes, chapter11/turn1/Yellow/human control, Oscar and Kieran complete records including factions/HP/lv/EXP/flags/items, and all captured roster slot/PID identities. Talk/event/door data preserved; transient menu context and two enemy0x20 flag changes excluded from selected-unit persistence claim. No permanent recruitment, natural campaign/chapter-transition save, whole-engine serialization equivalence or Netplay persistence acceptance."
+    },
+    "ch6-ch7-native-load-29": {
+      "kind": "dolphin",
+      "commit": "91bb9b6",
+      "fixture_generation_commit": "4648a2b",
+      "fingerprint": "e60e83a81d994e3b",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_ch6_original_escape_queue",
+      "chapters": [
+        "7",
+        "8"
+      ],
+      "axes": [
+        "save_reload"
+      ],
+      "reported_by": "human user; explicit confirmation of newly saved Chapter7 and fresh native Load/Resume without state restoration",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/before_queue/state.sav",
+          "sha256": "3220c7610b3913a819aafd31e58e260d7d66bfaaeb7a22436687e9b4e630bae9"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/before/state.sav",
+          "sha256": "a9d91815ce30959763ac4eb7f23db7d4eaa8a286d05af05905a7bb5f8ff5ab64"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/after/state.sav",
+          "sha256": "8c6f855a5f80f2c595400a7ae57799ed3914dad8f189f1ad5ee8b4914616a1e0"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/next_prep/state.sav",
+          "sha256": "d01eb4effd9660e312f88828ea766ea646fac7b098988adddb5c7a5ea422e453"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/reloaded/state.sav",
+          "sha256": "2d44d83b55f51a7d376fc6e6e28a6f7eed46cd236b4a4166fc32b9dbb9c5bd66"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/reloaded/GFEE01.ini",
+          "sha256": "1a44b3ee22a62912aec1466f78b665e4d93baa6215ddf4e6d0d4d41d1d9da653"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/card-before/native_ch6_card_start.gci",
+          "sha256": "b415a97e9645e83f60bdc7380a2e86dd4686077549c6ce1863e30de6ad51de12"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/reloaded/profile/GC/USA/Card A/native_ch6_card_start.gci",
+          "sha256": "99446e1b65ed44ec60e10da9232d5ab894b48a6cc018a8e7eb6fc24445e429ca"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-IKE-COMPLETE/native-ch7-load-confirmed-v1.json",
+          "sha256": "4af87dd9c62567afbd79c9efd1694bbca651e13a0cc27b28e2d50e8c24271f6e"
+        }
+      ],
+      "description": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
     }
   },
   "next_cases": [
