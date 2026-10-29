@@ -5,8 +5,9 @@ Codex has not launched Dolphin or performed these interactions. The owner has
 now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y) and
 **CH10-PRISONER-ESCAPE** (CAMP-Z): local original P2 Wait/P1 lockout and local
 original Escape only. Ch6's synthetic original Ike-last sequence and next-Chapter7
-preparation roster are now observed (CAMP-AA); fresh native reload remains
-INCONCLUSIVE and the separate Ch10 native-resume candidate remains unverified.
+preparation roster are now observed (CAMP-AA), with Ch6 native reload unresolved.
+Ch10 standalone native Suspend/fresh Resume passed for living Oscar/Kieran state
+and roster identities (CAMP-AB); natural campaign and Netplay remain separate.
 The earlier Oscar Talk and Oscar Escape evidence remains separate and accepted.
 
 ```powershell
@@ -148,9 +149,13 @@ This command supplies **no savestate**. Select the game's original Resume/Load,
 capture `after.sav` before acting, close Dolphin and collect both captures using
 `$case = 'work/scenarios/human_v1/CH10-NATIVE-RESUME'`. Observations:
 `native_suspend_accepted,fresh_boot_without_state,native_resume_selected,same_roster_and_progression,no_unexpected_behavior`.
-Review reports the decoded comparison for engineering review as INCONCLUSIVE;
-equal savestate fields alone never prove native persistence. Card refusal is a
-fixture limitation until reproduced from matched natural history.
+Review gives a narrow PASS only when the immutable pre-test card differs from
+the preserved post-test card, all five original-action/fresh-load observations
+are explicitly confirmed, and original scripts/live codes and the selected
+Oscar/Kieran records match. Equal savestate fields or a card write alone never
+prove native persistence. Enemy transient flags and complete engine serialization
+are excluded. Card refusal is a fixture limitation until reproduced from matched
+natural history. The supplied scenario passed these scoped checks in CAMP-AB.
 
 ## Evidence and boundaries
 

@@ -30,6 +30,48 @@ class Mem:
 
 
 class HumanScenarioTests(unittest.TestCase):
+    def test_native_resume_requires_human_fresh_load_card_write_and_retained_records(self):
+        from tests.test_campaign_test_pack import wait_pair
+        from tools.scenario_verdicts import native_resume
+        before,_=wait_pair()
+        before['game']['event_flags']={'complete_table_read':True,'values':{'gf_complete':False}}
+        after=copy.deepcopy(before);after['evidence']['state_sha256']='after'
+        observed=dict.fromkeys(('native_suspend_accepted','fresh_boot_without_state',
+            'native_resume_selected','same_roster_and_progression','no_unexpected_behavior'),True)
+        self.assertEqual(native_resume(before,after,observed,True)['status'],'PASS')
+        self.assertEqual(native_resume(before,after,observed,False)['status'],'INCONCLUSIVE')
+        self.assertEqual(native_resume(before,after,{},True)['status'],'INCONCLUSIVE')
+        for change in ('items','force','hp','acted','lost','duplicate','script','hooks','key','flags','same_state','human'):
+            bad=copy.deepcopy(after);obs=dict(observed)
+            if change=='items':bad['game']['units'][0]['inventory_slots_hex']='changed'
+            elif change=='force':bad['game']['units'][1]['force']=2
+            elif change=='hp':bad['game']['units'][0]['hp']-=1
+            elif change=='acted':bad['game']['units'][0]['flags']^=1
+            elif change=='lost':bad['game']['units'].pop()
+            elif change=='duplicate':bad['game']['units'].append(copy.deepcopy(bad['game']['units'][1]))
+            elif change=='script':bad['game']['event_scripts']['campaign_ids']=[7]
+            elif change=='hooks':bad['evidence']['intended_c2_verified']=False
+            elif change=='key':bad['game']['talk_fixture']['flags'].clear()
+            elif change=='flags':bad['game'].pop('event_flags')
+            elif change=='same_state':bad['evidence']['state_sha256']=before['evidence']['state_sha256']
+            else:obs['fresh_boot_without_state']=False
+            with self.subTest(change=change):self.assertEqual(native_resume(before,bad,obs,True)['status'],'FAIL')
+
+    def test_native_resume_allows_ui_context_reset_without_claiming_whole_engine_equality(self):
+        from tests.test_campaign_test_pack import wait_pair
+        from tools.scenario_verdicts import native_resume
+        before,_=wait_pair()
+        before['game']['event_flags']={'complete_table_read':True,'values':{'gf_complete':False}}
+        before['game']['units'].append({'slot':11,'pid':'ENEMY','force':1,'flags':0x80000})
+        after=copy.deepcopy(before);after['evidence']['state_sha256']='after'
+        after['game']['units'][-1]['flags']|=0x20
+        after['game']['talk_fixture']['menu_context']={'actor_slot':None,'flags16':0}
+        observed=dict.fromkeys(('native_suspend_accepted','fresh_boot_without_state',
+            'native_resume_selected','same_roster_and_progression','no_unexpected_behavior'),True)
+        verdict=native_resume(before,after,observed,True)
+        self.assertEqual(verdict['status'],'PASS')
+        self.assertIn('enemy transient flag interpretation',verdict['excludes'])
+
     def test_generated_queue_executes_guards_order_and_register_restoration(self):
         from tests.fixture_executor import run
         from tools.escape_scenarios import SPECS

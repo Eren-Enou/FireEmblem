@@ -1,14 +1,14 @@
 # Testing
 
 Latest owner-operated result: **CAMP-AB**, Ch10 original Suspend accepted and
-private-card write confirmed; fresh native reload capture timing needs clarification.
+fresh native Resume confirmed; living Oscar/Kieran state and roster identities retained.
 CAMP-AA records synthetic Ch6 Ike-last completion/Ch7 prep retention; its reload remains INCONCLUSIVE.
 CAMP-Z records original Kieran Escape, CAMP-Y Wait/P1 lockout. Single-command launch/capture
 instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
 
-## CAMP-AB — Original Ch10 Suspend/card write; reload checkpoint pending
+## CAMP-AB — Original Ch10 Suspend and fresh native Resume
 
-**Native Suspend acceptance/private-card write PASS; native reload INCONCLUSIVE.**
+**PASS, scoped standalone native Suspend/fresh Resume.**
 The human supplied the original "Saved suspended data. Select Resume Chapter to
 continue your game" screenshot, before.sav and after.sav, and declared all five
 case observations true. Codex collected the previously missing before file,
@@ -32,13 +32,23 @@ with exact captured-snapshot matches. Codex did not launch or control Dolphin.
 - Evidence: work/scenarios/human_v1/CH10-NATIVE-RESUME/captures/ and exclusive
   native-save-evidence-v1/ (copied screenshot, hashes and scoped analysis).
 
-The screenshot establishes successful Save, but does not show the subsequent
-fresh native Resume. All fresh-boot/resume observations were declared true;
-clarification requested only about whether after.sav belongs to the fresh-resumed
-map or the Save confirmation checkpoint. Do not replace accepted after evidence.
-If it is the Save checkpoint, collect a separately named resumed state after
-original Resume in a fresh process. No native reload PASS or campaign/Netplay
-persistence claim until the checkpoint is resolved.
+The human explicitly clarified that after.sav was captured **after fresh boot
+and Resume Chapter**, establishing the previously ambiguous checkpoint. The
+earlier provisional save-only analysis remains unchanged; the explicit reply,
+observation snapshot and final scoped verdict are retained in exclusive
+native-resume-confirmed-v2.json. The narrow native verifier now returns PASS
+only with all five human observations, a hash-verified changed private card,
+matching original scripts/live codes, identical Oscar/Kieran records and matching
+roster identities. Regression mutations reject lost/duplicated units, altered
+items/HP/factions/acted flags, stale hooks/scripts, missing flags and absent human
+fresh-load evidence. A card write alone remains INCONCLUSIVE.
+
+Campaign run ch10-native-resume-28 records the scoped save_reload/native_save/
+native_reload evidence. Synthetic local native persistence does not certify
+natural history, permanent recruitment, chapter-transition saving, whole-engine
+serialization equivalence or Netplay write-back. Two enemy0x20 flag changes remain
+outside this selected-unit claim. 191 offline tests and378 signatures pass;
+22 accepted runtime artifact hashes checked.
 
 ## CAMP-AA — Synthetic Ch6 Ike-last and Ch7 preparations (2026-10-28)
 

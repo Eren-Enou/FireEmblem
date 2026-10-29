@@ -2,11 +2,13 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
-- CAMP-AB: original Ch10 Suspend confirmation and private GCI write established;
-  Oscar/Kieran selected-field retention and live code/script identity match both
-  states. Collected missing before capture. Fresh native Resume was declared,
-  but after-capture timing clarification is pending (save popup vs resumed map).
-  Preserve both accepted bundles; do not conflate card write with reload proof.
+- CAMP-AB native local PASS: human confirms after.sav follows fresh boot and
+  original Resume Chapter. Original Suspend/private GCI write and living Oscar/
+  Kieran full-record persistence, roster identities and live code/script identity
+  verified. Added narrow native verdict and mutation regressions; changed card
+  alone never proves reload. Dashboard now records synthetic standalone native
+  save/reload; natural chapter-transition saving and Netplay remain untested.
+  191 tests/378 signatures;22 accepted runtime artifact hashes verified.
 
 - CAMP-AA: human synthetic Ch6 escape queue/Ike-last reaches original Ch7 prep
   with all five survivors. Oscar PID/slot/class/HP/lv/EXP/nonempty items preserved;

@@ -406,7 +406,9 @@
           "status": "NOT TESTED"
         },
         "save_reload": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch10-native-resume-28",
+          "note": "Standalone native Suspend/fresh Resume in synthetic post-Talk Ch10 only; living Oscar/Kieran records and roster identities retained. No chapter-transition save, full-engine or Netplay claim."
         },
         "netplay_local": {
           "status": "NOT TESTED"
@@ -454,10 +456,19 @@
           "scope": "Bounded roster-availability/map-flag/ownership fragments only; complete native next-chapter initialization unresolved."
         },
         "native_save": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch10-native-resume-28",
+          "scope": "Human original standalone Suspend then fresh native Resume; living Oscar/Kieran complete records and roster identities preserved in synthetic Ch10. Excludes permanent recruitment, chapter-transition save, whole-engine state and Netplay persistence."
         },
         "native_reload": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch10-native-resume-28",
+          "scope": "Human original standalone Suspend then fresh native Resume; living Oscar/Kieran complete records and roster identities preserved in synthetic Ch10. Excludes permanent recruitment, chapter-transition save, whole-engine state and Netplay persistence."
+        },
+        "save_reload": {
+          "status": "PASS",
+          "evidence": "ch10-native-resume-28",
+          "scope": "Human original standalone Suspend then fresh native Resume; living Oscar/Kieran complete records and roster identities preserved in synthetic Ch10. Excludes permanent recruitment, chapter-transition save, whole-engine state and Netplay persistence."
         }
       }
     },
@@ -1632,6 +1643,47 @@
         "script_model"
       ],
       "description": "Executable composition of pinned cleanup, native force5 availability fragment, map-start flag writes and existing fixed-table routing. Preserves declared identities/payload and excludes native temporary records, dead6, away7 and story enemy1; original return0 required before routing. Not final deployment/caps/placement, complete chapter initialization or native persistence. Individual owned Escape rejects ambiguous PID before mutation after failing regression. Reproduce unittest tests.test_cross_chapter tests.test_unit_lifecycle."
+    },
+    "ch10-native-resume-28": {
+      "kind": "dolphin",
+      "commit": "bbd17d9",
+      "fingerprint": "c11089d39a0fe037",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_ch10_post_talk",
+      "chapters": [
+        "11"
+      ],
+      "axes": [
+        "save_reload"
+      ],
+      "reported_by": "human user; explicitly confirmed after.sav was captured after fresh boot and original Resume Chapter",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH10-NATIVE-RESUME/captures/before/state.sav",
+          "sha256": "d1a4ad28c57cabb68d77ac34de9af99c38bb24a91c26449d963a350d51fecd8a"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH10-NATIVE-RESUME/captures/after/state.sav",
+          "sha256": "130c7353b0eecc98c6e2c258b9b5b5d2511520339852a72a0ad96410fbfcbb97"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH10-NATIVE-RESUME/captures/after/GFEE01.ini",
+          "sha256": "c86e5a9ad2c4260162b3cff34debe0fd67ffaac28b5823c14aa7f7507f7961b8"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH10-NATIVE-RESUME/card-before/native_ch6_card_start.gci",
+          "sha256": "b415a97e9645e83f60bdc7380a2e86dd4686077549c6ce1863e30de6ad51de12"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH10-NATIVE-RESUME/captures/after/profile/GC/USA/Card A/native_ch6_card_start.gci",
+          "sha256": "b6ad7112c1a9eb5a9c0da48f8c236af706754730d1fcd2113679ed8ec55ec74e"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH10-NATIVE-RESUME/native-resume-confirmed-v2.json",
+          "sha256": "5fd4e5cd4651fe37c60499195a2782a115e8c2b3246119f7fe001ab911be39d0"
+        }
+      ],
+      "description": "Original standalone Suspend accepted and private GCI changed from immutable pre-test baseline; human closed Dolphin, fresh booted without a savestate and selected original Resume Chapter. Before/after match original loaded C11, live intended codes, chapter11/turn1/Yellow/human control, Oscar and Kieran complete records including factions/HP/lv/EXP/flags/items, and all captured roster slot/PID identities. Talk/event/door data preserved; transient menu context and two enemy0x20 flag changes excluded from selected-unit persistence claim. No permanent recruitment, natural campaign/chapter-transition save, whole-engine serialization equivalence or Netplay persistence acceptance."
     }
   },
   "next_cases": [
