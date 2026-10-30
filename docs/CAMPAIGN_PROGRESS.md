@@ -2,6 +2,14 @@
 
 ## Current manual-testing boundary and latest checkpoint
 
+- CAMP-AE offline integrity milestone: corrected the saved-code verifier's omitted
+  C2 return branch and permissive link-bit handling. Reviews now independently
+  inspect raw states. Read-only audit rechecked31 accepted artifacts,18 raw states
+  and521 hooks; all existing continuations pass, plus six candidate inspections.
+  215 tests/428 signatures. No new runtime acceptance, game patch or Gecko bytes;
+  no Dolphin/input or accepted-evidence changes. Next physical evidence remains
+  C11 ending/Kieran retention and Ch7 actual P2 battle control.
+
 - CAMP-AD offline next batch (2026-10-29): six separate owner-operated candidates
   prepared and preflighted; runtime NOT TESTED. C11 original ending/Kieran retention
   uses3216bytes; Ch7 native-load P2 control2536; original Rescue2928; Oscar ordinary

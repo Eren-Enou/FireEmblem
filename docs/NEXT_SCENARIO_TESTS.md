@@ -194,3 +194,13 @@ alone cannot establish eligibility. No empty later-chapter profiles were made.
 Full natural campaign completion, carried cleanup, later special objectives and
 internet Netplay remain unresolved. Offline fixture safety and mocked original
 call tests never count as a new gameplay PASS.
+
+Optional offline integrity audit, without opening Dolphin:
+
+```powershell
+& $py -B -m tools.campaign_integrity --include-candidates --out work/scenarios/NEW_hook_integrity.json
+```
+
+This independently verifies saved C2 entry/body/return paths using the recorded
+configuration fingerprint. Missing configuration is INCONCLUSIVE. Scenario
+`-Review` also rechecks raw hook paths; accepted snapshots are never rewritten.

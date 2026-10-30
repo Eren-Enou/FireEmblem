@@ -15,6 +15,33 @@ Confidence labels:
 
 ## 0. Environment facts
 
+### CAMP-024 — saved C2 continuation integrity
+
+STATIC/OFFLINE ONLY, 2026-10-29. A concrete evidence-tool gap existed in
+`campaign_snapshot.observe_hooks`: it compared the injected body except the final
+word, because the Gecko handler installs that return dynamically. It did not
+check that the installed return actually branches to the original hook plus4.
+It also allowed a link-bit-set entry branch. A body match therefore could conceal
+an invalid continuation, making a future chapter-transition verdict unreliable.
+No damaged hook has been demonstrated in existing accepted gameplay evidence.
+
+The decoder now requires relative, non-link entry and return branches, a bounded
+complete payload inside the existing F-59 Gecko area, the expected body and the
+exact original continuation. It records cave/return addresses, target and separate
+return verification. No new game address, patch instruction or memory layout was
+introduced. Scenario review independently rereads the raw state rather than
+accepting an older snapshot's cached C2 boolean. Existing snapshots remain intact.
+
+`tools.campaign_integrity` checks accepted artifact hashes, resolves only an exact
+recorded configuration fingerprint and redecodes the raw states. Missing matching
+configuration is INCONCLUSIVE, never inferred success. Audit of the current
+31 accepted artifacts covers18 distinct raw states and521 hook observations;
+all complete entry/body/return paths PASS. All six new candidate inspections also
+pass offline; Chapter7's source state is inspection-only and is never restored by
+its native launcher. Report: ignored work/scenarios/hook_integrity_v1.json.
+This audit proves saved code-path integrity only, not full campaign compatibility,
+event activation, natural history or Netplay. No Dolphin launch/input occurred.
+
 ### CAMP-023 — compact private next-action fixtures and original Rescue predicates
 
 STATIC/OFFLINE ONLY, 2026-10-29. `scenario_position_code` uses a bounded source-

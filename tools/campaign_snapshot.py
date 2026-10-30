@@ -17,6 +17,7 @@ from tools.netplay_package import fingerprint, enabled_codes
 from tools.verify_game import DEFAULT_IMAGE
 from tools.loaded_scripts import inspect as loaded_scripts
 from tools.event_state import inspect as event_state, chapter17_request
+from tools.fe9.ppc import direct_branch_target
 
 
 def configuration_flags(names):
@@ -28,7 +29,11 @@ def configuration_flags(names):
 
 
 def observe_hooks(mem, dol, text):
-    """Compare intended C2 bodies to RAM; mutable cave data may conservatively mismatch."""
+    """Verify C2 entry/body/return; mutable cave data may conservatively mismatch.
+
+    The final word is installed dynamically by the handler. Omitting its check
+    can accept a correct body that branches back to the wrong original address.
+    """
     observations=[]
     for kind,name,lines in enabled_codes(text):
         if kind!="Gecko":continue
@@ -42,14 +47,41 @@ def observe_hooks(mem, dol, text):
                 hook=0x80000000|(command&0x1FFFFFF)
                 original,actual=dol.u32(hook),mem.u32(hook)
                 status="original instruction" if actual==original else "unmatched patch"
-                if actual!=original and actual>>26==18 and not actual&2:
-                    delta=(actual&0x3FFFFFC)-(0x4000000 if actual&0x2000000 else 0)
-                    target=hook+delta
-                    if 0x80001800<=target<0x80003000:
+                target=return_address=return_target=None
+                return_verified=False
+                valid_payload=count>0 and len(payload)==count*2 and payload[-1]==0
+                if not valid_payload:status='invalid C2 payload'
+                elif actual!=original and actual>>26==18 and not actual&3:
+                    target=direct_branch_target(hook,actual)
+                    if 0x80001800<=target and target+len(payload)*4<=0x80003000:
                         expected=b"".join(w.to_bytes(4,"big") for w in payload[:-1])
-                        if mem.read(target,len(expected))==expected:status="intended C2 body matched"
-                observations.append({"code":name.split()[0],"hook":hook,"original":original,"actual":actual,"status":status})
+                        if mem.read(target,len(expected))==expected:
+                            return_address=target+len(expected)
+                            word=mem.u32(return_address)
+                            return_target=direct_branch_target(return_address,word)
+                            return_verified=word>>26==18 and not word&3 and return_target==hook+4
+                            status='intended C2 body matched' if return_verified else 'intended C2 body matched; invalid return branch'
+                observations.append({"code":name.split()[0],"hook":hook,"original":original,"actual":actual,"status":status,
+                                     'cave':target,'return_address':return_address,'return_target':return_target,
+                                     'return_verified':return_verified})
     return observations
+
+
+def verify_live_hooks(path, text, image=DEFAULT_IMAGE):
+    """Re-read raw state, verifying complete hook paths rather than cached JSON."""
+    from tools.fe9.disc import DiscReader
+    from tools.fe9.ppc import Dol
+    from tools.verify_game import EXPECTED_DOL_SHA1,EXPECTED_ID
+    info,mem=load_mem1(path,image)
+    with DiscReader(image) as disc:raw=disc.read_dol()
+    if info.game_id!=EXPECTED_ID or hashlib.sha1(raw).hexdigest()!=EXPECTED_DOL_SHA1:
+        raise ValueError('original executable/state identity mismatch')
+    observations=observe_hooks(mem,Dol(raw),text)
+    failures=[f"{o['code']} hook {o['hook']:08X}: {o['status']}" for o in observations
+              if o['status']!='intended C2 body matched']
+    if not observations:failures.append('no C2 hooks independently verified')
+    return dict(status='FAIL' if failures else 'PASS',failures=failures,hooks=observations,
+                scope='Saved original-game C2 entry/body/return integrity only; no event execution or campaign acceptance')
 
 
 def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:

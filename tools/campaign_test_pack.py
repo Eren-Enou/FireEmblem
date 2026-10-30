@@ -10,6 +10,7 @@ import hashlib
 import json
 import re
 import subprocess
+import struct
 from pathlib import Path
 
 from tools.install_codes import ROOT, validate_ini
@@ -289,6 +290,15 @@ def review(case_dir):
             failures.append(label + ': decoded snapshot hash mismatch')
         if sha(dest / 'state.sav') != manifest['state_sha256'] or sha(dest / 'GFEE01.ini') != manifest['ini_sha256']:
             failures.append(label + ': artifact hash mismatch')
+        else:
+            # Earlier snapshot schemas omitted the dynamic return word. Preserve
+            # those immutable snapshots, but do not trust their cached boolean.
+            from tools.campaign_snapshot import verify_live_hooks
+            try:
+                live=verify_live_hooks(dest/'state.sav',(dest/'GFEE01.ini').read_text(),DEFAULT_IMAGE)
+                failures.extend(label+': '+error for error in live['failures'])
+            except (ValueError,OSError,struct.error,RuntimeError) as exc:
+                failures.append(label+': raw hook integrity could not be decoded: '+str(exc))
         snapshots[label] = json.loads((dest / 'snapshot.json').read_text(encoding='utf-8'))
         if snapshots[label]['evidence'].get('state_sha256') != manifest['state_sha256']:
             failures.append(label + ': snapshot state hash mismatch')

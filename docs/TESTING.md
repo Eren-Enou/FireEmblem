@@ -6,6 +6,36 @@ CAMP-AB records standalone Ch10 Suspend/fresh Resume.
 CAMP-Z records original Kieran Escape, CAMP-Y Wait/P1 lockout. Single-command launch/capture
 instructions: [SCENARIO_TESTS.md](SCENARIO_TESTS.md).
 
+## CAMP-AE — independent saved hook-path audit, OFFLINE only
+
+2026-10-29. Fixed evidence verification that previously omitted the final C2
+return branch. Entry/body/return now must match the expected original continuation;
+link/absolute branches, corrupt/truncated payloads and Gecko-area overflow fail.
+Scenario reviews re-read raw states and cannot accept a stale cached verification.
+
+New read-only campaign_integrity audit:31 accepted artifacts hash-verified;
+18 raw states,521 hooks, all saved entry/body/return paths PASS. Six new candidate
+inspections also PASS offline, with runtime NOT TESTED. Existing accepted snapshots
+and profiles are unchanged. No production code, Gecko budget or campaign acceptance
+axis changed. **This is not a new gameplay or chapter-completion PASS.**
+
+215 tests PASS, including8 new regressions: bad entry/return forms and targets,
+payload bounds, raw-state corruption on a disposable copy, exact-fingerprint-only
+configuration resolution, missing configuration and cached-true verdict rejection.
+Required tests.test_tools51 PASS;428 signatures match;31 accepted artifacts intact.
+Two existing manifest tests now mock raw decoding explicitly because their byte
+sentinels are not emulator states; actual decoding has a separate mutation test.
+
+Reproduce without launching Dolphin; use a NEW output filename:
+
+```powershell
+$py = '..\FireEmblemTwoHouses\.venv\Scripts\python.exe'
+& $py -B -m tools.campaign_integrity --include-candidates --out work/scenarios/NEW_hook_integrity.json
+```
+
+Next campaign evidence remains the original C11 ending/permanent Kieran retention
+and Ch7 P2 battle initialization. The prepared owner-only scenarios are unchanged.
+
 ## CAMP-AD — next human-operated batch, OFFLINE preparation only
 
 2026-10-29. **No new runtime PASS.** Six separate candidates pass offline preflight:

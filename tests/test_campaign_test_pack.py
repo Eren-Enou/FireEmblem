@@ -99,7 +99,10 @@ class CampaignTestPackTests(unittest.TestCase):
                 self.assertEqual(result['missing_captures'], ['before', 'after'])
                 with self.assertRaises(ValueError): prepare(root / 'work/pack', ledger, catalog)
 
-    def test_generic_complete_bundle_never_automatically_passes_and_tampering_fails(self):
+    @patch('tools.campaign_snapshot.verify_live_hooks',return_value={'status':'PASS','failures':[]})
+    def test_generic_complete_bundle_never_automatically_passes_and_tampering_fails(self, raw_hooks):
+        # These sentinels test manifest integrity, not Dolphin serialization.
+        # Raw decoding/return-branch mutations have separate integration tests.
         from tools.campaign_test_pack import sha, write_json
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -122,7 +125,8 @@ class CampaignTestPackTests(unittest.TestCase):
             self.assertEqual(result['status'], 'FAIL')
             self.assertIn('after: artifact hash mismatch', result['failures'])
 
-    def test_edited_decoded_snapshot_cannot_pass_with_unchanged_raw_state_hash(self):
+    @patch('tools.campaign_snapshot.verify_live_hooks',return_value={'status':'PASS','failures':[]})
+    def test_edited_decoded_snapshot_cannot_pass_with_unchanged_raw_state_hash(self, raw_hooks):
         from tools.campaign_test_pack import sha, write_json
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
