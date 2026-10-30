@@ -10,7 +10,8 @@ param(
     [string[]]$Passed,
     [string[]]$Failed,
     [string]$Notes,
-    [string]$Trial = 'human_v1'
+    [string]$Trial = 'human_v1',
+    [ValidateSet('human','agent')][string]$Operator = 'human'
 )
 $ErrorActionPreference = 'Stop'
 if (($Check -or $FreshBoot) -and ($Capture -or $Collect -or $Review -or $Passed -or $Failed -or $Notes)) {
@@ -31,6 +32,7 @@ else {
     }
     elseif ($Collect) {
         $argsList += @('collect', $Scenario)
+        $argsList += @('--operator', $Operator)
         foreach ($item in $Passed) { $argsList += @('--passed', $item) }
         foreach ($item in $Failed) { $argsList += @('--failed', $item) }
         if ($Notes) { $argsList += @('--notes', $Notes) }
@@ -38,6 +40,7 @@ else {
     elseif ($Review) { $argsList += @('review', $Scenario) }
     elseif ($Passed -or $Failed -or $Notes) {
         $argsList += @('observe', $Scenario)
+        $argsList += @('--operator', $Operator)
         foreach ($item in $Passed) { $argsList += @('--passed', $item) }
         foreach ($item in $Failed) { $argsList += @('--failed', $item) }
         if ($Notes) { $argsList += @('--notes', $Notes) }

@@ -1,6 +1,26 @@
 # Autonomous campaign engineering progress
 
-## Current manual-testing boundary and latest checkpoint
+## Current runtime checkpoint
+
+- CAMP-AG: agent Computer Use executed native Chapter7 file load, original
+  preparations/Fight, Blue-to-Yellow, P1 Oscar lockout and P2 original Wait.
+  Scoped PASS with two raw states and six screenshots. Oscar stays force3,
+  HP28/lv6/EXP28/items; only acted bit changes. Private card unchanged. No chapter
+  clear, natural campaign or Netplay claim. Stable2536/fingerprint8609ae9f49fd879f.
+- CAMP-AF: original Chapter10 enemy phase exposed invalid ending staging:
+  moved Reds damaged Green Brom28 ->20; native alarm reinforcements occupy exit6,2.
+  Saved failure evidence and stopped. Exact fingerprint92f0ad0562beaef9 quarantined
+  from launch/build; preserve existing files and make a NEW corrected trial.
+- Observation tooling now records human/manual versus agent/Computer Use per check
+  and immutable declaration revisions. Candidate audit preserves rejected cases
+  and independently reports actual runtime statuses.218 tests/428 signatures;
+  47 accepted artifacts,20 raw states/577 hooks verified.
+- Next: original CH6-YELLOW-RESCUE, CH6-YELLOW-COMBAT, CH9-PARTNER-COMBAT and
+  one CH6-YELLOW-FATAL probe. Then investigate C10 alarm/detection and all Green
+  positions before a replacement ending fixture. Accepted Rescue is required
+  before carried Escape. Later-chapter original-history prerequisites remain open.
+
+## Earlier checkpoints
 
 - CAMP-AE offline integrity milestone: corrected the saved-code verifier's omitted
   C2 return branch and permissive link-bit handling. Reviews now independently

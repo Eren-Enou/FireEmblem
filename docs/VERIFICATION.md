@@ -11,7 +11,7 @@ PASS applies only to the named axis and evidence configuration. Parser/model pas
 | Ch.4: Roadside Battle | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.5: Flight! | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.6: A Brief Diversion | PASS | PASS | PASS | PASS | NOT TESTED | NOT TESTED | PASS | NOT TESTED | NOT TESTED |
-| Ch.7: Shades of Evil | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | PASS | NOT TESTED | NOT TESTED |
+| Ch.7: Shades of Evil | PASS | NOT TESTED | PASS | PASS | NOT TESTED | NOT TESTED | PASS | NOT TESTED | NOT TESTED |
 | Ch.8: Despair and Hope | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.9: Gallia | PASS | NOT TESTED | PASS | PASS | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Ch.10: Prisoner Release | PASS | PASS | PASS | PASS | NOT TESTED | NOT TESTED | PASS | NOT TESTED | NOT TESTED |
@@ -52,7 +52,7 @@ STATICALLY VERIFIED = local instruction CFG; MODEL VERIFIED = original script pl
 | Ch.4: Roadside Battle | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.5: Flight! | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.6: A Brief Diversion | MODEL VERIFIED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
-| Ch.7: Shades of Evil | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
+| Ch.7: Shades of Evil | UNTESTED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
 | Ch.8: Despair and Hope | UNTESTED | UNTESTED | UNTESTED | UNTESTED |
 | Ch.9: Gallia | UNTESTED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
 | Ch.10: Prisoner Release | MODEL VERIFIED | SYNTHETIC RUNTIME VERIFIED | UNTESTED | UNTESTED |
@@ -96,6 +96,7 @@ Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes nativ
 | Ch.7: Shades of Evil | save_reload | SYNTHETIC RUNTIME VERIFIED | ch6-ch7-native-load-29 | Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim. |
 | Ch.7: Shades of Evil | native_save | SYNTHETIC RUNTIME VERIFIED | ch6-ch7-native-load-29 | Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim. |
 | Ch.7: Shades of Evil | native_reload | SYNTHETIC RUNTIME VERIFIED | ch6-ch7-native-load-29 | Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim. |
+| Ch.7: Shades of Evil | ownership | SYNTHETIC RUNTIME VERIFIED | ch7-p2-native-control-agent-29 | Native Chapter7 initialization, original Blue-to-Yellow routing, P1 lockout and P2 Oscar Wait; no drafting/deployment or whole-campaign claim. |
 | Ch.10: Prisoner Release | conversation | SYNTHETIC RUNTIME VERIFIED | ch10-original-talk-14 | Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only. |
 | Ch.10: Prisoner Release | temporary_transfer | SYNTHETIC RUNTIME VERIFIED | ch10-original-talk-14 | Human synthetic inside-cell original Oscar/Kieran Talk: Green->Yellow and original key set only. |
 | Ch.10: Prisoner Release | permanent_recruitment | BLOCKED | - | Original later cleanup/ending and fresh native next-chapter roster evidence unavailable; force5 projection alone is insufficient. |
@@ -134,6 +135,8 @@ Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes nativ
 - **roster-boundary-model-24**: `script_model`; Executable composition of pinned cleanup, native force5 availability fragment, map-start flag writes and existing fixed-table routing. Preserves declared identities/payload and excludes native temporary records, dead6, away7 and story enemy1; original return0 required before routing. Not final deployment/caps/placement, complete chapter initialization or native persistence. Individual owned Escape rejects ambiguous PID before mutation after failing regression. Reproduce unittest tests.test_cross_chapter tests.test_unit_lifecycle.
 - **ch10-native-resume-28**: `dolphin`; Original standalone Suspend accepted and private GCI changed from immutable pre-test baseline; human closed Dolphin, fresh booted without a savestate and selected original Resume Chapter. Before/after match original loaded C11, live intended codes, chapter11/turn1/Yellow/human control, Oscar and Kieran complete records including factions/HP/lv/EXP/flags/items, and all captured roster slot/PID identities. Talk/event/door data preserved; transient menu context and two enemy0x20 flag changes excluded from selected-unit persistence claim. No permanent recruitment, natural campaign/chapter-transition save, whole-engine serialization equivalence or Netplay persistence acceptance.
 - **ch6-ch7-native-load-29**: `dolphin`; Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim.
+- **ch7-p2-native-control-agent-29**: `dolphin`; Agent Computer Use: copied native Chapter7 file -> original battle/Blue-to-Yellow -> P1 Oscar lockout and P2 original Wait. Oscar HP/lv/EXP/items retained; only acted bit changes. Synthetic inherited campaign history; no chapter clear, natural transition or Netplay.
+- **ch10-ending-staging-interference-agent-29**: `dolphin`; Rejected fixture: original Yellow End triggered prison alarm; staged guards damaged native Green Brom28 to20; native reinforcements occupied exit6,2. No original completion or co-op defect established. Exact configuration quarantined pending a NEW corrected trial.
 
 ## Highest-priority open cases
 
@@ -165,3 +168,4 @@ These are fixture/prerequisite blockers, not confirmed production gameplay defec
 - **BLOCKED LATE-SPECIALS**: BLOCKED_NEEDS_SAVE: Natural late-campaign saves including separate duel/Endgame starts; Chapter27 duel, unique units and Endgame ending
 - **BLOCKED NETPLAY-CONTINUITY**: NEEDS_TWO_PCS_AND_IDENTICAL_STABLE_NATIVE_START; Two-PC original event, clear, native save and resume
 - **FAILED diagnostic ch10-restart-redirect-rejected-10**: rejected fixture/test; do not infer a campaign defect. REJECTED fixture route source7->target11 from copied native Chapter6 restart. RAM chapter11 but original Chapter6 title/map/Emil loaded; all three Chapter10 prisoners absent. Stable C2 bodies matched. state_expect prisoner presence FAIL. No Chapter10 event tested. Original/copied card SHA1 unchanged; private Dolphin stopped. Chapter byte is insufficient to identify a loaded scenario.
+- **FAILED diagnostic ch10-ending-staging-interference-agent-29**: rejected fixture/test; do not infer a campaign defect. Rejected fixture: original Yellow End triggered prison alarm; staged guards damaged native Green Brom28 to20; native reinforcements occupied exit6,2. No original completion or co-op defect established. Exact configuration quarantined pending a NEW corrected trial.

@@ -271,6 +271,18 @@ def verify_partner_wait(before, after, observed):
 
 
 def review(case_dir):
+    record = json.loads((case_dir / 'observations.json').read_text(encoding='utf-8'))
+    attribution = {key: record.get('attribution', {}).get(key, dict(operator='human', method='manual'))
+                   for key, value in record['observed'].items() if value is not None}
+    for value in attribution.values():
+        if value not in (dict(operator='human', method='manual'), dict(operator='agent', method='computer_use')):
+            return dict(status='FAIL', failures=['unsupported runtime observation attribution'])
+    verdict = _review(case_dir)
+    verdict['observation_attribution'] = attribution
+    return verdict
+
+
+def _review(case_dir):
     case = json.loads((case_dir / 'case.json').read_text(encoding='utf-8'))
     observations = json.loads((case_dir / 'observations.json').read_text(encoding='utf-8'))
     snapshots, missing, failures, unverified = {}, [], [], []
@@ -306,7 +318,7 @@ def review(case_dir):
             failures.append(label + ': live C2 bodies unverified')
     observed = {k: observations.get('observed', {}).get(k) for k in case['observations']}
     refused_card = case['id'] == 'CH10-NATIVE-RESUME' and observed.get('native_suspend_accepted') is False
-    failures += ['human reported failed check: ' + k for k, value in observed.items() if value is False and not (refused_card and k == 'native_suspend_accepted')]
+    failures += ['operator reported failed check: ' + k for k, value in observed.items() if value is False and not (refused_card and k == 'native_suspend_accepted')]
     if refused_card and not failures:
         return {'status': 'INCONCLUSIVE', 'reason': 'Original Suspend refused; inherited card identity is unverified. Preserve exact refusal screenshot; do not spoof identity.', 'missing_captures': missing}
     if failures or missing:

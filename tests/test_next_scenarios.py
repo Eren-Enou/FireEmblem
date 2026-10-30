@@ -252,6 +252,12 @@ class ActionVerdictTests(unittest.TestCase):
 
 
 class LauncherTests(unittest.TestCase):
+    def test_runtime_rejected_staging_cannot_be_relaunched_or_rebuilt(self):
+        from tools.next_scenarios import runtime_candidate
+        with self.assertRaisesRegex(ValueError,'Green Brom'):
+            runtime_candidate('92f0ad0562beaef9')
+        runtime_candidate('8609ae9f49fd879f')
+
     def test_accepted_runtime_stays_visible_when_current_card_blocks_seed_launch(self):
         import json
         from unittest.mock import patch
@@ -264,15 +270,20 @@ class LauncherTests(unittest.TestCase):
             self.assertEqual(rows[0]['offline_validation'],'REFUSED')
             self.assertEqual(rows[1]['readiness'],'MISSING_PREREQUISITES')
     @unittest.skipUnless((ROOT/'work/scenarios/human_v1/CH7-PLAYER2-CONTROL/scenario.json').is_file(),'private candidate unavailable')
-    def test_six_candidates_check_without_launch_or_observation_and_native_boot_has_no_state(self):
+    def test_candidate_checks_do_not_change_observations_and_reject_known_runtime_failure(self):
         from tools.test_scenario import check,NEXT,scenario_dir
         for name in NEXT:
             with self.subTest(name=name):
+                obs_path=scenario_dir(name)/'observations.json'
+                before=obs_path.read_bytes()
+                if name=='CH10-CHAPTER-COMPLETE':
+                    with self.assertRaisesRegex(ValueError,'CAMP-AF'):check(name)
+                    self.assertEqual(obs_path.read_bytes(),before)
+                    continue
                 p=check(name)
                 self.assertLessEqual(p['gecko_bytes'],3248)
                 self.assertEqual('--save_state' in p['arguments'],name!='CH7-PLAYER2-CONTROL')
-                obs=json_load(scenario_dir(name)/'observations.json')
-                self.assertTrue(all(value is None for value in obs['observed'].values()))
+                self.assertEqual(obs_path.read_bytes(),before)
 
     def test_collect_refuses_changed_raw_and_keeps_existing_evidence(self):
         import json

@@ -1,7 +1,10 @@
 # Next short owner-operated tests
 
-Prepared offline on `codex/campaign-compatibility`, 2026-10-29. **All six new
-scenarios are runtime NOT TESTED.** The four previously accepted scenarios and
+Prepared offline on `codex/campaign-compatibility`, 2026-10-29. **Runtime update:
+CH7-PLAYER2-CONTROL PASS through agent Computer Use (CAMP-AG). The original
+CH10-CHAPTER-COMPLETE configuration is rejected/quarantined (CAMP-AF): native
+guards damage Brom and alarm reinforcements occupy the exit. Do not relaunch it.
+The four action probes remain NOT TESTED.** The four previously accepted scenarios and
 their captures are preserved; they do not need repeating. No Dolphin launch or
 input occurred during this preparation.
 
@@ -29,7 +32,10 @@ another instance. P1: arrows/X/Z/D; P2: numpad8/5/4/6, M/N/E.
 
 For each name substitute it in `-Scenario NAME -Check` and then `-Scenario NAME`.
 The printed steps are scenario-specific. Set **Auto End Off** before actions.
-Do not select Restart Chapter. The action probes must not advance phases or use
+Do not select Restart Chapter in redirected/state-backed fixtures. For the
+native-only Chapter7 scenario, the original title menu **Restart Chapter >
+Ch.7: Shades of Evil** is the normal native file-loading route; select that
+verified Chapter7 file, never `source.sav`. The action probes must not advance phases or use
 native Save/Suspend; their copied card is not a validated state/card pairing.
 All profiles are separate. Stable COOP-P6 + EXP-16 remains 2536 bytes, fingerprint
 `8609ae9f49fd879f`; no production gameplay code was changed.

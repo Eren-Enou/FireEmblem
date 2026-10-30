@@ -26,7 +26,7 @@ def common(snaps,chapter_by_label,fingerprint,failures):
 
 
 def result(failures,observed,required,scope,**extras):
-    failures+=['human reported failed check: '+k for k in required if observed.get(k) is False]
+    failures+=['operator reported failed check: '+k for k in required if observed.get(k) is False]
     missing=[k for k in required if observed.get(k) is not True]
     return dict(status='FAIL' if failures else 'INCONCLUSIVE' if missing or extras.get('private_card_write_verified') is False else 'PASS',
                 failures=failures,missing_observations=missing,scope=scope,

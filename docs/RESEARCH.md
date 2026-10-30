@@ -1,6 +1,30 @@
 # Research Log — FE9 (Path of Radiance) Two-Army Co-op
 
 Reverse-engineering findings, with source and confidence for each.
+
+### CAMP-025 — Original enemy-phase prerequisites invalidate an ending fixture
+
+2026-10-29, **runtime observed by Codex Computer Use**, synthetic Chapter10
+history only (TESTING CAMP-AF). The 3216-byte ending setup's initial six Red
+positions were distant from staged players but adjacent to native Green Brom.
+Original Yellow End produced alarm dialogue, guard attacks (Brom28 ->20), and
+original Red arrivals at the genuine exit6,2 and neighboring stairs. Captured
+result remains Red turn1. Native reinforcements cannot be inferred from the
+initial six-unit set or a Manhattan-distance check against only the player army.
+This proves a fixture prerequisite defect; it establishes no force3 campaign bug.
+
+Next investigation must correlate the original discovery/alarm conditions,
+all native Green positions, reinforcement arrivals and event/AI ordering before
+building a NEW position-only ending trial. Do not clear alarm flags, synthesize
+Escape keys, disable original reinforcements or restore prisoner HP to disguise
+the defect. Existing evidence is preserved under
+work/agent_runtime_20261029_v1/ and ledger diagnostic
+ch10-ending-staging-interference-agent-29. No new executable address is asserted.
+
+Chapter7 native load route was also observed: title **Restart Chapter > Ch.7:
+Shades of Evil**, followed by original preparations/Fight. This native route is
+different in purpose from restarting a redirected savestate fixture (CAMP-AG).
+
 All addresses are for **GFEE01 rev 0** (NTSC-U) with `main.dol` SHA-1
 `9d00d7d407750b82cb1cfccc56f8aa8a89cc8851` unless marked otherwise.
 `python -m tools.check_signatures` re-checks every static claim marked **[S]**.

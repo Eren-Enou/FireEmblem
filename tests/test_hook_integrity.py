@@ -102,6 +102,24 @@ class HookIntegrityTests(unittest.TestCase):
 
 
 class CampaignIntegrityTests(unittest.TestCase):
+    def test_rejected_candidate_does_not_hide_independent_integrity_or_runtime_results(self):
+        from tools.campaign_integrity import candidates
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            config=root/'safe/User/GameSettings/GFEE01.ini'
+            config.parent.mkdir(parents=True);config.write_text(TEXT)
+            with patch('tools.test_scenario.NEXT',('rejected','safe')), \
+                 patch('tools.test_scenario.scenario_dir',side_effect=lambda name,root:root/name), \
+                 patch('tools.test_scenario.review',side_effect=[dict(status='FAIL'),dict(status='PASS')]), \
+                 patch('tools.test_scenario.check',side_effect=[ValueError('runtime fixture interference'),dict(gecko_bytes=2536)]), \
+                 patch('tools.campaign_integrity.verify_live_hooks',return_value=dict(status='PASS')):
+                rows=candidates(root)
+            self.assertEqual(len(rows),2)
+            self.assertEqual(rows[0]['status'],'INCONCLUSIVE')
+            self.assertTrue(rows[0]['launch_refused'])
+            self.assertEqual(rows[0]['runtime'],'FAIL')
+            self.assertEqual((rows[1]['status'],rows[1]['runtime']),('PASS','PASS'))
+
     def test_review_cannot_reuse_cached_true_when_raw_hook_check_fails(self):
         from tools.campaign_test_pack import review,sha
         with tempfile.TemporaryDirectory() as directory:

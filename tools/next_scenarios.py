@@ -25,6 +25,15 @@ OBS7=('original_battle','p1_cannot_command_oscar','p2_original_wait','normal_tur
 OBS10=('remaining_blue_original_escapes','ike_last_blue','original_completion','expected_recruits',
        'native_save_accepted','fresh_boot_without_state','native_load_selected','no_unexpected_behavior')
 
+REJECTED_RUNTIME_FINGERPRINTS = {
+    '92f0ad0562beaef9': 'CAMP-AF: original enemy phase damages Green Brom and alarm reinforcements occupy exit6,2; this staging needs a NEW corrected trial',
+}
+
+
+def runtime_candidate(fingerprint_value):
+    if fingerprint_value in REJECTED_RUNTIME_FINGERPRINTS:
+        raise ValueError(REJECTED_RUNTIME_FINGERPRINTS[fingerprint_value])
+
 
 def source(name):
     directory,digest=SOURCES[name]
@@ -93,6 +102,7 @@ def prepare(name,root):
                    expected_recruits=['PID_KEVIN'],unmet_recruit_conditions=['PID_CHAP','PID_NEPENEE'],
                    caveat='One original enemy phase is required; pathing, triggers and runtime positioning remain unverified. Inherited Shinon/Gatrie history is synthetic.')
     size=validate_ini(text)
+    runtime_candidate(fingerprint(text))
     # Accepted immutable capture/profile only. Never copy a mutable active card.
     profile=directory/'profile'
     cards=sorted((profile/'GC/USA/Card A').glob('*.gci'))
@@ -141,7 +151,7 @@ def prepare(name,root):
 
 def steps(name):
     if name=='CH7-PLAYER2-CONTROL':
-        return ['Native boot only: choose original Load of Chapter7 on this copied card. Never load source.sav or use Restart Chapter.',
+        return ['Native boot only: Title > Restart Chapter is the original native save-file menu. Select Ch.7: Shades of Evil on this copied card. Never load source.sav. The no-Restart warning applies to redirected state fixtures, not this native-only load.',
           'Enter Fight/Begin normally. Keep Oscar deployed. At Blue turn1 set Auto End Off and end Blue without acting or fighting.',
           'At Yellow turn1, attempt a Player1 command on Oscar: it must be refused. With Player2 select Oscar, confirm CURRENT tile and leave Wait menu open. Save before.sav.',
           'Player2 chooses original Wait. Save after.sav on the same Yellow turn. Do not move, fight, trade or advance another phase. The before capture establishes the Blue-to-Yellow cycle.']

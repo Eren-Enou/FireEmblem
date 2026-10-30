@@ -248,6 +248,26 @@ class HumanScenarioTests(unittest.TestCase):
             with self.assertRaises(ValueError):observe(dest,['invented'],[],'')
             with self.assertRaises(ValueError):observe(dest,['original_escape'],['original_escape'],'')
 
+    def test_agent_observations_preserve_separate_human_provenance(self):
+        from tools.test_scenario import verified_readiness
+        from tools.campaign_test_pack import review
+        with tempfile.TemporaryDirectory() as temp:
+            dest=Path(temp)
+            (dest/'case.json').write_text(json.dumps(dict(id='probe',captures=['before'],observations=['manual','action'])))
+            (dest/'observations.json').write_text(json.dumps(dict(observed=dict(manual=True,action=None),notes='')))
+            record=observe(dest,['action'],[],'Original input observed through TAS',operator='agent')
+            self.assertEqual(record['attribution']['manual'],dict(operator='human',method='manual'))
+            self.assertEqual(record['attribution']['action'],dict(operator='agent',method='computer_use'))
+            self.assertEqual(record['declarations'][-1]['operator'],'agent')
+            self.assertEqual(verified_readiness(dest),'RUNTIME_VERIFIED')
+            result=review(dest)
+            self.assertEqual(result['status'],'NOT TESTED')
+            self.assertEqual(result['observation_attribution'],record['attribution'])
+            before=(dest/'observations.json').read_bytes()
+            with self.assertRaises(ValueError):observe(dest,[],[],'',operator='invented')
+            self.assertEqual((dest/'observations.json').read_bytes(),before)
+            self.assertEqual(len(list((dest/'observation-history').glob('*.json'))),1)
+
     @unittest.skipUnless((PACKAGE/'CH6-IKE-COMPLETE/scenario.json').exists(),'private candidates unavailable')
     def test_private_seed_payload_deltas_and_source_hashes_are_bounded(self):
         from tools.campaign_test_pack import sha

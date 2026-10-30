@@ -298,10 +298,14 @@
           "status": "NOT TESTED"
         },
         "fixture": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch7-p2-native-control-agent-29",
+          "note": "Agent Computer Use: copied native Chapter7 file -> original battle/Blue-to-Yellow -> P1 Oscar lockout and P2 original Wait. Oscar HP/lv/EXP/items retained; only acted bit changes. Synthetic inherited campaign history; no chapter clear, natural transition or Netplay."
         },
         "event_runtime": {
-          "status": "NOT TESTED"
+          "status": "PASS",
+          "evidence": "ch7-p2-native-control-agent-29",
+          "note": "Agent Computer Use: copied native Chapter7 file -> original battle/Blue-to-Yellow -> P1 Oscar lockout and P2 original Wait. Oscar HP/lv/EXP/items retained; only acted bit changes. Synthetic inherited campaign history; no chapter clear, natural transition or Netplay."
         },
         "chapter_clear": {
           "status": "NOT TESTED"
@@ -336,6 +340,11 @@
           "status": "PASS",
           "evidence": "ch6-ch7-native-load-29",
           "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
+        },
+        "ownership": {
+          "status": "PASS",
+          "evidence": "ch7-p2-native-control-agent-29",
+          "scope": "Native Chapter7 initialization, original Blue-to-Yellow routing, P1 lockout and P2 Oscar Wait; no drafting/deployment or whole-campaign claim."
         }
       }
     },
@@ -1774,6 +1783,117 @@
         }
       ],
       "description": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
+    },
+    "ch7-p2-native-control-agent-29": {
+      "kind": "dolphin",
+      "commit": "84f87f1f2140d59f048777dbee41c6247c5531b8",
+      "fixture_generation_commit": "84f87f1f2140d59f048777dbee41c6247c5531b8",
+      "fingerprint": "8609ae9f49fd879f",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_history_native_boot",
+      "chapters": [
+        "8"
+      ],
+      "axes": [
+        "fixture",
+        "event_runtime"
+      ],
+      "reported_by": "Codex agent via authorized Computer Use, not human observation",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/before/state.sav",
+          "sha256": "01aff8ec5cf1c7fe440b8d526b832a38c92ec42b8af6fb6550497806c8a1b10e"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/before/GFEE01.ini",
+          "sha256": "1a211d09772c236ff4a76fd1f7f9a2dcb6eae4021b260f86c5f7feb04ca51348"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/before/snapshot.json",
+          "sha256": "6aacf5bc4bca0b4136edb6bf84be13ee537da61c6286fb27981df1c9d45e309a"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/before/manifest.json",
+          "sha256": "91416c205dd7b254fee29416c8a74a184bbb395a7dd7de821d8ba0e8499e438d"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/after/state.sav",
+          "sha256": "e768b6239dc5ee7f420793edd009684e7d33f1d6a7924d5c754da12e52552eed"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/after/GFEE01.ini",
+          "sha256": "1a211d09772c236ff4a76fd1f7f9a2dcb6eae4021b260f86c5f7feb04ca51348"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/after/snapshot.json",
+          "sha256": "9701742801a989b49403f6e80527e8e6a47a5190817c9d150185a40672b982f5"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/after/manifest.json",
+          "sha256": "9ac126e1a09271e1d180f7b6cdf974ca27f68e62c95553ae1e896ec81931c377"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH7-PLAYER2-CONTROL/observation-history/0001.json",
+          "sha256": "1f3691de1835ba5222e092585ae6b5fb8bf7567bfb91e49268ccfd6731853924"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch7-control-result.json",
+          "sha256": "66ea9a5afb646b254e873a8a5954c291e5d30a2b68e8d6c2c2a4d5dc6c19e0ee"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch7-autoend-off.png",
+          "sha256": "22ad673a755290f1e4e63d1cdc2039fba43ddd4e195a46451e708ff70cc89f2c"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch7-native-file.png",
+          "sha256": "09b3fe1770b2c41685a79a28837537145e74419e36104ad14d1172c7f37e013b"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch7-original-wait-done.png",
+          "sha256": "bb15221f86e39c1703582bab214d59bddda4bddcd09c52b1f7d70108b7861995"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch7-original-wait-menu.png",
+          "sha256": "0d6acb6f6dc8c22ca73a69e15d41fd225b449b92335f2502cf711ab62148b31e"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch7-p1-refused.png",
+          "sha256": "4dde980f0b765701d2793afbb065ca0943d506d6baa30977754a2c5c64aef5d3"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch7-yellow-before-p1.png",
+          "sha256": "0d9127c922180607dbc9da00f21b735078b99a5cfe18ab06668e944654eb4edd"
+        }
+      ],
+      "description": "Agent Computer Use: copied native Chapter7 file -> original battle/Blue-to-Yellow -> P1 Oscar lockout and P2 original Wait. Oscar HP/lv/EXP/items retained; only acted bit changes. Synthetic inherited campaign history; no chapter clear, natural transition or Netplay."
+    },
+    "ch10-ending-staging-interference-agent-29": {
+      "kind": "dolphin",
+      "status": "FAIL",
+      "commit": "84f87f1f2140d59f048777dbee41c6247c5531b8",
+      "fingerprint": "92f0ad0562beaef9",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "rejected_synthetic_ending_staging",
+      "chapters": [
+        "11"
+      ],
+      "axes": [],
+      "reported_by": "Codex agent via authorized Computer Use",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH10-CHAPTER-COMPLETE/captures/staged/state.sav",
+          "sha256": "ebd566c3ec31c653c36f2d7f188f13d8b8b0ccc7a374d1e01c50e6afee353458"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch10-enemy-interference.sav",
+          "sha256": "60eed92be58d01153ca50ac4a2eb515d47356b96aecc92aa2f6ee85f96322a22"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/ch10-interference.png",
+          "sha256": "931912189f8264b0da6b533e4d415e19ea28854caa78269f05959d9ed9e091a6"
+        }
+      ],
+      "description": "Rejected fixture: original Yellow End triggered prison alarm; staged guards damaged native Green Brom28 to20; native reinforcements occupied exit6,2. No original completion or co-op defect established. Exact configuration quarantined pending a NEW corrected trial."
     }
   },
   "next_cases": [

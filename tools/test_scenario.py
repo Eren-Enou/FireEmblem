@@ -1,4 +1,4 @@
-"""Human-operated scenario plans and evidence, never emulator execution or input."""
+"""Scenario plans and attributed runtime evidence; never emulator execution or input."""
 from __future__ import annotations
 
 import argparse
@@ -199,6 +199,9 @@ def check(name, fresh=False, root=PACKAGE):
     if size != manifest['gecko_bytes'] or fingerprint(text) != manifest['fingerprint']:
         raise ValueError('configuration fingerprint/budget mismatch')
     if name in NEXT:
+        from tools.next_scenarios import runtime_candidate
+        runtime_candidate(fingerprint(text))
+    if name in NEXT:
         from tools.fixture_state import HANDLER_SHA256
         if sha(ROOT/'Dolphin-x64/Sys/codehandler.bin')!=HANDLER_SHA256:
             raise ValueError('handler identity changed')
@@ -262,10 +265,10 @@ def listing(root=PACKAGE):
         row=dict(scenario=name,runtime=verdict['status'])
         try:
             plan=check(name,root=root)
-            row.update(readiness='HUMAN_VERIFIED' if verdict['status']=='PASS' else 'OFFLINE_VALIDATED_CANDIDATE',
+            row.update(readiness=verified_readiness(dest) if verdict['status']=='PASS' else 'OFFLINE_VALIDATED_CANDIDATE',
                        offline_validation='PASS',gecko_bytes=plan['gecko_bytes'])
         except (ValueError,OSError,KeyError,configparser.Error) as exc:
-            row.update(readiness='HUMAN_VERIFIED' if verdict['status']=='PASS' else 'INVALID',
+            row.update(readiness=verified_readiness(dest) if verdict['status']=='PASS' else 'INVALID',
                        offline_validation='REFUSED',reason=str(exc))
         if verdict['status']=='FAIL': row['readiness']='FAILED_VALIDATION'
         result.append(row)
@@ -295,20 +298,39 @@ def collect_all(dest):
     return dict(collected=collected,retained=retained,missing_raw_states=missing,review=review(dest))
 
 
-def observe(dest, passed, failed, notes):
+def verified_readiness(dest):
+    path = dest / 'observations.json'
+    record = json.loads(path.read_text(encoding='utf-8')) if path.is_file() else {}
+    operators = {v['operator'] for v in record.get('attribution', {}).values()}
+    return 'RUNTIME_VERIFIED' if 'agent' in operators else 'HUMAN_VERIFIED'
+
+
+def observe(dest, passed, failed, notes, operator='human'):
+    if operator not in ('human', 'agent'):
+        raise ValueError('operator must be human or agent')
     case = json.loads((dest / 'case.json').read_text(encoding='utf-8'))
     allowed = set(case['observations'])
     if (set(passed) | set(failed)) - allowed or set(passed) & set(failed):
         raise ValueError('use declared observation names; cannot mark one both passed and failed')
     path = dest / 'observations.json'
     record = json.loads(path.read_text(encoding='utf-8'))
+    attribution = record.setdefault('attribution', {})
+    # Older declarations came from the owner. Preserve their attribution when
+    # an agent adds a different check or a note to the same trial.
+    for key, value in record['observed'].items():
+        if value is not None:
+            attribution.setdefault(key, dict(operator='human', method='manual'))
+    author = dict(operator=operator, method='computer_use' if operator == 'agent' else 'manual')
     for key in passed:
         record['observed'][key] = True
+        attribution[key] = dict(author)
     for key in failed:
         record['observed'][key] = False
+        attribution[key] = dict(author)
+    record.setdefault('declarations', []).append(dict(**author, passed=list(passed), failed=list(failed), notes=notes))
     if notes:
         record['notes'] += ('\n' if record['notes'] else '') + notes
-    # Preserve each owner declaration as an exclusive immutable revision.
+    # Preserve each declaration as an exclusive immutable revision.
     history = dest / 'observation-history'
     history.mkdir(exist_ok=True)
     write_json(history / (str(len(list(history.glob('*.json'))) + 1).zfill(4) + '.json'), record)
@@ -327,8 +349,10 @@ def main():
     p = sub.add_parser('review'); p.add_argument('name')
     p = sub.add_parser('collect'); p.add_argument('name')
     p.add_argument('--passed',action='append',default=[]);p.add_argument('--failed',action='append',default=[]);p.add_argument('--notes',default='')
+    p.add_argument('--operator', choices=('human','agent'), default='human')
     p = sub.add_parser('observe'); p.add_argument('name'); p.add_argument('--passed', action='append', default=[])
     p.add_argument('--failed', action='append', default=[]); p.add_argument('--notes', default='')
+    p.add_argument('--operator', choices=('human','agent'), default='human')
     args = parser.parse_args()
     try:
         if not re.fullmatch(r'[A-Za-z0-9_-]+',args.trial):
@@ -352,9 +376,9 @@ def main():
                 configuration(dest / 'User')
                 for path in (dest / 'User').rglob('*'): private(path, dest)
                 result = collect(dest, args.label, args.state, dest / 'User/GameSettings/GFEE01.ini', profile=dest / 'User')
-            elif args.mode == 'observe': result = observe(dest, args.passed, args.failed, args.notes)
+            elif args.mode == 'observe': result = observe(dest, args.passed, args.failed, args.notes, args.operator)
             elif args.mode == 'collect':
-                if args.passed or args.failed or args.notes: observe(dest,args.passed,args.failed,args.notes)
+                if args.passed or args.failed or args.notes: observe(dest,args.passed,args.failed,args.notes,args.operator)
                 result=collect_all(dest)
             else: result = review(dest)
     except (ValueError, OSError, KeyError, configparser.Error) as exc:

@@ -1,12 +1,14 @@
 # Short owner-operated campaign tests
 
-**Next batch:** [NEXT_SCENARIO_TESTS.md](NEXT_SCENARIO_TESTS.md) has six new
-offline-validated candidates and the simpler `-Collect` workflow. The four
+**Next batch:** [NEXT_SCENARIO_TESTS.md](NEXT_SCENARIO_TESTS.md) tracks the six
+prepared cases and the simpler `-Collect` workflow. Chapter7 now has an agent
+runtime PASS; the original C10 ending candidate is rejected/quarantined. The four
 scenarios documented below now have scoped human passes and need no repeat.
 `-List` separates accepted runtime results from current launch/card safety.
 
 Run PowerShell in `C:\Users\Aaron\CoderViber2\FireEmblemCampaignAudit`.
-Codex has not launched Dolphin or performed these interactions. The owner has
+The four historical cases below were operated by the owner. Codex's later
+authorized Computer Use runs are recorded separately in CAMP-AF/AG. The owner has
 now passed **CH10-PARTNER-WAIT** (TESTING.md CAMP-Y) and
 **CH10-PRISONER-ESCAPE** (CAMP-Z): local original P2 Wait/P1 lockout and local
 original Escape only. Ch6's synthetic original Ike-last sequence and next-Chapter7
@@ -15,6 +17,11 @@ and fresh native Load with retained survivor/away records (CAMP-AC).
 Ch10 standalone native Suspend/fresh Resume passed for living Oscar/Kieran state
 and roster identities (CAMP-AB); natural campaign and Netplay remain separate.
 The earlier Oscar Talk and Oscar Escape evidence remains separate and accepted.
+
+Observation commands default to `-Operator human`. Agent Computer Use declarations
+must use `-Operator agent`; provenance is recorded per check and immutable revision.
+Reviews show attribution and `-List` labels agent/mixed passes RUNTIME_VERIFIED.
+This flag records who observed an action; it never substitutes for raw captures.
 
 ```powershell
 .\Test-Scenario.ps1 -List

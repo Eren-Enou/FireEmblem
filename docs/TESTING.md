@@ -1,5 +1,63 @@
 # Testing
 
+## CAMP-AG — Chapter7 native initialization and P2 Oscar Wait
+
+**PASS, scoped synthetic-history runtime.** On 2026-10-29 Codex used authorized
+Computer Use and Dolphin's two TAS panels, with the isolated
+`CH7-PLAYER2-CONTROL/User` profile (PID157244). Boot supplied no savestate. The
+original title route is **Restart Chapter > Ch.7: Shades of Evil**; original
+opening scenes, preparations, Fight/Yes and Blue End reached Yellow turn1.
+Autoend Turns was Off. P1 A on Oscar was ignored. P2 selected his CURRENT tile,
+opened Items/Wait, then executed the original Wait. No movement, combat, extra
+phase, native save or state restoration occurred. The disposable card is unchanged.
+
+Before SHA256 `01aff8ec5cf1c7fe440b8d526b832a38c92ec42b8af6fb6550497806c8a1b10e`;
+after `e768b6239dc5ee7f420793edd009684e7d33f1d6a7924d5c754da12e52552eed`.
+Both decode original C08/internal8, Yellow turn1, stable2536-byte configuration
+`8609ae9f49fd879f`, and independently verified C2 entries/bodies/continuations.
+Oscar slot2/PID_OSCAR remains force3, HP28/lv6/EXP28 with identical inventory;
+only flags `0x10400 -> 0x10401` changes. The remaining decoded roster and event
+flags/scripts match. `Test-Scenario.ps1 -Review` PASS includes explicit agent
+attribution, not human observations.
+
+Evidence: `work/scenarios/human_v1/CH7-PLAYER2-CONTROL/captures/{before,after}/`,
+immutable observation-history/0001.json and
+`work/agent_runtime_20261029_v1/ch7-control-result.json` plus six screenshots.
+Ledger `ch7-p2-native-control-agent-29` accepts fixture/event/ownership scope only.
+Chapter7 completion, natural campaign history and Netplay remain NOT TESTED.
+
+Tooling validation:218 tests PASS, required tests.test_tools51 PASS,
+428/428 signatures.47 accepted artifacts,20 raw states and577 saved hook paths
+rechecked. All accepted raw hooks PASS; combined candidate report is INCONCLUSIVE
+because the rejected C10 fixture is deliberately refused, rather than silently
+omitted. Stable/production codes and Gecko size are unchanged.
+
+## CAMP-AF — rejected Chapter10 ending staging
+
+**FAIL, synthetic fixture; campaign completion INCONCLUSIVE.** Codex launched only
+private `CH10-CHAPTER-COMPLETE/User` (PID157136), restored its supplied seed,
+confirmed near-exit staging, and saved staged.sav. Original P2 End triggered
+the native prison alarm. The staged original guards attacked Green Brom in his
+cell; staged/result records show HP28 ->20. The original alarm also spawned Red
+reinforcements, including an armor at exit `(6,2)` and units at `(7,2)/(8,2)`.
+Result capture is still Red turn1. The trial stopped before Blue Escape or any
+chapter outcome; no co-op defect is established.
+
+The old separation test covered staged Blue/Yellow versus six initial Reds, but
+omitted native Green prisoners and original reinforcement arrival tiles. Therefore
+3216-byte fingerprint `92f0ad0562beaef9` is now refused by both launch checks and
+new preparation. Existing seed/profile/captures remain intact. A future corrected
+fixture must use a NEW trial, inspect all native actors and alarm/event geometry,
+and allow original events without faking discovery, recruitment or completion.
+
+Evidence: staged SHA256
+`ebd566c3ec31c653c36f2d7f188f13d8b8b0ccc7a374d1e01c50e6afee353458`;
+`work/agent_runtime_20261029_v1/ch10-enemy-interference.sav` SHA256
+`60eed92be58d01153ca50ac4a2eb515d47356b96aecc92aa2f6ee85f96322a22`;
+paired decoded snapshots and screenshot in the same session directory.
+No original card, accepted earlier evidence, production code or ownership logic
+was changed. No original Escape/ending/retention was accepted from this trial.
+
 Latest owner-operated result: **CAMP-AC**, synthetic Ch6 Ike-last -> Ch7 preparations
 and fresh native Chapter7 Load PASS for survivor/away roster retention.
 CAMP-AB records standalone Ch10 Suspend/fresh Resume.

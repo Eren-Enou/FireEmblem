@@ -61,17 +61,23 @@ def accepted(ledger,root=ROOT):
 
 
 def candidates(root):
-    from tools.test_scenario import NEXT,scenario_dir,check
+    from tools.test_scenario import NEXT,scenario_dir,check,review
     result=[]
     for name in NEXT:
         dest=scenario_dir(name,root)
-        plan=check(name,root=root)
+        verdict=review(dest)
+        try:
+            plan=check(name,root=root)
+        except ValueError as exc:
+            result.append(dict(scenario=name,status='INCONCLUSIVE',launch_refused=True,
+                               reason=str(exc),runtime=verdict['status']))
+            continue
         native=name=='CH7-PLAYER2-CONTROL'
         state=dest/('source.sav' if native else 'seed.s02.sav')
         ini=dest/'source.ini' if native else dest/'User/GameSettings/GFEE01.ini'
         record=verify_live_hooks(state,ini.read_text())
         result.append(dict(scenario=name,launch_gecko_bytes=plan['gecko_bytes'],
-                           inspection_only=native,runtime='NOT TESTED',**record))
+                           inspection_only=native,runtime=verdict['status'],**record))
     return result
 
 
@@ -87,6 +93,7 @@ def main():
         if args.include_candidates:
             result['candidates']=candidates(ROOT/'work/scenarios/human_v1')
             if any(r['status']=='FAIL' for r in result['candidates']):result['status']='FAIL'
+            elif any(r['status']!='PASS' for r in result['candidates']):result['status']='INCONCLUSIVE'
         out.parent.mkdir(parents=True,exist_ok=True);write_json(out,result)
         summary=dict(status=result['status'],accepted_artifacts=result['accepted_artifacts_hash_verified'],
                      raw_states=len(result['raw_states']),hooks=sum(len(r.get('hooks',[])) for r in result['raw_states']),
