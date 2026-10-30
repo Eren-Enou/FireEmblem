@@ -1,5 +1,46 @@
 # Testing
 
+## CAMP-AH — Original Yellow Oscar Rescue of Blue Rhys
+
+**PASS, local synthetic-positioning action**, reviewed 2026-10-30. Codex used
+authorized Computer Use/TAS in isolated `CH6-YELLOW-RESCUE/User` (PID146428).
+The seed restores an old Escape menu: P2 B cancelled it and B cancelled Move,
+allowing native setup to position Oscar13,24 and Rhys14,24. Autoend Turns was On;
+P2 changed it Off through original Options. Original Next Unit found Oscar;
+CURRENT-tile confirmation offered Rescue. The original target display showed
+Oscar Wt33/HP28 and Rhys Wt8/HP22. P2 confirmed Rhys once. Captured the carrying
+icon and mounted Move continuation before movement, Wait, Escape or phase advance.
+No native card write, fabricated relationship, stat change or outcome edit.
+
+Before SHA256 `ffb0bb56a94273eb26a82562af13a499679fa00683828a3ae5706f6979a8ce0c`;
+after `33dc7fc1b2e1057870e881f07a38a84df71d16a1d277217a3611d1b85c24265d`.
+Both are original C07/internal7 Yellow turn1 with all2928-byte live hooks matching
+`ea5eb5fdbcd75004`. Oscar stays force3, flags10400 ->10402, link802B3564;
+Rhys stays force0, flags10400 ->10404, reciprocal link802B1764, coordinates
+14,24 ->13,24. Both retain HP/class/level/EXP/inventory/ownership and no death.
+No unrelated decoded roster field changes during Rescue.
+
+The first strict review failed its setup comparison: source versus pre-action
+unit flags differed only in0x20 on slots10/14/16/17. Original projection code
+subsequently established screen-bounds cache behavior (RESEARCH CAMP-026), with
+10 newly pinned signatures. The corrected comparison excludes only that bit and
+reports every delta; raw states, captured snapshots and declarations remain
+unchanged. Regression mutations still reject other flags, force changes, missing
+links, altered items/HP/ownership and wrong passenger coordinates. Native-save
+and chapter-boundary verifiers do not inherit this exclusion.
+
+Evidence: `work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/`, immutable
+observation-history/0001.json, four screenshots and `rescue-result-v2.json` in
+`work/agent_runtime_20261029_v1/`. Ledger `ch6-yellow-blue-rescue-agent-30`
+records an independent Rescue lifecycle claim; earlier fixture/Escape evidence
+remains accepted and hash-checked. Carried Escape, cleanup, native persistence,
+natural campaign and Netplay remain unverified. Follow-up must use this genuine
+relationship and original positioning/movement; never fabricate rescue links.
+
+Validation:219 tests PASS (including required tests.test_tools51);438/438
+signatures.61 accepted artifacts and22 raw states/635 hook continuations PASS.
+Stable2536 bytes and all production generators remain unchanged.
+
 ## CAMP-AG — Chapter7 native initialization and P2 Oscar Wait
 
 **PASS, scoped synthetic-history runtime.** On 2026-10-29 Codex used authorized

@@ -4,6 +4,22 @@ from tools.next_verdicts import common,result,unit
 from tools.inspect_state import UNITS
 
 
+def without_render_cache(units):
+    """CAMP-026: original per-unit screen projection updates only flag0x20.
+
+    This is a comparison projection, never a saved-state edit. Retain every
+    other flag and field, including ownership, death and rescue relationships.
+    """
+    return [dict(u, flags=u['flags'] & ~0x20) for u in units]
+
+
+def render_deltas(left,right):
+    old={u['slot']:u for u in left}
+    return [dict(slot=u['slot'],pid=u['pid'],before=old[u['slot']]['flags'] & 0x20,
+                 after=u['flags'] & 0x20) for u in right if u['slot'] in old and
+            (old[u['slot']]['flags'] ^ u['flags']) & 0x20]
+
+
 def verify(name,snaps,observed,source,setup,fingerprint):
     failures=[];spec=SPECS[name];chapter=source['chapter']
     common(snaps,dict(before=chapter,after=chapter),fingerprint,failures)
@@ -15,7 +31,8 @@ def verify(name,snaps,observed,source,setup,fingerprint):
     expected=[dict(u) for u in source['units']]
     for row in setup['records']:
         next(u for u in expected if u['slot']==row['slot'])['xy']=list(row['destination_xy'])
-    if before['units']!=expected:failures.append('before differs from declared position-only setup')
+    if without_render_cache(before['units'])!=without_render_cache(expected):
+        failures.append('before differs from declared position-only setup')
     a=unit(before,spec['actor'],failures,'before');b=unit(after,spec['actor'],failures,'after')
     target=next((u for u in before['units'] if u['slot']==spec['target_slot']),None)
     other=[u for u in after['units'] if u['slot']==spec['target_slot']]
@@ -31,6 +48,10 @@ def verify(name,snaps,observed,source,setup,fingerprint):
             ap=UNITS+(a['slot']-1)*0x280;tp=UNITS+(target['slot']-1)*0x280
             if b['rescue_link']!=tp or passenger['rescue_link']!=ap:failures.append('complete reciprocal rescue links required')
             if not b['flags']&2 or not passenger['flags']&4:failures.append('original carrier/passenger role bits required')
+            if b['flags'] & ~0x20 not in ((a['flags'] | 2) & ~0x20, (a['flags'] | 3) & ~0x20):
+                failures.append('Rescue changed additional carrier flags')
+            if passenger['flags'] & ~0x20 != (target['flags'] | 4) & ~0x20:
+                failures.append('Rescue changed additional passenger flags')
             if passenger['xy']!=b['xy']:failures.append('original Rescue must place passenger at carrier coordinates')
             for key in ('slot','pid','class','force','hp','level','exp','inventory_slots_hex','owned','owner','death_record','death_chapter'):
                 if passenger[key]!=target[key]:failures.append('Rescue changed passenger '+key)
@@ -61,11 +82,13 @@ def verify(name,snaps,observed,source,setup,fingerprint):
             if b['owned'] or b['owner'] is not None or b['force']!=3:failures.append('native partner became persistently owned')
             if b['class']!='JID_CAT/F':failures.append('expected original transformed Lethe')
     changed={a['slot'],target['slot']}
-    if [u for u in before['units'] if u['slot'] not in changed]!=[u for u in after['units'] if u['slot'] not in changed]:
+    if without_render_cache([u for u in before['units'] if u['slot'] not in changed])!=without_render_cache([u for u in after['units'] if u['slot'] not in changed]):
         failures.append('unrelated roster changed during one action')
     scope={'rescue':'original Yellow Oscar Rescue of Blue Rhys; reciprocal identities only, no carried Escape',
            'combat':'original Yellow Oscar attack, damage, EXP and weapon uses; level-up not required/proven',
            'fatal':'original Yellow Oscar fatal combat and local persistent death record; later roster/cleanup NOT TESTED',
            'partner':'original transformed native Yellow Lethe combat; gauge/EXP measured, cleanup/recruitment NOT TESTED'}[kind]
     return result(failures,observed,spec['observations'],scope,
-                  actor_changes={k:[a[k],b[k]] for k in a if a[k]!=b[k]})
+                  actor_changes={k:[a[k],b[k]] for k in a if a[k]!=b[k]},
+                  render_cache_changes=dict(setup=render_deltas(expected,before['units']),action=render_deltas(before['units'],after['units'])),
+                  comparison_exclusion='unit flags0x20 original projected-screen-bounds cache; all other fields remain checked')

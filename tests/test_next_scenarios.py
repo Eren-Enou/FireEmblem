@@ -192,7 +192,20 @@ class ActionVerdictTests(unittest.TestCase):
         obs=dict.fromkeys(SPECS[name]['observations'],True)
         self.assertEqual(verify(name,s,obs,src,m['setup'],m['fingerprint'])['status'],'PASS')
         self.assertEqual(verify(name,s,{},src,m['setup'],m['fingerprint'])['status'],'INCONCLUSIVE')
-        for mutation in ('link','role','force','hp','items','ownership','xy'):
+        screen=copy.deepcopy(s)
+        for label in ('before','after'):
+            next(u for u in screen[label]['game']['units'] if u['slot']==10)['flags']^=0x20
+        next(u for u in screen['after']['game']['units'] if u['slot']==16)['flags']^=0x20
+        rendered=verify(name,screen,obs,src,m['setup'],m['fingerprint'])
+        self.assertEqual(rendered['status'],'PASS')
+        self.assertTrue(rendered['render_cache_changes']['setup'])
+        self.assertTrue(rendered['render_cache_changes']['action'])
+        for bit in (1,2,4,0x400,0x4000,0x8000,0x10000,0x20000000,0x40000000):
+            bad=copy.deepcopy(screen)
+            next(u for u in bad['after']['game']['units'] if u['slot']==16)['flags']^=bit
+            with self.subTest(unrelated_bit=hex(bit)):
+                self.assertEqual(verify(name,bad,obs,src,m['setup'],m['fingerprint'])['status'],'FAIL')
+        for mutation in ('link','role','force','hp','items','ownership','xy','extra_flags'):
             bad=copy.deepcopy(s);p=next(u for u in bad['after']['game']['units'] if u['pid']=='PID_KILROY')
             if mutation=='link':p['rescue_link']=0
             elif mutation=='role':p['flags']&=~4
@@ -200,6 +213,7 @@ class ActionVerdictTests(unittest.TestCase):
             elif mutation=='hp':p['hp']=0
             elif mutation=='items':p['inventory_slots_hex']='00'*64
             elif mutation=='ownership':p['owned']=True
+            elif mutation=='extra_flags':p['flags']|=0x4000
             else:p['xy']=[1,1]
             with self.subTest(mutation=mutation):self.assertEqual(verify(name,bad,obs,src,m['setup'],m['fingerprint'])['status'],'FAIL')
 

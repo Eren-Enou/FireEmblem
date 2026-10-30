@@ -10,7 +10,7 @@ import re
 import struct
 from pathlib import Path
 from tools.install_codes import ROOT,build_ini,validate_ini
-from tools.campaign_verify import validate,check_artifacts,RUNTIME
+from tools.campaign_verify import validate,check_artifacts,accepted_runtime_runs
 from tools.campaign_snapshot import verify_live_hooks
 from tools.campaign_test_pack import sha,write_json,work_destination
 from tools.netplay_package import fingerprint
@@ -33,8 +33,7 @@ def configurations(state,expected):
 def accepted(ledger,root=ROOT):
     validate(ledger)
     count=check_artifacts(ledger,root)
-    runs={claim['evidence'] for row in ledger['chapters'] for axis,claim in row['checks'].items()
-          if axis in RUNTIME and claim['status']=='PASS'}
+    runs=accepted_runtime_runs(ledger)
     states={}
     for run_id in sorted(runs):
         run=ledger['runs'][run_id]

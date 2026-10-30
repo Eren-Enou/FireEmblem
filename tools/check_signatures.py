@@ -18,6 +18,17 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-026: original per-unit projected-screen bounds cache, not ownership.
+    (0x80016B50, 0x48037629, "unit display loop calls original projection worker"),
+    (0x8004E178, 0x9421FE70, "unit projection worker entry"),
+    (0x8004E550, 0xC0210104, "projection reads transformed coordinate"),
+    (0x8004E560, 0xD03F0170, "projection stores unit projected coordinate"),
+    (0x8004E580, 0xC01F0170, "screen-bounds test reads projected coordinate"),
+    (0x8004E588, 0x408100A0, "outside first screen bound branches to flag0x20 setter"),
+    (0x8004E59C, 0x4081008C, "outside second screen bound branches to flag0x20 setter"),
+    (0x8004E5AC, 0x540006F2, "inside projected bounds clears only unit flag0x20"),
+    (0x8004E62C, 0x60000020, "outside projected bounds sets only unit flag0x20"),
+    (0x8004E630, 0x901F01A0, "projection stores updated unit flags"),
     # CAMP-023: original Rescue pair construction and inventory-use decrement.
     (0x80077D88, 0x3C608027, "Rescue label callback entry"),
     (0x80077E60, 0x9421FFF0, "Rescue availability callback entry"),

@@ -86,6 +86,7 @@ Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes nativ
 
 | Chapter/stage | Behavior | Level | Evidence | Exact scope or blocker |
 |---|---|---|---|---|
+| Ch.6: A Brief Diversion | rescue | SYNTHETIC RUNTIME VERIFIED | ch6-yellow-blue-rescue-agent-30 | Agent Computer Use original P2 Yellow Oscar Rescue of Blue Rhys after synthetic native positioning. Original target eligibility, reciprocal pointers, role bits2/4 and common coordinates verified. Factions/HP/progression/items retained. Only original flag0x20 projection cache excluded and reported. Mounted continuation captured before movement/Wait; no carried Escape, cleanup, natural campaign or Netplay. |
 | Ch.6: A Brief Diversion | escape | SYNTHETIC RUNTIME VERIFIED | ch6-yellow-escape-07 | One original Yellow Oscar Escape from synthetic exit; no carried/Ike-last/cleanup/save acceptance. |
 | Ch.6: A Brief Diversion | roster_cleanup | MODEL VERIFIED | native-lifecycle-model-20 | Bounded no-rescue native classification and fixed ownership hand-back projection only. |
 | Ch.6: A Brief Diversion | chapter_completion | SYNTHETIC RUNTIME VERIFIED | ch6-ch7-native-load-29 | Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim. |
@@ -137,6 +138,7 @@ Unlisted behaviors/chapters are UNTESTED. MODEL VERIFIED never establishes nativ
 - **ch6-ch7-native-load-29**: `dolphin`; Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim.
 - **ch7-p2-native-control-agent-29**: `dolphin`; Agent Computer Use: copied native Chapter7 file -> original battle/Blue-to-Yellow -> P1 Oscar lockout and P2 original Wait. Oscar HP/lv/EXP/items retained; only acted bit changes. Synthetic inherited campaign history; no chapter clear, natural transition or Netplay.
 - **ch10-ending-staging-interference-agent-29**: `dolphin`; Rejected fixture: original Yellow End triggered prison alarm; staged guards damaged native Green Brom28 to20; native reinforcements occupied exit6,2. No original completion or co-op defect established. Exact configuration quarantined pending a NEW corrected trial.
+- **ch6-yellow-blue-rescue-agent-30**: `dolphin`; Agent Computer Use original P2 Yellow Oscar Rescue of Blue Rhys after synthetic native positioning. Original target eligibility, reciprocal pointers, role bits2/4 and common coordinates verified. Factions/HP/progression/items retained. Only original flag0x20 projection cache excluded and reported. Mounted continuation captured before movement/Wait; no carried Escape, cleanup, natural campaign or Netplay.
 
 ## Highest-priority open cases
 

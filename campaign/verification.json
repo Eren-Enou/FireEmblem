@@ -283,6 +283,11 @@
           "status": "PASS",
           "evidence": "ch6-ch7-native-load-29",
           "scope": "Synthetic original Ch6 Escape queue/Ike-last -> Ch7 preparations -> original native Chapter7 save and fresh Load; five survivor records and two away records retained. Oscar identity/HP/lv/EXP/nonempty items preserved across the whole sequence. No natural campaign, Ch7 P2 battle control, enemy reconstruction equivalence, carried Escape or Netplay claim."
+        },
+        "rescue": {
+          "status": "PASS",
+          "evidence": "ch6-yellow-blue-rescue-agent-30",
+          "scope": "Agent Computer Use original P2 Yellow Oscar Rescue of Blue Rhys after synthetic native positioning. Original target eligibility, reciprocal pointers, role bits2/4 and common coordinates verified. Factions/HP/progression/items retained. Only original flag0x20 projection cache excluded and reported. Mounted continuation captured before movement/Wait; no carried Escape, cleanup, natural campaign or Netplay."
         }
       }
     },
@@ -1894,6 +1899,81 @@
         }
       ],
       "description": "Rejected fixture: original Yellow End triggered prison alarm; staged guards damaged native Green Brom28 to20; native reinforcements occupied exit6,2. No original completion or co-op defect established. Exact configuration quarantined pending a NEW corrected trial."
+    },
+    "ch6-yellow-blue-rescue-agent-30": {
+      "kind": "dolphin",
+      "commit": "e997212",
+      "fixture_generation_commit": "84f87f1",
+      "fingerprint": "ea5eb5fdbcd75004",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_original_positioning",
+      "chapters": [
+        "7"
+      ],
+      "axes": [],
+      "reported_by": "Codex agent via authorized Computer Use, not human observation",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/before/state.sav",
+          "sha256": "ffb0bb56a94273eb26a82562af13a499679fa00683828a3ae5706f6979a8ce0c"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/before/GFEE01.ini",
+          "sha256": "0568cad038926ea305284fbc262e97922829e091a60fd27713dfe3453af72132"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/before/snapshot.json",
+          "sha256": "e222a3ed0d630a5bbd03865c8ec2ea31ec0ace067760228187420416c717c557"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/before/manifest.json",
+          "sha256": "815f9440a84096c2d31f7d2e3ef7cfdaa7a767125918dcf5d3fa745c36a33625"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/after/state.sav",
+          "sha256": "33dc7fc1b2e1057870e881f07a38a84df71d16a1d277217a3611d1b85c24265d"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/after/GFEE01.ini",
+          "sha256": "0568cad038926ea305284fbc262e97922829e091a60fd27713dfe3453af72132"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/after/snapshot.json",
+          "sha256": "92199e7c3f3396ae76df66f610dc0dd431db2bffbb7756e0acfb5d9808ab7c6b"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/captures/after/manifest.json",
+          "sha256": "10f92fd64d48e20dd5d3039294c82bddded73bbdbefcbc48627bb37fcf93f1fa"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-RESCUE/observation-history/0001.json",
+          "sha256": "05a56bcfb075b7128629a5cf64b41ff4ed532b829db11ecb8a737eea4c741d15"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/rescue-result-v2.json",
+          "sha256": "82d1a36ddf2321a9b190ce1c12c89e4b10e7b12ac535c0763a905d7511c8a346"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/rescue-autoend-off.png",
+          "sha256": "a67b80b7951f4c86f8c1b6ead94d773a2dae07c85e254320332571e2f2483b31"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/rescue-original-menu.png",
+          "sha256": "fa412498015a9c68f27744b3e20ccbf40c1e3f242d1f09d1af93dca1fc26f48c"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/rescue-original-result.png",
+          "sha256": "15ea4e73b528db12c02a9c102c5bb08895cb64c2ca910875737b0db2ed8fbb63"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/rescue-original-rhys-target.png",
+          "sha256": "696c8796e5bbd1174b77bc42a351a05902275020db81f3ef7470a0fb51efec59"
+        }
+      ],
+      "description": "Agent Computer Use original P2 Yellow Oscar Rescue of Blue Rhys after synthetic native positioning. Original target eligibility, reciprocal pointers, role bits2/4 and common coordinates verified. Factions/HP/progression/items retained. Only original flag0x20 projection cache excluded and reported. Mounted continuation captured before movement/Wait; no carried Escape, cleanup, natural campaign or Netplay.",
+      "lifecycle": [
+        "rescue"
+      ]
     }
   },
   "next_cases": [

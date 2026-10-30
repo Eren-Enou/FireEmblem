@@ -105,6 +105,7 @@ def prepare(name,root):
 
 def steps(name,target):
     head=['Do not Restart Chapter, Suspend, save to memory card or advance phases. This private setup changes original positions only. All original stats, factions, items and flags are retained.',
+          'Chapter6 seeds inherit an Escape action menu: use Player2 B to cancel it, then B to cancel Move. Wait at the idle map for native positioning; never confirm inherited Escape. Chapter9 starts at the idle map.',
           'Player2: set Auto End Off (map menu E > Options). Select the Yellow actor, confirm CURRENT tile. Save before.sav with the original action/forecast menu open.']
     if name=='CH6-YELLOW-RESCUE':
         return head+['Oscar is Yellow at (13,24); Rhys is Blue at (14,24). Try the original Rescue command targeting Rhys. If unavailable, save before.sav and record exact menu/eligibility result; do not force the relationship.',

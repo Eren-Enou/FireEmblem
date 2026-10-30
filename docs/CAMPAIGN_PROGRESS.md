@@ -2,6 +2,15 @@
 
 ## Current runtime checkpoint
 
+- CAMP-AH: agent original Yellow Oscar Rescue of Blue Rhys PASS. Reciprocal
+  pointers and role bits2/4 are game-created; factions, HP/progression/items
+  retained. Captured mounted continuation before movement/Wait/Escape. Four
+  setup-only0x20 differences traced to original projected-screen cache, pinned
+  in10 signatures and separately reported; no saved evidence was edited.
+  Independent lifecycle acceptance preserves earlier fixture/Escape claims.
+  61 accepted artifacts,22 raw states/635 hooks PASS;219 tests/438 signatures.
+  Next: Oscar combat, native Lethe combat, one fatal probe, then a separate carried
+  Escape follow-up using the genuine Rescue and corrected C10 alarm staging.
 - CAMP-AG: agent Computer Use executed native Chapter7 file load, original
   preparations/Fight, Blue-to-Yellow, P1 Oscar lockout and P2 original Wait.
   Scoped PASS with two raw states and six screenshots. Oscar stays force3,

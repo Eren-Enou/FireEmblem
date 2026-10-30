@@ -115,6 +115,28 @@ class EvidenceClassificationTests(unittest.TestCase):
         data['chapters'][0]['lifecycle'] = {'invented': {'status':'NOT TESTED'}}
         with self.assertRaisesRegex(ValueError, 'unknown lifecycle'): validate(data)
 
+    def test_independent_rescue_evidence_requires_scope_provenance_and_artifact_bytes(self):
+        from tools.campaign_verify import check_artifacts,accepted_runtime_runs
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);artifact=root/'runtime.json';artifact.write_bytes(b'unit-test evidence')
+            data=ledger()
+            data['runs']['rescue']=dict(kind='dolphin',chapters=['7'],axes=[],lifecycle=['rescue'],
+                commit='test',fingerprint='test',dolphin='test',fixture_class='synthetic',
+                artifacts=[dict(path='runtime.json',sha256=hashlib.sha256(artifact.read_bytes()).hexdigest())])
+            data['chapters'][0]['lifecycle']={'rescue':dict(status='PASS',evidence='rescue',scope='one original Rescue only')}
+            validate(data)
+            self.assertEqual(accepted_runtime_runs(data),{'rescue'})
+            self.assertEqual(check_artifacts(data,root),1)
+            self.assertTrue(all(c['status']=='NOT TESTED' for c in data['chapters'][0]['checks'].values()))
+            for mutation in ('scope','provenance','failed'):
+                bad=copy.deepcopy(data)
+                if mutation=='scope':bad['runs']['rescue']['lifecycle']=['escape']
+                elif mutation=='provenance':del bad['runs']['rescue']['fingerprint']
+                else:bad['runs']['rescue']['status']='FAIL'
+                with self.subTest(mutation=mutation),self.assertRaises(ValueError):validate(bad)
+            artifact.write_bytes(b'corrupt')
+            with self.assertRaisesRegex(ValueError,'hash mismatch'):check_artifacts(data,root)
+
     def test_scope_labels_do_not_promote_models_or_incomplete_history_to_natural(self):
         passed = {'status': 'PASS'}
         self.assertEqual(evidence_level('static_cfg', passed), 'STATICALLY VERIFIED')

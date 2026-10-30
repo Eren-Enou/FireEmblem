@@ -8,9 +8,28 @@ from pathlib import Path
 STATUSES={"PASS","FAIL","INCONCLUSIVE","NOT TESTED"}
 AXES=("static_cfg","script_model","fixture","event_runtime","chapter_clear","transition","save_reload","netplay_local","netplay_two_pc")
 RUNTIME={"fixture","event_runtime","chapter_clear","transition","save_reload","netplay_local","netplay_two_pc"}
-LIFECYCLE=('conversation','temporary_transfer','permanent_recruitment','escape','roster_cleanup',
+LIFECYCLE=('conversation','temporary_transfer','permanent_recruitment','rescue','escape','roster_cleanup',
            'death_absence','stage_transition','chapter_completion','next_chapter_initialization',
            'save_reload','native_save','native_reload','ownership','netplay')
+
+
+def runtime_provenance(run):
+    if run.get('status') == 'FAIL': raise ValueError('failed diagnostic cannot establish runtime PASS')
+    if not all(run.get(k) for k in ('commit','fingerprint','dolphin','fixture_class','artifacts')):
+        raise ValueError('runtime evidence lacks provenance')
+    for artifact in run['artifacts']:
+        if not isinstance(artifact,dict) or not artifact.get('path') or not re.fullmatch(r'[0-9a-fA-F]{64}',artifact.get('sha256','')):
+            raise ValueError('runtime artifact requires a path and SHA-256')
+    if run['kind']=='netplay_two_pc' and len(set(run.get('machines',[])))<2:
+        raise ValueError('two-PC evidence requires two distinct machine declarations')
+
+
+def accepted_runtime_runs(ledger):
+    """Named accepted axes AND explicitly scoped lifecycle-only runs."""
+    return {claim['evidence'] for row in ledger['chapters']
+            for claim in [*row['checks'].values(),*row.get('lifecycle',{}).values()]
+            if claim['status']=='PASS' and
+            ledger['runs'][claim['evidence']]['kind'] in ('dolphin','netplay_local','netplay_two_pc')}
 
 
 def validate(ledger):
@@ -30,15 +49,9 @@ def validate(ledger):
                         raise ValueError("static evidence cannot establish gameplay")
                     if axis.startswith("netplay") and run["kind"]!=axis:
                         raise ValueError("Netplay topology does not match claim")
-                    if not all(run.get(k) for k in ("commit","fingerprint","dolphin","fixture_class","artifacts")):
-                        raise ValueError("runtime evidence lacks provenance")
-                    if axis in ("chapter_clear","transition") and run["fixture_class"]!="naturally_progressed":
+                    if axis in ("chapter_clear","transition") and run.get('fixture_class') and run['fixture_class']!="naturally_progressed":
                         raise ValueError("synthetic fixture cannot certify natural campaign completion")
-                    for artifact in run["artifacts"]:
-                        if not isinstance(artifact,dict) or not artifact.get("path") or not re.fullmatch(r"[0-9a-fA-F]{64}",artifact.get("sha256","")):
-                            raise ValueError("runtime artifact requires a path and SHA-256")
-                    if axis=="netplay_two_pc" and len(set(run.get("machines",[])))<2:
-                        raise ValueError("two-PC evidence requires two distinct machine declarations")
+                    runtime_provenance(run)
                 if row["key"] not in run.get("chapters", []) or axis not in run.get("axes", []):
                     raise ValueError("evidence scope does not cover this chapter/stage and axis")
         for behavior, claim in row.get('lifecycle', {}).items():
@@ -54,7 +67,9 @@ def validate(ledger):
                     raise ValueError('unknown lifecycle evidence kind')
                 if run['kind'] in ('dolphin','netplay_local','netplay_two_pc') and not any(
                         c['status']=='PASS' and c.get('evidence')==claim['evidence'] for c in row['checks'].values()):
-                    raise ValueError('runtime lifecycle must reuse accepted/hash-validated axis evidence')
+                    if behavior not in run.get('lifecycle',[]):
+                        raise ValueError('runtime lifecycle must reuse accepted/hash-validated axis evidence or declare exact lifecycle scope')
+                    runtime_provenance(run)
     return ledger
 
 
@@ -62,19 +77,15 @@ def check_artifacts(ledger, root):
     """Check local bytes for runtime PASS claims; hashes do not prove semantics."""
     validate(ledger)
     checked = set()
-    for row in ledger["chapters"]:
-        for axis in RUNTIME:
-            claim = row["checks"][axis]
-            if claim["status"] != "PASS":
-                continue
-            for artifact in ledger["runs"][claim["evidence"]]["artifacts"]:
-                path = Path(artifact["path"])
-                path = path if path.is_absolute() else root / path
-                if not path.is_file():
-                    raise ValueError(f"missing evidence artifact: {path}")
-                if hashlib.sha256(path.read_bytes()).hexdigest().lower() != artifact["sha256"].lower():
-                    raise ValueError(f"evidence artifact hash mismatch: {path}")
-                checked.add(path.resolve())
+    for run_id in accepted_runtime_runs(ledger):
+        for artifact in ledger['runs'][run_id]['artifacts']:
+            path = Path(artifact["path"])
+            path = path if path.is_absolute() else root / path
+            if not path.is_file():
+                raise ValueError(f"missing evidence artifact: {path}")
+            if hashlib.sha256(path.read_bytes()).hexdigest().lower() != artifact["sha256"].lower():
+                raise ValueError(f"evidence artifact hash mismatch: {path}")
+            checked.add(path.resolve())
     return len(checked)
 
 

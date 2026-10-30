@@ -2,6 +2,29 @@
 
 Reverse-engineering findings, with source and confidence for each.
 
+### CAMP-026 — Unit flag0x20 caches original projected screen bounds
+
+**VERIFIED-STATIC plus observed runtime deltas**, GFEE01 rev0. Original display
+loop call `0x80016B50` invokes unit worker `0x8004E178`. The worker transforms the
+unit's display coordinates, reads a transformed component at `0x8004E550`, and
+stores projected components beginning at unit+0x170 (`0x8004E560`). Bounds checks
+from `0x8004E580` branch to `0x8004E628` when outside the view; `0x8004E62C` ORs
+only0x20 into unit+0x1A0. The inside path at `0x8004E5AC` uses maskFFFFFFDF,
+clearing only0x20. These sites and the worker entry are pinned in check_signatures.
+Confidence: original projection-dependent cache updates are demonstrated by code;
+the complete set of possible readers/writers is not claimed here.
+
+In CH6-YELLOW-RESCUE, native menu cancellation, position setup and camera tracking
+changed only flag0x20 on four source records before the action (slots10/14/16/17).
+The original Rescue then produced expected reciprocal pointers/role bits, with
+no unrelated action delta. Raw captures/snapshots are preserved unchanged.
+The action verifier excludes only0x20 in source/setup and unrelated-roster
+comparisons, reports its exact deltas, and checks every other captured field.
+Additional Rescue flag changes beyond role/acted bits are rejected. This local
+comparison policy is not a claim that0x20 is absent from native saves: F-52's raw
+flag serialization still applies. Do not extend this exclusion to native-save,
+whole-engine or chapter-boundary acceptance without a separate contract.
+
 ### CAMP-025 — Original enemy-phase prerequisites invalidate an ending fixture
 
 2026-10-29, **runtime observed by Codex Computer Use**, synthetic Chapter10

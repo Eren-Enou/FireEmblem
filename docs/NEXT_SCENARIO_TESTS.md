@@ -4,7 +4,8 @@ Prepared offline on `codex/campaign-compatibility`, 2026-10-29. **Runtime update
 CH7-PLAYER2-CONTROL PASS through agent Computer Use (CAMP-AG). The original
 CH10-CHAPTER-COMPLETE configuration is rejected/quarantined (CAMP-AF): native
 guards damage Brom and alarm reinforcements occupy the exit. Do not relaunch it.
-The four action probes remain NOT TESTED.** The four previously accepted scenarios and
+CH6-YELLOW-RESCUE now has a scoped agent runtime PASS (CAMP-AH); the three combat
+probes remain NOT TESTED.** The four previously accepted scenarios and
 their captures are preserved; they do not need repeating. No Dolphin launch or
 input occurred during this preparation.
 
@@ -32,6 +33,12 @@ another instance. P1: arrows/X/Z/D; P2: numpad8/5/4/6, M/N/E.
 
 For each name substitute it in `-Scenario NAME -Check` and then `-Scenario NAME`.
 The printed steps are scenario-specific. Set **Auto End Off** before actions.
+Chapter6 seeds inherit an old Escape action menu. With P2, cancel the menu with
+B and cancel Move with B again, then wait at the idle map for native positioning.
+Never confirm that inherited Escape. Use original Next Unit to find Oscar's new
+tile before selecting him. The Chapter6 seed has Auto End On: explicitly switch
+it Off through Options; the selected value is green. Raw position-only setup
+comparisons report flag0x20 screen-projection updates separately (RESEARCH CAMP-026).
 Do not select Restart Chapter in redirected/state-backed fixtures. For the
 native-only Chapter7 scenario, the original title menu **Restart Chapter >
 Ch.7: Shades of Evil** is the normal native file-loading route; select that
