@@ -8,7 +8,7 @@ from pathlib import Path
 STATUSES={"PASS","FAIL","INCONCLUSIVE","NOT TESTED"}
 AXES=("static_cfg","script_model","fixture","event_runtime","chapter_clear","transition","save_reload","netplay_local","netplay_two_pc")
 RUNTIME={"fixture","event_runtime","chapter_clear","transition","save_reload","netplay_local","netplay_two_pc"}
-LIFECYCLE=('conversation','temporary_transfer','permanent_recruitment','rescue','escape','roster_cleanup',
+LIFECYCLE=('conversation','temporary_transfer','permanent_recruitment','rescue','combat','escape','roster_cleanup',
            'death_absence','stage_transition','chapter_completion','next_chapter_initialization',
            'save_reload','native_save','native_reload','ownership','netplay')
 

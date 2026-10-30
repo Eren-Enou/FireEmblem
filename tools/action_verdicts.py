@@ -24,9 +24,16 @@ def verify(name,snaps,observed,source,setup,fingerprint):
     failures=[];spec=SPECS[name];chapter=source['chapter']
     common(snaps,dict(before=chapter,after=chapter),fingerprint,failures)
     games={k:snaps[k]['game'] for k in ('before','after')}
+    event_effects=[]
     for label,g in games.items():
         if (g['phase'],g['turn'],g['control'][3])!=(3,1,1):failures.append(label+': same original human Yellow turn required')
-        if g['event_flags']!=source['event_flags']:failures.append(label+': original event flags changed')
+        if label=='before':
+            flags_ok=g['event_flags']==source['event_flags']
+        else:
+            from tools.combat_event_contract import event_effect
+            flags_ok,effect=event_effect(name,source['event_flags'],g['event_flags'],g['phase'])
+            if effect:event_effects.append(effect)
+        if not flags_ok:failures.append(label+': original event flags changed outside the bounded action contract')
     before,after=games['before'],games['after']
     expected=[dict(u) for u in source['units']]
     for row in setup['records']:
@@ -90,5 +97,6 @@ def verify(name,snaps,observed,source,setup,fingerprint):
            'partner':'original transformed native Yellow Lethe combat; gauge/EXP measured, cleanup/recruitment NOT TESTED'}[kind]
     return result(failures,observed,spec['observations'],scope,
                   actor_changes={k:[a[k],b[k]] for k in a if a[k]!=b[k]},
+                  original_event_effects=event_effects,
                   render_cache_changes=dict(setup=render_deltas(expected,before['units']),action=render_deltas(before['units'],after['units'])),
                   comparison_exclusion='unit flags0x20 original projected-screen-bounds cache; all other fields remain checked')

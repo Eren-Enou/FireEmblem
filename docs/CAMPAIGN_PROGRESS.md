@@ -2,6 +2,14 @@
 
 ## Current runtime checkpoint
 
+- CAMP-AI: original P2 Oscar attack PASS: ArcherHP21 ->1, OscarHP28 unchanged,
+  EXP28 ->45, Iron Lance39 ->37, same Yellow turn1 and no follow-up movement/Wait.
+  Transient EXP bar not captured; raw-state values verified. Original C07 discovery
+  flag effect traced through scene17 and reported separately. Scene15's force0-only
+  movement/discovery scan is a separate static risk, not a reproduced blocker.
+  Next runtime: native Lethe combat, then one fatal probe; carried Escape and C10
+  corrected ending staging remain independent follow-ups. Production codes unchanged.
+  221 tests/438 signatures;75 accepted artifacts,24 raw states/693 hooks PASS.
 - CAMP-AH: agent original Yellow Oscar Rescue of Blue Rhys PASS. Reciprocal
   pointers and role bits2/4 are game-created; factions, HP/progression/items
   retained. Captured mounted continuation before movement/Wait/Escape. Four
@@ -9,7 +17,8 @@
   in10 signatures and separately reported; no saved evidence was edited.
   Independent lifecycle acceptance preserves earlier fixture/Escape claims.
   61 accepted artifacts,22 raw states/635 hooks PASS;219 tests/438 signatures.
-  Next: Oscar combat, native Lethe combat, one fatal probe, then a separate carried
+  Next at this checkpoint was Oscar combat (now CAMP-AI), native Lethe combat,
+  one fatal probe, then a separate carried
   Escape follow-up using the genuine Rescue and corrected C10 alarm staging.
 - CAMP-AG: agent Computer Use executed native Chapter7 file load, original
   preparations/Fight, Blue-to-Yellow, P1 Oscar lockout and P2 original Wait.
@@ -24,8 +33,8 @@
   and immutable declaration revisions. Candidate audit preserves rejected cases
   and independently reports actual runtime statuses.218 tests/428 signatures;
   47 accepted artifacts,20 raw states/577 hooks verified.
-- Next: original CH6-YELLOW-RESCUE, CH6-YELLOW-COMBAT, CH9-PARTNER-COMBAT and
-  one CH6-YELLOW-FATAL probe. Then investigate C10 alarm/detection and all Green
+- Remaining original action probes: CH9-PARTNER-COMBAT and one CH6-YELLOW-FATAL.
+  Then investigate C10 alarm/detection and all Green
   positions before a replacement ending fixture. Accepted Rescue is required
   before carried Escape. Later-chapter original-history prerequisites remain open.
 

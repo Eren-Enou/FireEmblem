@@ -2,6 +2,32 @@
 
 Reverse-engineering findings, with source and confidence for each.
 
+### CAMP-027 — Chapter6 combat has an original discovery-flag effect
+
+Original Scripts/C07.cmb SHA256
+`c4bb776bfc12cbcacb7bad6cebd906d1e9d88b609cd535a9d51410b20a8feacc`
+(already pinned by campaign_event_model.load_scripts). Scene17, file offsets
+9180..9229, kind9 metadata [191,191,1,224], reads BMGetPhase. Phase1 uses
+MindGetTarget; every other phase uses MindGetMe. It writes that token with
+BMSetValue(1,unit), then sets `見つかるトリガ` (discovery trigger). The strict
+bytecode VM executes phase0/1/3 branches with explicit actor/target native facts;
+this fragment contains no force0-only test. Complete native scene dispatch and
+the meaning of its full registration metadata remain outside that model.
+
+Runtime CAMP-AI: one original P2 Oscar attack changed exactly this flag false
+to true, alongside target damage, EXP and weapon use. The action verifier admits
+only unchanged event tables or this specific forward original C07 effect for the
+two Chapter6 combat probes. Rescue/Chapter9 cannot use that exception, reverse
+changes and other flag changes fail, and all effects are reported. No flag or
+gameplay code was edited to obtain a pass. The raw result preserves the change.
+
+Scene15 separately reads the discovery event/trigger and, when no trigger exists,
+scans **force0** via ForceGetCount(0)/ForceGetFirst(0), checking original terrain.
+This suggests a separate Yellow-only movement/discovery risk; it is a static
+finding, not a demonstrated campaign blocker. The later original discovery
+presentation/AI change has not been executed in this one-action test. A future
+movement probe must preserve its original terrain and phase prerequisites.
+
 ### CAMP-026 — Unit flag0x20 caches original projected screen bounds
 
 **VERIFIED-STATIC plus observed runtime deltas**, GFEE01 rev0. Original display

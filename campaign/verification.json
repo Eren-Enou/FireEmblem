@@ -288,6 +288,11 @@
           "status": "PASS",
           "evidence": "ch6-yellow-blue-rescue-agent-30",
           "scope": "Agent Computer Use original P2 Yellow Oscar Rescue of Blue Rhys after synthetic native positioning. Original target eligibility, reciprocal pointers, role bits2/4 and common coordinates verified. Factions/HP/progression/items retained. Only original flag0x20 projection cache excluded and reported. Mounted continuation captured before movement/Wait; no carried Escape, cleanup, natural campaign or Netplay."
+        },
+        "combat": {
+          "status": "PASS",
+          "evidence": "ch6-yellow-combat-agent-30",
+          "scope": "Agent executed ONE original P2 Yellow Oscar attack from synthetic positioning: ArcherHP21 to1, OscarHP28 unchanged, EXP28 to45, IronLance39 to37. Same Yellow turn; mounted continuation captured before movement/Wait. Original discovery flag effect matches bounded pinned C07 scene17; later discovery dispatch/cutscene unverified. Transient EXP bar not photographed; result values independently decoded. No natural campaign, chapter completion, level-up or Netplay claim."
         }
       }
     },
@@ -1974,6 +1979,81 @@
       "lifecycle": [
         "rescue"
       ]
+    },
+    "ch6-yellow-combat-agent-30": {
+      "kind": "dolphin",
+      "commit": "d33f308",
+      "fixture_generation_commit": "84f87f1",
+      "fingerprint": "c480776d604082cb",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_original_positioning",
+      "chapters": [
+        "7"
+      ],
+      "axes": [],
+      "lifecycle": [
+        "combat"
+      ],
+      "reported_by": "Codex agent Computer Use and independent raw-state analysis",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/before/state.sav",
+          "sha256": "a51c47baed2ea55f3a1bb20dc548a166a715fb069b2a80b7a0a377e2e6f2c4c1"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/before/GFEE01.ini",
+          "sha256": "6f13abf29fbd5957648b892623feb7d949ead4f3307f6920d5866dd1eedcd37c"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/before/snapshot.json",
+          "sha256": "daa28ad27b8f194b810a652d89c760e2fb939ed4db429bedb3afd46666940f7f"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/before/manifest.json",
+          "sha256": "539717007a4564c29ed9c64fcaafc416ad447ce16bb235b89f5418b40852e6b9"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/after/state.sav",
+          "sha256": "294113e5b9306992f5401d315c18f12403dea1e670a878b6432b49b8d01977d3"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/after/GFEE01.ini",
+          "sha256": "6f13abf29fbd5957648b892623feb7d949ead4f3307f6920d5866dd1eedcd37c"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/after/snapshot.json",
+          "sha256": "51de82749567ac0439b307db3977d85cd6c1ac870ab3fa8a61be1ee9bdb2c367"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/after/manifest.json",
+          "sha256": "94b254e8d875c58dc90875df4ed7cf5eaf4e1af352a7ce8707a535d5cc847811"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-COMBAT/observation-history/0001.json",
+          "sha256": "b1eebecf423713ac575919db807d320aa5a48f6fccfd0df835ece354097cdd87"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/combat-result-v2.json",
+          "sha256": "3ae6aafb11aec5ac41d9e28278e0b8bebbabb5bc6012ad80ad668283724dc2b2"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/combat-autoend-off.png",
+          "sha256": "fe9f28c7f9274418d54afaa1cc424c72c03cffb6ca9d366dac87ca0b6b488186"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/combat-original-forecast.png",
+          "sha256": "14ca228091a9c5984022f9c6aab4e057c4283b0ca86b3037f71827ba0936246e"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/combat-original-result.png",
+          "sha256": "c2f16e31a9681515511e6a83107c9b1bd6cbea19c0ed366d6cfedeec04b67f2f"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/combat-weapon-before.png",
+          "sha256": "8e32dfd0b8a71f806882265c8bf3fc9f6d35393576fa0d3c01082540bd0a5fcd"
+        }
+      ],
+      "description": "Agent executed ONE original P2 Yellow Oscar attack from synthetic positioning: ArcherHP21 to1, OscarHP28 unchanged, EXP28 to45, IronLance39 to37. Same Yellow turn; mounted continuation captured before movement/Wait. Original discovery flag effect matches bounded pinned C07 scene17; later discovery dispatch/cutscene unverified. Transient EXP bar not photographed; result values independently decoded. No natural campaign, chapter completion, level-up or Netplay claim."
     }
   },
   "next_cases": [

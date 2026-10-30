@@ -1,5 +1,45 @@
 # Testing
 
+## CAMP-AI — Original P2 Oscar attack, damage, EXP and weapon use
+
+**PASS, local synthetic-positioning combat**, 2026-10-30. Agent Computer Use
+resumed verified private PID72516, CH6-YELLOW-COMBAT. Cancelled inherited Escape
+and Move, allowed native positioning, changed original Autoend Turns On ->Off,
+then Next Unit found Oscar15,13. Confirmed CURRENT tile, original Attack and his
+existing Iron Lance39/45. Original forecast: Archer21HP, Oscar28HP,10 damage x2,
+93hit/1crit and no bow counterattack. Saved before.sav, confirmed exactly ONE
+attack command, and captured mounted movement continuation before moving/Wait.
+R status was tried once there and ignored. No phase advance, repeated attack,
+state restoration, game-memory outcome edit or native card write.
+
+Before SHA256 `a51c47baed2ea55f3a1bb20dc548a166a715fb069b2a80b7a0a377e2e6f2c4c1`;
+after `294113e5b9306992f5401d315c18f12403dea1e670a878b6432b49b8d01977d3`.
+Original C07/internal7, Yellow turn1, live2912-byte fingerprint
+`c480776d604082cb`. Oscar remains force3/slot2/PID_OSCAR, HP28/lv6 at15,13;
+EXP28 ->45, first Iron Lance uses39 ->37. Archer slot13 stays force1 at15,14,
+HP21 ->1. No unrelated roster action delta. Transient EXP bar was **not**
+visually captured: original pre-action EXP/uses/forecast are photographed;
+post-action damage/gain/consumption are independently decoded from raw states.
+This is not a new EXP-bar-display or level-up test.
+
+One original event key, `見つかるトリガ`, changed false ->true. The first review
+rejected it under an overly strict no-event-change contract. Pinned original
+C07 scene17 then established this precise effect through aligned bytecode/VM
+branches (CAMP-027). Only that forward effect in the Chapter6 combat probes is
+now admitted and reported. Other flag changes/reversal/wrong chapter still fail.
+Native event dispatch and the later discovery presentation remain unverified.
+All raw captures/snapshots remain unchanged; no production gameplay code changed.
+
+Evidence: `work/scenarios/human_v1/CH6-YELLOW-COMBAT/captures/`, immutable
+observation-history/0001.json, four screenshots and combat-result-v2.json under
+`work/agent_runtime_20261029_v1/`. Ledger ch6-yellow-combat-agent-30 accepts an
+independent combat lifecycle result, retaining earlier fixture/Escape/Rescue
+claims. Natural campaign, chapter completion and Netplay remain untested.
+
+Validation:221 tests PASS (required tests.test_tools51),438/438 signatures;
+75 accepted artifacts,24 raw states and693 saved hook continuations rechecked PASS.
+Stable2536 and this private2912-byte configuration remain unchanged.
+
 ## CAMP-AH — Original Yellow Oscar Rescue of Blue Rhys
 
 **PASS, local synthetic-positioning action**, reviewed 2026-10-30. Codex used
