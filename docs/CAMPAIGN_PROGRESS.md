@@ -2,6 +2,13 @@
 
 ## Current runtime checkpoint
 
+- CAMP-AL: a NEW carried_exit_v1 original Rescue-at-exit candidate is offline
+  prepared at2936 bytes. Original exit and North-edge/capacity/faction checks pass;
+  South-edge proposal was rejected. Original commands must create the relationship
+  and Escape; runtime NOT TESTED, no automatic carried PASS. Older accepted Rescue
+  remains untouched. Next runtime is this short separate trial.
+  227 tests/450 signatures PASS; accepted runtime evidence unchanged90/26/751.
+
 - CAMP-AJ native Yellow Lethe original combat PASS: Archer defeated, Lethe34HP,
   EXP0 ->11, gauge20 ->19, force3/unassigned retained. CAMP-AK Oscar one-attack
   fatal probe INCONCLUSIVE: survived original Emil combat, no repeated attack

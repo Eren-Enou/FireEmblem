@@ -16,6 +16,9 @@ from tools.talk_evidence import cell
 C6=ROOT/'work/fixtures/ch6_escape_native_v2'
 C7=ROOT/'work/scenarios/human_v1/CH6-IKE-COMPLETE/captures/reloaded/profile'
 SPECS={
+ 'CH6-CARRIED-ESCAPE':dict(actor='PID_OSCAR',target_slot=14,
+     positions={'PID_EMAKOU':(15,13),'PID_OSCAR':(13,26),'PID_KILROY':(13,25)},
+     kind='rescue',observations=['original_rescue','p2_command','original_escape','no_unexpected_behavior']),
  'CH6-YELLOW-RESCUE':dict(actor='PID_OSCAR',target_slot=14,positions={'PID_OSCAR':(13,24),'PID_KILROY':(14,24)},
      kind='rescue',observations=['original_rescue','p2_command','no_unexpected_behavior']),
  'CH6-YELLOW-COMBAT':dict(actor='PID_OSCAR',target_slot=13,positions={'PID_OSCAR':(15,13)},
@@ -26,6 +29,26 @@ SPECS={
      kind='partner',observations=['p2_original_attack','damage_observed','native_partner_unassigned','no_unexpected_behavior']),
 }
 NAMES=tuple(SPECS)
+
+
+def destinations(positions,units,read_cell):
+    """Ordered native moves may use only empty or explicitly earlier-vacated tiles.
+
+    Never accept a destination occupied by a unit that moves later, and never
+    assume source records alone prove the grid is empty.
+    """
+    if len(set(positions.values()))!=len(positions):raise ValueError('duplicate setup destination')
+    vacated={};grids={}
+    for pid,xy in positions.items():
+        matches=[u for u in units if u['pid']==pid]
+        if len(matches)!=1:raise ValueError('unique setup identity required')
+        u=matches[0];grid=read_cell(*xy)
+        if grid['occupant_id'] not in (0,u['slot'],vacated.get(tuple(xy),-1)):
+            raise ValueError('occupied destination not vacated by an earlier native move')
+        if not grid['edge_mask']&15:raise ValueError('invalid destination edge grid')
+        grids[pid]=grid
+        if tuple(u['xy'])!=tuple(xy):vacated[tuple(u['xy'])]=u['slot']
+    return grids
 
 
 def source(name):
@@ -47,12 +70,12 @@ def prepare(name,root):
     root=work_destination(root);spec=SPECS[name];state,ini,snap=source(name)
     g=snap['game'];_,mem=load_mem1(state,DEFAULT_IMAGE)
     target=next(u for u in g['units'] if u['slot']==spec['target_slot'])
+    grids=destinations(spec['positions'],g['units'],lambda x,y:cell(mem,x,y))
     records=[]
     for pid,xy in spec['positions'].items():
         matches=[u for u in g['units'] if u['pid']==pid]
         if len(matches)!=1:raise ValueError('unique actor required')
-        u=matches[0];grid=cell(mem,*xy)
-        if grid['occupant_id'] not in (0,u['slot']) or not grid['edge_mask']&15:raise ValueError('occupied/invalid destination')
+        u=matches[0];grid=grids[pid]
         if u['rescue_link'] or u['hp']<=0 or u['flags']&1:raise ValueError('living available unrescued actor required')
         addr=UNITS+(u['slot']-1)*0x280
         records.append(dict(pid=pid,slot=u['slot'],unit=addr,character=mem.u32(addr+0x188),force=u['force'],source_xy=u['xy'],destination_xy=xy,grid=grid))
@@ -65,6 +88,14 @@ def prepare(name,root):
         from tools.action_prerequisites import rescue
         prerequisites=rescue(mem,actor['slot'],target['slot'],actorxy,targetxy)
         if not prerequisites['all_bounded_predicates']:raise ValueError('bounded original Rescue predicate rejected')
+    if name=='CH6-CARRIED-ESCAPE':
+        from tools.escape_scenarios import geometry
+        from tools.campaign_test_pack import review
+        reference=ROOT/'work/scenarios/human_v1/CH6-YELLOW-RESCUE'
+        if review(reference)['status']!='PASS':raise ValueError('accepted original Rescue reference required')
+        prerequisites['original_exit']=geometry(mem,dict(chapter=7,exit=(13,26)))
+        prerequisites['accepted_rescue_reference']={str(p):sha(p) for p in (
+            reference/'captures/before/state.sav',reference/'captures/after/state.sav')}
     text=build_ini(['COOP-P6','EXP-16'],verbose=False)
     name_line='$DBG-CAMP-ACTION '+name+' original-command probe'
     body=words(g['chapter'],3,1,records)
@@ -74,6 +105,7 @@ def prepare(name,root):
     cards=sorted((C7/'GC/USA/Card A').glob('*.gci'))
     if len(cards)!=1 or sha(cards[0])!='99446e1b65ed44ec60e10da9232d5ab894b48a6cc018a8e7eb6fc24445e429ca':raise ValueError('accepted disposable card copy required')
     originals={str(p):sha(p) for p in [state,ini,*[p for p in (C7/'GC').rglob('*') if p.is_file()]]}
+    if name=='CH6-CARRIED-ESCAPE':originals.update(prerequisites['accepted_rescue_reference'])
     root.mkdir(parents=True)
     make_user(root/'User',DEFAULT_IMAGE.parent.resolve(),'PRIVATE '+name,PORT1_KEYBOARD,text,pad2=PORT2_KEYBOARD)
     for src in (C7/'GC').rglob('*'):
@@ -87,7 +119,8 @@ def prepare(name,root):
     checked=capture(root/'seed.s02.sav',DEFAULT_IMAGE,root/'User/GameSettings/GFEE01.ini','offline-repacked')
     if checked['game']!=g or not checked['evidence']['intended_c2_verified']:raise ValueError('seed changed game data or failed live codes')
     instructions=steps(name,target)
-    case=dict(id=name,title=name+' original '+spec['kind']+' interaction',captures=['before','after'],
+    case=dict(id=name,title=name+' original '+spec['kind']+' interaction',
+              captures=['before_rescue','before','after'] if name=='CH6-CARRIED-ESCAPE' else ['before','after'],
               observations=spec['observations'],steps=instructions,classification='synthetic_original_positioning')
     write_json(root/'case.json',case)
     write_json(root/'observations.json',dict(observed=dict.fromkeys(spec['observations']),notes=''))
@@ -107,6 +140,13 @@ def steps(name,target):
     head=['Do not Restart Chapter, Suspend, save to memory card or advance phases. This private setup changes original positions only. All original stats, factions, items and flags are retained.',
           'Chapter6 seeds inherit an Escape action menu: use Player2 B to cancel it, then B to cancel Move. Wait at the idle map for native positioning; never confirm inherited Escape. Chapter9 starts at the idle map.',
           'Player2: set Auto End Off (map menu E > Options). Select the Yellow actor, confirm CURRENT tile. Save before.sav with the original action/forecast menu open.']
+    if name=='CH6-CARRIED-ESCAPE':
+        return head[:2]+[
+          'NEW synthetic setup: Emil moves from13,25 to15,13; Oscar remains13,26 on the original exit; Blue Rhys moves to13,25. No stats, relationships, faction, story or completion flags are edited. Do not advance phase.',
+          'Set Auto End Off through original Options. Select Oscar, confirm CURRENT exit tile, choose original Rescue targeting Rhys to the north. Save before_rescue.sav before confirming Rescue.',
+          'Execute Rescue ONCE. Save before.sav after the carrying icon appears, before another command. This relationship must be game-created; never inject rescue links.',
+          'During original mounted continuation confirm CURRENT tile. Inspect whether original Escape is offered. If it is absent, save after.sav and record INCONCLUSIVE; do not Wait/end phase to force availability.',
+          'If Escape is offered, choose it once, confirm original Yes/dialogue if required, and save after.sav on this same map. Stop before phase/chapter advance. Engineering review must inspect both retained identities, forces, flags, positions and reciprocal links; no automatic carried-Escape PASS is issued yet.']
     if name=='CH6-YELLOW-RESCUE':
         return head+['Oscar is Yellow at (13,24); Rhys is Blue at (14,24). Try the original Rescue command targeting Rhys. If unavailable, save before.sav and record exact menu/eligibility result; do not force the relationship.',
           'If Rescue is offered, execute it once and save after.sav on the SAME Yellow turn, before another action. This prepares genuine carrier/passenger evidence; do not Escape yet. Carried Escape needs a separately validated follow-up fixture.']

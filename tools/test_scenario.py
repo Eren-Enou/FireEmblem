@@ -38,7 +38,6 @@ def scenario_dir(name, root=PACKAGE):
 BLOCKED = {
     'CH10-PRISONER-CLEANUP': 'Superseded by the separate CH10-CHAPTER-COMPLETE candidate. Original ending/permanent recruitment is still runtime unverified.',
     'CH17-STAGE-TRANSITIONS': 'Needs original stage-specific map and near-clear state, roster, difficulty and stage/story history for all four stages. Shared C18 script alone cannot establish the stage.',
-    'CH6-CARRIED-ESCAPE': 'Needs an original executed Rescue and captured reciprocal relationship. CH6-YELLOW-RESCUE prepares that action without faking links. A carried Escape fixture must be derived separately from accepted Rescue evidence.',
     'CH9-PARTNER-CLEANUP': 'Accepted native transformation/Wait and new combat candidate do not supply original near-clear history. No chapter-completion/recruitment outcome is synthesized.',
 }
 

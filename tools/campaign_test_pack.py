@@ -343,6 +343,20 @@ def _review(case_dir):
             path=(case_dir/relative).resolve()
             if case_dir.resolve() not in path.parents or sha(path)!=digest:
                 return dict(status='FAIL',failures=['immutable scenario prerequisite changed: '+relative])
+        if case['id']=='CH6-CARRIED-ESCAPE':
+            # Original relationship creation is checked independently. The native
+            # carried Escape branch still needs engineering review; never infer
+            # success from disappearance or a generated starting fixture.
+            first=verify('CH6-YELLOW-RESCUE',
+                         dict(before=snapshots['before_rescue'],after=snapshots['before']),
+                         observed,original['game'],setup['setup'],setup['fingerprint'])
+            if first['status']!='PASS':return first
+            return dict(status='INCONCLUSIVE',failures=[],
+                        scope='Original Rescue validated; carried Escape outcome requires independent native-branch review',
+                        actor_passenger={label:[u for u in snap['game']['units'] if u['pid'] in ('PID_OSCAR','PID_KILROY')]
+                                         for label,snap in snapshots.items()},
+                        original_escape_observed=observed.get('original_escape'),
+                        excludes=['chapter completion','native save/reload','natural campaign','Netplay'])
         return verify(case['id'],snapshots,observed,original['game'],setup['setup'],setup['fingerprint'])
     if case['id'] in ('CH10-CHAPTER-COMPLETE','CH7-PLAYER2-CONTROL'):
         from tools.next_scenarios import source,positioning

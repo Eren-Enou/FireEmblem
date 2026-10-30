@@ -1,5 +1,26 @@
 # Next short owner-operated tests
 
+New follow-up, **offline prepared / runtime NOT TESTED**: `CH6-CARRIED-ESCAPE`
+under a separate `carried_exit_v1` trial. Native position-only setup places Oscar
+on original exit13,26 and Rhys north13,25 after moving Emil to15,13. This avoids
+the blocked route from CAMP-AH's Rescue tile. Original South edge at13,26 is
+closed: Rhys13,27 was rejected by the bounded Rescue predicate, not assumed valid.
+North edge/capacity/faction gates pass; actual Rescue and post-Rescue Escape
+availability remain runtime tests. No rescue links or outcome flags are synthesized.
+2936/3248 bytes, fingerprint `8a309c26dca97928`; old profiles untouched.
+
+```powershell
+.\Test-Scenario.ps1 -Trial carried_exit_v1 -Scenario CH6-CARRIED-ESCAPE -Check
+.\Test-Scenario.ps1 -Trial carried_exit_v1 -Scenario CH6-CARRIED-ESCAPE
+```
+
+Capture `before_rescue.sav`, `before.sav` (genuine carrying relationship), and
+`after.sav` in `work/scenarios/carried_exit_v1/CH6-CARRIED-ESCAPE/`. Follow the
+printed instructions. If mounted continuation offers no Escape, preserve the menu
+and stop; no phase advance/Wait to force it. Collection/review require the SAME
+`-Trial carried_exit_v1`. The original Rescue stage is checked independently;
+carried Escape deliberately remains INCONCLUSIVE pending native-branch review.
+
 Prepared offline on `codex/campaign-compatibility`, 2026-10-29. **Runtime update:
 CH7-PLAYER2-CONTROL PASS through agent Computer Use (CAMP-AG). The original
 CH10-CHAPTER-COMPLETE configuration is rejected/quarantined (CAMP-AF): native

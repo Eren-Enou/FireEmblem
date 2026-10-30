@@ -288,13 +288,16 @@ class LauncherTests(unittest.TestCase):
         from tools.test_scenario import check,NEXT,scenario_dir
         for name in NEXT:
             with self.subTest(name=name):
-                obs_path=scenario_dir(name)/'observations.json'
+                trial='carried_exit_v1' if name=='CH6-CARRIED-ESCAPE' else 'human_v1'
+                root=ROOT/'work/scenarios'/trial
+                obs_path=scenario_dir(name,root)/'observations.json'
+                if not obs_path.is_file():continue  # New trials are optional private prerequisites.
                 before=obs_path.read_bytes()
                 if name=='CH10-CHAPTER-COMPLETE':
-                    with self.assertRaisesRegex(ValueError,'CAMP-AF'):check(name)
+                    with self.assertRaisesRegex(ValueError,'CAMP-AF'):check(name,root=root)
                     self.assertEqual(obs_path.read_bytes(),before)
                     continue
-                p=check(name)
+                p=check(name,root=root)
                 self.assertLessEqual(p['gecko_bytes'],3248)
                 self.assertEqual('--save_state' in p['arguments'],name!='CH7-PLAYER2-CONTROL')
                 self.assertEqual(obs_path.read_bytes(),before)

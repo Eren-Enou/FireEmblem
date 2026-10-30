@@ -1,5 +1,33 @@
 # Testing
 
+## CAMP-AL — Separate original Rescue-at-exit/carried Escape candidate
+
+**OFFLINE PASS / runtime NOT TESTED**, 2026-10-30. New ignored trial
+work/scenarios/carried_exit_v1/CH6-CARRIED-ESCAPE,2936 bytes, fingerprint
+8a309c26dca97928. Source is the original unrescued Chapter6 state, with accepted
+CAMP-AH before/after raw hashes retained as prerequisite references. No old state,
+profile/card or accepted capture was changed. Position-only native calls move
+Emil13,25 ->15,13 then keep Oscar13,26 and move Rhys to13,25. No relationship,
+faction, action, stat, inventory, story, death or completion stores were added.
+
+Original kind5/action14 unkeyed Escape record identifies13,26. Actual edge75
+admits North8; South4 is absent, so attempted Rhys13,27 geometry was rejected.
+North Rescue predicate passes with capacity33/8, relation2, native role/ability
+and terrain checks. Ordered destination checks reject unrelated occupancy, later
+vacating moves, duplicate destinations, missing identities and invalid edges.
+The generated hook retains its live original GetByPos empty-destination check.
+Raw repacking preserves the complete decoded game snapshot and verified C2 body/
+return; no synthetic carrying link is constructed.
+
+The scenario captures before_rescue/before/after. Original Rescue must establish
+the pair; Escape availability during mounted continuation must be observed.
+Absent Escape is INCONCLUSIVE. No automatic carried-outcome PASS is emitted;
+native branch/retention still requires independent review of genuine captures.
+Guide: NEXT_SCENARIO_TESTS.md, using -Trial carried_exit_v1 for every command.
+Validation:227 tests PASS, including required tests.test_tools51;450/450
+original signatures. Accepted runtime evidence remains90 artifacts/26 states/
+751 hook continuations; this prepared fixture adds no runtime acceptance.
+
 ## CAMP-AJ / CAMP-AK — Native Yellow combat and surviving fatal probe
 
 2026-10-30, agent Computer Use, separate private profiles, runtime commit
