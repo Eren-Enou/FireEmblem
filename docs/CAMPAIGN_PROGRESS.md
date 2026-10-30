@@ -2,6 +2,17 @@
 
 ## Current runtime checkpoint
 
+- CAMP-AJ native Yellow Lethe original combat PASS: Archer defeated, Lethe34HP,
+  EXP0 ->11, gauge20 ->19, force3/unassigned retained. CAMP-AK Oscar one-attack
+  fatal probe INCONCLUSIVE: survived original Emil combat, no repeated attack
+  or HP edit. Original boss dialogue effect now bounded by C07 scene19 tests;
+  chapter234 byte has a separate original statistics writer, not exclusive death.
+  All six prepared scenarios attempted. Four scoped passes; C10 staging failed
+  and remains quarantined; fatal transition absent. No production gameplay fix.
+  223 tests/450 signatures;90 accepted artifacts,26 raw states/751 hooks PASS.
+  Next: genuine carried Escape from accepted Rescue, corrected C10 ending
+  staging with native Green/alarm prerequisites, then valid later-stage sources.
+
 - CAMP-AI: original P2 Oscar attack PASS: ArcherHP21 ->1, OscarHP28 unchanged,
   EXP28 ->45, Iron Lance39 ->37, same Yellow turn1 and no follow-up movement/Wait.
   Transient EXP bar not captured; raw-state values verified. Original C07 discovery
@@ -33,8 +44,7 @@
   and immutable declaration revisions. Candidate audit preserves rejected cases
   and independently reports actual runtime statuses.218 tests/428 signatures;
   47 accepted artifacts,20 raw states/577 hooks verified.
-- Remaining original action probes: CH9-PARTNER-COMBAT and one CH6-YELLOW-FATAL.
-  Then investigate C10 alarm/detection and all Green
+- Original action batch now executed (AJ/AK above). Investigate C10 alarm/detection and all Green
   positions before a replacement ending fixture. Accepted Rescue is required
   before carried Escape. Later-chapter original-history prerequisites remain open.
 

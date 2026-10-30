@@ -1,5 +1,52 @@
 # Testing
 
+## CAMP-AJ / CAMP-AK — Native Yellow combat and surviving fatal probe
+
+2026-10-30, agent Computer Use, separate private profiles, runtime commit
+`a0bc15e`. All six prepared scenarios have now been attempted: AG/AH/AI/AJ
+scoped PASS; AF fixture FAIL/completion INCONCLUSIVE; AK fatal INCONCLUSIVE.
+No natural-campaign, chapter clear, later roster, native saving or Netplay claim.
+
+**CAMP-AJ PASS, synthetic original positioning:** CH9-PARTNER-COMBAT, PID117556,
+2912-byte fingerprint `93cc716863b133a7`. Original Options Autoend Off; Next Unit
+selected native Lethe, CURRENT tile9,26, Attack/Claw. Forecast against original
+Archer8,26:21HP versus34HP,20x2 damage,100hit,5crit, no bow counter. Saved before,
+executed ONE attack, observed target defeat and same Yellow turn1 with Lethe
+34HP/gauge19. Saved after before another action/phase; closed private Dolphin.
+Raw comparison: Lethe force3/slot26/JID_CAT/F unchanged, unassigned ownership,
+EXP0 ->11, gauge20 ->19, acted bit0 ->1, inventory unchanged; target slot30
+removed. No unrelated action record delta. Legacy chapter234 byte0 ->10 is
+reported, not interpreted as death (CAMP-028). Transient EXP bar not captured.
+
+Before SHA256 `dfcd7a10a33da34e3c0a226f03d29008b03ccbec2f56f27acfd951c48d40f4fa`;
+after `f0bd421f9ed0e7ded64836728b8ba36dd9b344947a9fe21178018d86aa6d79ea`.
+Evidence: CH9-PARTNER-COMBAT/captures and observation-history/0001.json;
+partner-result.json plus five partner-*.png in work/agent_runtime_20261029_v1.
+Ledger ch9-native-partner-combat-agent-30 accepts only independent combat
+lifecycle, preserving all previous accepted claims/artifacts.
+
+**CAMP-AK INCONCLUSIVE, fatal transition absent:** CH6-YELLOW-FATAL, PID144576,
+2912-byte fingerprint `3eeff9026a3238a5`. Cancelled inherited Escape/Move,
+Autoend Off, CURRENT tile Oscar13,26, original Iron Lance39. Actual forecast:
+Emil32HP/Short Spear,8damage82hit1crit; Oscar28HP,6damage78hit1crit. Advanced
+original Emil boss dialogue once and allowed ONE attack. Oscar survived and
+mounted continuation returned. Raw OscarHP28 unchanged, EXP28 ->51, lance39 ->38;
+EmilHP32 ->26. No death observed or declared. No repeated combat, movement,
+Wait, phase advance, HP/death edit or native card write.
+
+Before SHA256 `d507f075f3da9f0961866c2255d9e83885ca0b540d15ea2b7fed3259f9a07c57`;
+after `197ce71a4b85d26b7db0d8b94959fd37673ee411a400d8fea747fa9930833a29`.
+The first review rejected generic boss-talk plus discovery keys; original pinned
+C07 scenes19/17 explain both precise forward effects (CAMP-028/027). Added strict
+script regressions; revised verdict is INCONCLUSIVE, never a fatal PASS.
+Unchanged raw evidence: CH6-YELLOW-FATAL/captures, observation-history/0001.json;
+fatal-result.json and four fatal-*.png in the session folder. Diagnostic ledger
+ch6-fatal-survived-agent-30 does not promote a runtime acceptance axis.
+
+Both private card hashes unchanged. Original game/production codes unchanged.
+Accepted integrity audit:90 artifacts,26 raw states,751 hook continuations PASS.
+Automated validation:223 tests and450 original signatures PASS.
+
 ## CAMP-AI — Original P2 Oscar attack, damage, EXP and weapon use
 
 **PASS, local synthetic-positioning combat**, 2026-10-30. Agent Computer Use

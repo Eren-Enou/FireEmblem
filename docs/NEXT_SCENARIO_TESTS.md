@@ -5,7 +5,10 @@ CH7-PLAYER2-CONTROL PASS through agent Computer Use (CAMP-AG). The original
 CH10-CHAPTER-COMPLETE configuration is rejected/quarantined (CAMP-AF): native
 guards damage Brom and alarm reinforcements occupy the exit. Do not relaunch it.
 CH6-YELLOW-RESCUE and CH6-YELLOW-COMBAT now have scoped agent runtime passes
-(CAMP-AH/AI); Lethe combat and the one-attack fatal probe remain NOT TESTED.** The four previously accepted scenarios and
+(CAMP-AH/AI). Native Lethe combat PASS (CAMP-AJ); the one-attack fatal probe
+was executed but Oscar survived, so death handling is INCONCLUSIVE (CAMP-AK).
+All six have been attempted; do not repeat accepted actions or attack repeatedly
+to force death.** The four previously accepted scenarios and
 their captures are preserved; they do not need repeating. No Dolphin launch or
 input occurred during this preparation.
 

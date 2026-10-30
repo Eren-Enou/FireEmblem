@@ -18,6 +18,19 @@ from tools.verify_game import DEFAULT_IMAGE
 
 # (address, expected word, meaning) -- see docs/RESEARCH.md section "Faction model"
 SIGNATURES: list[tuple[int, int, str]] = [
+    # CAMP-028: battle-result statistics also write unit+0x234 without death.
+    (0x801A4F50, 0x881F01A8, "battle-result first participant zero-HP branch"),
+    (0x801A4F58, 0x4082004C, "nonzero first participant branches to reciprocal check"),
+    (0x801A4F6C, 0x80BF0560, "result selects opposite participant unit"),
+    (0x801A4F78, 0xA085022C, "result reads participant statistic22C"),
+    (0x801A4F80, 0xB005022C, "result increments statistic22C"),
+    (0x801A4F90, 0xB005022A, "result increments statistic22A"),
+    (0x801A4F94, 0x88030010, "result reads current chapter byte"),
+    (0x801A4F9C, 0x98030234, "result writes opposite participant chapter234"),
+    (0x801A4FA4, 0x881F0488, "reciprocal participant zero-HP check"),
+    (0x801A4FAC, 0x40820048, "nonzero reciprocal participant skips statistic update"),
+    (0x801A4FEC, 0x807F0280, "reciprocal result selects other original unit"),
+    (0x801A4FF0, 0x98030234, "reciprocal result writes unit chapter234"),
     # CAMP-026: original per-unit projected-screen bounds cache, not ownership.
     (0x80016B50, 0x48037629, "unit display loop calls original projection worker"),
     (0x8004E178, 0x9421FE70, "unit projection worker entry"),

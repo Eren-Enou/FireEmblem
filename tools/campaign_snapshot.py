@@ -107,6 +107,9 @@ def capture(path: Path, image: Path, ini: Path, commit: str) -> dict:
                       "flags": flags, "owned": bool(flags & 0x20000000),
                       "escaped": bool(flags & 0x4000),  # CAMP-001/F-43 original escape flag
                       "owner": 2 if flags & 0x60000000 == 0x60000000 else 1 if flags & 0x20000000 else None,
+                      # Legacy field name retained for immutable capture compatibility.
+                      # CAMP-028: battle-result statistics also write +234 on a living
+                      # unit. This byte alone never establishes death.
                       "death_record": bool(flags & 0x8000), "death_chapter": mem.u8(addr + 0x234)})
     text = ini.read_text()
     names = [n for _, n, _ in enabled_codes(text)]

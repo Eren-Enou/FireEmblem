@@ -2,6 +2,33 @@
 
 Reverse-engineering findings, with source and confidence for each.
 
+### CAMP-028 — Boss talk effects and the nonexclusive chapter234 byte
+
+Original C07.cmb identity is pinned in CAMP-027. Scene19, offsets9332..9423,
+kind9 metadata[2469,191,1,278], obtains Ike, then selects MindGetTarget for
+phase1 and MindGetMe otherwise. It returns immediately for Ike; the non-Ike
+branch presents MS_07_BT and sets `ボス戦闘会話`. Scene18 separately handles
+Ike's talk/key. A strict scene19 VM contract now tests Oscar/Ike in Blue,
+Yellow and Red perspectives, rejects unknown natives, and admits its precise
+forward key effect only for the prepared Emil probe. CAMP-AK observed original
+Emil dialogue and this key plus the scene17 discovery trigger; death was not
+demonstrated. Native registration/dispatch remains outside the script model.
+
+The snapshot field named `death_chapter` is a **legacy raw byte label**, not
+exclusive death evidence. F-45 establishes one death writer, but original
+battle-result code also writes unit+0x234. At0x801A4F50 a battle participant's
+byte+1A8 is tested; zero selects the opposite original unit from result+560,
+increments counters+22C/+22A, reads current chapter at0x801A4F94 and stores it
+to that unit+234 at0x801A4F9C. The reciprocal check at0x801A4FA4 uses byte+488,
+the other original unit at result+280 and store0x801A4FF0. Twelve signatures
+pin these sites. These are static instruction facts; complete counter semantics
+and all writers/readers are not claimed.
+
+CAMP-AJ independently observed living Lethe34HP, no death flag, after defeating
+an Archer: byte234 changed0 ->10. Preserve the existing snapshot field/schema
+and report that delta; never infer death from the byte alone. Fatal acceptance
+continues to require zeroHP plus persistent death bit and matching chapter.
+
 ### CAMP-027 — Chapter6 combat has an original discovery-flag effect
 
 Original Scripts/C07.cmb SHA256

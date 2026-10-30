@@ -428,6 +428,13 @@
         "netplay_two_pc": {
           "status": "NOT TESTED"
         }
+      },
+      "lifecycle": {
+        "combat": {
+          "status": "PASS",
+          "evidence": "ch9-native-partner-combat-agent-30",
+          "scope": "ONE original P2 transformed native Yellow Lethe attack defeated Archer21HP; Lethe34HP unchanged, EXP0 to11, gauge20 to19, force3 and unassigned ownership retained. Same Yellow turn1, no follow-up action/phase. Cleanup, recruitment, natural campaign and Netplay NOT TESTED."
+        }
       }
     },
     {
@@ -2054,6 +2061,159 @@
         }
       ],
       "description": "Agent executed ONE original P2 Yellow Oscar attack from synthetic positioning: ArcherHP21 to1, OscarHP28 unchanged, EXP28 to45, IronLance39 to37. Same Yellow turn; mounted continuation captured before movement/Wait. Original discovery flag effect matches bounded pinned C07 scene17; later discovery dispatch/cutscene unverified. Transient EXP bar not photographed; result values independently decoded. No natural campaign, chapter completion, level-up or Netplay claim."
+    },
+    "ch9-native-partner-combat-agent-30": {
+      "kind": "dolphin",
+      "commit": "a0bc15eb9d5d9f97c5afece09583af4034bba9d3",
+      "fixture_generation_commit": "84f87f1",
+      "fingerprint": "93cc716863b133a7",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_original_positioning",
+      "chapters": [
+        "10"
+      ],
+      "axes": [],
+      "lifecycle": [
+        "combat"
+      ],
+      "reported_by": "Codex agent Computer Use and independent raw-state analysis",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/before/state.sav",
+          "sha256": "dfcd7a10a33da34e3c0a226f03d29008b03ccbec2f56f27acfd951c48d40f4fa"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/before/GFEE01.ini",
+          "sha256": "317b73183a38ac3e54b3f47b2230baacf6fc6f974e1d0f31209b1ddb599fa958"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/before/snapshot.json",
+          "sha256": "f48eb265c1a99606e683879a01765679c5415ae634300236345b7d9cfa9a31bb"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/before/manifest.json",
+          "sha256": "06876f896e1cc7c071677541e3daf321a4a72c5cfd2b6d3aed0daa89f9710189"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/after/state.sav",
+          "sha256": "f0bd421f9ed0e7ded64836728b8ba36dd9b344947a9fe21178018d86aa6d79ea"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/after/GFEE01.ini",
+          "sha256": "317b73183a38ac3e54b3f47b2230baacf6fc6f974e1d0f31209b1ddb599fa958"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/after/snapshot.json",
+          "sha256": "92273906f4131fb0060217a2a9c2bdaab0c2a8cb623bd6398cb0561ff0e2e07e"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/captures/after/manifest.json",
+          "sha256": "2f350c7890d936e42dc0bc510d454f5cb4427a511d5f2a47744fd054d2ad5e7d"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH9-PARTNER-COMBAT/observation-history/0001.json",
+          "sha256": "14b4f9abd027784894140cf782e943b88a0cf89807f24a92daee225dfe917b25"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/partner-result.json",
+          "sha256": "20833c047e3049fa57a717029e9d9608f819093d63daac9d4dda9859d58bcb6f"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/partner-after-map.png",
+          "sha256": "fc22dc87ab9f4776ba08b1880ff24c2557ecdbec9f7d00d33ae91b06599971c9"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/partner-attack-menu.png",
+          "sha256": "af273c57614ebf9fe5a9342667ccb4e77194e5dff8c405f877a6689ac013b94d"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/partner-autoend-off.png",
+          "sha256": "80ff4e1c5d3cdbe9823e2698eafb8c2fad24b241bb774d8d7e8c31d98e96afa9"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/partner-forecast.png",
+          "sha256": "af0f5b1e23d2be7c8366935d0f00e1896037f9e3c614559948c9e749ae422c41"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/partner-target-defeated.png",
+          "sha256": "3b07d116f2c6d2d1502a671a9de3f6a32a097298bb3f9feb056a6372990d7b0a"
+        }
+      ],
+      "description": "ONE original P2 transformed native Yellow Lethe attack defeated Archer21HP; Lethe34HP unchanged, EXP0 to11, gauge20 to19, force3 and unassigned ownership retained. Same Yellow turn1, no follow-up action/phase. Cleanup, recruitment, natural campaign and Netplay NOT TESTED."
+    },
+    "ch6-fatal-survived-agent-30": {
+      "kind": "dolphin",
+      "commit": "a0bc15eb9d5d9f97c5afece09583af4034bba9d3",
+      "fixture_generation_commit": "84f87f1",
+      "fingerprint": "3eeff9026a3238a5",
+      "dolphin": "Dolphin 2609a",
+      "fixture_class": "synthetic_original_positioning",
+      "chapters": [
+        "7"
+      ],
+      "axes": [],
+      "lifecycle": [],
+      "reported_by": "Codex agent Computer Use and independent raw-state analysis",
+      "artifacts": [
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/before/state.sav",
+          "sha256": "d507f075f3da9f0961866c2255d9e83885ca0b540d15ea2b7fed3259f9a07c57"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/before/GFEE01.ini",
+          "sha256": "a98523c69bddc402e750bb0ebd7152d4fe3b35180dc85e9fd63dfec9078a17c5"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/before/snapshot.json",
+          "sha256": "d4658cbc5ec610e5c4cf2bedc7deda88c47d8b47d0f793420ec1575a63ee7807"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/before/manifest.json",
+          "sha256": "15677c91ceeec4168ca4b9bbe9e3cfe396119c57165c7978aa3ce186a4e5a9d1"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/after/state.sav",
+          "sha256": "197ce71a4b85d26b7db0d8b94959fd37673ee411a400d8fea747fa9930833a29"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/after/GFEE01.ini",
+          "sha256": "a98523c69bddc402e750bb0ebd7152d4fe3b35180dc85e9fd63dfec9078a17c5"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/after/snapshot.json",
+          "sha256": "56839ad446dc95112bed2cdc400b0b58cba4c862672fb44e78923df00a354343"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/captures/after/manifest.json",
+          "sha256": "4d4848162bcff1d89444a11dd0fb15d689ed6cae180dc1aba67cfdd4f8335b05"
+        },
+        {
+          "path": "work/scenarios/human_v1/CH6-YELLOW-FATAL/observation-history/0001.json",
+          "sha256": "b9601915576fe5519592d85933a734d6aba6a6a5fed1c406907972775499416b"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/fatal-result.json",
+          "sha256": "65a5f99861d7165f2ebcd9b46ea426389126fd5faf741b79aa0bb6135830911f"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/fatal-autoend-off.png",
+          "sha256": "9c88e2c46acdeda44751afb5079120d1db93725f2999fbfc5e4dcdb2cf2f968d"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/fatal-emil-dialogue.png",
+          "sha256": "7b3591c657be70f93a76d05da378b9096f59f2b432cec1ed148380367775ad3b"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/fatal-forecast.png",
+          "sha256": "9e03e8101be28caf338fcefe4c19b04255e60f02f377caa11e6071e12e6772c9"
+        },
+        {
+          "path": "work/agent_runtime_20261029_v1/fatal-survived-map.png",
+          "sha256": "2fb7ce1d1d5e9454c3726d32d85d45de92fe07b7aa983a0519e2f130c9df4897"
+        }
+      ],
+      "description": "ONE original P2 Oscar attack against Emil; original boss talk occurred, Oscar survived. Fatal transition INCONCLUSIVE; no repeated attacks or outcome edits. Original discovery and generic boss-talk effects traced to pinned C07 scenes17/19.",
+      "status": "INCONCLUSIVE"
     }
   },
   "next_cases": [
