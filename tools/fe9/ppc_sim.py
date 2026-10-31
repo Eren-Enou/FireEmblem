@@ -73,8 +73,18 @@ class Machine:
         """Run block i. Returns True if it left through the normal branch-back slot, False if it returned
         straight to its caller with blr (e.g. a hook that refuses and returns a value itself)."""
         start, end = self._blocks[i]
-        self.lr = self.EXIT_LR
-        return self._exec(start, end, self._region, max_steps)
+        self.lr, sp = self.EXIT_LR, self.r[1]
+        normal = self._exec(start, end, self._region, max_steps)
+        # A hook runs in the middle of a game function: leaving through the branch-back slot with another
+        # LR or stack pointer breaks that function's own return (a clobbered LR looped the game, COMBO-01).
+        orig = self.rw(end - 4)                                   # the replayed original instruction
+        if orig == 0x60000000:                                    # (after the alignment nop)
+            orig = self.rw(end - 8)
+        if orig >> 16 == 0x9421:                                  # stwu r1,d(r1): the prologue moves r1 itself
+            sp = (sp + ((orig & 0xFFFF) - (0x10000 if orig & 0x8000 else 0))) & 0xFFFFFFFF
+        if normal and (self.lr != self.EXIT_LR or self.r[1] != sp):
+            raise SimError(f"block {i} returned with LR {self.lr:08X} / r1 {self.r[1]:08X} changed")
+        return normal
 
     def run(self, words: list[int] | None = None, max_steps: int = 200000) -> None:
         if words is not None:
