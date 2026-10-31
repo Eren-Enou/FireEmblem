@@ -345,3 +345,7 @@ Controller routing / Netplay (per user priority).
   - Full set **3168/3256** (3224 with DBG-01). `DeploymentByOwner` tests pass, 75/75 in total.
   - Runtime DEPLOY-01 needs a Ch8+ prep screen.
 
+- **2026-10-30, COMBO-01 run by Claude (computer use, isolated profile `work/combo01/host`):**
+  - **Defect found and fixed (b7d53cf):** EXP-21 v3 hung the game at the Ch6 start. The shared mover's EABI prologue wrote its LR into the stubs' parked-LR word, so hooked functions returned into the stub. The mover's LR now goes inside its own frame. The simulator's `run_block` now fails a block that leaves with LR or r1 changed; the old code fails that check.
+  - **Run 2 passed the combined flow up to turn 2:** prep draft (alternating picks, colours), ownership applied at Fight, turn-1 battle draft (release, out-of-turn refusal, reclaim), yellow phase on port 2, turn-2 draft closed. Fingerprint `c8f9100ce3960912`, 3224/3256 bytes.
+  - **Still open:** PREP-04 (Ch6 → Ch7, native save, fresh reload; the Ch6 escape is a long walk south), the prep transfer, DEPLOY-01 (Ch8+).
