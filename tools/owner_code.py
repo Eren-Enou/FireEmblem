@@ -8,7 +8,8 @@ the game's own script command UnitTransferToForce (0x800BCA38, F-34):
           then control[3] = 1 if force 3 has units (EXP-08's rule, applied from turn 1; F-44)
   return  entry of every chapter-end path found (F-38, F-39): AllUnitEscape 0x800BA784, the turn-loop
           transition 0x8002E0D0 and the chapter sequence 0x80005F04: Player-2 characters in force 3 -> 0,
-          so the vanilla cleanup and roster code sees ordinary blue units
+          so the vanilla cleanup and roster code sees ordinary blue units; then control[3] = 2 (CPU, the
+          vanilla value), so EXP-14 hands the pad back to port 1 after a yellow-phase win (F-63)
   escape  entry of UnitEscape 0x800BA8F8(unit id): only the escaping Player-2 character, force 3 -> 0
 
 Characters not in the table are Player 1 (blue): Ike, every newly recruited character, etc. Only units in
@@ -101,7 +102,7 @@ def pid_table(owners: dict[str, int], player: int = 2) -> bytes:
 
 
 def cave(src: int, dst: int, original: int, table: bytes, phase: int | None = None,
-         only_r3_id: bool = False, set_control: bool = False) -> list[int]:
+         only_r3_id: bool = False, set_control: bool = False, release_pad: bool = False) -> list[int]:
     """C2 cave: for each PID in `table` whose unit is in force `src`, UnitTransferToForce(id, dst)."""
     n = len(table) // SLOT
     a = _Asm()
@@ -126,6 +127,11 @@ def cave(src: int, dst: int, original: int, table: bytes, phase: int | None = No
             # COOP-P2 EXP display/gain hooks treat the yellow army as human from turn 1 (F-44).
             a(lis(12, 0x802D), lwz(12, -0x5D78, 12), cmpwi(12, 0)); a.br("beq", "done")   # force 3 head
             a(li(0, 1), lis(12, 0x8033), stb(0, 0x71F, 12))                              # control[3] = 1
+    if release_pad:
+        # Chapter end: control[3] = 2 (CPU, the vanilla value), so EXP-14 stops routing the pad to port 2 for the
+        # victory events, the save screen and the base, which still run in phase 3 after a yellow-phase win (F-63).
+        # Single-unit UnitEscape does not get this, so the yellow phase stays human.
+        a(li(0, 2), lis(12, 0x8033), stb(0, 0x71F, 12))
     a.label("done")   # no Player-2 characters: the cave only saves and restores registers
     a(lwz(0, 0x24, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), lwz(31, 0x10, 1), lwz(30, 0x14, 1), addi(1, 1, 0x20))
     a(original)
@@ -141,7 +147,7 @@ def c2_lines(addr: int, words: list[int]) -> list[str]:
 def blocks(owners: dict[str, int] = OWNERS) -> list[tuple[int, list[int]]]:
     t = pid_table(owners)
     out = [(APPLY_HOOK[0], cave(0, 3, APPLY_HOOK[1], t, phase=0, set_control=True))]
-    out += [(addr, cave(3, 0, orig, t)) for addr, orig in RETURN_HOOKS]
+    out += [(addr, cave(3, 0, orig, t, release_pad=True)) for addr, orig in RETURN_HOOKS]
     out.append((ESCAPE_HOOK[0], cave(3, 0, ESCAPE_HOOK[1], t, only_r3_id=True)))
     return out
 

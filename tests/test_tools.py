@@ -315,9 +315,29 @@ class GameTests(unittest.TestCase):
             self.assertNotIn("lbz r0, 0x718(r12)", head)   # no chapter restriction any more
             self.assertEqual(addr == 0x8002E738, "lbz r0, 0x719(r12)" in head)   # apply: phase 0 only
             self.assertEqual(addr == 0x800BA8F8, "cmpw r3, r0" in text)          # escape: that unit only
-            self.assertEqual(addr == 0x8002E738, "stb r0, 0x71f(r12)" in text)   # apply: control[3] = 1
+            self.assertEqual(addr != 0x800BA8F8, "stb r0, 0x71f(r12)" in text)   # control[3] written
+            self.assertEqual(addr == 0x8002E738, "li r0, 1" in text)             # apply: control[3] = 1
+            self.assertEqual(addr in (0x800BA784, 0x8002E0D0, 0x80005F04),       # chapter end: = 2 (F-63)
+                             "li r0, 2" in text)
         with self.assertRaises(ValueError):
             oc.pid_table({"PID_IKE": 2})
+
+    def test_exp16_chapter_end_hands_the_pad_back(self):
+        """F-63: a yellow-phase win keeps phase 3, so EXP-14 would keep port 2 through the victory events and the
+        save screen. Each chapter-end return cave ends with control[3] = 2 (after the transfer loop, before the
+        register restore), with or without Player 2 characters; UnitEscape and the apply cave never write 2."""
+        from tools import owner_code as oc
+        release = [oc.li(0, 2), oc.lis(12, 0x8033), oc.stb(0, 0x71F, 12)]
+        restore = oc.lwz(0, 0x24, 1)
+        for owners in (oc.OWNERS, {}):
+            for addr, words in oc.blocks(owners):
+                at = next((i for i in range(len(words)) if words[i:i + 3] == release), None)
+                if addr in (0x800BA784, 0x8002E0D0, 0x80005F04):
+                    self.assertIsNotNone(at, hex(addr))
+                    self.assertEqual(words[at + 3], restore)                       # last thing before the exit
+                    self.assertNotIn(oc.BCTRL, words[at:])                         # after every transfer
+                else:
+                    self.assertIsNone(at, hex(addr))
 
     def test_exp17_next_unit_hooks(self):
         """EXP-17: the next-unit search uses force 3 in phase 3 (auto-end + Next Unit), force 0 otherwise."""

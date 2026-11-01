@@ -630,6 +630,23 @@ Installed in the one-PC test bed `work/ch1/host` with COOP-P6 + EXP-16 + DBG-01.
 |---|---|---|---|
 | 2026-10-27 | user (one PC, `work/ch1/host`, COOP-P6 + EXP-16 + DBG-01; fresh boot, Ch. 3) | **PASS** | User: at the start of the yellow phase the cursor swapped to a yellow unit. **Slot 3** (phase 3, turn 2, backup `work/saves/GFEE01.exp20_s03`): cursor `state+0x524/0x528` = (15.5, 21.5) = tile (15,21), which is **Shinon's tile**. Ike, where the vanilla blue-phase step puts the cursor, is at (15,23). Slot 2 (turn 1 yellow phase, `GFEE01.exp20_s02`) has the cursor on (15,21), the tile Shinon moves to in that phase, so it was probably saved mid-move. Option byte `state+0x9E` = `0x15` (bit 0x40 clear). For contrast, the Netplay yellow-phase state without EXP-20 (`GFEE01.net02_inet_host_s02`) has the cursor on Titania's tile (13,8), where the blue phase left it. Not checked: the cursor option turned off, and vanilla chapters without yellow units. |
 
+## PAD-01 — A yellow-phase win hands the controls back to Player 1 (F-63)
+
+**Defect (found 2026-11-01, Ch7, on `draft-ownership`; the release on `main` has it too):** when the last enemy dies in the yellow phase, EXP-14 keeps the current pad on port 2 through the victory events, the save screen and the base transition. Player 1 cannot press anything there.
+
+**Fix on `main`:** EXP-16's chapter-end return caves set `control[3] = 2` after returning Player 2's characters to blue (`test_exp16_chapter_end_hands_the_pad_back`). Install: `python -m tools.install_codes --enable COOP-P6 --enable EXP-16` (or the rebuilt Netplay package).
+
+### Procedure (tester)
+1. Win a Rout or Defeat-boss chapter with a **Player 2** unit in the yellow phase (DBG-01 makes this quick; Ch7 was used for the defect).
+2. In the victory scene, press A on **Player 1's** pad. Expected: the text advances.
+3. On Save Data, Player 1's A opens "Would you like to save?".
+4. Regression: win a chapter in the blue phase, and check that Player 2's units still move in the yellow phase of the next chapter (turn 1).
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-11-01 | Claude (computer use, `draft-ownership`) | **FAIL before the fix** | Ch7 win on turn 12 by Oscar in the yellow phase: Player 1's A and Start did nothing in the victory scene or on Save Data; Player 2's A and Start worked (`work/evidence/pad_after_yellow_clear/`). |
+| 2026-11-01 | Claude (static, `main`) | pending runtime | EXP-16 fix generated; tests and signatures pass; COOP-P6 + EXP-16 = 2560 bytes; package net02-4, fingerprint `a5d1e83641e32a27`. Needs the owner's in-game run of steps 1–4 before the PR merges. |
+
 ## EXP-15 — Chapter 1 with two armies (Phase 4 proof, fixed assignment)
 
 **Goal (user):** play Chapter 1 with **Blue = Ike, Titania** (player 1, port 1) and **Yellow = Boyd, Oscar** (player 2, port 2), strictly in sequence (blue phase, then yellow phase, then enemy phase), and carry everyone into Chapter 2 with their progression.
