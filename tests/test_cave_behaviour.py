@@ -180,6 +180,18 @@ class OwnershipForcesBehaviour(unittest.TestCase):
         w.r[3] = SOREN; w.run_block(4)                            # UnitEscape(Soren)
         self.assertEqual((w.force_of(SOREN), w.force_of(TITANIA)), (0, 3))
 
+    def test_chapter_end_hands_the_pad_back(self):
+        """A yellow-phase win keeps phase 3, so EXP-14 would keep port 2 for the victory events and the save
+        screen (seen at the Ch7 Rout clear). Returning all units sets control[3] = 2; a single escape doesn't."""
+        for hook in (1, 2, 3):
+            w = self._code(self._world(phase=0)); w.run_block(0)
+            self.assertEqual(w.control(3), 1)
+            w.run_block(hook)
+            self.assertEqual(w.control(3), 2)
+        w = self._code(self._world()); w.run_block(0)
+        w.r[3] = SOREN; w.run_block(4)
+        self.assertEqual(w.control(3), 1)
+
 
 class ListColourBehaviour(unittest.TestCase):
     """EXP-25: the colour index chosen for a data cell."""

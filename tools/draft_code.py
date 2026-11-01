@@ -383,6 +383,13 @@ def blocks23() -> list[tuple[int, list[int]]]:
 
 
 BLR = 0x4E800020
+
+
+def or_rc(a: int, s: int, b: int) -> int:
+    """or. rA,rS,rB (sets CR0)."""
+    return (31 << 26) | (s << 21) | (a << 16) | (b << 11) | (444 << 1) | 1
+
+
 FORCE_HEAD_ADDR = {0: 0x802CA264, 3: 0x802CA288}
 
 
@@ -417,6 +424,12 @@ def _mover(a: Asm) -> None:
     a.label("mnext")
     a(mr(31, 30)); a.br("b", "mloop")
     a.label("mend")
+    # Chapter end (all of force 3 back to 0, no unit filter): control[3] = 2 (CPU, the native partner value), so
+    # EXP-14 stops routing the pad to port 2 for the victory events, the save screen and the base (they still
+    # run in phase 3 after a yellow-phase win). A single-unit UnitEscape (r28 != 0) keeps the yellow phase human.
+    a(or_rc(0, 28, 29)); a.br("bne", "mret")
+    a(li(0, 2), lis(12, 0x8033), stb(0, 0x71F, 12))
+    a.label("mret")
     a(lwz(0, 0x20, 1), MTLR0, lwz(3, 8, 1), lwz(4, 0xC, 1), lmw(28, 0x10, 1), addi(1, 1, 0x28), BLR)
 
 

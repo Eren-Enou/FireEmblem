@@ -634,6 +634,23 @@ The game's own toggle (`0x80117D80`, F-62) does the work, so the cap ("You can s
 
 | Date | Tester | Result | Notes |
 |---|---|---|---|
+| 2026-11-01 | Claude (computer use, `work/combo01/host`, Ch8 prep reached by playing Ch6 → Ch7 → Ch8 with the co-op set) | **PASS** | Fixture: Ch8 "Despair and Hope" prep, cap 7, only Ike forced, 7 candidates (Shinon and Gatrie away). Card `work/evidence/deploy01/ch8_card.gci`, state `ch8_prep_fixture.s04`. Every step was confirmed from a state:<br>1. Player 1's A on Titania (Player 2's): refused, flags unchanged, 7/7.<br>2. Player 2's A (M) on Titania: benched, `0x610044DC` (bench group added, ownership kept), 6/7, row grey.<br>3. Player 2's A again: redeployed, `0x60004400`.<br>4. Player 2's A on Soren (Player 1's): refused.<br>5. Player 1's A on Soren: bench `0x210044DC`, then redeploy.<br>6. Both players' A on Ike (forced): refused (native).<br>7. Player 2 benched Rhys and Player 1 benched Boyd (unassigned), 5/7 → Fight: Rhys and Boyd in force 5 (Rhys keeps `0x60…`); Oscar and Titania in force 3; Ike, Soren and Mia in force 0 (`ch8_turn1_after_bench.s05`).<br>Observation: benched rows are grey, so a benched character's owner is not shown (PREP.md risk 00, now seen at runtime). |
+
+## PAD-01 — A yellow-phase win hands the controls back to Player 1 (F-63)
+
+**Defect (found 2026-11-01, Ch7):** when the last enemy dies in the yellow phase, EXP-14 keeps the current pad on port 2 through the victory events, the save screen and the base transition. Player 1 cannot press anything there.
+
+**Fix:** EXP-21 sets `control[3] = 2` when it returns all Player 2 units at a chapter end (`test_chapter_end_hands_the_pad_back`). **Not fixed on `main`** (EXP-16).
+
+### Procedure
+1. Win a Rout or Defeat-boss chapter with a **Player 2** unit in the yellow phase (Ch7 is used here).
+2. In the victory scene, press A on **Player 1's** pad (X). Expected: the text advances.
+3. On Save Data, Player 1's A opens "Would you like to save?".
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-11-01 | Claude (computer use) | **FAIL before the fix** | Ch7 win on turn 12 by Oscar in the yellow phase: Player 1's A and Start did nothing in the victory scene or on Save Data; Player 2's A and Start worked. The base was fine again (`work/evidence/pad_after_yellow_clear/`). |
+| 2026-11-01 | Claude (computer use) | **PASS with the fix** | Same turn-12 state with the new code list written into RAM (scratch tool `recode_state.py`, which installs the C2 branches as the handler does): after the win `control` = `01020202`; Player 1's A and Start drove the victory scene and the Save Data prompt. A clean boot with the new set (3240/3256) is still to be seen across a whole chapter. |
 
 ## COMBO-01 — Both drafts in one code set (EXP-27 + EXP-21 v2), plus Ch6 → Ch7 persistence (PREP-04)
 

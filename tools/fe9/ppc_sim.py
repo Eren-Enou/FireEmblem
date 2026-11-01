@@ -194,7 +194,7 @@ class Machine:
             raise SimError(f"op19 xo {xo}")
         elif op == 31:
             xo = (w >> 1) & 0x3FF
-            if xo == 444: r[a] = r[d] | r[b]                               # or / mr
+            if xo == 444: r[a] = r[d] | r[b]; (w & 1) and self._rec(r[a])  # or / mr / or.
             elif xo == 28: r[a] = r[d] & r[b]; (w & 1) and self._rec(r[a])  # and
             elif xo == 40: r[d] = (r[b] - r[a]) & M                        # subf
             elif xo == 266: r[d] = (r[a] + r[b]) & M                       # add
