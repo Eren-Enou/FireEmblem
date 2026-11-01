@@ -636,6 +636,24 @@ The game's own toggle (`0x80117D80`, F-62) does the work, so the cap ("You can s
 |---|---|---|---|
 | 2026-11-01 | Claude (computer use, `work/combo01/host`, Ch8 prep reached by playing Ch6 → Ch7 → Ch8 with the co-op set) | **PASS** | Fixture: Ch8 "Despair and Hope" prep, cap 7, only Ike forced, 7 candidates (Shinon and Gatrie away). Card `work/evidence/deploy01/ch8_card.gci`, state `ch8_prep_fixture.s04`. Every step was confirmed from a state:<br>1. Player 1's A on Titania (Player 2's): refused, flags unchanged, 7/7.<br>2. Player 2's A (M) on Titania: benched, `0x610044DC` (bench group added, ownership kept), 6/7, row grey.<br>3. Player 2's A again: redeployed, `0x60004400`.<br>4. Player 2's A on Soren (Player 1's): refused.<br>5. Player 1's A on Soren: bench `0x210044DC`, then redeploy.<br>6. Both players' A on Ike (forced): refused (native).<br>7. Player 2 benched Rhys and Player 1 benched Boyd (unassigned), 5/7 → Fight: Rhys and Boyd in force 5 (Rhys keeps `0x60…`); Oscar and Titania in force 3; Ike, Soren and Mia in force 0 (`ch8_turn1_after_bench.s05`).<br>Observation: benched rows are grey, so a benched character's owner is not shown (PREP.md risk 00, now seen at runtime). |
 
+## PREP-07 — The draft-ownership set under Netplay (local loopback, then two computers)
+
+**What it is:** the draft, persistent ownership and deployment code set (COOP-P6 + EXP-21 + EXP-25 + EXP-27, 3184 of 3256 bytes, fingerprint **`ab75cb7dbe172a15`**) running in lockstep. The host syncs the codes and its save data.
+
+**Experimental package:** `python -m tools.netplay_package --experimental` → `dist/FE9-Coop-Client-EXPERIMENTAL-ab75cb7dbe172a15.zip`. It has its own version `draft-exp1`, folder name and README section (DRAFTING AND DEPLOYMENT). The release package (COOP-P6 + EXP-16, `8609ae9f49fd879f`) is unchanged.
+
+**Local test bed:** `netplay_setup --root work/netplay_exp --card work/saves/exp_ch8_card --enable COOP-P6 --enable EXP-21 --enable EXP-25 --enable EXP-27`. The card is the Ch8 card reached by playing (DEPLOY-01).
+
+### Procedure (local)
+1. Host: Tools > Start NetPlay > Host. Client: Connect 127.0.0.1:2626. Check: P1-Blue GC1, P2-Yellow GC2; Data: Load Host's Save Data Only, Sync AR/Gecko Codes.
+2. Start → Restart Chapter → Ch. 8 → base → preparations → Choose Units.
+3. Player 2's A benches and redeploys Titania; Player 1's A on Titania buzzes; Player 1's Z claims Boyd and Mia.
+4. Fight; yellow phase: Player 2 acts; enemy phase; turn 2. Compare both screens and the chat.
+
+| Date | Tester | Result | Notes |
+|---|---|---|---|
+| 2026-11-01 | Claude (computer use, two instances on one PC) | **PASS (local)** | Codes and save data synchronised, game started on both. Every step above was identical on both screens: 6/7 after the bench, 7/7 after the redeploy, refusal, the claims coloured on both. Battle turn 1 and the yellow phase (Player 2's Titania waited, Player 2 ended the phase), the full-HP enemy phase and turn 2 were identical. No desync message in either chat. **Two-computer test not yet run** (needs the owner and a second PC). |
+
 ## PAD-01 — A yellow-phase win hands the controls back to Player 1 (F-63)
 
 **Defect (found 2026-11-01, Ch7):** when the last enemy dies in the yellow phase, EXP-14 keeps the current pad on port 2 through the victory events, the save screen and the base transition. Player 1 cannot press anything there.
@@ -650,7 +668,7 @@ The game's own toggle (`0x80117D80`, F-62) does the work, so the cap ("You can s
 | Date | Tester | Result | Notes |
 |---|---|---|---|
 | 2026-11-01 | Claude (computer use) | **FAIL before the fix** | Ch7 win on turn 12 by Oscar in the yellow phase: Player 1's A and Start did nothing in the victory scene or on Save Data; Player 2's A and Start worked. The base was fine again (`work/evidence/pad_after_yellow_clear/`). |
-| 2026-11-01 | Claude (computer use) | **PASS with the fix** | Same turn-12 state with the new code list written into RAM (scratch tool `recode_state.py`, which installs the C2 branches as the handler does): after the win `control` = `01020202`; Player 1's A and Start drove the victory scene and the Save Data prompt. A clean boot with the new set (3240/3256) is still to be seen across a whole chapter. |
+| 2026-11-01 | Claude (computer use) | **PASS with the fix** | Same turn-12 state with the new code list written into RAM (scratch tool `recode_state.py`, which installs the C2 branches as the handler does): after the win `control` = `01020202`; Player 1's A and Start drove the victory scene and the Save Data prompt. Clean boot afterwards with the new set (3240/3256): the code list is fully in RAM; the Ch8 file loads with the right colours; Fight puts Player 2's characters in force 3; turn-1 L+R claims work. A whole chapter ending in a yellow-phase win on a clean boot is not yet seen. |
 
 ## COMBO-01 — Both drafts in one code set (EXP-27 + EXP-21 v2), plus Ch6 → Ch7 persistence (PREP-04)
 

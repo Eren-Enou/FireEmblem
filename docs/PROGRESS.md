@@ -356,3 +356,7 @@ Controller routing / Netplay (per user priority).
   - Reached a genuine **Ch8 prep fixture** (cap 7, only Ike forced). DEPLOY-01 passes: each player toggles only their own characters, forced Ike is refused, and benched units go to force 5 with their ownership bits.
   - **F-63:** a yellow-phase win left the pad on port 2 for the victory scene, the save screen and the base transition. The fix is in EXP-21 (control[3] = 2 when everything returns at a chapter end). It is runtime-verified on a patched replay of the same win. EXP-21 is now 480 bytes; the full set is 3184/3256 (3240 with DBG-01).
   - **The `main` release still has F-63** (EXP-16); a separate fix and package are needed there.
+- **2026-11-01, PREP-07 local Netplay passed; experimental package built (Claude):**
+  - Two Dolphin instances on one PC ran the draft set in lockstep: prep deployment by owner, claims, battle start, the yellow phase, an enemy phase. No desync.
+  - `netplay_package --experimental` builds `dist/FE9-Coop-Client-EXPERIMENTAL-ab75cb7dbe172a15.zip` (version draft-exp1, own folder and README section). The release ZIP is byte-identical to before.
+  - Two-computer PREP-07 is the owner's next test; send the experimental ZIP only for that test.

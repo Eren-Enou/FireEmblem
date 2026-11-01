@@ -42,6 +42,31 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "netplay/client"
 PACKAGE_CODES = ["COOP-P6", "EXP-16"]
 PACKAGE_VERSION = "net02-3"
+# README wording that depends on the code set (the release text is unchanged by these placeholders).
+WHO = "the characters the host's ownership table gives to Player 2 (in this test\nbuild: Oscar, Boyd, Shinon and Gatrie)"
+DRAFT = ""
+# --experimental: the draft-ownership set (draft, persistent ownership, deployment by owner). Separate
+# version, folder and ZIP name so it can never be mistaken for the release package.
+EXPERIMENTAL = {
+    "PACKAGE_CODES": ["COOP-P6", "EXP-21", "EXP-25", "EXP-27"],
+    "PACKAGE_VERSION": "draft-exp1",
+    "TOP": "FE9-Coop-Client-EXPERIMENTAL",
+    "WHO": "the characters you claim in the draft (see DRAFTING AND DEPLOYMENT below)",
+    "DRAFT": """DRAFTING AND DEPLOYMENT (EXPERIMENTAL BUILD)
+   Ownership is stored in each character and kept in the host's save, chapter after chapter.
+   * Preparations > Choose Units: the host moves the list cursor. Press Z (D) on your controller on
+     a character to claim it when it is your pick, or on one of yours to release it. On one of the
+     host's characters, Z asks for it (orange); the host's own Z then gives it to you.
+   * Chapters without preparations: battle turn 1, blue phase. The host puts the cursor on a
+     character and you press L+R (Q+W together) to claim or release it.
+   * Picks alternate: whoever owns fewer characters picks next. Ike always stays with the host.
+   * Deployment, when the chapter lets you choose: press A (X) on your controller on one of YOUR
+     characters to bench or deploy it. The host's A cannot change your characters (it buzzes).
+   * Your characters are yellow in the lists; the host's are light blue; benched ones are grey.
+
+
+""",
+}
 DOLPHIN_VERSION = "2609a"            # F-47; the version NET-01 ran on
 GAME = "GFEE01 rev 0"
 # Dolphin's Verify of the project's copy (DolphinTool verify). Informational: other dump formats agree only
@@ -108,7 +133,8 @@ def contents() -> dict[str, bytes]:
     files = {"User/Config/Dolphin.ini": _crlf(dolphin_ini()),
              "User/Config/GCPadNew.ini": _crlf(set_ini("", "GCPad1", PORT1_KEYBOARD)),
              "User/GameSettings/GFEE01.ini": _crlf(codes)}
-    subst = {"PACKAGE_VERSION": PACKAGE_VERSION, "CODES": " + ".join(PACKAGE_CODES), "FINGERPRINT": fp,
+    subst = {"WHO": WHO, "DRAFT": DRAFT,
+             "PACKAGE_VERSION": PACKAGE_VERSION, "CODES": " + ".join(PACKAGE_CODES), "FINGERPRINT": fp,
              "DOLPHIN_VERSION": DOLPHIN_VERSION, "GAME_SHA1": GAME_SHA1,
              "CODES_SHA256": hashlib.sha256(files["User/GameSettings/GFEE01.ini"]).hexdigest().upper()}
     text = (SOURCE / "README.txt").read_text(encoding="ascii")
@@ -193,7 +219,11 @@ def main() -> int:
     ap.add_argument("--out", type=Path)
     ap.add_argument("--verify", type=Path, metavar="ZIP")
     ap.add_argument("--fingerprint", type=Path, metavar="USER_DIR")
+    ap.add_argument("--experimental", action="store_true",
+                    help="the draft-ownership code set (separate version, folder and ZIP name)")
     args = ap.parse_args()
+    if args.experimental:
+        globals().update(EXPERIMENTAL)
     if args.fingerprint:
         ini = args.fingerprint / "GameSettings/GFEE01.ini" if args.fingerprint.is_dir() else args.fingerprint
         text = ini.read_text()

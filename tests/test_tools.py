@@ -69,6 +69,28 @@ class NetplayPackageTests(unittest.TestCase):
         self.assertNotEqual(npk.fingerprint(build_ini(npk.PACKAGE_CODES + ["DBG-01"], verbose=False)), fp)
         self.assertNotEqual(npk.fingerprint(build_ini(["COOP-P5"], verbose=False)), fp)
 
+    def test_experimental_package_is_separate_and_fits(self):
+        """--experimental: the draft set under its own version, folder and ZIP name; it fits the Gecko area
+        and never carries test aids. The release README text is unchanged by the profile placeholders."""
+        import tempfile, zipfile
+        from unittest import mock
+        from tools import netplay_package as npk
+        from tools.install_codes import check_budget
+        release_readme = npk.contents()["README.txt"].decode()
+        self.assertIn("ownership table gives to Player 2", release_readme)
+        self.assertNotIn("DRAFTING AND DEPLOYMENT", release_readme)
+        with mock.patch.multiple(npk, **npk.EXPERIMENTAL), tempfile.TemporaryDirectory() as d:
+            self.assertEqual(check_budget(npk.PACKAGE_CODES), [])
+            self.assertFalse(any(c.startswith("DBG-") or c == "EXP-16" for c in npk.PACKAGE_CODES))
+            z = npk.build(Path(d) / "exp.zip")
+            self.assertEqual(npk.verify(z), [])
+            with zipfile.ZipFile(z) as f:
+                readme = f.read(f"{npk.TOP}/README.txt").decode()
+            self.assertTrue(npk.TOP.endswith("EXPERIMENTAL"))
+            self.assertIn("draft-exp1", readme)
+            self.assertIn("DRAFTING AND DEPLOYMENT", readme)
+            self.assertNotIn("@@", readme)
+
     def test_netplay_setup_traversal_host_keeps_net01_defaults(self):
         from tools.netplay_setup import dolphin_ini
         net01 = dolphin_ini(Path("G"), "P1-Blue", True)

@@ -2,8 +2,7 @@ FIRE EMBLEM: PATH OF RADIANCE - TWO-PLAYER CO-OP (NETPLAY CLIENT, PLAYER 2)
 Package @@PACKAGE_VERSION@@ - codes @@CODES@@ - code fingerprint @@FINGERPRINT@@
 
 This is an experimental fan modification. Player 1 (the host) plays Ike's blue army; you, Player 2,
-play the yellow army: the characters the host's ownership table gives to Player 2 (in this test
-build: Oscar, Boyd, Shinon and Gatrie), plus the game's own yellow partner units (e.g. Lethe and
+play the yellow army: @@WHO@@, plus the game's own yellow partner units (e.g. Lethe and
 Mordecai in Chapter 9). Turns go blue phase -> yellow phase -> enemy phase. You can only move your
 units in the yellow phase; the host can only move theirs in the blue phase.
 
@@ -72,7 +71,7 @@ Dolphin with it (step 2) leaves your normal Dolphin settings, memory cards and s
    A USB gamepad works too: Controllers > Port 1 > Standard Controller > Configure, Device = your pad.
 
 
-FIRST TEST SESSION (about 30 minutes; the host leads)
+@@DRAFT@@FIRST TEST SESSION (about 30 minutes; the host leads)
    The host starts from their own memory card; nothing you play is saved on either side.
    1. Host: Title > Restart Chapter > the chapter the host names. Skip scenes with Start.
    2. Blue phase: only the host's keys move units. Press X and the arrows: nothing happens.
