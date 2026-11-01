@@ -108,3 +108,19 @@ Fixtures: create only with `tools/patch_state.py` (slots 2+, refuses to overwrit
 2. ~~Resolve the Gecko budget~~ done statically (EXP-27 + EXP-21 v2, 3200/3256); confirm with COMBO-01. Step 5 v0 (deployment by owner) is built into EXP-27; the full set is 3168/3256 (3224 with DBG-01), with 88 bytes left (32 with DBG-01). A hard fairness quota and the dimmed owner colour for benched rows would need more slimming or a payload loader.
 3. PREP-04 → confirm the benched bit → build Step 5 (fair split), with its own budget check → Step 6 → Netplay.
 4. Only merge into `main` after a two-PC Netplay pass with a rebuilt friend package (new fingerprint).
+
+## Update 2026-11-01 (Claude, runtime session with computer use)
+
+- **Set:** COOP-P6 + EXP-21 + EXP-25 + EXP-27 = 3184/3256 (3240 with DBG-01), fingerprint `ab75cb7dbe172a15`.
+- **Defects found and fixed:**
+  - EXP-21 v3 stub/mover LR clash: game hang at the Ch6 start (b7d53cf).
+  - F-63: the pad stayed on port 2 after a yellow-phase win (e0a768d). The **release on `main` still has F-63**.
+- **Runtime passes:**
+  - COMBO-01: both drafts, colours, yellow control.
+  - PREP-04: Ch6 → Ch7 with a native save and a fresh reload, plus the prep transfer and the Reposition no-op.
+  - DEPLOY-01: on a genuine Ch8 prep screen.
+  - PAD-01: on a patched replay; the clean boot was checked separately.
+  - PREP-07 local Netplay.
+- **Not done:** two-computer PREP-07 (needs the owner), fairness quota / benched-owner colour / readiness (space; see PREP.md §5), and the F-63 fix for the release.
+- **Fixtures (git-ignored):** `work/evidence/{combo01_run2,prep04,deploy01,pad_after_yellow_clear}`, Ch8 card `work/saves/exp_ch8_card/`.
+- **Experimental client ZIP:** `python -m tools.netplay_package --experimental`.
