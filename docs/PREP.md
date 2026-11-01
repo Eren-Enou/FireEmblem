@@ -55,3 +55,25 @@ Plan: test Pick Units *mechanics* on the first reachable prep screen (Ch8), and 
 4. **Ch10 temporary partners and native partners** are not in the player roster (force 3 without OWNED, F-52), so the prep list never offers them.
 5. **Messages:** a whose-pick line needs a hook in the message lookup. Until then, help-line changes are out and the row states plus sounds carry the information.
 6. **Suspend at prep:** prep state is in the battle save. Ready bits kept in code memory would reset on reload, which is safe: both confirm again.
+
+## 5. Fairness, benched-owner visibility and readiness (design, 2026-11-01)
+
+Status: DEPLOY-01 passed, so deployment by owner (Step 5 v0) works on a real Ch8 prep screen. The full package set is **3184 of 3256 bytes (72 free)**; the test aid DBG-01 takes 56 of those. Estimates below are **[H]** until built and simulated.
+
+| Option | What it does | Hook / data | Est. bytes | Notes |
+|---|---|---|---|---|
+| **A. Agreement (current v0)** | Each player toggles only their own characters; the native cap ("You can select N more") limits the total; players agree on the split | EXP-27 wrapper on `0x80117D80` | 0 (built) | Verified (DEPLOY-01). Fair enough for two friends talking. The weak spot is the race: whoever deploys first fills the slots. |
+| **B. Fair-slot quota** | Deploying is refused (buzz) while that owner already has ⌈(cap − forced) / 2⌉ deployed, unless the other owner has nothing left to deploy | Same wrapper; count deployed (no `0x010000DC` bits) per owner over force 0 by reusing the core's table-driven count; cap = `state+0x544`, forced = `0x10000` | 72–96 | Doesn't fit next to DBG-01; fits only without it, and only if ≤ 72. Odd cap: the extra slot goes to whoever asks first. Unassigned characters count for nobody. |
+| **C. Dimmed owner colour on benched rows** | A benched owned character shows dim blue or dim yellow instead of plain grey (risk 00, seen at runtime) | EXP-25: if the chosen index is 0 (grey) and the unit is owned, use a dim index | 16–24 | Palette indices `0x09` / `0x0D` are **unverified [H]**: check the colours in `0x80296088` first. |
+| **D. Readiness (PREP-06)** | Fight is refused until both players pressed Start on their own pad (one ready bit each in the EXP-27 data word; any change in Choose Units clears both) | Needs the "Begin now?" / Fight entry (**not traced yet**) + an edge reader for both pads' Start | 80–120 + 8 header | Biggest; needs research first. A reload resets the bits harmlessly (risk 6). |
+
+**Recommendation:**
+1. Keep **A** as the default. It is verified and costs nothing.
+2. Build **C** next. It's small and fixes a visibility gap seen at runtime.
+3. Make **B** optional: the code stays in the ini but isn't in the package, so it never uses package bytes.
+4. **D** needs both research (the Fight confirm) and space.
+
+**Making space (any of these, in order of risk):**
+1. Leave DBG-01 out of every package (already the rule): 72 bytes free.
+2. Compact COOP-P6 (1328 bytes). Its EXP-06 ownership caves are 13 near-identical 6-line blocks (`GetUnitSelectState` and friends). One shared routine with cross-block calls (F-60, as done for EXP-21 v3) could save about 300–400 bytes **[H]**. It is the verified release core, so it would need the full COOP regression (EXP-06/07/10–14/17/20) again.
+3. Move code out of the Gecko area: Dolphin `[OnFrame]` patches or a patched DOL. Whether Netplay syncs `[OnFrame]` patches the way it syncs Gecko codes is **unknown** (research first). A patched DOL needs a distribution step for both players.
