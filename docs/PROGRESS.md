@@ -257,3 +257,11 @@ Controller routing / Netplay (per user priority).
 - **NET-02 PASSED on two computers over the internet** (user + friend, COOP-P5 + EXP-16). Ch3 reached turn 6 with yellow combat and EXP, and the turn 4 and turn 6 states are identical on both PCs, with no desync (TESTING.md NET-02).
 - The Netplay package and host moved to **COOP-P6 + EXP-16**: package net02-3, fingerprint `8609ae9f49fd879f`, ZIP `dist/FE9-Coop-Client-8609ae9f49fd879f.zip`. The friend needs the new ZIP for the fingerprint/hash check, though the synced host codes are what actually run. The README's Gecko-code check now names the enabled codes from the build.
 
+
+## 2026-11-01 — F-63 fix ported to the stable release (EXP-16)
+
+- Defect F-63 (found on `draft-ownership`, Ch7): after a yellow-phase win, EXP-14 keeps the pad on port 2 through the victory events and the Save Data screen, so only Player 2 can advance.
+- Fix on `main`: EXP-16's chapter-end return caves (`0x800BA784`, `0x8002E0D0`, `0x80005F04`) end with `control[3] = 2`; the UnitEscape cave does not. Same change as EXP-21 on `draft-ownership` (`e0a768d`).
+- Tests 43/43 (new `test_exp16_chapter_end_hands_the_pad_back`), signatures 133/133. COOP-P6 + EXP-16 = 2560 of 3256 bytes.
+- Package **net02-4**, fingerprint `a5d1e83641e32a27`, ZIP `dist/FE9-Coop-Client-a5d1e83641e32a27.zip` (SHA-256 `7010586fa39d161124f1e3b9dce061e24dfcf5a3126275187a952a92e638b4af`).
+- **Not runtime-verified on `main`:** TESTING.md PAD-01 (win a chapter in the yellow phase; Player 1's A must advance the victory text) before merging. After the merge: reinstall the Netplay host and send the friend the new ZIP (the fingerprint changed).
